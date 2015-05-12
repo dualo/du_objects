@@ -1,0 +1,3 @@
+[submodule "du-touch/parameters"]
+	path = du-touch/parameters
+	url = ../../Products/Du_Touch_pro/parameters.git
