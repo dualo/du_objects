@@ -46,7 +46,7 @@ public:
     void setKneeType(int value);
 
     QString getEffectName() const;
-    void setEffectName(QString &value);
+    void setEffectName(const QString &value);
 };
 
 #endif // DUCOMPRESSOR_H

@@ -73,7 +73,7 @@ DuPreset *DuPreset::fromDuMusicFile(const preset_instr &du_preset)
 DuPreset *DuPreset::fromJson(const QJsonObject &jsonPreset)
 {
     DuPreset *preset = new DuPreset();
-    QStringList &keyList = preset->keys();
+    const QStringList &keyList = preset->keys();
 
     bool test = true;
     for (int i = 0; i < keyList.count(); i++)

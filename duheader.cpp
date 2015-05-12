@@ -61,7 +61,7 @@ DuHeader *DuHeader::fromDuMusicFile(const music_song &du_song)
 DuHeader *DuHeader::fromJson(const QJsonObject &jsonHeader)
 {
     DuHeader *header = new DuHeader();
-    QStringList &keyList = header->keys();
+    const QStringList &keyList = header->keys();
 
     bool test = true;
     for (int i = 0; i < keyList.count(); i++)

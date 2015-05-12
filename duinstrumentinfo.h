@@ -27,16 +27,16 @@ public:
     static DuInstrumentInfo *fromJson(const QJsonObject &jsonInstrInfo);
 
     QString getCategory() const;
-    void setCategory(QString &value);
+    void setCategory(const QString &value);
 
     QString getName() const;
-    void setName(QString &value);
+    void setName(const QString &value);
 
     int getID() const;
     void setID(int value);
 
     QString getUserID() const;
-    void setUserID(QString &value);
+    void setUserID(const QString &value);
 
     int getMidiProgramChange() const;
     void setMidiProgramChange(int value);

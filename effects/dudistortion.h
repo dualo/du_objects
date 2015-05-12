@@ -46,7 +46,7 @@ public:
     void setDrive(int value);
 
     QString getEffectName() const;
-    void setEffectName(QString &value);
+    void setEffectName(const QString &value);
 };
 
 #endif // DUDISTORTION_H

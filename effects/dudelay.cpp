@@ -63,7 +63,7 @@ DuDelay *DuDelay::fromDuMusicFile(const FX_delay &du_delay)
 DuDelay *DuDelay::fromJson(const QJsonObject &jsonDelay)
 {
     DuDelay *delay = new DuDelay();
-    QStringList &keyList = delay->keys();
+    const QStringList &keyList = delay->keys();
 
     bool test = true;
     for (int i = 0; i < keyList.count(); i++)
@@ -243,7 +243,7 @@ QString DuDelay::getEffectName() const
     return tmp->getString();
 }
 
-void DuDelay::setEffectName(QString &value)
+void DuDelay::setEffectName(const QString &value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_DELAY_EFFECTNAME));
 

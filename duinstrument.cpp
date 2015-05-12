@@ -56,7 +56,7 @@ DuInstrument *DuInstrument::fromDuMusicFile(const music_instr &du_instr)
 DuInstrument *DuInstrument::fromJson(const QJsonObject &jsonInstrument)
 {
     DuInstrument *instrument = new DuInstrument();
-    QStringList &keyList = instrument->keys();
+    const QStringList &keyList = instrument->keys();
 
     bool test = true;
     for (int i = 0; i < keyList.count(); i++)

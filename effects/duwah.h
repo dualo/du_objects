@@ -34,7 +34,7 @@ public:
     void setAutoWahSensitivity(int value);
 
     QString getEffectName() const;
-    void setEffectName(QString &value);
+    void setEffectName(const QString &value);
 };
 
 #endif // DUWAH_H

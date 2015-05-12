@@ -39,7 +39,7 @@ public:
     void setEnvelopeReleaseTime(int value);
 
     QString getEffectName() const;
-    void setEffectName(QString &value);
+    void setEffectName(const QString &value);
 };
 
 #endif // DUADSR_H

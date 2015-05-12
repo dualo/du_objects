@@ -51,7 +51,7 @@ DuAdsr *DuAdsr::fromDuMusicFile(const FX_adsr &du_adsr)
 DuAdsr *DuAdsr::fromJson(const QJsonObject &jsonAdsr)
 {
     DuAdsr *adsr = new DuAdsr();
-    QStringList &keyList = adsr->keys();
+    const QStringList &keyList = adsr->keys();
 
     bool test = true;
     for (int i = 0; i < keyList.count(); i++)
@@ -213,7 +213,7 @@ QString DuAdsr::getEffectName() const
     return tmp->getString();
 }
 
-void DuAdsr::setEffectName(QString &value)
+void DuAdsr::setEffectName(const QString &value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_ADSR_EFFECTNAME));
 

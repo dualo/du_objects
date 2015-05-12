@@ -85,7 +85,7 @@ DuEqualizer *DuEqualizer::fromDuMusicFile(const FX_equalizer du_equalizer)
 DuEqualizer *DuEqualizer::fromJson(const QJsonObject &jsonEqualizer)
 {
     DuEqualizer *equalizer = new DuEqualizer();
-    QStringList &keyList = equalizer->keys();
+    const QStringList &keyList = equalizer->keys();
 
     bool test = true;
     for (int i = 0; i < keyList.count(); i++)
@@ -359,7 +359,7 @@ QString DuEqualizer::getEffectName() const
     return tmp->getString();
 }
 
-void DuEqualizer::setEffectName(QString &value)
+void DuEqualizer::setEffectName(const QString &value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_EQ_EFFECTNAME));
 

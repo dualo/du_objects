@@ -64,7 +64,7 @@ DuCompressor *DuCompressor::fromDuMusicFile(const FX_compressor &du_compressor)
 DuCompressor *DuCompressor::fromJson(const QJsonObject &jsonCompressor)
 {
     DuCompressor *compressor = new DuCompressor();
-    QStringList &keyList = compressor->keys();
+    const QStringList &keyList = compressor->keys();
 
     bool test = true;
     for (int i = 0; i < keyList.count(); i++)
@@ -243,7 +243,7 @@ QString DuCompressor::getEffectName() const
     return tmp->getString();
 }
 
-void DuCompressor::setEffectName(QString &value)
+void DuCompressor::setEffectName(const QString &value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_COMP_EFFECTNAME));
 

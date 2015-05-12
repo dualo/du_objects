@@ -62,7 +62,7 @@ DuMixer *DuMixer::fromDuMusicFile(const FX_mix &du_mixer)
 DuMixer *DuMixer::fromJson(const QJsonObject &jsonMixer)
 {
     DuMixer *mixer = new DuMixer();
-    QStringList &keyList = mixer->keys();
+    const QStringList &keyList = mixer->keys();
 
     bool test = true;
     for (int i = 0; i < keyList.count(); i++)

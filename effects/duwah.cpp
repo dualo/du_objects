@@ -46,7 +46,7 @@ DuWah *DuWah::fromDuMusicFile(const FX_wah &du_wah)
 DuWah *DuWah::fromJson(const QJsonObject &jsonWah)
 {
     DuWah *wah = new DuWah();
-    QStringList &keyList = wah->keys();
+    const QStringList &keyList = wah->keys();
 
     bool test = true;
     for (int i = 0; i < keyList.count(); i++)
@@ -160,7 +160,7 @@ QString DuWah::getEffectName() const
     return tmp->getString();
 }
 
-void DuWah::setEffectName(QString &value)
+void DuWah::setEffectName(const QString &value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_WAH_EFFECTNAME));
 

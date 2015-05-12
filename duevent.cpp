@@ -39,7 +39,7 @@ DuEvent *DuEvent::fromDuMusicFile(const music_sample &du_sample)
 DuEvent *DuEvent::fromJson(const QJsonObject &jsonEvent)
 {
     DuEvent *event = new DuEvent(0, 0, 0, 0, 0);
-    QStringList &keyList = event->keys();
+    const QStringList &keyList = event->keys();
 
     bool test = true;
     for (int i = 0; i < keyList.count(); i++)

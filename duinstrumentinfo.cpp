@@ -57,7 +57,7 @@ DuInstrumentInfo *DuInstrumentInfo::fromDuMusicFile(const s_instr &du_instrInfo)
 DuInstrumentInfo *DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
 {
     DuInstrumentInfo *instrInfo = new DuInstrumentInfo();
-    QStringList &keyList = instrInfo->keys();
+    const QStringList &keyList = instrInfo->keys();
 
     bool test = true;
     for (int i = 0; i < keyList.count(); i++)
@@ -94,7 +94,7 @@ QString DuInstrumentInfo::getCategory() const
     return tmp->getString();
 }
 
-void DuInstrumentInfo::setCategory(QString &value)
+void DuInstrumentInfo::setCategory(const QString &value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_INSTRINFO_CATEGORY));
 
@@ -114,7 +114,7 @@ QString DuInstrumentInfo::getName() const
     return tmp->getString();
 }
 
-void DuInstrumentInfo::setName(QString &value)
+void DuInstrumentInfo::setName(const QString &value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_INSTRINFO_NAME));
 
@@ -154,7 +154,7 @@ QString DuInstrumentInfo::getUserID() const
     return tmp->getString();
 }
 
-void DuInstrumentInfo::setUserID(QString &value)
+void DuInstrumentInfo::setUserID(const QString &value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_INSTRINFO_USERID));
 

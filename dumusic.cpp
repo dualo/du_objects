@@ -42,7 +42,7 @@ DuMusic *DuMusic::fromJson(const QJsonObject &jsonMusic)
     //TODO
 
     DuMusic *music = new DuMusic();
-    QStringList &keyList = music->keys();
+    const QStringList &keyList = music->keys();
 
     bool test = true;
     for (int i = 0; i < keyList.count(); i++)
@@ -57,7 +57,7 @@ DuMusic *DuMusic::fromJson(const QJsonObject &jsonMusic)
     music->setSongInfo(DuSongInfo::fromJson(jsonMusic[KEY_MUSIC_SONGINFO].toObject()));
 
     DuArray *tracks = music->getTracks();
-    QJsonArray &jsonTracks = jsonMusic[KEY_MUSIC_TRACKS].toArray();
+    const QJsonArray &jsonTracks = jsonMusic[KEY_MUSIC_TRACKS].toArray();
 
     for (int i = 0; i < jsonTracks.count(); i++)
     {

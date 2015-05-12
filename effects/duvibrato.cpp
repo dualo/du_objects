@@ -41,7 +41,7 @@ DuVibrato *DuVibrato::fromDuMusicFile(const FX_vibrato &du_vibrato)
 DuVibrato *DuVibrato::fromJson(const QJsonObject &jsonVibrato)
 {
     DuVibrato *vibrato = new DuVibrato();
-    QStringList &keyList = vibrato->keys();
+    const QStringList &keyList = vibrato->keys();
 
     bool test = true;
     for (int i = 0; i < keyList.count(); i++)
@@ -133,7 +133,7 @@ QString DuVibrato::getEffectName() const
     return tmp->getString();
 }
 
-void DuVibrato::setEffectName(QString &value)
+void DuVibrato::setEffectName(const QString &value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_VIB_EFFECTNAME));
 

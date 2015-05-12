@@ -53,7 +53,7 @@ DuTrack *DuTrack::fromDuMusicFile(const music_track &du_track,
 DuTrack *DuTrack::fromJson(const QJsonObject &jsonTrack)
 {
     DuTrack *track = new DuTrack();
-    QStringList &keyList = track->keys();
+    const QStringList &keyList = track->keys();
 
     bool test = true;
     for (int i = 0; i < keyList.count(); i++)
@@ -68,7 +68,7 @@ DuTrack *DuTrack::fromJson(const QJsonObject &jsonTrack)
     track->setCurrentLoop(jsonTrack[KEY_TRACK_CURRENTLOOP].toInt());
 
     DuArray *loops = track->getLoops();
-    QJsonArray &jsonLoops = jsonTrack[KEY_TRACK_LOOPS].toArray();
+    const QJsonArray &jsonLoops = jsonTrack[KEY_TRACK_LOOPS].toArray();
 
     for (int i = 0; i < jsonLoops.count(); i++)
     {

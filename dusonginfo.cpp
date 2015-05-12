@@ -82,7 +82,7 @@ DuSongInfo *DuSongInfo::fromDuMusicFile(const music_song &du_song)
 DuSongInfo *DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
 {
     DuSongInfo *songInfo = new DuSongInfo();
-    QStringList &keyList = songInfo->keys();
+    const QStringList &keyList = songInfo->keys();
 
     bool test = true;
     for (int i = 0; i < keyList.count(); i++)

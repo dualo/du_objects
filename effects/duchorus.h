@@ -58,7 +58,7 @@ public:
     void setRotarySpeed(int value);
 
     QString getEffectName() const;
-    void setEffectName(QString &value);
+    void setEffectName(const QString &value);
 };
 
 #endif // DUCHORUS_H

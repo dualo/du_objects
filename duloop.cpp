@@ -53,7 +53,7 @@ DuLoop *DuLoop::fromDuMusicFile(const music_loop &du_loop,
 DuLoop *DuLoop::fromJson(const QJsonObject &jsonLoop)
 {
     DuLoop *loop = new DuLoop();
-    QStringList &keyList = loop->keys();
+    const QStringList &keyList = loop->keys();
 
     bool test = true;
     for (int i = 0; i < keyList.count(); i++)
@@ -72,7 +72,7 @@ DuLoop *DuLoop::fromJson(const QJsonObject &jsonLoop)
                 DuInstrument::fromJson(jsonLoop[KEY_LOOP_INSTRUMENT].toObject()));
 
     DuArray *events = loop->getEvents();
-    QJsonArray &jsonEvents = jsonLoop[KEY_LOOP_EVENTS].toArray();
+    const QJsonArray &jsonEvents = jsonLoop[KEY_LOOP_EVENTS].toArray();
 
     for (int i = 0; i < jsonEvents.count(); i++)
     {

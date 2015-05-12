@@ -78,7 +78,7 @@ DuChorus *DuChorus::fromDuMusicFile(const FX_chorus &du_chorus)
 DuChorus *DuChorus::fromJson(const QJsonObject &jsonChorus)
 {
     DuChorus *chorus = new DuChorus();
-    QStringList &keyList = chorus->keys();
+    const QStringList &keyList = chorus->keys();
 
     bool test = true;
     for (int i = 0; i < keyList.count(); i++)
@@ -320,7 +320,7 @@ QString DuChorus::getEffectName() const
     return tmp->getString();
 }
 
-void DuChorus::setEffectName(QString &value)
+void DuChorus::setEffectName(const QString &value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_CHORUS_EFFECTNAME));
 

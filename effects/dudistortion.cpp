@@ -65,7 +65,7 @@ DuDistortion *DuDistortion::fromDuMusicFile(const FX_distortion &du_distortion)
 DuDistortion *DuDistortion::fromJson(const QJsonObject &jsonDistortion)
 {
     DuDistortion *distortion = new DuDistortion();
-    QStringList &keyList = distortion->keys();
+    const QStringList &keyList = distortion->keys();
 
     bool test = true;
     for (int i = 0; i < keyList.count(); i++)
@@ -253,7 +253,7 @@ QString DuDistortion::getEffectName() const
     return tmp->getString();
 }
 
-void DuDistortion::setEffectName(QString &value)
+void DuDistortion::setEffectName(const QString &value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_DIST_EFFECTNAME));
 

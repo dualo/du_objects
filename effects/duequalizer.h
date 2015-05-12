@@ -62,7 +62,7 @@ public:
     void setHighMidBandQualityFactor(int value);
 
     QString getEffectName() const;
-    void setEffectName(QString &value);
+    void setEffectName(const QString &value);
 };
 
 #endif // DUEQUALIZER_H
