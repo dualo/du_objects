@@ -1,0 +1,8 @@
+[submodule "du-touch/parameters"]
+	path = du-touch/parameters
+	owner = /
+	url = ^/Products/Du_Touch_pro/parameters/Trunk
+	branch = /
+	fetch = :refs/remotes/git-svn
+	remote = svn
+	type = dir
