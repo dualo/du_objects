@@ -87,7 +87,11 @@ QByteArray DuAdsr::toDuMusicFile()
 
     QByteArray tmpName(NAME_CARACT, (char)0x00);
     tmpName.prepend(getEffectName().toUtf8());
+#ifdef Q_OS_WIN
     memcpy_s(du_adsr.a_name, NAME_CARACT, tmpName.data(), NAME_CARACT);
+#else
+    memcpy(du_adsr.a_name, tmpName.data(), NAME_CARACT);
+#endif
 
     QByteArray array((char *)&(du_adsr), FX_ADSR_SIZE);
 
