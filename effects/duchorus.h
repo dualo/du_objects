@@ -24,7 +24,6 @@ public:
     ~DuChorus();
 
     static DuChorus *fromDuMusicFile(const FX_chorus &du_chorus);
-
     static DuChorus *fromJson(const QJsonObject &jsonChorus);
 
     int getMode() const;

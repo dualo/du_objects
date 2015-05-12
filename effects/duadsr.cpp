@@ -34,7 +34,7 @@ DuAdsr::~DuAdsr()
 
 DuAdsr *DuAdsr::fromDuMusicFile(const FX_adsr &du_adsr)
 {
-    DuAdsr *adsr = new DuAdsr();
+    DuAdsr *adsr = new DuAdsr;
 
     adsr->setEnvelopeAttackTime(du_adsr.a_env_attack_time);
     adsr->setEnvelopeDecayTime(du_adsr.a_env_decay_time);
@@ -50,27 +50,29 @@ DuAdsr *DuAdsr::fromDuMusicFile(const FX_adsr &du_adsr)
 
 DuAdsr *DuAdsr::fromJson(const QJsonObject &jsonAdsr)
 {
+    QJsonValue jsonEnvAttTime = jsonAdsr[KEY_ADSR_ENVELOPEATTACKTIME];
+    QJsonValue jsonEnvDecTime = jsonAdsr[KEY_ADSR_ENVELOPEDECAYTIME];
+    QJsonValue jsonTvfCutRes  = jsonAdsr[KEY_ADSR_TIMEVARIANTFILTERCUTOFFRESONANCE];
+    QJsonValue jsonTvfCutFreq = jsonAdsr[KEY_ADSR_TIMEVARIANTFILTERCUTOFFFREQUENCY];
+    QJsonValue jsonEnvRelTime = jsonAdsr[KEY_ADSR_ENVELOPERELEASETIME];
+    QJsonValue jsonEffectName = jsonAdsr[KEY_ADSR_EFFECTNAME];
+
+    if (!jsonEnvAttTime.isDouble() || !jsonEnvDecTime.isDouble()
+            || !jsonTvfCutRes.isDouble() || !jsonTvfCutFreq.isDouble()
+            || !jsonEnvRelTime.isDouble() || !jsonEffectName.isString())
+
+        return NULL;
+
+
     DuAdsr *adsr = new DuAdsr;
-    const QStringList &keyList = adsr->keys();
 
-    for (int i = 0; i < keyList.count(); i++)
-    {
-        if (!jsonAdsr.contains(keyList[i]))
-        {
-            delete adsr;
-            return NULL;
-        }
-    }
+    adsr->setEnvelopeAttackTime(jsonEnvAttTime.toInt());
+    adsr->setEnvelopeDecayTime(jsonEnvDecTime.toInt());
+    adsr->setTimeVariantFilterCutoffResonance(jsonTvfCutRes.toInt());
+    adsr->setTimeVariantFilterCutoffFrequency(jsonTvfCutFreq.toInt());
+    adsr->setEnvelopeReleaseTime(jsonEnvRelTime.toInt());
 
-    adsr->setEnvelopeAttackTime(jsonAdsr[KEY_ADSR_ENVELOPEATTACKTIME].toInt());
-    adsr->setEnvelopeDecayTime(jsonAdsr[KEY_ADSR_ENVELOPEDECAYTIME].toInt());
-    adsr->setTimeVariantFilterCutoffResonance(
-                jsonAdsr[KEY_ADSR_TIMEVARIANTFILTERCUTOFFRESONANCE].toInt());
-    adsr->setTimeVariantFilterCutoffFrequency(
-                jsonAdsr[KEY_ADSR_TIMEVARIANTFILTERCUTOFFFREQUENCY].toInt());
-    adsr->setEnvelopeReleaseTime(jsonAdsr[KEY_ADSR_ENVELOPERELEASETIME].toInt());
-
-    adsr->setEffectName(jsonAdsr[KEY_ADSR_EFFECTNAME].toString());
+    adsr->setEffectName(jsonEffectName.toString());
 
     return adsr;
 }
@@ -87,6 +89,7 @@ QByteArray DuAdsr::toDuMusicFile()
 
     QByteArray tmpName(NAME_CARACT, (char)0x00);
     tmpName.prepend(getEffectName().toUtf8());
+
 #ifdef Q_OS_WIN
     memcpy_s(du_adsr.a_name, NAME_CARACT, tmpName.data(), NAME_CARACT);
 #else

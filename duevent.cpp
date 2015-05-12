@@ -50,8 +50,13 @@ DuEvent::~DuEvent()
 
 DuEvent *DuEvent::fromDuMusicFile(const music_sample &du_sample)
 {
-    DuEvent *event = new DuEvent(du_sample.time, du_sample.control, du_sample.canal,
-                                 (du_sample.note & 0x7F), du_sample.value);
+    DuEvent *event = new DuEvent;
+
+    event->setTime(du_sample.time);
+    event->setControl(du_sample.control);
+    event->setKeyboard(du_sample.canal);
+    event->setNote(du_sample.note & 0x7F);
+    event->setValue(du_sample.value);
 
     return event;
 }
@@ -59,23 +64,25 @@ DuEvent *DuEvent::fromDuMusicFile(const music_sample &du_sample)
 
 DuEvent *DuEvent::fromJson(const QJsonObject &jsonEvent)
 {
-    DuEvent *event = new DuEvent;
-    const QStringList &keyList = event->keys();
+    QJsonValue jsonTime = jsonEvent[KEY_EVENT_TIME];
+    QJsonValue jsonCtrl = jsonEvent[KEY_EVENT_CONTROL];
+    QJsonValue jsonKbrd = jsonEvent[KEY_EVENT_KEYBOARD];
+    QJsonValue jsonNote = jsonEvent[KEY_EVENT_NOTE];
+    QJsonValue jsonVal  = jsonEvent[KEY_EVENT_VALUE];
 
-    bool test = true;
-    for (int i = 0; i < keyList.count(); i++)
-    {
-        test = test && jsonEvent.contains(keyList[i]);
-    }
+    if (!jsonTime.isDouble() || !jsonCtrl.isDouble() || !jsonKbrd.isDouble()
+            || !jsonNote.isDouble() || !jsonVal.isDouble())
 
-    if (!test)
         return NULL;
 
-    event->setTime(jsonEvent[KEY_EVENT_TIME].toInt());
-    event->setControl(jsonEvent[KEY_EVENT_CONTROL].toInt());
-    event->setKeyboard(jsonEvent[KEY_EVENT_KEYBOARD].toInt());
-    event->setNote(jsonEvent[KEY_EVENT_NOTE].toInt());
-    event->setValue(jsonEvent[KEY_EVENT_VALUE].toInt());
+
+    DuEvent *event = new DuEvent;
+
+    event->setTime(jsonTime.toInt());
+    event->setControl(jsonCtrl.toInt());
+    event->setKeyboard(jsonKbrd.toInt());
+    event->setNote(jsonNote.toInt());
+    event->setValue(jsonVal.toInt());
 
     return event;
 }
@@ -99,19 +106,19 @@ int DuEvent::getTime() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EVENT_TIME));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuEvent::setTime(int value)
+bool DuEvent::setTime(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EVENT_TIME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -120,19 +127,19 @@ int DuEvent::getControl() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EVENT_CONTROL));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuEvent::setControl(int value)
+bool DuEvent::setControl(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EVENT_CONTROL));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -141,19 +148,19 @@ int DuEvent::getKeyboard() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EVENT_KEYBOARD));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuEvent::setKeyboard(int value)
+bool DuEvent::setKeyboard(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EVENT_KEYBOARD));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -162,19 +169,19 @@ int DuEvent::getNote() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EVENT_NOTE));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuEvent::setNote(int value)
+bool DuEvent::setNote(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EVENT_NOTE));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -183,17 +190,17 @@ int DuEvent::getValue() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EVENT_VALUE));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuEvent::setValue(int value)
+bool DuEvent::setValue(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EVENT_VALUE));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }

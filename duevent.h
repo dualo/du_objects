@@ -25,19 +25,19 @@ public:
     QByteArray toDuMusicFile();
 
     int getTime() const;
-    void setTime(int value);
+    bool setTime(int value);
 
     int getControl() const;
-    void setControl(int value);
+    bool setControl(int value);
 
     int getKeyboard() const;
-    void setKeyboard(int value);
+    bool setKeyboard(int value);
 
     int getNote() const;
-    void setNote(int value);
+    bool setNote(int value);
 
     int getValue() const;
-    void setValue(int value);
+    bool setValue(int value);
 };
 
 #endif // DUEVENT_H
