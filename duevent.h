@@ -16,6 +16,7 @@ class DuEvent : public DuContainer
 {
 public:
     explicit DuEvent(int time, int control, int keyboard, int note, int value);
+    explicit DuEvent();
     ~DuEvent();
 
     static DuEvent *fromDuMusicFile(const music_sample &du_sample);

@@ -49,7 +49,7 @@ DuObject *DuContainer::getChild(const QString &key) const
 }
 
 
-QStringList DuContainer::keys()
+QStringList DuContainer::keys() const
 {
     return children.keys();
 }

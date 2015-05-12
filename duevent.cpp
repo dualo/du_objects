@@ -22,6 +22,27 @@ DuEvent::DuEvent(int time, int control, int keyboard, int note, int value) :
                            0x7F, 0x00, 0x40));
 }
 
+DuEvent::DuEvent()
+{
+    addChild(KEY_EVENT_TIME, new DuNumeric(0));
+
+    addChild(KEY_EVENT_CONTROL,
+             new DuNumeric(0, NUMERIC_DEFAULT_SIZE,
+                           6, 0));
+
+    addChild(KEY_EVENT_KEYBOARD,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0xFF, 0x00));
+
+    addChild(KEY_EVENT_NOTE,
+             new DuNumeric(0x40, NUMERIC_DEFAULT_SIZE,
+                           0x7F, 0x00));
+
+    addChild(KEY_EVENT_VALUE,
+             new DuNumeric(0x40, NUMERIC_DEFAULT_SIZE,
+                           0x7F, 0x00));
+}
+
 DuEvent::~DuEvent()
 {
 }
@@ -38,7 +59,7 @@ DuEvent *DuEvent::fromDuMusicFile(const music_sample &du_sample)
 
 DuEvent *DuEvent::fromJson(const QJsonObject &jsonEvent)
 {
-    DuEvent *event = new DuEvent(0, 0, 0, 0, 0);
+    DuEvent *event = new DuEvent;
     const QStringList &keyList = event->keys();
 
     bool test = true;
@@ -62,17 +83,14 @@ DuEvent *DuEvent::fromJson(const QJsonObject &jsonEvent)
 
 QByteArray DuEvent::toDuMusicFile()
 {
-    music_sample *du_sample = new music_sample;
-    du_sample->time = getTime();
-    du_sample->control = getControl();
-    du_sample->canal = getKeyboard();
-    du_sample->note = ((du_sample->canal << 4) & 0x80) | getNote();
-    du_sample->value = getValue();
+    music_sample du_sample;
+    du_sample.time = getTime();
+    du_sample.control = getControl();
+    du_sample.canal = getKeyboard();
+    du_sample.note = ((du_sample.canal << 4) & 0x80) | getNote();
+    du_sample.value = getValue();
 
-    QByteArray array = QByteArray((char *)du_sample, MUSIC_SAMPLE_SIZE);
-    delete du_sample;
-
-    return array;
+    return QByteArray((char *)&(du_sample), MUSIC_SAMPLE_SIZE);
 }
 
 

@@ -19,7 +19,7 @@ public:
     void addChild(const QString &key, DuObject *child);
     DuObject *getChild(const QString &key) const;
 
-    QStringList keys();
+    QStringList keys() const;
 
     DuObject *operator[](const QString &label);
 

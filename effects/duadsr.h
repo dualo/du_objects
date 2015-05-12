@@ -24,22 +24,22 @@ public:
     QByteArray toDuMusicFile();
 
     int getEnvelopeAttackTime() const;
-    void setEnvelopeAttackTime(int value);
+    bool setEnvelopeAttackTime(int value);
 
     int getEnvelopeDecayTime() const;
-    void setEnvelopeDecayTime(int value);
+    bool setEnvelopeDecayTime(int value);
 
     int getTimeVariantFilterCutoffResonance() const;
-    void setTimeVariantFilterCutoffResonance(int value);
+    bool setTimeVariantFilterCutoffResonance(int value);
 
     int getTimeVariantFilterCutoffFrequency() const;
-    void setTimeVariantFilterCutoffFrequency(int value);
+    bool setTimeVariantFilterCutoffFrequency(int value);
 
     int getEnvelopeReleaseTime() const;
-    void setEnvelopeReleaseTime(int value);
+    bool setEnvelopeReleaseTime(int value);
 
     QString getEffectName() const;
-    void setEffectName(const QString &value);
+    bool setEffectName(const QString &value);
 };
 
 #endif // DUADSR_H

@@ -50,17 +50,17 @@ DuAdsr *DuAdsr::fromDuMusicFile(const FX_adsr &du_adsr)
 
 DuAdsr *DuAdsr::fromJson(const QJsonObject &jsonAdsr)
 {
-    DuAdsr *adsr = new DuAdsr();
+    DuAdsr *adsr = new DuAdsr;
     const QStringList &keyList = adsr->keys();
 
-    bool test = true;
     for (int i = 0; i < keyList.count(); i++)
     {
-        test = test && jsonAdsr.contains(keyList[i]);
+        if (!jsonAdsr.contains(keyList[i]))
+        {
+            delete adsr;
+            return NULL;
+        }
     }
-
-    if (!test)
-        return NULL;
 
     adsr->setEnvelopeAttackTime(jsonAdsr[KEY_ADSR_ENVELOPEATTACKTIME].toInt());
     adsr->setEnvelopeDecayTime(jsonAdsr[KEY_ADSR_ENVELOPEDECAYTIME].toInt());
@@ -93,9 +93,7 @@ QByteArray DuAdsr::toDuMusicFile()
     memcpy(du_adsr.a_name, tmpName.data(), NAME_CARACT);
 #endif
 
-    QByteArray array((char *)&(du_adsr), FX_ADSR_SIZE);
-
-    return array;
+    return QByteArray((char *)&(du_adsr), FX_ADSR_SIZE);
 }
 
 
@@ -104,19 +102,19 @@ int DuAdsr::getEnvelopeAttackTime() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_ADSR_ENVELOPEATTACKTIME));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuAdsr::setEnvelopeAttackTime(int value)
+bool DuAdsr::setEnvelopeAttackTime(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_ADSR_ENVELOPEATTACKTIME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuAdsr::getEnvelopeDecayTime() const
@@ -124,19 +122,19 @@ int DuAdsr::getEnvelopeDecayTime() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_ADSR_ENVELOPEDECAYTIME));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuAdsr::setEnvelopeDecayTime(int value)
+bool DuAdsr::setEnvelopeDecayTime(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_ADSR_ENVELOPEDECAYTIME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuAdsr::getTimeVariantFilterCutoffResonance() const
@@ -145,20 +143,20 @@ int DuAdsr::getTimeVariantFilterCutoffResonance() const
         dynamic_cast<DuNumeric *>(getChild(KEY_ADSR_TIMEVARIANTFILTERCUTOFFRESONANCE));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuAdsr::setTimeVariantFilterCutoffResonance(int value)
+bool DuAdsr::setTimeVariantFilterCutoffResonance(int value)
 {
     DuNumeric *tmp =
         dynamic_cast<DuNumeric *>(getChild(KEY_ADSR_TIMEVARIANTFILTERCUTOFFRESONANCE));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuAdsr::getTimeVariantFilterCutoffFrequency() const
@@ -167,20 +165,20 @@ int DuAdsr::getTimeVariantFilterCutoffFrequency() const
         dynamic_cast<DuNumeric *>(getChild(KEY_ADSR_TIMEVARIANTFILTERCUTOFFFREQUENCY));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuAdsr::setTimeVariantFilterCutoffFrequency(int value)
+bool DuAdsr::setTimeVariantFilterCutoffFrequency(int value)
 {
     DuNumeric *tmp =
         dynamic_cast<DuNumeric *>(getChild(KEY_ADSR_TIMEVARIANTFILTERCUTOFFFREQUENCY));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuAdsr::getEnvelopeReleaseTime() const
@@ -188,19 +186,19 @@ int DuAdsr::getEnvelopeReleaseTime() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_ADSR_ENVELOPERELEASETIME));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuAdsr::setEnvelopeReleaseTime(int value)
+bool DuAdsr::setEnvelopeReleaseTime(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_ADSR_ENVELOPERELEASETIME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 QString DuAdsr::getEffectName() const
@@ -213,12 +211,12 @@ QString DuAdsr::getEffectName() const
     return tmp->getString();
 }
 
-void DuAdsr::setEffectName(const QString &value)
+bool DuAdsr::setEffectName(const QString &value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_ADSR_EFFECTNAME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setString(value);
+    return tmp->setString(value);
 }
