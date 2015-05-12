@@ -10,7 +10,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
-#include "../dumusic/parameters/music_parameters_mng.h"
+#include "du-touch/parameters/music_parameters_mng.h"
 
 
 class DuObject
