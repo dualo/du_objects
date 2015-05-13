@@ -21,32 +21,31 @@ public:
     ~DuDistortion();
 
     static DuDistortion *fromDuMusicFile(const FX_distortion &du_distortion);
-
     static DuDistortion *fromJson(const QJsonObject &jsonDistortion);
 
     int getOnOff() const;
-    void setOnOff(int value);
+    bool setOnOff(int value);
 
     int getPreGain() const;
-    void setPreGain(int value);
+    bool setPreGain(int value);
 
     int getEffectType() const;
-    void setEffectType(int value);
+    bool setEffectType(int value);
 
     int getLowPassFilterFrequency() const;
-    void setLowPassFilterFrequency(int value);
+    bool setLowPassFilterFrequency(int value);
 
     int getLowPassFilterResonance() const;
-    void setLowPassFilterResonance(int value);
+    bool setLowPassFilterResonance(int value);
 
     int getPostGain() const;
-    void setPostGain(int value);
+    bool setPostGain(int value);
 
     int getDrive() const;
-    void setDrive(int value);
+    bool setDrive(int value);
 
     QString getEffectName() const;
-    void setEffectName(const QString &value);
+    bool setEffectName(const QString &value);
 };
 
 #endif // DUDISTORTION_H

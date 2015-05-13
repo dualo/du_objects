@@ -51,12 +51,19 @@ DuEvent::~DuEvent()
 DuEvent *DuEvent::fromDuMusicFile(const music_sample &du_sample)
 {
     DuEvent *event = new DuEvent;
+    bool verif = true;
 
-    event->setTime(du_sample.time);
-    event->setControl(du_sample.control);
-    event->setKeyboard(du_sample.canal);
-    event->setNote(du_sample.note & 0x7F);
-    event->setValue(du_sample.value);
+    verif = verif && event->setTime(du_sample.time);
+    verif = verif && event->setControl(du_sample.control);
+    verif = verif && event->setKeyboard(du_sample.canal);
+    verif = verif && event->setNote(du_sample.note & 0x7F);
+    verif = verif && event->setValue(du_sample.value);
+
+    if (!verif)
+    {
+        delete event;
+        return NULL;
+    }
 
     return event;
 }
@@ -70,19 +77,27 @@ DuEvent *DuEvent::fromJson(const QJsonObject &jsonEvent)
     QJsonValue jsonNote = jsonEvent[KEY_EVENT_NOTE];
     QJsonValue jsonVal  = jsonEvent[KEY_EVENT_VALUE];
 
-    if (!jsonTime.isDouble() || !jsonCtrl.isDouble() || !jsonKbrd.isDouble()
-            || !jsonNote.isDouble() || !jsonVal.isDouble())
+    if (        !jsonTime.isDouble()    ||  !jsonCtrl.isDouble()
+            ||  !jsonKbrd.isDouble()    ||  !jsonNote.isDouble()
+            ||  !jsonVal.isDouble())
 
         return NULL;
 
 
     DuEvent *event = new DuEvent;
+    bool verif = true;
 
-    event->setTime(jsonTime.toInt());
-    event->setControl(jsonCtrl.toInt());
-    event->setKeyboard(jsonKbrd.toInt());
-    event->setNote(jsonNote.toInt());
-    event->setValue(jsonVal.toInt());
+    verif = verif && event->setTime(jsonTime.toInt());
+    verif = verif && event->setControl(jsonCtrl.toInt());
+    verif = verif && event->setKeyboard(jsonKbrd.toInt());
+    verif = verif && event->setNote(jsonNote.toInt());
+    verif = verif && event->setValue(jsonVal.toInt());
+
+    if (!verif)
+    {
+        delete event;
+        return NULL;
+    }
 
     return event;
 }

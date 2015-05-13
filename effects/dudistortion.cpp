@@ -42,21 +42,30 @@ DuDistortion::~DuDistortion()
 
 DuDistortion *DuDistortion::fromDuMusicFile(const FX_distortion &du_distortion)
 {
-    DuDistortion *distortion = new DuDistortion();
+    DuDistortion *distortion = new DuDistortion;
+    bool verif = true;
 
-    distortion->setOnOff(du_distortion.d_on_off);
+    verif = verif && distortion->setOnOff(du_distortion.d_on_off);
 
-    distortion->setPreGain(du_distortion.d_pre_gain);
-    distortion->setEffectType(du_distortion.d_type);
+    verif = verif && distortion->setPreGain(du_distortion.d_pre_gain);
+    verif = verif && distortion->setEffectType(du_distortion.d_type);
 
-    distortion->setLowPassFilterFrequency(du_distortion.d_lowpassfilterfreq);
-    distortion->setLowPassFilterResonance(du_distortion.d_lowpassfilterres);
+    verif = verif && distortion->setLowPassFilterFrequency(
+                du_distortion.d_lowpassfilterfreq);
+    verif = verif && distortion->setLowPassFilterResonance(
+                du_distortion.d_lowpassfilterres);
 
-    distortion->setPostGain(du_distortion.d_postgain);
-    distortion->setDrive(du_distortion.d_drive);
+    verif = verif && distortion->setPostGain(du_distortion.d_postgain);
+    verif = verif && distortion->setDrive(du_distortion.d_drive);
 
-    distortion->setEffectName(
+    verif = verif && distortion->setEffectName(
             QString(QByteArray((char *)du_distortion.d_name, NAME_CARACT)));
+
+    if (!verif)
+    {
+        delete distortion;
+        return NULL;
+    }
 
     return distortion;
 }
@@ -64,32 +73,44 @@ DuDistortion *DuDistortion::fromDuMusicFile(const FX_distortion &du_distortion)
 
 DuDistortion *DuDistortion::fromJson(const QJsonObject &jsonDistortion)
 {
-    DuDistortion *distortion = new DuDistortion();
-    const QStringList &keyList = distortion->keys();
+    QJsonValue jsonOnOff        = jsonDistortion[KEY_DIST_ONOFF];
+    QJsonValue jsonPreGain      = jsonDistortion[KEY_DIST_PREGAIN];
+    QJsonValue jsonEffectType   = jsonDistortion[KEY_DIST_TYPE];
+    QJsonValue jsonLoPassFreq   = jsonDistortion[KEY_DIST_LOWPASSFILTERFREQUENCY];
+    QJsonValue jsonLoPassRes    = jsonDistortion[KEY_DIST_LOWPASSFILTERRESONANCE];
+    QJsonValue jsonPostGain     = jsonDistortion[KEY_DIST_POSTGAIN];
+    QJsonValue jsonDrive        = jsonDistortion[KEY_DIST_DRIVE];
+    QJsonValue jsonEffectName   = jsonDistortion[KEY_DIST_EFFECTNAME];
 
-    bool test = true;
-    for (int i = 0; i < keyList.count(); i++)
-    {
-        test = test && jsonDistortion.contains(keyList[i]);
-    }
+    if (        !jsonOnOff.isDouble()       ||  !jsonPreGain.isDouble()
+            ||  !jsonEffectType.isDouble()  ||  !jsonLoPassFreq.isDouble()
+            ||  !jsonLoPassRes.isDouble()   ||  !jsonPostGain.isDouble()
+            ||  !jsonDrive.isDouble()       ||  !jsonEffectName.isString())
 
-    if (!test)
         return NULL;
 
-    distortion->setOnOff(jsonDistortion[KEY_DIST_ONOFF].toInt());
 
-    distortion->setPreGain(jsonDistortion[KEY_DIST_PREGAIN].toInt());
-    distortion->setEffectType(jsonDistortion[KEY_DIST_TYPE].toInt());
+    DuDistortion *distortion = new DuDistortion;
+    bool verif = true;
 
-    distortion->setLowPassFilterFrequency(
-                jsonDistortion[KEY_DIST_LOWPASSFILTERFREQUENCY].toInt());
-    distortion->setLowPassFilterResonance(
-                jsonDistortion[KEY_DIST_LOWPASSFILTERRESONANCE].toInt());
+    verif = verif && distortion->setOnOff(jsonOnOff.toInt());
 
-    distortion->setPostGain(jsonDistortion[KEY_DIST_POSTGAIN].toInt());
-    distortion->setDrive(jsonDistortion[KEY_DIST_DRIVE].toInt());
+    verif = verif && distortion->setPreGain(jsonPreGain.toInt());
+    verif = verif && distortion->setEffectType(jsonEffectType.toInt());
 
-    distortion->setEffectName(jsonDistortion[KEY_DIST_EFFECTNAME].toString());
+    verif = verif && distortion->setLowPassFilterFrequency(jsonLoPassFreq.toInt());
+    verif = verif && distortion->setLowPassFilterResonance(jsonLoPassRes.toInt());
+
+    verif = verif && distortion->setPostGain(jsonPostGain.toInt());
+    verif = verif && distortion->setDrive(jsonDrive.toInt());
+
+    verif = verif && distortion->setEffectName(jsonEffectName.toString());
+
+    if (!verif)
+    {
+        delete distortion;
+        return NULL;
+    }
 
     return distortion;
 }
@@ -100,19 +121,19 @@ int DuDistortion::getOnOff() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DIST_ONOFF));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuDistortion::setOnOff(int value)
+bool DuDistortion::setOnOff(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DIST_ONOFF));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -121,19 +142,19 @@ int DuDistortion::getPreGain() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DIST_PREGAIN));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuDistortion::setPreGain(int value)
+bool DuDistortion::setPreGain(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DIST_PREGAIN));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuDistortion::getEffectType() const
@@ -141,19 +162,19 @@ int DuDistortion::getEffectType() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DIST_TYPE));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuDistortion::setEffectType(int value)
+bool DuDistortion::setEffectType(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DIST_TYPE));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -163,20 +184,20 @@ int DuDistortion::getLowPassFilterFrequency() const
             dynamic_cast<DuNumeric *>(getChild(KEY_DIST_LOWPASSFILTERFREQUENCY));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuDistortion::setLowPassFilterFrequency(int value)
+bool DuDistortion::setLowPassFilterFrequency(int value)
 {
     DuNumeric *tmp =
             dynamic_cast<DuNumeric *>(getChild(KEY_DIST_LOWPASSFILTERFREQUENCY));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuDistortion::getLowPassFilterResonance() const
@@ -185,20 +206,20 @@ int DuDistortion::getLowPassFilterResonance() const
             dynamic_cast<DuNumeric *>(getChild(KEY_DIST_LOWPASSFILTERRESONANCE));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuDistortion::setLowPassFilterResonance(int value)
+bool DuDistortion::setLowPassFilterResonance(int value)
 {
     DuNumeric *tmp =
             dynamic_cast<DuNumeric *>(getChild(KEY_DIST_LOWPASSFILTERRESONANCE));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -207,19 +228,19 @@ int DuDistortion::getPostGain() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DIST_POSTGAIN));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuDistortion::setPostGain(int value)
+bool DuDistortion::setPostGain(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DIST_POSTGAIN));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuDistortion::getDrive() const
@@ -227,19 +248,19 @@ int DuDistortion::getDrive() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DIST_DRIVE));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuDistortion::setDrive(int value)
+bool DuDistortion::setDrive(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DIST_DRIVE));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -253,12 +274,12 @@ QString DuDistortion::getEffectName() const
     return tmp->getString();
 }
 
-void DuDistortion::setEffectName(const QString &value)
+bool DuDistortion::setEffectName(const QString &value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_DIST_EFFECTNAME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setString(value);
+    return tmp->setString(value);
 }

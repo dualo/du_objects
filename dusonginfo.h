@@ -29,44 +29,43 @@ public:
     ~DuSongInfo();
 
     static DuSongInfo *fromDuMusicFile(const music_song &du_song);
-
     static DuSongInfo *fromJson(const QJsonObject &jsonSongInfo);
 
     int getReferenceTrack() const;
-    void setReferenceTrack(int value);
+    bool setReferenceTrack(int value);
 
     int getReferenceLoopDuration() const;
-    void setReferenceLoopDuration(int value);
+    bool setReferenceLoopDuration(int value);
 
     int getVolume() const;
-    void setVolume(int value);
+    bool setVolume(int value);
 
     int getTempo() const;
-    void setTempo(int value);
+    bool setTempo(int value);
 
     int getOffset() const;
-    void setOffset(int value);
+    bool setOffset(int value);
 
     int getClickVolume() const;
-    void setClickVolume(int value);
+    bool setClickVolume(int value);
 
     int getGain() const;
-    void setGain(int value);
+    bool setGain(int value);
 
     int getLowCutFilterFrequency() const;
-    void setLowCutFilterFrequency(int value);
+    bool setLowCutFilterFrequency(int value);
 
     int getHighCutFilterFrequency() const;
-    void setHighCutFilterFrequency(int value);
+    bool setHighCutFilterFrequency(int value);
 
     int getTimeSignature() const;
-    void setTimeSignature(int value);
+    bool setTimeSignature(int value);
 
     int getScale() const;
-    void setScale(int value);
+    bool setScale(int value);
 
     int getTonality() const;
-    void setTonality(int value);
+    bool setTonality(int value);
 };
 
 #endif // DUSONGINFO_H

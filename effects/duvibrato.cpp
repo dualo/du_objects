@@ -26,13 +26,21 @@ DuVibrato::~DuVibrato()
 
 DuVibrato *DuVibrato::fromDuMusicFile(const FX_vibrato &du_vibrato)
 {
-    DuVibrato *vibrato = new DuVibrato();
+    DuVibrato *vibrato = new DuVibrato;
+    bool verif = true;
 
-    vibrato->setDepth(du_vibrato.v_depth);
-    vibrato->setDelay(du_vibrato.v_delay);
-    vibrato->setRate(du_vibrato.v_rate);
+    verif = verif && vibrato->setDepth(du_vibrato.v_depth);
+    verif = verif && vibrato->setDelay(du_vibrato.v_delay);
+    verif = verif && vibrato->setRate(du_vibrato.v_rate);
 
-    vibrato->setEffectName(QString(QByteArray((char *)du_vibrato.v_name, NAME_CARACT)));
+    verif = verif && vibrato->setEffectName(
+                QString(QByteArray((char *)du_vibrato.v_name, NAME_CARACT)));
+
+    if (!verif)
+    {
+        delete vibrato;
+        return NULL;
+    }
 
     return vibrato;
 }
@@ -40,23 +48,31 @@ DuVibrato *DuVibrato::fromDuMusicFile(const FX_vibrato &du_vibrato)
 
 DuVibrato *DuVibrato::fromJson(const QJsonObject &jsonVibrato)
 {
-    DuVibrato *vibrato = new DuVibrato();
-    const QStringList &keyList = vibrato->keys();
+    QJsonValue jsonDepth        = jsonVibrato[KEY_VIB_DEPTH];
+    QJsonValue jsonDelay        = jsonVibrato[KEY_VIB_DELAY];
+    QJsonValue jsonRate         = jsonVibrato[KEY_VIB_RATE];
+    QJsonValue jsonEffectName   = jsonVibrato[KEY_VIB_EFFECTNAME];
 
-    bool test = true;
-    for (int i = 0; i < keyList.count(); i++)
-    {
-        test = test && jsonVibrato.contains(keyList[i]);
-    }
+    if (        !jsonDepth.isDouble()   ||  !jsonDelay.isDouble()
+            ||  !jsonRate.isDouble()    ||  !jsonEffectName.isString())
 
-    if (!test)
         return NULL;
 
-    vibrato->setDepth(jsonVibrato[KEY_VIB_DEPTH].toInt());
-    vibrato->setDelay(jsonVibrato[KEY_VIB_DELAY].toInt());
-    vibrato->setRate(jsonVibrato[KEY_VIB_RATE].toInt());
 
-    vibrato->setEffectName(jsonVibrato[KEY_VIB_EFFECTNAME].toString());
+    DuVibrato *vibrato = new DuVibrato;
+    bool verif = true;
+
+    verif = verif && vibrato->setDepth(jsonDepth.toInt());
+    verif = verif && vibrato->setDelay(jsonDelay.toInt());
+    verif = verif && vibrato->setRate(jsonRate.toInt());
+
+    verif = verif && vibrato->setEffectName(jsonEffectName.toString());
+
+    if (!verif)
+    {
+        delete vibrato;
+        return NULL;
+    }
 
     return vibrato;
 }
@@ -67,19 +83,19 @@ int DuVibrato::getDepth() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_VIB_DEPTH));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuVibrato::setDepth(int value)
+bool DuVibrato::setDepth(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_VIB_DEPTH));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuVibrato::getDelay() const
@@ -87,19 +103,19 @@ int DuVibrato::getDelay() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_VIB_DELAY));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuVibrato::setDelay(int value)
+bool DuVibrato::setDelay(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_VIB_DELAY));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuVibrato::getRate() const
@@ -107,19 +123,19 @@ int DuVibrato::getRate() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_VIB_RATE));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuVibrato::setRate(int value)
+bool DuVibrato::setRate(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_VIB_RATE));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -133,12 +149,12 @@ QString DuVibrato::getEffectName() const
     return tmp->getString();
 }
 
-void DuVibrato::setEffectName(const QString &value)
+bool DuVibrato::setEffectName(const QString &value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_VIB_EFFECTNAME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setString(value);
+    return tmp->setString(value);
 }

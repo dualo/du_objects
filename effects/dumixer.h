@@ -21,32 +21,31 @@ public:
     ~DuMixer();
 
     static DuMixer *fromDuMusicFile(const FX_mix &du_mixer);
-
     static DuMixer *fromJson(const QJsonObject &jsonMixer);
 
     int getInputGain() const;
-    void setInputGain(int value);
+    bool setInputGain(int value);
 
     int getLowCutFilterFrequency() const;
-    void setLowCutFilterFrequency(int value);
+    bool setLowCutFilterFrequency(int value);
 
     int getHighCutFilterFrequency() const;
-    void setHighCutFilterFrequency(int value);
+    bool setHighCutFilterFrequency(int value);
 
     int getOutputLevel() const;
-    void setOutputLevel(int value);
+    bool setOutputLevel(int value);
 
     int getOutputPanning() const;
-    void setOutputPanning(int value);
+    bool setOutputPanning(int value);
 
     int getOutputFrontRear() const;
-    void setOutputFrontRear(int value);
+    bool setOutputFrontRear(int value);
 
     int getSendToReverb() const;
-    void setSendToReverb(int value);
+    bool setSendToReverb(int value);
 
     int getSendToChorus() const;
-    void setSendToChorus(int value);
+    bool setSendToChorus(int value);
 };
 
 #endif // DUMIXER_H

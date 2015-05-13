@@ -31,19 +31,39 @@ DuLoop *DuLoop::fromDuMusicFile(const music_loop &du_loop,
     if (du_loop.l_state == 0)
         return NULL;
 
-    DuLoop *loop = new DuLoop();
+    DuLoop *loop = new DuLoop;
+    bool verif = true;
 
-    loop->setState(du_loop.l_state);
-    loop->setDurationModifier(du_loop.l_loopmod);
-    loop->setMidiOutChannel(du_loop.l_midioutchannel);
+    verif = verif && loop->setState(du_loop.l_state);
+    verif = verif && loop->setDurationModifier(du_loop.l_loopmod);
+    verif = verif && loop->setMidiOutChannel(du_loop.l_midioutchannel);
 
-    loop->setInstrument(DuInstrument::fromDuMusicFile(du_loop.l_instr));
+    if (!verif)
+    {
+        delete loop;
+        return NULL;
+    }
+
+    DuInstrument *instrument = DuInstrument::fromDuMusicFile(du_loop.l_instr);
+    if (instrument != NULL)
+        loop->setInstrument(instrument);
+    else
+    {
+        delete loop;
+        return NULL;
+    }
 
     DuArray *events = loop->getEvents();
 
     for (int i = 0; i < du_loop.l_numsample; i++)
     {
-        events->append(DuEvent::fromDuMusicFile(du_sample[i]));
+        DuEvent *event = DuEvent::fromDuMusicFile(du_sample[i]);
+        if (event == NULL)
+        {
+            delete loop;
+            return NULL;
+        }
+        events->append(event);
     }
 
     return loop;
@@ -52,33 +72,53 @@ DuLoop *DuLoop::fromDuMusicFile(const music_loop &du_loop,
 
 DuLoop *DuLoop::fromJson(const QJsonObject &jsonLoop)
 {
-    DuLoop *loop = new DuLoop();
-    const QStringList &keyList = loop->keys();
+    QJsonValue jsonState        = jsonLoop[KEY_LOOP_STATE];
+    QJsonValue jsonDurationMod  = jsonLoop[KEY_LOOP_DURATIONMODIFIER];
+    QJsonValue jsonOutChannel   = jsonLoop[KEY_LOOP_MIDIOUTCHANNEL];
+    QJsonValue jsonInstrument   = jsonLoop[KEY_LOOP_INSTRUMENT];
+    QJsonValue jsonEvents       = jsonLoop[KEY_LOOP_EVENTS];
 
-    bool test = true;
-    for (int i = 0; i < keyList.count(); i++)
-    {
-        test = test && jsonLoop.contains(keyList[i]);
-    }
+    if (        !jsonState.isDouble()       ||  !jsonDurationMod.isDouble()
+            ||  !jsonOutChannel.isDouble()  ||  !jsonInstrument.isObject()
+            ||  !jsonEvents.isArray())
 
-    if (!test)
         return NULL;
 
-    loop->setState(jsonLoop[KEY_LOOP_STATE].toInt());
-    loop->setDurationModifier(jsonLoop[KEY_LOOP_DURATIONMODIFIER].toInt());
-    loop->setMidiOutChannel(jsonLoop[KEY_LOOP_MIDIOUTCHANNEL].toInt());
 
-    loop->setInstrument(
-                DuInstrument::fromJson(jsonLoop[KEY_LOOP_INSTRUMENT].toObject()));
+    DuLoop *loop = new DuLoop;
+    bool verif = true;
+
+    verif = verif && loop->setState(jsonState.toInt());
+    verif = verif && loop->setDurationModifier(jsonDurationMod.toInt());
+    verif = verif && loop->setMidiOutChannel(jsonOutChannel.toInt());
+
+    if (!verif)
+    {
+        delete loop;
+        return NULL;
+    }
+
+    DuInstrument *instrument = DuInstrument::fromJson(jsonInstrument.toObject());
+    if (instrument != NULL)
+        loop->setInstrument(instrument);
+    else
+    {
+        delete loop;
+        return NULL;
+    }
 
     DuArray *events = loop->getEvents();
-    const QJsonArray &jsonEvents = jsonLoop[KEY_LOOP_EVENTS].toArray();
+    const QJsonArray &jsonEventArray = jsonEvents.toArray();
 
-    for (int i = 0; i < jsonEvents.count(); i++)
+    for (int i = 0; i < jsonEventArray.count(); i++)
     {
-        DuEvent *event = DuEvent::fromJson(jsonEvents[i].toObject());
-        if (event != NULL)
-            events->append(event);
+        DuEvent *event = DuEvent::fromJson(jsonEventArray[i].toObject());
+        if (event == NULL)
+        {
+            delete loop;
+            return NULL;
+        }
+        events->append(event);
     }
 
     return loop;
@@ -90,19 +130,19 @@ int DuLoop::getState() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_LOOP_STATE));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuLoop::setState(int value)
+bool DuLoop::setState(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_LOOP_STATE));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuLoop::getDurationModifier() const
@@ -110,19 +150,19 @@ int DuLoop::getDurationModifier() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_LOOP_DURATIONMODIFIER));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuLoop::setDurationModifier(int value)
+bool DuLoop::setDurationModifier(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_LOOP_DURATIONMODIFIER));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuLoop::getMidiOutChannel() const
@@ -130,19 +170,19 @@ int DuLoop::getMidiOutChannel() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_LOOP_MIDIOUTCHANNEL));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuLoop::setMidiOutChannel(int value)
+bool DuLoop::setMidiOutChannel(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_LOOP_MIDIOUTCHANNEL));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 

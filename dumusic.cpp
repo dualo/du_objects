@@ -17,10 +17,25 @@ DuMusic::~DuMusic()
 
 DuMusic *DuMusic::fromDuMusicFile(const s_total_buffer &du_music)
 {
-    DuMusic *music = new DuMusic();
+    DuMusic *music = new DuMusic;
 
-    music->setHeader(DuHeader::fromDuMusicFile(du_music.local_song));
-    music->setSongInfo(DuSongInfo::fromDuMusicFile(du_music.local_song));
+    DuHeader *header = DuHeader::fromDuMusicFile(du_music.local_song);
+    if (header != NULL)
+        music->setHeader(header);
+    else
+    {
+        delete music;
+        return NULL;
+    }
+
+    DuSongInfo *songInfo = DuSongInfo::fromDuMusicFile(du_music.local_song);
+    if (songInfo != NULL)
+        music->setSongInfo(songInfo);
+    else
+    {
+        delete music;
+        return NULL;
+    }
 
     DuArray *tracks = music->getTracks();
 
@@ -28,9 +43,12 @@ DuMusic *DuMusic::fromDuMusicFile(const s_total_buffer &du_music)
     {
         DuTrack *track = DuTrack::fromDuMusicFile(du_music.local_song.s_track[i],
                                                   du_music.local_buffer);
-
-        if (track != NULL)
-            tracks->append(track);
+        if (track == NULL)
+        {
+            delete music;
+            return NULL;
+        }
+        tracks->append(track);
     }
 
     return music;
@@ -39,31 +57,48 @@ DuMusic *DuMusic::fromDuMusicFile(const s_total_buffer &du_music)
 
 DuMusic *DuMusic::fromJson(const QJsonObject &jsonMusic)
 {
-    //TODO
+    QJsonValue jsonHeader   = jsonMusic[KEY_MUSIC_HEADER];
+    QJsonValue jsonSongInfo = jsonMusic[KEY_MUSIC_SONGINFO];
+    QJsonValue jsonTracks   = jsonMusic[KEY_MUSIC_TRACKS];
 
-    DuMusic *music = new DuMusic();
-    const QStringList &keyList = music->keys();
+    if (        !jsonHeader.isObject()  ||  !jsonSongInfo.isObject()
+            ||  !jsonTracks.isArray())
 
-    bool test = true;
-    for (int i = 0; i < keyList.count(); i++)
-    {
-        test = test && jsonMusic.contains(keyList[i]);
-    }
-
-    if (!test)
         return NULL;
 
-    music->setHeader(DuHeader::fromJson(jsonMusic[KEY_MUSIC_HEADER].toObject()));
-    music->setSongInfo(DuSongInfo::fromJson(jsonMusic[KEY_MUSIC_SONGINFO].toObject()));
+
+    DuMusic *music = new DuMusic;
+
+    DuHeader *header = DuHeader::fromJson(jsonHeader.toObject());
+    if (header != NULL)
+        music->setHeader(header);
+    else
+    {
+        delete music;
+        return NULL;
+    }
+
+    DuSongInfo *songInfo = DuSongInfo::fromJson(jsonSongInfo.toObject());
+    if (songInfo != NULL)
+        music->setSongInfo(songInfo);
+    else
+    {
+        delete music;
+        return NULL;
+    }
 
     DuArray *tracks = music->getTracks();
-    const QJsonArray &jsonTracks = jsonMusic[KEY_MUSIC_TRACKS].toArray();
+    const QJsonArray &jsonTrackArray = jsonTracks.toArray();
 
-    for (int i = 0; i < jsonTracks.count(); i++)
+    for (int i = 0; i < jsonTrackArray.count(); i++)
     {
-        DuTrack *track = DuTrack::fromJson(jsonTracks[i].toObject());
-        if (track != NULL)
-            tracks->append(track);
+        DuTrack *track = DuTrack::fromJson(jsonTrackArray[i].toObject());
+        if (track == NULL)
+        {
+            delete music;
+            return NULL;
+        }
+        tracks->append(track);
     }
 
     return music;

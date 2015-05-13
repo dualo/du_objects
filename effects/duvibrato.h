@@ -17,20 +17,19 @@ public:
     ~DuVibrato();
 
     static DuVibrato *fromDuMusicFile(const FX_vibrato &du_vibrato);
-
     static DuVibrato *fromJson(const QJsonObject &jsonVibrato);
 
     int getDepth() const;
-    void setDepth(int value);
+    bool setDepth(int value);
 
     int getDelay() const;
-    void setDelay(int value);
+    bool setDelay(int value);
 
     int getRate() const;
-    void setRate(int value);
+    bool setRate(int value);
 
     QString getEffectName() const;
-    void setEffectName(const QString &value);
+    bool setEffectName(const QString &value);
 };
 
 #endif // DUVIBRATO_H

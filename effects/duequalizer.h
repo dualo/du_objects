@@ -25,44 +25,43 @@ public:
     ~DuEqualizer();
 
     static DuEqualizer *fromDuMusicFile(const FX_equalizer du_equalizer);
-
     static DuEqualizer *fromJson(const QJsonObject &jsonEqualizer);
 
     int getOnOff() const;
-    void setOnOff(int value);
+    bool setOnOff(int value);
 
     int getLowBandGain() const;
-    void setLowBandGain(int value);
+    bool setLowBandGain(int value);
 
     int getLowMidBandGain() const;
-    void setLowMidBandGain(int value);
+    bool setLowMidBandGain(int value);
 
     int getHighMidBandGain() const;
-    void setHighMidBandGain(int value);
+    bool setHighMidBandGain(int value);
 
     int getHighBandGain() const;
-    void setHighBandGain(int value);
+    bool setHighBandGain(int value);
 
     int getLowBandFrequency() const;
-    void setLowBandFrequency(int value);
+    bool setLowBandFrequency(int value);
 
     int getLowMidBandFrequency() const;
-    void setLowMidBandFrequency(int value);
+    bool setLowMidBandFrequency(int value);
 
     int getHighMidBandFrequency() const;
-    void setHighMidBandFrequency(int value);
+    bool setHighMidBandFrequency(int value);
 
     int getHighBandFrequency() const;
-    void setHighBandFrequency(int value);
+    bool setHighBandFrequency(int value);
 
     int getLowMidBandQualityFactor() const;
-    void setLowMidBandQualityFactor(int value);
+    bool setLowMidBandQualityFactor(int value);
 
     int getHighMidBandQualityFactor() const;
-    void setHighMidBandQualityFactor(int value);
+    bool setHighMidBandQualityFactor(int value);
 
     QString getEffectName() const;
-    void setEffectName(const QString &value);
+    bool setEffectName(const QString &value);
 };
 
 #endif // DUEQUALIZER_H

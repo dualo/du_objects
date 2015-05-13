@@ -43,48 +43,67 @@ DuMixer::~DuMixer()
 
 DuMixer *DuMixer::fromDuMusicFile(const FX_mix &du_mixer)
 {
-    DuMixer *mixer = new DuMixer();
+    DuMixer *mixer = new DuMixer;
+    bool verif = true;
 
-    mixer->setInputGain(du_mixer.m_inputgain);
-    mixer->setLowCutFilterFrequency(du_mixer.m_locutfilterfrequency);
-    mixer->setHighCutFilterFrequency(du_mixer.m_hicutfilterfrequency);
+    verif = verif && mixer->setInputGain(du_mixer.m_inputgain);
+    verif = verif && mixer->setLowCutFilterFrequency(du_mixer.m_locutfilterfrequency);
+    verif = verif && mixer->setHighCutFilterFrequency(du_mixer.m_hicutfilterfrequency);
 
-    mixer->setOutputLevel(du_mixer.m_ouputlevel);
-    mixer->setOutputPanning(du_mixer.m_outputpanning);
-    mixer->setOutputFrontRear(du_mixer.m_ouputfrontrear);
+    verif = verif && mixer->setOutputLevel(du_mixer.m_ouputlevel);
+    verif = verif && mixer->setOutputPanning(du_mixer.m_outputpanning);
+    verif = verif && mixer->setOutputFrontRear(du_mixer.m_ouputfrontrear);
 
-    mixer->setSendToReverb(du_mixer.m_sendtoreverb);
-    mixer->setSendToChorus(du_mixer.m_sendtochorus);
+    verif = verif && mixer->setSendToReverb(du_mixer.m_sendtoreverb);
+    verif = verif && mixer->setSendToChorus(du_mixer.m_sendtochorus);
+
+    if (!verif)
+    {
+        delete mixer;
+        return NULL;
+    }
 
     return mixer;
 }
 
 DuMixer *DuMixer::fromJson(const QJsonObject &jsonMixer)
 {
-    DuMixer *mixer = new DuMixer();
-    const QStringList &keyList = mixer->keys();
+    QJsonValue jsonInputGain    = jsonMixer[KEY_MIXER_INPUTGAIN];
+    QJsonValue jsonLoCutFreq    = jsonMixer[KEY_MIXER_LOWCUTFILTERFREQUENCY];
+    QJsonValue jsonHiCutFreq    = jsonMixer[KEY_MIXER_HIGHCUTFILTERFREQUENCY];
+    QJsonValue jsonOutputLvl    = jsonMixer[KEY_MIXER_OUTPUTLEVEL];
+    QJsonValue jsonPanning      = jsonMixer[KEY_MIXER_OUTPUTPANNING];
+    QJsonValue jsonFrontRear    = jsonMixer[KEY_MIXER_OUTPUTFRONTREAR];
+    QJsonValue jsonToReverb     = jsonMixer[KEY_MIXER_SENDTOREVERB];
+    QJsonValue jsonToChorus     = jsonMixer[KEY_MIXER_SENDTOCHORUS];
 
-    bool test = true;
-    for (int i = 0; i < keyList.count(); i++)
-    {
-        test = test && jsonMixer.contains(keyList[i]);
-    }
+    if (        !jsonInputGain.isDouble()   ||  !jsonLoCutFreq.isDouble()
+            ||  !jsonHiCutFreq.isDouble()   ||  !jsonOutputLvl.isDouble()
+            ||  !jsonPanning.isDouble()     ||  !jsonFrontRear.isDouble()
+            ||  !jsonToReverb.isDouble()    ||  !jsonToChorus.isDouble())
 
-    if (!test)
         return NULL;
 
-    mixer->setInputGain(jsonMixer[KEY_MIXER_INPUTGAIN].toInt());
-    mixer->setLowCutFilterFrequency(
-                jsonMixer[KEY_MIXER_LOWCUTFILTERFREQUENCY].toInt());
-    mixer->setHighCutFilterFrequency(
-                jsonMixer[KEY_MIXER_HIGHCUTFILTERFREQUENCY].toInt());
 
-    mixer->setOutputLevel(jsonMixer[KEY_MIXER_OUTPUTLEVEL].toInt());
-    mixer->setOutputPanning(jsonMixer[KEY_MIXER_OUTPUTPANNING].toInt());
-    mixer->setOutputFrontRear(jsonMixer[KEY_MIXER_OUTPUTFRONTREAR].toInt());
+    DuMixer *mixer = new DuMixer;
+    bool verif = true;
 
-    mixer->setSendToReverb(jsonMixer[KEY_MIXER_SENDTOREVERB].toInt());
-    mixer->setSendToChorus(jsonMixer[KEY_MIXER_SENDTOCHORUS].toInt());
+    verif = verif && mixer->setInputGain(jsonInputGain.toInt());
+    verif = verif && mixer->setLowCutFilterFrequency(jsonLoCutFreq.toInt());
+    verif = verif && mixer->setHighCutFilterFrequency(jsonHiCutFreq.toInt());
+
+    verif = verif && mixer->setOutputLevel(jsonOutputLvl.toInt());
+    verif = verif && mixer->setOutputPanning(jsonPanning.toInt());
+    verif = verif && mixer->setOutputFrontRear(jsonFrontRear.toInt());
+
+    verif = verif && mixer->setSendToReverb(jsonToReverb.toInt());
+    verif = verif && mixer->setSendToChorus(jsonToChorus.toInt());
+
+    if (!verif)
+    {
+        delete mixer;
+        return NULL;
+    }
 
     return mixer;
 }
@@ -95,19 +114,19 @@ int DuMixer::getInputGain() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_INPUTGAIN));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuMixer::setInputGain(int value)
+bool DuMixer::setInputGain(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_INPUTGAIN));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuMixer::getLowCutFilterFrequency() const
@@ -116,20 +135,20 @@ int DuMixer::getLowCutFilterFrequency() const
             dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_LOWCUTFILTERFREQUENCY));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuMixer::setLowCutFilterFrequency(int value)
+bool DuMixer::setLowCutFilterFrequency(int value)
 {
     DuNumeric *tmp =
             dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_LOWCUTFILTERFREQUENCY));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuMixer::getHighCutFilterFrequency() const
@@ -138,20 +157,20 @@ int DuMixer::getHighCutFilterFrequency() const
             dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_HIGHCUTFILTERFREQUENCY));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuMixer::setHighCutFilterFrequency(int value)
+bool DuMixer::setHighCutFilterFrequency(int value)
 {
     DuNumeric *tmp =
             dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_HIGHCUTFILTERFREQUENCY));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -160,19 +179,19 @@ int DuMixer::getOutputLevel() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_OUTPUTLEVEL));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuMixer::setOutputLevel(int value)
+bool DuMixer::setOutputLevel(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_OUTPUTLEVEL));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuMixer::getOutputPanning() const
@@ -180,19 +199,19 @@ int DuMixer::getOutputPanning() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_OUTPUTPANNING));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuMixer::setOutputPanning(int value)
+bool DuMixer::setOutputPanning(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_OUTPUTPANNING));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuMixer::getOutputFrontRear() const
@@ -200,19 +219,19 @@ int DuMixer::getOutputFrontRear() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_OUTPUTFRONTREAR));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuMixer::setOutputFrontRear(int value)
+bool DuMixer::setOutputFrontRear(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_OUTPUTFRONTREAR));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -221,19 +240,19 @@ int DuMixer::getSendToReverb() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_SENDTOREVERB));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuMixer::setSendToReverb(int value)
+bool DuMixer::setSendToReverb(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_SENDTOREVERB));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuMixer::getSendToChorus() const
@@ -241,17 +260,17 @@ int DuMixer::getSendToChorus() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_SENDTOCHORUS));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuMixer::setSendToChorus(int value)
+bool DuMixer::setSendToChorus(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_SENDTOCHORUS));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }

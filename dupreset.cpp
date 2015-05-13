@@ -51,20 +51,27 @@ DuPreset::~DuPreset()
 
 DuPreset *DuPreset::fromDuMusicFile(const preset_instr &du_preset)
 {
-    DuPreset *preset = new DuPreset();
+    DuPreset *preset = new DuPreset;
+    bool verif = true;
 
-    preset->setVolume(du_preset.s_volume);
-    preset->setPanning(du_preset.s_panning);
-    preset->setExpression(du_preset.s_expression);
-    preset->setOctave(du_preset.s_instr_octave);
-    preset->setSendToReverb(du_preset.s_sendtorev);
+    verif = verif && preset->setVolume(du_preset.s_volume);
+    verif = verif && preset->setPanning(du_preset.s_panning);
+    verif = verif && preset->setExpression(du_preset.s_expression);
+    verif = verif && preset->setOctave(du_preset.s_instr_octave);
+    verif = verif && preset->setSendToReverb(du_preset.s_sendtorev);
 
-    preset->setPortamentoOnOff(du_preset.s_portamento_on_off);
-    preset->setPortamentoControl(du_preset.s_portamento_ctrl);
-    preset->setPortamentoTime(du_preset.s_portamento_time);
+    verif = verif && preset->setPortamentoOnOff(du_preset.s_portamento_on_off);
+    verif = verif && preset->setPortamentoControl(du_preset.s_portamento_ctrl);
+    verif = verif && preset->setPortamentoTime(du_preset.s_portamento_time);
 
-    preset->setPitchBendSensitivity(du_preset.s_pitch_bend_sensitivity);
-    preset->setDisposition(du_preset.s_disposition);
+    verif = verif && preset->setPitchBendSensitivity(du_preset.s_pitch_bend_sensitivity);
+    verif = verif && preset->setDisposition(du_preset.s_disposition);
+
+    if (!verif)
+    {
+        delete preset;
+        return NULL;
+    }
 
     return preset;
 }
@@ -72,30 +79,47 @@ DuPreset *DuPreset::fromDuMusicFile(const preset_instr &du_preset)
 
 DuPreset *DuPreset::fromJson(const QJsonObject &jsonPreset)
 {
-    DuPreset *preset = new DuPreset();
-    const QStringList &keyList = preset->keys();
+    QJsonValue jsonVolume       = jsonPreset[KEY_PRESET_VOLUME];
+    QJsonValue jsonPanning      = jsonPreset[KEY_PRESET_PANNING];
+    QJsonValue jsonExpression   = jsonPreset[KEY_PRESET_EXPRESSION];
+    QJsonValue jsonOctave       = jsonPreset[KEY_PRESET_OCTAVE];
+    QJsonValue jsonToReverb     = jsonPreset[KEY_PRESET_SENDTOREVERB];
+    QJsonValue jsonPortaOnOff   = jsonPreset[KEY_PRESET_PORTAMENTOONOFF];
+    QJsonValue jsonPortaCtrl    = jsonPreset[KEY_PRESET_PORTAMENTOCONTROL];
+    QJsonValue jsonPortaTime    = jsonPreset[KEY_PRESET_PORTAMENTOTIME];
+    QJsonValue jsonPitchBend    = jsonPreset[KEY_PRESET_PITCHBENDSENSITIVITY];
+    QJsonValue jsonDisposition  = jsonPreset[KEY_PRESET_DISPOSITION];
 
-    bool test = true;
-    for (int i = 0; i < keyList.count(); i++)
-    {
-        test = test && jsonPreset.contains(keyList[i]);
-    }
+    if (        !jsonVolume.isDouble()      ||  !jsonPanning.isDouble()
+            ||  !jsonExpression.isDouble()  ||  !jsonOctave.isDouble()
+            ||  !jsonToReverb.isDouble()    ||  !jsonPortaOnOff.isDouble()
+            ||  !jsonPortaCtrl.isDouble()   ||  !jsonPortaTime.isDouble()
+            ||  !jsonPitchBend.isDouble()   ||  !jsonDisposition.isDouble())
 
-    if (!test)
         return NULL;
 
-    preset->setVolume(jsonPreset[KEY_PRESET_VOLUME].toInt());
-    preset->setPanning(jsonPreset[KEY_PRESET_PANNING].toInt());
-    preset->setExpression(jsonPreset[KEY_PRESET_EXPRESSION].toInt());
-    preset->setOctave(jsonPreset[KEY_PRESET_OCTAVE].toInt());
-    preset->setSendToReverb(jsonPreset[KEY_PRESET_SENDTOREVERB].toInt());
 
-    preset->setPortamentoOnOff(jsonPreset[KEY_PRESET_PORTAMENTOONOFF].toInt());
-    preset->setPortamentoControl(jsonPreset[KEY_PRESET_PORTAMENTOCONTROL].toInt());
-    preset->setPortamentoTime(jsonPreset[KEY_PRESET_PORTAMENTOTIME].toInt());
+    DuPreset *preset = new DuPreset;
+    bool verif = true;
 
-    preset->setPitchBendSensitivity(jsonPreset[KEY_PRESET_PITCHBENDSENSITIVITY].toInt());
-    preset->setDisposition(jsonPreset[KEY_PRESET_DISPOSITION].toInt());
+    verif = verif && preset->setVolume(jsonVolume.toInt());
+    verif = verif && preset->setPanning(jsonPanning.toInt());
+    verif = verif && preset->setExpression(jsonExpression.toInt());
+    verif = verif && preset->setOctave(jsonOctave.toInt());
+    verif = verif && preset->setSendToReverb(jsonToReverb.toInt());
+
+    verif = verif && preset->setPortamentoOnOff(jsonPortaOnOff.toInt());
+    verif = verif && preset->setPortamentoControl(jsonPortaCtrl.toInt());
+    verif = verif && preset->setPortamentoTime(jsonPortaTime.toInt());
+
+    verif = verif && preset->setPitchBendSensitivity(jsonPitchBend.toInt());
+    verif = verif && preset->setDisposition(jsonDisposition.toInt());
+
+    if (!verif)
+    {
+        delete preset;
+        return NULL;
+    }
 
     return preset;
 }
@@ -106,19 +130,19 @@ int DuPreset::getVolume() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_VOLUME));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuPreset::setVolume(int value)
+bool DuPreset::setVolume(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_VOLUME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuPreset::getPanning() const
@@ -126,19 +150,19 @@ int DuPreset::getPanning() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_PANNING));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuPreset::setPanning(int value)
+bool DuPreset::setPanning(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_PANNING));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuPreset::getExpression() const
@@ -146,19 +170,19 @@ int DuPreset::getExpression() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_EXPRESSION));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuPreset::setExpression(int value)
+bool DuPreset::setExpression(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_EXPRESSION));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuPreset::getOctave() const
@@ -166,19 +190,19 @@ int DuPreset::getOctave() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_OCTAVE));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuPreset::setOctave(int value)
+bool DuPreset::setOctave(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_OCTAVE));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuPreset::getSendToReverb() const
@@ -186,19 +210,19 @@ int DuPreset::getSendToReverb() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_SENDTOREVERB));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuPreset::setSendToReverb(int value)
+bool DuPreset::setSendToReverb(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_SENDTOREVERB));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -207,19 +231,19 @@ int DuPreset::getPortamentoOnOff() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_PORTAMENTOONOFF));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuPreset::setPortamentoOnOff(int value)
+bool DuPreset::setPortamentoOnOff(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_PORTAMENTOONOFF));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuPreset::getPortamentoControl() const
@@ -227,19 +251,19 @@ int DuPreset::getPortamentoControl() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_PORTAMENTOCONTROL));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuPreset::setPortamentoControl(int value)
+bool DuPreset::setPortamentoControl(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_PORTAMENTOCONTROL));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuPreset::getPortamentoTime() const
@@ -247,19 +271,19 @@ int DuPreset::getPortamentoTime() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_PORTAMENTOTIME));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuPreset::setPortamentoTime(int value)
+bool DuPreset::setPortamentoTime(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_PORTAMENTOTIME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -269,20 +293,20 @@ int DuPreset::getPitchBendSensitivity() const
             dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_PITCHBENDSENSITIVITY));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuPreset::setPitchBendSensitivity(int value)
+bool DuPreset::setPitchBendSensitivity(int value)
 {
     DuNumeric *tmp =
             dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_PITCHBENDSENSITIVITY));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuPreset::getDisposition() const
@@ -290,17 +314,17 @@ int DuPreset::getDisposition() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_DISPOSITION));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuPreset::setDisposition(int value)
+bool DuPreset::setDisposition(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_DISPOSITION));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }

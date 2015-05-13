@@ -23,32 +23,31 @@ public:
     ~DuInstrumentInfo();
 
     static DuInstrumentInfo *fromDuMusicFile(const s_instr &du_instrInfo);
-
     static DuInstrumentInfo *fromJson(const QJsonObject &jsonInstrInfo);
 
     QString getCategory() const;
-    void setCategory(const QString &value);
+    bool setCategory(const QString &value);
 
     QString getName() const;
-    void setName(const QString &value);
+    bool setName(const QString &value);
 
     int getID() const;
-    void setID(int value);
+    bool setID(int value);
 
     QString getUserID() const;
-    void setUserID(const QString &value);
+    bool setUserID(const QString &value);
 
     int getMidiProgramChange() const;
-    void setMidiProgramChange(int value);
+    bool setMidiProgramChange(int value);
 
     int getMidiControlChange0() const;
-    void setMidiControlChange0(int value);
+    bool setMidiControlChange0(int value);
 
     int getActiveNoteOff() const;
-    void setActiveNoteOff(int value);
+    bool setActiveNoteOff(int value);
 
     int getRelativeVolume() const;
-    void setRelativeVolume(int value);
+    bool setRelativeVolume(int value);
 };
 
 #endif // DUINSTRUMENTINFO_H

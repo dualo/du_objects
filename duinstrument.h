@@ -34,7 +34,6 @@ public:
     ~DuInstrument();
 
     static DuInstrument *fromDuMusicFile(const music_instr &du_instr);
-
     static DuInstrument *fromJson(const QJsonObject &jsonInstrument);
 
     DuInstrumentInfo *getInstrumentInfo();

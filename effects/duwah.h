@@ -18,23 +18,22 @@ public:
     ~DuWah();
 
     static DuWah *fromDuMusicFile(const FX_wah &du_wah);
-
     static DuWah *fromJson(const QJsonObject &jsonWah);
 
     int getFilterType() const;
-    void setFilterType(int value);
+    bool setFilterType(int value);
 
     int getFilterFrequency() const;
-    void setFilterFrequency(int value);
+    bool setFilterFrequency(int value);
 
     int getFilterResonance() const;
-    void setFilterResonance(int value);
+    bool setFilterResonance(int value);
 
     int getAutoWahSensitivity() const;
-    void setAutoWahSensitivity(int value);
+    bool setAutoWahSensitivity(int value);
 
     QString getEffectName() const;
-    void setEffectName(const QString &value);
+    bool setEffectName(const QString &value);
 };
 
 #endif // DUWAH_H

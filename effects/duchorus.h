@@ -27,37 +27,37 @@ public:
     static DuChorus *fromJson(const QJsonObject &jsonChorus);
 
     int getMode() const;
-    void setMode(int value);
+    bool setMode(int value);
 
     int getEffectLevel() const;
-    void setEffectLevel(int value);
+    bool setEffectLevel(int value);
 
     int getDelayTime() const;
-    void setDelayTime(int value);
+    bool setDelayTime(int value);
 
     int getFeedback() const;
-    void setFeedback(int value);
+    bool setFeedback(int value);
 
     int getInputHighPassFilterFrequency() const;
-    void setInputHighPassFilterFrequency(int value);
+    bool setInputHighPassFilterFrequency(int value);
 
     int getHDAmp() const;
-    void setHDAmp(int value);
+    bool setHDAmp(int value);
 
     int getModulationDepth() const;
-    void setModulationDepth(int value);
+    bool setModulationDepth(int value);
 
     int getModulationRate() const;
-    void setModulationRate(int value);
+    bool setModulationRate(int value);
 
     int getTremoloShape() const;
-    void setTremoloShape(int value);
+    bool setTremoloShape(int value);
 
     int getRotarySpeed() const;
-    void setRotarySpeed(int value);
+    bool setRotarySpeed(int value);
 
     QString getEffectName() const;
-    void setEffectName(const QString &value);
+    bool setEffectName(const QString &value);
 };
 
 #endif // DUCHORUS_H

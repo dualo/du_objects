@@ -42,20 +42,27 @@ DuCompressor::~DuCompressor()
 
 DuCompressor *DuCompressor::fromDuMusicFile(const FX_compressor &du_compressor)
 {
-    DuCompressor *compressor = new DuCompressor();
+    DuCompressor *compressor = new DuCompressor;
+    bool verif = true;
 
-    compressor->setOnOff(du_compressor.c_on_off);
+    verif = verif && compressor->setOnOff(du_compressor.c_on_off);
 
-    compressor->setAttackTime(du_compressor.c_attacktime);
-    compressor->setReleaseTime(du_compressor.c_releasetime);
+    verif = verif && compressor->setAttackTime(du_compressor.c_attacktime);
+    verif = verif && compressor->setReleaseTime(du_compressor.c_releasetime);
 
-    compressor->setThreshold(du_compressor.c_threshold);
-    compressor->setRatio(du_compressor.c_ratio);
-    compressor->setBoost(du_compressor.c_boost);
-    compressor->setKneeType(du_compressor.c_kneetype);
+    verif = verif && compressor->setThreshold(du_compressor.c_threshold);
+    verif = verif && compressor->setRatio(du_compressor.c_ratio);
+    verif = verif && compressor->setBoost(du_compressor.c_boost);
+    verif = verif && compressor->setKneeType(du_compressor.c_kneetype);
 
-    compressor->setEffectName(
+    verif = verif && compressor->setEffectName(
             QString(QByteArray((char *)du_compressor.c_name, NAME_CARACT)));
+
+    if (!verif)
+    {
+        delete compressor;
+        return NULL;
+    }
 
     return compressor;
 }
@@ -63,29 +70,43 @@ DuCompressor *DuCompressor::fromDuMusicFile(const FX_compressor &du_compressor)
 
 DuCompressor *DuCompressor::fromJson(const QJsonObject &jsonCompressor)
 {
-    DuCompressor *compressor = new DuCompressor();
-    const QStringList &keyList = compressor->keys();
+    QJsonValue jsonOnOff        = jsonCompressor[KEY_COMP_ONOFF];
+    QJsonValue jsonAttTime      = jsonCompressor[KEY_COMP_ATTACKTIME];
+    QJsonValue jsonRelTime      = jsonCompressor[KEY_COMP_RELEASETIME];
+    QJsonValue jsonThreshold    = jsonCompressor[KEY_COMP_THRESHOLD];
+    QJsonValue jsonRatio        = jsonCompressor[KEY_COMP_RATIO];
+    QJsonValue jsonBoost        = jsonCompressor[KEY_COMP_BOOST];
+    QJsonValue jsonKneeType     = jsonCompressor[KEY_COMP_KNEETYPE];
+    QJsonValue jsonEffectName   = jsonCompressor[KEY_COMP_EFFECTNAME];
 
-    bool test = true;
-    for (int i = 0; i < keyList.count(); i++)
-    {
-        test = test && jsonCompressor.contains(keyList[i]);
-    }
+    if (        !jsonOnOff.isDouble()       ||  !jsonAttTime.isDouble()
+            ||  !jsonRelTime.isDouble()     ||  !jsonThreshold.isDouble()
+            ||  !jsonRatio.isDouble()       ||  !jsonBoost.isDouble()
+            ||  !jsonKneeType.isDouble()    ||  !jsonEffectName.isString())
 
-    if (!test)
         return NULL;
 
-    compressor->setOnOff(jsonCompressor[KEY_COMP_ONOFF].toInt());
 
-    compressor->setAttackTime(jsonCompressor[KEY_COMP_ATTACKTIME].toInt());
-    compressor->setReleaseTime(jsonCompressor[KEY_COMP_RELEASETIME].toInt());
-    compressor->setThreshold(jsonCompressor[KEY_COMP_THRESHOLD].toInt());
+    DuCompressor *compressor = new DuCompressor;
+    bool verif = true;
 
-    compressor->setRatio(jsonCompressor[KEY_COMP_RATIO].toInt());
-    compressor->setBoost(jsonCompressor[KEY_COMP_BOOST].toInt());
-    compressor->setKneeType(jsonCompressor[KEY_COMP_KNEETYPE].toInt());
+    verif = verif && compressor->setOnOff(jsonOnOff.toInt());
 
-    compressor->setEffectName(jsonCompressor[KEY_COMP_EFFECTNAME].toString());
+    verif = verif && compressor->setAttackTime(jsonAttTime.toInt());
+    verif = verif && compressor->setReleaseTime(jsonRelTime.toInt());
+    verif = verif && compressor->setThreshold(jsonThreshold.toInt());
+
+    verif = verif && compressor->setRatio(jsonRatio.toInt());
+    verif = verif && compressor->setBoost(jsonBoost.toInt());
+    verif = verif && compressor->setKneeType(jsonKneeType.toInt());
+
+    verif = verif && compressor->setEffectName(jsonEffectName.toString());
+
+    if (!verif)
+    {
+        delete compressor;
+        return NULL;
+    }
 
     return compressor;
 }
@@ -96,19 +117,19 @@ int DuCompressor::getOnOff() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_COMP_ONOFF));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuCompressor::setOnOff(int value)
+bool DuCompressor::setOnOff(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_COMP_ONOFF));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -117,19 +138,19 @@ int DuCompressor::getAttackTime() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_COMP_ATTACKTIME));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuCompressor::setAttackTime(int value)
+bool DuCompressor::setAttackTime(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_COMP_ATTACKTIME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuCompressor::getReleaseTime() const
@@ -137,19 +158,19 @@ int DuCompressor::getReleaseTime() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_COMP_RELEASETIME));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuCompressor::setReleaseTime(int value)
+bool DuCompressor::setReleaseTime(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_COMP_RELEASETIME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuCompressor::getThreshold() const
@@ -157,19 +178,19 @@ int DuCompressor::getThreshold() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_COMP_THRESHOLD));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuCompressor::setThreshold(int value)
+bool DuCompressor::setThreshold(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_COMP_THRESHOLD));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuCompressor::getRatio() const
@@ -177,19 +198,19 @@ int DuCompressor::getRatio() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_COMP_RATIO));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuCompressor::setRatio(int value)
+bool DuCompressor::setRatio(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_COMP_RATIO));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuCompressor::getBoost() const
@@ -197,19 +218,19 @@ int DuCompressor::getBoost() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_COMP_BOOST));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuCompressor::setBoost(int value)
+bool DuCompressor::setBoost(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_COMP_BOOST));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuCompressor::getKneeType() const
@@ -217,19 +238,19 @@ int DuCompressor::getKneeType() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_COMP_KNEETYPE));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuCompressor::setKneeType(int value)
+bool DuCompressor::setKneeType(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_COMP_KNEETYPE));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -243,12 +264,12 @@ QString DuCompressor::getEffectName() const
     return tmp->getString();
 }
 
-void DuCompressor::setEffectName(const QString &value)
+bool DuCompressor::setEffectName(const QString &value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_COMP_EFFECTNAME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setString(value);
+    return tmp->setString(value);
 }

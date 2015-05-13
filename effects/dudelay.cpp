@@ -42,19 +42,27 @@ DuDelay::~DuDelay()
 
 DuDelay *DuDelay::fromDuMusicFile(const FX_delay &du_delay)
 {
-    DuDelay *delay = new DuDelay();
+    DuDelay *delay = new DuDelay;
+    bool verif = true;
 
-    delay->setOnOff(du_delay.d_on_off);
+    verif = verif && delay->setOnOff(du_delay.d_on_off);
 
-    delay->setMode(du_delay.d_mode);
-    delay->setPreLowPassFilter(du_delay.d_prelp);
+    verif = verif && delay->setMode(du_delay.d_mode);
+    verif = verif && delay->setPreLowPassFilter(du_delay.d_prelp);
 
-    delay->setEffectLevel(du_delay.d_level);
-    delay->setEffectTime(du_delay.d_time);
-    delay->setFeedback(du_delay.d_feedback);
-    delay->setHDAmp(du_delay.d_hdamp);
+    verif = verif && delay->setEffectLevel(du_delay.d_level);
+    verif = verif && delay->setEffectTime(du_delay.d_time);
+    verif = verif && delay->setFeedback(du_delay.d_feedback);
+    verif = verif && delay->setHDAmp(du_delay.d_hdamp);
 
-    delay->setEffectName(QString(QByteArray((char *)du_delay.d_name, NAME_CARACT)));
+    verif = verif && delay->setEffectName(
+                QString(QByteArray((char *)du_delay.d_name, NAME_CARACT)));
+
+    if (!verif)
+    {
+        delete delay;
+        return NULL;
+    }
 
     return delay;
 }
@@ -62,30 +70,44 @@ DuDelay *DuDelay::fromDuMusicFile(const FX_delay &du_delay)
 
 DuDelay *DuDelay::fromJson(const QJsonObject &jsonDelay)
 {
-    DuDelay *delay = new DuDelay();
-    const QStringList &keyList = delay->keys();
+    QJsonValue jsonOnOff        = jsonDelay[KEY_DELAY_ONOFF];
+    QJsonValue jsonMode         = jsonDelay[KEY_DELAY_MODE];
+    QJsonValue jsonLoPassFilt   = jsonDelay[KEY_DELAY_PRELOWPASSFILTER];
+    QJsonValue jsonEffectLvl    = jsonDelay[KEY_DELAY_EFFECTLEVEL];
+    QJsonValue jsonEffectTime   = jsonDelay[KEY_DELAY_EFFECTTIME];
+    QJsonValue jsonFeedback     = jsonDelay[KEY_DELAY_FEEDBACK];
+    QJsonValue jsonHDAmp        = jsonDelay[KEY_DELAY_HDAMP];
+    QJsonValue jsonEffectName   = jsonDelay[KEY_DELAY_EFFECTNAME];
 
-    bool test = true;
-    for (int i = 0; i < keyList.count(); i++)
-    {
-        test = test && jsonDelay.contains(keyList[i]);
-    }
+    if (        !jsonOnOff.isDouble()       ||  !jsonMode.isDouble()
+            ||  !jsonLoPassFilt.isDouble()  ||  !jsonEffectLvl.isDouble()
+            ||  !jsonEffectTime.isDouble()  ||  !jsonFeedback.isDouble()
+            ||  !jsonHDAmp.isDouble()       ||  !jsonEffectName.isString())
 
-    if (!test)
         return NULL;
 
-    delay->setOnOff(jsonDelay[KEY_DELAY_ONOFF].toInt());
 
-    delay->setMode(jsonDelay[KEY_DELAY_MODE].toInt());
-    delay->setPreLowPassFilter(jsonDelay[KEY_DELAY_PRELOWPASSFILTER].toInt());
+    DuDelay *delay = new DuDelay;
+    bool verif = true;
 
-    delay->setEffectLevel(jsonDelay[KEY_DELAY_EFFECTLEVEL].toInt());
-    delay->setEffectTime(jsonDelay[KEY_DELAY_EFFECTTIME].toInt());
+    verif = verif && delay->setOnOff(jsonOnOff.toInt());
 
-    delay->setFeedback(jsonDelay[KEY_DELAY_FEEDBACK].toInt());
-    delay->setHDAmp(jsonDelay[KEY_DELAY_HDAMP].toInt());
+    verif = verif && delay->setMode(jsonMode.toInt());
+    verif = verif && delay->setPreLowPassFilter(jsonLoPassFilt.toInt());
 
-    delay->setEffectName(jsonDelay[KEY_DELAY_EFFECTNAME].toString());
+    verif = verif && delay->setEffectLevel(jsonEffectLvl.toInt());
+    verif = verif && delay->setEffectTime(jsonEffectTime.toInt());
+
+    verif = verif && delay->setFeedback(jsonFeedback.toInt());
+    verif = verif && delay->setHDAmp(jsonHDAmp.toInt());
+
+    verif = verif && delay->setEffectName(jsonEffectName.toString());
+
+    if (!verif)
+    {
+        delete delay;
+        return NULL;
+    }
 
     return delay;
 }
@@ -96,19 +118,19 @@ int DuDelay::getOnOff() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_ONOFF));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuDelay::setOnOff(int value)
+bool DuDelay::setOnOff(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_ONOFF));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -117,19 +139,19 @@ int DuDelay::getMode() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_MODE));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuDelay::setMode(int value)
+bool DuDelay::setMode(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_MODE));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuDelay::getPreLowPassFilter() const
@@ -137,19 +159,19 @@ int DuDelay::getPreLowPassFilter() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_PRELOWPASSFILTER));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuDelay::setPreLowPassFilter(int value)
+bool DuDelay::setPreLowPassFilter(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_PRELOWPASSFILTER));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuDelay::getEffectLevel() const
@@ -157,19 +179,19 @@ int DuDelay::getEffectLevel() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_EFFECTLEVEL));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuDelay::setEffectLevel(int value)
+bool DuDelay::setEffectLevel(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_EFFECTLEVEL));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuDelay::getEffectTime() const
@@ -177,19 +199,19 @@ int DuDelay::getEffectTime() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_EFFECTTIME));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuDelay::setEffectTime(int value)
+bool DuDelay::setEffectTime(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_EFFECTTIME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuDelay::getFeedback() const
@@ -197,19 +219,19 @@ int DuDelay::getFeedback() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_FEEDBACK));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuDelay::setFeedback(int value)
+bool DuDelay::setFeedback(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_FEEDBACK));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuDelay::getHDAmp() const
@@ -217,19 +239,19 @@ int DuDelay::getHDAmp() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_HDAMP));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuDelay::setHDAmp(int value)
+bool DuDelay::setHDAmp(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_HDAMP));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -243,12 +265,12 @@ QString DuDelay::getEffectName() const
     return tmp->getString();
 }
 
-void DuDelay::setEffectName(const QString &value)
+bool DuDelay::setEffectName(const QString &value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_DELAY_EFFECTNAME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setString(value);
+    return tmp->setString(value);
 }

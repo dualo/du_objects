@@ -21,32 +21,31 @@ public:
     ~DuDelay();
 
     static DuDelay *fromDuMusicFile(const FX_delay &du_delay);
-
     static DuDelay *fromJson(const QJsonObject &jsonDelay);
 
     int getOnOff() const;
-    void setOnOff(int value);
+    bool setOnOff(int value);
 
     int getMode() const;
-    void setMode(int value);
+    bool setMode(int value);
 
     int getPreLowPassFilter() const;
-    void setPreLowPassFilter(int value);
+    bool setPreLowPassFilter(int value);
 
     int getEffectLevel() const;
-    void setEffectLevel(int value);
+    bool setEffectLevel(int value);
 
     int getEffectTime() const;
-    void setEffectTime(int value);
+    bool setEffectTime(int value);
 
     int getFeedback() const;
-    void setFeedback(int value);
+    bool setFeedback(int value);
 
     int getHDAmp() const;
-    void setHDAmp(int value);
+    bool setHDAmp(int value);
 
     QString getEffectName() const;
-    void setEffectName(const QString &value);
+    bool setEffectName(const QString &value);
 };
 
 #endif // DUDELAY_H

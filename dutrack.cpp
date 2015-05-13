@@ -22,10 +22,17 @@ DuTrack::~DuTrack()
 DuTrack *DuTrack::fromDuMusicFile(const music_track &du_track,
                                   const music_sample *du_sample)
 {
-    DuTrack *track = new DuTrack();
+    DuTrack *track = new DuTrack;
+    bool verif = true;
 
-    track->setChannel(du_track.t_midichannel);
-    track->setCurrentLoop(du_track.t_currentloop);
+    verif = verif && track->setChannel(du_track.t_midichannel);
+    verif = verif && track->setCurrentLoop(du_track.t_currentloop);
+
+    if (!verif)
+    {
+        delete track;
+        return NULL;
+    }
 
     DuArray *loops = track->getLoops();
 
@@ -34,10 +41,14 @@ DuTrack *DuTrack::fromDuMusicFile(const music_track &du_track,
         const music_loop &du_loop = du_track.t_loop[i];
         const music_sample *du_sample_address = (music_sample*)
                 ((long)du_sample + du_loop.l_adress);
-        DuLoop *loop = DuLoop::fromDuMusicFile(du_loop, du_sample_address);
 
-        if (loop != NULL)
-            loops->append(loop);
+        DuLoop *loop = DuLoop::fromDuMusicFile(du_loop, du_sample_address);
+        if (loop == NULL)
+        {
+            delete track;
+            return NULL;
+        }
+        loops->append(loop);
     }
 
     if (loops->count() == 0)
@@ -52,29 +63,40 @@ DuTrack *DuTrack::fromDuMusicFile(const music_track &du_track,
 
 DuTrack *DuTrack::fromJson(const QJsonObject &jsonTrack)
 {
-    DuTrack *track = new DuTrack();
-    const QStringList &keyList = track->keys();
+    QJsonValue jsonChannel      = jsonTrack[KEY_TRACK_CHANNEL];
+    QJsonValue jsonCurrentLoop  = jsonTrack[KEY_TRACK_CURRENTLOOP];
+    QJsonValue jsonLoops        = jsonTrack[KEY_TRACK_LOOPS];
 
-    bool test = true;
-    for (int i = 0; i < keyList.count(); i++)
-    {
-        test = test && jsonTrack.contains(keyList[i]);
-    }
+    if (        !jsonChannel.isDouble() ||  !jsonCurrentLoop.isDouble()
+            ||  !jsonLoops.isArray())
 
-    if (!test)
         return NULL;
 
-    track->setChannel(jsonTrack[KEY_TRACK_CHANNEL].toInt());
-    track->setCurrentLoop(jsonTrack[KEY_TRACK_CURRENTLOOP].toInt());
+
+    DuTrack *track = new DuTrack;
+    bool verif = true;
+
+    verif = verif && track->setChannel(jsonChannel.toInt());
+    verif = verif && track->setCurrentLoop(jsonCurrentLoop.toInt());
+
+    if (!verif)
+    {
+        delete track;
+        return NULL;
+    }
 
     DuArray *loops = track->getLoops();
-    const QJsonArray &jsonLoops = jsonTrack[KEY_TRACK_LOOPS].toArray();
+    const QJsonArray &jsonLoopArray = jsonLoops.toArray();
 
-    for (int i = 0; i < jsonLoops.count(); i++)
+    for (int i = 0; i < jsonLoopArray.count(); i++)
     {
-        DuLoop *loop = DuLoop::fromJson(jsonLoops[i].toObject());
-        if (loop != NULL)
-            loops->append(loop);
+        DuLoop *loop = DuLoop::fromJson(jsonLoopArray[i].toObject());
+        if (loop == NULL)
+        {
+            delete track;
+            return NULL;
+        }
+        loops->append(loop);
     }
 
     return track;
@@ -86,19 +108,19 @@ int DuTrack::getChannel() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_TRACK_CHANNEL));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuTrack::setChannel(int value)
+bool DuTrack::setChannel(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_TRACK_CHANNEL));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuTrack::getCurrentLoop() const
@@ -106,19 +128,19 @@ int DuTrack::getCurrentLoop() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_TRACK_CURRENTLOOP));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuTrack::setCurrentLoop(int value)
+bool DuTrack::setCurrentLoop(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_TRACK_CURRENTLOOP));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 DuArray *DuTrack::getLoops()
@@ -128,8 +150,10 @@ DuArray *DuTrack::getLoops()
 
 void DuTrack::setLoops(DuArray *array)
 {
-    if (getChild(KEY_TRACK_LOOPS) != NULL)
-        delete getChild(KEY_TRACK_LOOPS);
+    DuObject *tmp = getChild(KEY_TRACK_LOOPS);
+
+    if (tmp != NULL)
+        delete tmp;
 
     addChild(KEY_TRACK_LOOPS, array);
 }

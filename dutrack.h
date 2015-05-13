@@ -17,14 +17,13 @@ public:
 
     static DuTrack *fromDuMusicFile(const music_track &du_track,
                                     const music_sample *du_sample);
-
     static DuTrack *fromJson(const QJsonObject &jsonTrack);
 
     int getChannel() const;
-    void setChannel(int value);
+    bool setChannel(int value);
 
     int getCurrentLoop() const;
-    void setCurrentLoop(int value);
+    bool setCurrentLoop(int value);
 
     DuArray *getLoops();
     void setLoops(DuArray *array);

@@ -21,17 +21,16 @@ public:
 
     static DuLoop *fromDuMusicFile(const music_loop &du_loop,
                                    const music_sample *du_sample);
-
     static DuLoop *fromJson(const QJsonObject &jsonLoop);
 
     int getState() const;
-    void setState(int value);
+    bool setState(int value);
 
     int getDurationModifier() const;
-    void setDurationModifier(int value);
+    bool setDurationModifier(int value);
 
     int getMidiOutChannel() const;
-    void setMidiOutChannel(int value);
+    bool setMidiOutChannel(int value);
 
     DuInstrument *getInstrument();
     void setInstrument(DuInstrument *instrument);

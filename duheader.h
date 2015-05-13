@@ -32,44 +32,43 @@ public:
     ~DuHeader();
 
     static DuHeader *fromDuMusicFile(const music_song &du_song);
-
     static DuHeader *fromJson(const QJsonObject &jsonHeader);
 
     int getFileVersion() const;
-    void setFileVersion(int value);
+    bool setFileVersion(int value);
 
     QString getOriginalSerialNumber() const;
-    void setOriginalSerialNumber(const QString value);
+    bool setOriginalSerialNumber(const QString value);
 
     QString getOriginalName() const;
-    void setOriginalName(const QString value);
+    bool setOriginalName(const QString value);
 
     QString getOriginalUser() const;
-    void setOriginalUser(const QString value);
+    bool setOriginalUser(const QString value);
 
     QString getOriginalUserId() const;
-    void setOriginalUserId(const QString value);
+    bool setOriginalUserId(const QString value);
 
     QString getLastModifSerialNumber() const;
-    void setLastModifSerialNumber(const QString value);
+    bool setLastModifSerialNumber(const QString value);
 
     QString getLastModifName() const;
-    void setLastModifName(const QString value);
+    bool setLastModifName(const QString value);
 
     QString getLastModifUser() const;
-    void setLastModifUser(const QString value);
+    bool setLastModifUser(const QString value);
 
     QString getLastModifUserId() const;
-    void setLastModifUserId(const QString value);
+    bool setLastModifUserId(const QString value);
 
     int getSongId() const;
-    void setSongId(int value);
+    bool setSongId(int value);
 
     QString getSongName() const;
-    void setSongName(const QString value);
+    bool setSongName(const QString value);
 
     int getSongVersion() const;
-    void setSongVersion(int value);
+    bool setSongVersion(int value);
 };
 
 #endif // DUHEADER_H

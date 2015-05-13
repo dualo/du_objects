@@ -21,32 +21,31 @@ public:
     ~DuCompressor();
 
     static DuCompressor *fromDuMusicFile(const FX_compressor &du_compressor);
-
     static DuCompressor *fromJson(const QJsonObject &jsonCompressor);
 
     int getOnOff() const;
-    void setOnOff(int value);
+    bool setOnOff(int value);
 
     int getAttackTime() const;
-    void setAttackTime(int value);
+    bool setAttackTime(int value);
 
     int getReleaseTime() const;
-    void setReleaseTime(int value);
+    bool setReleaseTime(int value);
 
     int getThreshold() const;
-    void setThreshold(int value);
+    bool setThreshold(int value);
 
     int getRatio() const;
-    void setRatio(int value);
+    bool setRatio(int value);
 
     int getBoost() const;
-    void setBoost(int value);
+    bool setBoost(int value);
 
     int getKneeType() const;
-    void setKneeType(int value);
+    bool setKneeType(int value);
 
     QString getEffectName() const;
-    void setEffectName(const QString &value);
+    bool setEffectName(const QString &value);
 };
 
 #endif // DUCOMPRESSOR_H

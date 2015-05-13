@@ -35,14 +35,24 @@ DuAdsr::~DuAdsr()
 DuAdsr *DuAdsr::fromDuMusicFile(const FX_adsr &du_adsr)
 {
     DuAdsr *adsr = new DuAdsr;
+    bool verif = true;
 
-    adsr->setEnvelopeAttackTime(du_adsr.a_env_attack_time);
-    adsr->setEnvelopeDecayTime(du_adsr.a_env_decay_time);
-    adsr->setTimeVariantFilterCutoffResonance(du_adsr.a_tvf_cutoff_res);
-    adsr->setTimeVariantFilterCutoffFrequency(du_adsr.a_tvf_cutoff_freq);
-    adsr->setEnvelopeReleaseTime(du_adsr.a_env_release_time);
+    verif = verif && adsr->setEnvelopeAttackTime(du_adsr.a_env_attack_time);
+    verif = verif && adsr->setEnvelopeDecayTime(du_adsr.a_env_decay_time);
+    verif = verif && adsr->setTimeVariantFilterCutoffResonance(
+                du_adsr.a_tvf_cutoff_res);
+    verif = verif && adsr->setTimeVariantFilterCutoffFrequency(
+                du_adsr.a_tvf_cutoff_freq);
+    verif = verif && adsr->setEnvelopeReleaseTime(du_adsr.a_env_release_time);
 
-    adsr->setEffectName(QString(QByteArray((char *)du_adsr.a_name, NAME_CARACT)));
+    verif = verif && adsr->setEffectName(
+                QString(QByteArray((char *)du_adsr.a_name, NAME_CARACT)));
+
+    if (!verif)
+    {
+        delete adsr;
+        return NULL;
+    }
 
     return adsr;
 }
@@ -50,29 +60,36 @@ DuAdsr *DuAdsr::fromDuMusicFile(const FX_adsr &du_adsr)
 
 DuAdsr *DuAdsr::fromJson(const QJsonObject &jsonAdsr)
 {
-    QJsonValue jsonEnvAttTime = jsonAdsr[KEY_ADSR_ENVELOPEATTACKTIME];
-    QJsonValue jsonEnvDecTime = jsonAdsr[KEY_ADSR_ENVELOPEDECAYTIME];
-    QJsonValue jsonTvfCutRes  = jsonAdsr[KEY_ADSR_TIMEVARIANTFILTERCUTOFFRESONANCE];
-    QJsonValue jsonTvfCutFreq = jsonAdsr[KEY_ADSR_TIMEVARIANTFILTERCUTOFFFREQUENCY];
-    QJsonValue jsonEnvRelTime = jsonAdsr[KEY_ADSR_ENVELOPERELEASETIME];
-    QJsonValue jsonEffectName = jsonAdsr[KEY_ADSR_EFFECTNAME];
+    QJsonValue jsonEnvAttTime   = jsonAdsr[KEY_ADSR_ENVELOPEATTACKTIME];
+    QJsonValue jsonEnvDecTime   = jsonAdsr[KEY_ADSR_ENVELOPEDECAYTIME];
+    QJsonValue jsonTvfCutRes    = jsonAdsr[KEY_ADSR_TIMEVARIANTFILTERCUTOFFRESONANCE];
+    QJsonValue jsonTvfCutFreq   = jsonAdsr[KEY_ADSR_TIMEVARIANTFILTERCUTOFFFREQUENCY];
+    QJsonValue jsonEnvRelTime   = jsonAdsr[KEY_ADSR_ENVELOPERELEASETIME];
+    QJsonValue jsonEffectName   = jsonAdsr[KEY_ADSR_EFFECTNAME];
 
-    if (!jsonEnvAttTime.isDouble() || !jsonEnvDecTime.isDouble()
-            || !jsonTvfCutRes.isDouble() || !jsonTvfCutFreq.isDouble()
-            || !jsonEnvRelTime.isDouble() || !jsonEffectName.isString())
+    if (        !jsonEnvAttTime.isDouble()  ||  !jsonEnvDecTime.isDouble()
+            ||  !jsonTvfCutRes.isDouble()   ||  !jsonTvfCutFreq.isDouble()
+            ||  !jsonEnvRelTime.isDouble()  ||  !jsonEffectName.isString())
 
         return NULL;
 
 
     DuAdsr *adsr = new DuAdsr;
+    bool verif = true;
 
-    adsr->setEnvelopeAttackTime(jsonEnvAttTime.toInt());
-    adsr->setEnvelopeDecayTime(jsonEnvDecTime.toInt());
-    adsr->setTimeVariantFilterCutoffResonance(jsonTvfCutRes.toInt());
-    adsr->setTimeVariantFilterCutoffFrequency(jsonTvfCutFreq.toInt());
-    adsr->setEnvelopeReleaseTime(jsonEnvRelTime.toInt());
+    verif = verif && adsr->setEnvelopeAttackTime(jsonEnvAttTime.toInt());
+    verif = verif && adsr->setEnvelopeDecayTime(jsonEnvDecTime.toInt());
+    verif = verif && adsr->setTimeVariantFilterCutoffResonance(jsonTvfCutRes.toInt());
+    verif = verif && adsr->setTimeVariantFilterCutoffFrequency(jsonTvfCutFreq.toInt());
+    verif = verif && adsr->setEnvelopeReleaseTime(jsonEnvRelTime.toInt());
 
-    adsr->setEffectName(jsonEffectName.toString());
+    verif = verif && adsr->setEffectName(jsonEffectName.toString());
+
+    if (!verif)
+    {
+        delete adsr;
+        return NULL;
+    }
 
     return adsr;
 }

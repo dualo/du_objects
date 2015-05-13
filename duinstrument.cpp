@@ -24,30 +24,107 @@ DuInstrument::~DuInstrument()
 
 DuInstrument *DuInstrument::fromDuMusicFile(const music_instr &du_instr)
 {
-    DuInstrument *instrument = new DuInstrument();
+    DuInstrument *instrument = new DuInstrument;
 
-    instrument->setInstrumentInfo(
-                DuInstrumentInfo::fromDuMusicFile(du_instr.i_instrument));
+    DuInstrumentInfo *instrInfo =
+            DuInstrumentInfo::fromDuMusicFile(du_instr.i_instrument);
+    if (instrInfo != NULL)
+        instrument->setInstrumentInfo(instrInfo);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
 
-    instrument->setPreset(DuPreset::fromDuMusicFile(du_instr.i_preset));
+    DuPreset *preset = DuPreset::fromDuMusicFile(du_instr.i_preset);
+    if (preset != NULL)
+        instrument->setPreset(preset);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
 
-    instrument->setMixer(DuMixer::fromDuMusicFile(du_instr.i_mix));
+    DuMixer *mixer = DuMixer::fromDuMusicFile(du_instr.i_mix);
+    if (mixer != NULL)
+        instrument->setMixer(mixer);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
 
-    instrument->setDistortion(DuDistortion::fromDuMusicFile(du_instr.i_distortion));
+    DuDistortion *distortion = DuDistortion::fromDuMusicFile(du_instr.i_distortion);
+    if (distortion != NULL)
+        instrument->setDistortion(distortion);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
 
-    instrument->setWah(DuWah::fromDuMusicFile(du_instr.i_wah));
+    DuWah *wah = DuWah::fromDuMusicFile(du_instr.i_wah);
+    if (wah != NULL)
+        instrument->setWah(wah);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
 
-    instrument->setCompressor(DuCompressor::fromDuMusicFile(du_instr.i_compressor));
+    DuCompressor *compressor = DuCompressor::fromDuMusicFile(du_instr.i_compressor);
+    if (compressor != NULL)
+        instrument->setCompressor(compressor);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
 
-    instrument->setEqualizer(DuEqualizer::fromDuMusicFile(du_instr.i_equalizer));
+    DuEqualizer *equalizer = DuEqualizer::fromDuMusicFile(du_instr.i_equalizer);
+    if (equalizer != NULL)
+        instrument->setEqualizer(equalizer);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
 
-    instrument->setDelay(DuDelay::fromDuMusicFile(du_instr.i_delay));
+    DuDelay *delay = DuDelay::fromDuMusicFile(du_instr.i_delay);
+    if (delay != NULL)
+        instrument->setDelay(delay);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
 
-    instrument->setChorus(DuChorus::fromDuMusicFile(du_instr.i_chorus));
+    DuChorus *chorus = DuChorus::fromDuMusicFile(du_instr.i_chorus);
+    if (chorus != NULL)
+        instrument->setChorus(chorus);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
 
-    instrument->setVibrato(DuVibrato::fromDuMusicFile(du_instr.i_vibrato));
+    DuVibrato *vibrato = DuVibrato::fromDuMusicFile(du_instr.i_vibrato);
+    if (vibrato != NULL)
+        instrument->setVibrato(vibrato);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
 
-    instrument->setAdsr(DuAdsr::fromDuMusicFile(du_instr.i_adsr));
+    DuAdsr *adsr = DuAdsr::fromDuMusicFile(du_instr.i_adsr);
+    if (adsr != NULL)
+        instrument->setAdsr(adsr);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
 
     return instrument;
 }
@@ -55,51 +132,130 @@ DuInstrument *DuInstrument::fromDuMusicFile(const music_instr &du_instr)
 
 DuInstrument *DuInstrument::fromJson(const QJsonObject &jsonInstrument)
 {
-    DuInstrument *instrument = new DuInstrument();
-    const QStringList &keyList = instrument->keys();
+    QJsonValue jsonInstrInfo    = jsonInstrument[KEY_INSTR_INSTRUMENTINFO];
+    QJsonValue jsonPreset       = jsonInstrument[KEY_INSTR_PRESET];
+    QJsonValue jsonMixer        = jsonInstrument[KEY_INSTR_MIXERSETTINGS];
+    QJsonValue jsonDistortion   = jsonInstrument[KEY_INSTR_DISTORTIONSETTINGS];
+    QJsonValue jsonWah          = jsonInstrument[KEY_INSTR_WAHSETTINGS];
+    QJsonValue jsonCompressor   = jsonInstrument[KEY_INSTR_COMPRESSORSETTINGS];
+    QJsonValue jsonEqualizer    = jsonInstrument[KEY_INSTR_EQUALIZERSETTINGS];
+    QJsonValue jsonDelay        = jsonInstrument[KEY_INSTR_DELAYSETTINGS];
+    QJsonValue jsonChorus       = jsonInstrument[KEY_INSTR_CHORUSSETTINGS];
+    QJsonValue jsonVibrato      = jsonInstrument[KEY_INSTR_VIBRATOSETTINGS];
+    QJsonValue jsonAdsr         = jsonInstrument[KEY_INSTR_ADSRSETTINGS];
 
-    bool test = true;
-    for (int i = 0; i < keyList.count(); i++)
-    {
-        test = test && jsonInstrument.contains(keyList[i]);
-    }
+    if (        !jsonInstrInfo.isObject()   ||  !jsonPreset.isObject()
+            ||  !jsonMixer.isObject()       ||  !jsonDistortion.isObject()
+            ||  !jsonWah.isObject()         ||  !jsonCompressor.isObject()
+            ||  !jsonEqualizer.isObject()   ||  !jsonDelay.isObject()
+            ||  !jsonChorus.isObject()      ||  !jsonVibrato.isObject()
+            ||  !jsonAdsr.isObject())
 
-    if (!test)
         return NULL;
 
-    instrument->setInstrumentInfo(
-                DuInstrumentInfo::fromJson(
-                    jsonInstrument[KEY_INSTR_INSTRUMENTINFO].toObject()));
-    instrument->setPreset(
-                DuPreset::fromJson(
-                    jsonInstrument[KEY_INSTR_PRESET].toObject()));
-    instrument->setMixer(
-                DuMixer::fromJson(
-                    jsonInstrument[KEY_INSTR_MIXERSETTINGS].toObject()));
-    instrument->setDistortion(
-                DuDistortion::fromJson(
-                    jsonInstrument[KEY_INSTR_DISTORTIONSETTINGS].toObject()));
-    instrument->setWah(
-                DuWah::fromJson(
-                    jsonInstrument[KEY_INSTR_WAHSETTINGS].toObject()));
-    instrument->setCompressor(
-                DuCompressor::fromJson(
-                    jsonInstrument[KEY_INSTR_COMPRESSORSETTINGS].toObject()));
-    instrument->setEqualizer(
-                DuEqualizer::fromJson(
-                    jsonInstrument[KEY_INSTR_EQUALIZERSETTINGS].toObject()));
-    instrument->setDelay(
-                DuDelay::fromJson(
-                    jsonInstrument[KEY_INSTR_DELAYSETTINGS].toObject()));
-    instrument->setChorus(
-                DuChorus::fromJson(
-                    jsonInstrument[KEY_INSTR_CHORUSSETTINGS].toObject()));
-    instrument->setVibrato(
-                DuVibrato::fromJson(
-                    jsonInstrument[KEY_INSTR_VIBRATOSETTINGS].toObject()));
-    instrument->setAdsr(
-                DuAdsr::fromJson(
-                    jsonInstrument[KEY_INSTR_ADSRSETTINGS].toObject()));
+
+    DuInstrument *instrument = new DuInstrument;
+
+    DuInstrumentInfo *instrInfo =
+            DuInstrumentInfo::fromJson(jsonInstrInfo.toObject());
+    if (instrInfo != NULL)
+        instrument->setInstrumentInfo(instrInfo);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
+
+    DuPreset *preset = DuPreset::fromJson(jsonPreset.toObject());
+    if (preset != NULL)
+        instrument->setPreset(preset);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
+
+    DuMixer *mixer = DuMixer::fromJson(jsonMixer.toObject());
+    if (mixer != NULL)
+        instrument->setMixer(mixer);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
+
+    DuDistortion *distortion = DuDistortion::fromJson(jsonDistortion.toObject());
+    if (distortion != NULL)
+        instrument->setDistortion(distortion);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
+
+    DuWah *wah = DuWah::fromJson(jsonWah.toObject());
+    if (wah != NULL)
+        instrument->setWah(wah);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
+
+    DuCompressor *compressor = DuCompressor::fromJson(jsonCompressor.toObject());
+    if (compressor != NULL)
+        instrument->setCompressor(compressor);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
+
+    DuEqualizer *equalizer = DuEqualizer::fromJson(jsonEqualizer.toObject());
+    if (equalizer != NULL)
+        instrument->setEqualizer(equalizer);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
+
+    DuDelay *delay = DuDelay::fromJson(jsonDelay.toObject());
+    if (delay != NULL)
+        instrument->setDelay(delay);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
+
+    DuChorus *chorus = DuChorus::fromJson(jsonChorus.toObject());
+    if (chorus != NULL)
+        instrument->setChorus(chorus);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
+
+    DuVibrato *vibrato = DuVibrato::fromJson(jsonVibrato.toObject());
+    if (vibrato != NULL)
+        instrument->setVibrato(vibrato);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
+
+    DuAdsr *adsr = DuAdsr::fromJson(jsonAdsr.toObject());
+    if (adsr != NULL)
+        instrument->setAdsr(adsr);
+    else
+    {
+        delete instrument;
+        return NULL;
+    }
+
 
     return instrument;
 }

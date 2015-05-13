@@ -58,25 +58,32 @@ DuEqualizer::~DuEqualizer()
 
 DuEqualizer *DuEqualizer::fromDuMusicFile(const FX_equalizer du_equalizer)
 {
-    DuEqualizer *equalizer = new DuEqualizer();
+    DuEqualizer *equalizer = new DuEqualizer;
+    bool verif = true;
 
-    equalizer->setOnOff(du_equalizer.e_on_off);
+    verif = verif && equalizer->setOnOff(du_equalizer.e_on_off);
 
-    equalizer->setLowBandGain(du_equalizer.e_lowbandgain);
-    equalizer->setLowMidBandGain(du_equalizer.e_lowmidbandgain);
-    equalizer->setHighMidBandGain(du_equalizer.e_highmidbandgain);
-    equalizer->setHighBandGain(du_equalizer.e_highbandgain);
+    verif = verif && equalizer->setLowBandGain(du_equalizer.e_lowbandgain);
+    verif = verif && equalizer->setLowMidBandGain(du_equalizer.e_lowmidbandgain);
+    verif = verif && equalizer->setHighMidBandGain(du_equalizer.e_highmidbandgain);
+    verif = verif && equalizer->setHighBandGain(du_equalizer.e_highbandgain);
 
-    equalizer->setLowBandFrequency(du_equalizer.e_lowbandfrequency);
-    equalizer->setLowMidBandFrequency(du_equalizer.e_lowmidbandfrequency);
-    equalizer->setHighMidBandFrequency(du_equalizer.e_highmidbandfrequency);
-    equalizer->setHighBandFrequency(du_equalizer.e_highbandfrequency);
+    verif = verif && equalizer->setLowBandFrequency(du_equalizer.e_lowbandfrequency);
+    verif = verif && equalizer->setLowMidBandFrequency(du_equalizer.e_lowmidbandfrequency);
+    verif = verif && equalizer->setHighMidBandFrequency(du_equalizer.e_highmidbandfrequency);
+    verif = verif && equalizer->setHighBandFrequency(du_equalizer.e_highbandfrequency);
 
-    equalizer->setLowMidBandQualityFactor(du_equalizer.e_lowmidbandQ);
-    equalizer->setHighMidBandQualityFactor(du_equalizer.e_highmidbandQ);
+    verif = verif && equalizer->setLowMidBandQualityFactor(du_equalizer.e_lowmidbandQ);
+    verif = verif && equalizer->setHighMidBandQualityFactor(du_equalizer.e_highmidbandQ);
 
     equalizer->setEffectName(
             QString(QByteArray((char *)du_equalizer.e_name, NAME_CARACT)));
+
+    if (!verif)
+    {
+        delete equalizer;
+        return NULL;
+    }
 
     return equalizer;
 }
@@ -84,38 +91,54 @@ DuEqualizer *DuEqualizer::fromDuMusicFile(const FX_equalizer du_equalizer)
 
 DuEqualizer *DuEqualizer::fromJson(const QJsonObject &jsonEqualizer)
 {
-    DuEqualizer *equalizer = new DuEqualizer();
-    const QStringList &keyList = equalizer->keys();
+    QJsonValue jsonOnOff        = jsonEqualizer[KEY_EQ_ONOFF];
+    QJsonValue jsonLowGain      = jsonEqualizer[KEY_EQ_LOWBANDGAIN];
+    QJsonValue jsonLoMidGain    = jsonEqualizer[KEY_EQ_LOWMIDBANDGAIN];
+    QJsonValue jsonHiMidGain    = jsonEqualizer[KEY_EQ_HIGHMIDBANDGAIN];
+    QJsonValue jsonHighGain     = jsonEqualizer[KEY_EQ_HIGHBANDGAIN];
+    QJsonValue jsonLowFreq      = jsonEqualizer[KEY_EQ_LOWBANDFREQUENCY];
+    QJsonValue jsonLoMidFreq    = jsonEqualizer[KEY_EQ_LOWMIDBANDFREQUENCY];
+    QJsonValue jsonHiMidFreq    = jsonEqualizer[KEY_EQ_HIGHMIDBANDFREQUENCY];
+    QJsonValue jsonHighFreq     = jsonEqualizer[KEY_EQ_HIGHBANDFREQUENCY];
+    QJsonValue jsonLoMidQual    = jsonEqualizer[KEY_EQ_LOWMIDBANDQUALITYFACTOR];
+    QJsonValue jsonHiMidQual    = jsonEqualizer[KEY_EQ_HIGHMIDBANDQUALITYFACTOR];
+    QJsonValue jsonEffectName   = jsonEqualizer[KEY_EQ_EFFECTNAME];
 
-    bool test = true;
-    for (int i = 0; i < keyList.count(); i++)
-    {
-        test = test && jsonEqualizer.contains(keyList[i]);
-    }
+    if (        !jsonOnOff.isDouble()       ||  !jsonLowGain.isDouble()
+            ||  !jsonLoMidGain.isDouble()   ||  !jsonHiMidGain.isDouble()
+            ||  !jsonHighGain.isDouble()    ||  !jsonLowFreq.isDouble()
+            ||  !jsonLoMidFreq.isDouble()   ||  !jsonHiMidFreq.isDouble()
+            ||  !jsonHighFreq.isDouble()    ||  !jsonLoMidQual.isDouble()
+            ||  !jsonHiMidQual.isDouble()   ||  !jsonEffectName.isString())
 
-    if (!test)
         return NULL;
 
-    equalizer->setOnOff(jsonEqualizer[KEY_EQ_ONOFF].toInt());
 
-    equalizer->setLowBandGain(jsonEqualizer[KEY_EQ_LOWBANDGAIN].toInt());
-    equalizer->setLowMidBandGain(jsonEqualizer[KEY_EQ_LOWMIDBANDGAIN].toInt());
-    equalizer->setHighMidBandGain(jsonEqualizer[KEY_EQ_HIGHMIDBANDGAIN].toInt());
-    equalizer->setHighBandGain(jsonEqualizer[KEY_EQ_HIGHBANDGAIN].toInt());
+    DuEqualizer *equalizer = new DuEqualizer;
+    bool verif = true;
 
-    equalizer->setLowBandFrequency(jsonEqualizer[KEY_EQ_LOWBANDFREQUENCY].toInt());
-    equalizer->setLowMidBandFrequency(
-                jsonEqualizer[KEY_EQ_LOWMIDBANDFREQUENCY].toInt());
-    equalizer->setHighMidBandFrequency(
-                jsonEqualizer[KEY_EQ_HIGHMIDBANDFREQUENCY].toInt());
-    equalizer->setHighBandFrequency(jsonEqualizer[KEY_EQ_HIGHBANDFREQUENCY].toInt());
+    verif = verif && equalizer->setOnOff(jsonOnOff.toInt());
 
-    equalizer->setLowMidBandQualityFactor(
-                jsonEqualizer[KEY_EQ_LOWMIDBANDQUALITYFACTOR].toInt());
-    equalizer->setHighMidBandQualityFactor(
-                jsonEqualizer[KEY_EQ_HIGHMIDBANDQUALITYFACTOR].toInt());
+    verif = verif && equalizer->setLowBandGain(jsonLowGain.toInt());
+    verif = verif && equalizer->setLowMidBandGain(jsonLoMidGain.toInt());
+    verif = verif && equalizer->setHighMidBandGain(jsonHiMidGain.toInt());
+    verif = verif && equalizer->setHighBandGain(jsonHighGain.toInt());
 
-    equalizer->setEffectName(jsonEqualizer[KEY_EQ_EFFECTNAME].toString());
+    verif = verif && equalizer->setLowBandFrequency(jsonLowFreq.toInt());
+    verif = verif && equalizer->setLowMidBandFrequency(jsonLoMidFreq.toInt());
+    verif = verif && equalizer->setHighMidBandFrequency(jsonHiMidFreq.toInt());
+    verif = verif && equalizer->setHighBandFrequency(jsonHighFreq.toInt());
+
+    verif = verif && equalizer->setLowMidBandQualityFactor(jsonLoMidQual.toInt());
+    verif = verif && equalizer->setHighMidBandQualityFactor(jsonHiMidQual.toInt());
+
+    verif = verif && equalizer->setEffectName(jsonEffectName.toString());
+
+    if (!verif)
+    {
+        delete equalizer;
+        return NULL;
+    }
 
     return equalizer;
 }
@@ -126,19 +149,19 @@ int DuEqualizer::getOnOff() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_ONOFF));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuEqualizer::setOnOff(int value)
+bool DuEqualizer::setOnOff(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_ONOFF));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -147,19 +170,19 @@ int DuEqualizer::getLowBandGain() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_LOWBANDGAIN));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuEqualizer::setLowBandGain(int value)
+bool DuEqualizer::setLowBandGain(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_LOWBANDGAIN));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuEqualizer::getLowMidBandGain() const
@@ -167,19 +190,19 @@ int DuEqualizer::getLowMidBandGain() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_LOWMIDBANDGAIN));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuEqualizer::setLowMidBandGain(int value)
+bool DuEqualizer::setLowMidBandGain(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_LOWMIDBANDGAIN));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuEqualizer::getHighMidBandGain() const
@@ -187,19 +210,19 @@ int DuEqualizer::getHighMidBandGain() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_HIGHMIDBANDGAIN));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuEqualizer::setHighMidBandGain(int value)
+bool DuEqualizer::setHighMidBandGain(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_HIGHMIDBANDGAIN));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuEqualizer::getHighBandGain() const
@@ -207,19 +230,19 @@ int DuEqualizer::getHighBandGain() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_HIGHBANDGAIN));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuEqualizer::setHighBandGain(int value)
+bool DuEqualizer::setHighBandGain(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_HIGHBANDGAIN));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -228,19 +251,19 @@ int DuEqualizer::getLowBandFrequency() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_LOWBANDFREQUENCY));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuEqualizer::setLowBandFrequency(int value)
+bool DuEqualizer::setLowBandFrequency(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_LOWBANDFREQUENCY));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuEqualizer::getLowMidBandFrequency() const
@@ -248,19 +271,19 @@ int DuEqualizer::getLowMidBandFrequency() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_LOWMIDBANDFREQUENCY));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuEqualizer::setLowMidBandFrequency(int value)
+bool DuEqualizer::setLowMidBandFrequency(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_LOWMIDBANDFREQUENCY));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuEqualizer::getHighMidBandFrequency() const
@@ -268,19 +291,19 @@ int DuEqualizer::getHighMidBandFrequency() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_HIGHMIDBANDFREQUENCY));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuEqualizer::setHighMidBandFrequency(int value)
+bool DuEqualizer::setHighMidBandFrequency(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_HIGHMIDBANDFREQUENCY));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuEqualizer::getHighBandFrequency() const
@@ -288,19 +311,19 @@ int DuEqualizer::getHighBandFrequency() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_HIGHBANDFREQUENCY));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuEqualizer::setHighBandFrequency(int value)
+bool DuEqualizer::setHighBandFrequency(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_HIGHBANDFREQUENCY));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -310,20 +333,20 @@ int DuEqualizer::getLowMidBandQualityFactor() const
             dynamic_cast<DuNumeric *>(getChild(KEY_EQ_LOWMIDBANDQUALITYFACTOR));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuEqualizer::setLowMidBandQualityFactor(int value)
+bool DuEqualizer::setLowMidBandQualityFactor(int value)
 {
     DuNumeric *tmp =
             dynamic_cast<DuNumeric *>(getChild(KEY_EQ_LOWMIDBANDQUALITYFACTOR));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuEqualizer::getHighMidBandQualityFactor() const
@@ -332,20 +355,20 @@ int DuEqualizer::getHighMidBandQualityFactor() const
             dynamic_cast<DuNumeric *>(getChild(KEY_EQ_HIGHMIDBANDQUALITYFACTOR));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuEqualizer::setHighMidBandQualityFactor(int value)
+bool DuEqualizer::setHighMidBandQualityFactor(int value)
 {
     DuNumeric *tmp =
             dynamic_cast<DuNumeric *>(getChild(KEY_EQ_HIGHMIDBANDQUALITYFACTOR));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -359,12 +382,12 @@ QString DuEqualizer::getEffectName() const
     return tmp->getString();
 }
 
-void DuEqualizer::setEffectName(const QString &value)
+bool DuEqualizer::setEffectName(const QString &value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_EQ_EFFECTNAME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setString(value);
+    return tmp->setString(value);
 }

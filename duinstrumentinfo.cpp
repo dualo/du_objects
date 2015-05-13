@@ -35,20 +35,27 @@ DuInstrumentInfo::~DuInstrumentInfo()
 
 DuInstrumentInfo *DuInstrumentInfo::fromDuMusicFile(const s_instr &du_instrInfo)
 {
-    DuInstrumentInfo *instrInfo = new DuInstrumentInfo();
+    DuInstrumentInfo *instrInfo = new DuInstrumentInfo;
+    bool verif = true;
 
-    instrInfo->setCategory(
+    verif = verif && instrInfo->setCategory(
             QString(QByteArray((char *)du_instrInfo.instr_cat, NAME_CARACT)));
-    instrInfo->setName(
+    verif = verif && instrInfo->setName(
             QString(QByteArray((char *)du_instrInfo.instr_name, NAME_CARACT)));
-    instrInfo->setID(du_instrInfo.instr_id);
-    //instrInfo->setUserID(instrInfo.instr_userid);
+    verif = verif && instrInfo->setID(du_instrInfo.instr_id);
+    //verif = verif && instrInfo->setUserID(instrInfo.instr_userid);
 
-    instrInfo->setMidiProgramChange(du_instrInfo.instr_midi_pc);
-    instrInfo->setMidiControlChange0(du_instrInfo.instr_midi_C0);
+    verif = verif && instrInfo->setMidiProgramChange(du_instrInfo.instr_midi_pc);
+    verif = verif && instrInfo->setMidiControlChange0(du_instrInfo.instr_midi_C0);
 
-    instrInfo->setActiveNoteOff(du_instrInfo.instr_noteoff);
-    instrInfo->setRelativeVolume(du_instrInfo.instr_relvolume);
+    verif = verif && instrInfo->setActiveNoteOff(du_instrInfo.instr_noteoff);
+    verif = verif && instrInfo->setRelativeVolume(du_instrInfo.instr_relvolume);
+
+    if (!verif)
+    {
+        delete instrInfo;
+        return NULL;
+    }
 
     return instrInfo;
 }
@@ -56,29 +63,41 @@ DuInstrumentInfo *DuInstrumentInfo::fromDuMusicFile(const s_instr &du_instrInfo)
 
 DuInstrumentInfo *DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
 {
-    DuInstrumentInfo *instrInfo = new DuInstrumentInfo();
-    const QStringList &keyList = instrInfo->keys();
+    QJsonValue jsonCategory     = jsonInstrInfo[KEY_INSTRINFO_CATEGORY];
+    QJsonValue jsonName         = jsonInstrInfo[KEY_INSTRINFO_NAME];
+    QJsonValue jsonId           = jsonInstrInfo[KEY_INSTRINFO_ID];
+    QJsonValue jsonUserId       = jsonInstrInfo[KEY_INSTRINFO_USERID];
+    QJsonValue jsonProgChange   = jsonInstrInfo[KEY_INSTRINFO_MIDIPROGRAMCHANGE];
+    QJsonValue jsonCtrlChange   = jsonInstrInfo[KEY_INSTRINFO_MIDICONTROLCHANGE0];
+    QJsonValue jsonNoteOff      = jsonInstrInfo[KEY_INSTRINFO_ACTIVENOTEOFF];
+    QJsonValue jsonRelVolume    = jsonInstrInfo[KEY_INSTRINFO_RELVOLUME];
 
-    bool test = true;
-    for (int i = 0; i < keyList.count(); i++)
-    {
-        test = test && jsonInstrInfo.contains(keyList[i]);
-    }
+    if (        !jsonCategory.isString()    ||  !jsonName.isString()
+            ||  !jsonId.isDouble()          ||  !jsonUserId.isString()
+            ||  !jsonProgChange.isDouble()  ||  !jsonCtrlChange.isDouble()
+            ||  !jsonNoteOff.isDouble()     ||  !jsonRelVolume.isDouble())
 
-    if (!test)
         return NULL;
 
-    instrInfo->setCategory(jsonInstrInfo[KEY_INSTRINFO_CATEGORY].toString());
-    instrInfo->setName(jsonInstrInfo[KEY_INSTRINFO_NAME].toString());
-    instrInfo->setID(jsonInstrInfo[KEY_INSTRINFO_ID].toInt());
-    instrInfo->setUserID(jsonInstrInfo[KEY_INSTRINFO_USERID].toString());
 
-    instrInfo->setMidiProgramChange(
-                jsonInstrInfo[KEY_INSTRINFO_MIDIPROGRAMCHANGE].toInt());
-    instrInfo->setMidiControlChange0(
-                jsonInstrInfo[KEY_INSTRINFO_MIDICONTROLCHANGE0].toInt());
-    instrInfo->setActiveNoteOff(jsonInstrInfo[KEY_INSTRINFO_ACTIVENOTEOFF].toInt());
-    instrInfo->setRelativeVolume(jsonInstrInfo[KEY_INSTRINFO_RELVOLUME].toInt());
+    DuInstrumentInfo *instrInfo = new DuInstrumentInfo;
+    bool verif = true;
+
+    verif = verif && instrInfo->setCategory(jsonCategory.toString());
+    verif = verif && instrInfo->setName(jsonName.toString());
+    verif = verif && instrInfo->setID(jsonId.toInt());
+    verif = verif && instrInfo->setUserID(jsonUserId.toString());
+
+    verif = verif && instrInfo->setMidiProgramChange(jsonProgChange.toInt());
+    verif = verif && instrInfo->setMidiControlChange0(jsonCtrlChange.toInt());
+    verif = verif && instrInfo->setActiveNoteOff(jsonNoteOff.toInt());
+    verif = verif && instrInfo->setRelativeVolume(jsonRelVolume.toInt());
+
+    if (!verif)
+    {
+        delete instrInfo;
+        return NULL;
+    }
 
     return instrInfo;
 }
@@ -94,14 +113,14 @@ QString DuInstrumentInfo::getCategory() const
     return tmp->getString();
 }
 
-void DuInstrumentInfo::setCategory(const QString &value)
+bool DuInstrumentInfo::setCategory(const QString &value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_INSTRINFO_CATEGORY));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setString(value);
+    return tmp->setString(value);
 }
 
 QString DuInstrumentInfo::getName() const
@@ -114,14 +133,14 @@ QString DuInstrumentInfo::getName() const
     return tmp->getString();
 }
 
-void DuInstrumentInfo::setName(const QString &value)
+bool DuInstrumentInfo::setName(const QString &value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_INSTRINFO_NAME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setString(value);
+    return tmp->setString(value);
 }
 
 int DuInstrumentInfo::getID() const
@@ -129,19 +148,19 @@ int DuInstrumentInfo::getID() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_INSTRINFO_ID));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuInstrumentInfo::setID(int value)
+bool DuInstrumentInfo::setID(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_INSTRINFO_ID));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 QString DuInstrumentInfo::getUserID() const
@@ -154,14 +173,14 @@ QString DuInstrumentInfo::getUserID() const
     return tmp->getString();
 }
 
-void DuInstrumentInfo::setUserID(const QString &value)
+bool DuInstrumentInfo::setUserID(const QString &value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_INSTRINFO_USERID));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setString(value);
+    return tmp->setString(value);
 }
 
 
@@ -171,20 +190,20 @@ int DuInstrumentInfo::getMidiProgramChange() const
             dynamic_cast<DuNumeric *>(getChild(KEY_INSTRINFO_MIDIPROGRAMCHANGE));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuInstrumentInfo::setMidiProgramChange(int value)
+bool DuInstrumentInfo::setMidiProgramChange(int value)
 {
     DuNumeric *tmp =
             dynamic_cast<DuNumeric *>(getChild(KEY_INSTRINFO_MIDIPROGRAMCHANGE));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuInstrumentInfo::getMidiControlChange0() const
@@ -193,20 +212,20 @@ int DuInstrumentInfo::getMidiControlChange0() const
             dynamic_cast<DuNumeric *>(getChild(KEY_INSTRINFO_MIDICONTROLCHANGE0));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuInstrumentInfo::setMidiControlChange0(int value)
+bool DuInstrumentInfo::setMidiControlChange0(int value)
 {
     DuNumeric *tmp =
             dynamic_cast<DuNumeric *>(getChild(KEY_INSTRINFO_MIDICONTROLCHANGE0));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -216,20 +235,20 @@ int DuInstrumentInfo::getActiveNoteOff() const
             dynamic_cast<DuNumeric *>(getChild(KEY_INSTRINFO_ACTIVENOTEOFF));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuInstrumentInfo::setActiveNoteOff(int value)
+bool DuInstrumentInfo::setActiveNoteOff(int value)
 {
     DuNumeric *tmp =
             dynamic_cast<DuNumeric *>(getChild(KEY_INSTRINFO_ACTIVENOTEOFF));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuInstrumentInfo::getRelativeVolume() const
@@ -237,17 +256,17 @@ int DuInstrumentInfo::getRelativeVolume() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_INSTRINFO_RELVOLUME));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuInstrumentInfo::setRelativeVolume(int value)
+bool DuInstrumentInfo::setRelativeVolume(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_INSTRINFO_RELVOLUME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }

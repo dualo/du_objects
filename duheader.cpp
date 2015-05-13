@@ -27,32 +27,39 @@ DuHeader::~DuHeader()
 
 DuHeader *DuHeader::fromDuMusicFile(const music_song &du_song)
 {
-    DuHeader *header = new DuHeader();
+    DuHeader *header = new DuHeader;
+    bool verif = true;
 
-    header->setFileVersion(du_song.s_version_music);
+    verif = verif && header->setFileVersion(du_song.s_version_music);
 
-    header->setOriginalSerialNumber(
+    verif = verif && header->setOriginalSerialNumber(
             QString(QByteArray((char *)du_song.s_original_sn, HEADER_NAME_SIZE)));
-    header->setOriginalName(
+    verif = verif && header->setOriginalName(
             QString(QByteArray((char *)du_song.s_original_name, HEADER_NAME_SIZE)));
-    header->setOriginalUser(
+    verif = verif && header->setOriginalUser(
             QString(QByteArray((char *)du_song.s_original_user, HEADER_NAME_SIZE)));
-    header->setOriginalUserId(
+    verif = verif && header->setOriginalUserId(
             QString(QByteArray((char *)du_song.s_original_userid, HEADER_NAME_SIZE)));
 
-    header->setLastModifSerialNumber(
+    verif = verif && header->setLastModifSerialNumber(
             QString(QByteArray((char *)du_song.s_modif_sn, HEADER_NAME_SIZE)));
-    header->setLastModifName(
+    verif = verif && header->setLastModifName(
             QString(QByteArray((char *)du_song.s_modif_name, HEADER_NAME_SIZE)));
-    header->setLastModifUser(
+    verif = verif && header->setLastModifUser(
             QString(QByteArray((char *)du_song.s_modif_user, HEADER_NAME_SIZE)));
-    header->setLastModifUserId(
+    verif = verif && header->setLastModifUserId(
             QString(QByteArray((char *)du_song.s_modif_userid, HEADER_NAME_SIZE)));
 
-    header->setSongId(du_song.s_id);
-    header->setSongName(
+    verif = verif && header->setSongId(du_song.s_id);
+    verif = verif && header->setSongName(
             QString(QByteArray((char *)du_song.s_name, MUSIC_SONG_NAME_SIZE)));
-    header->setSongVersion(du_song.s_version_song & 0x7FFFFFFF);
+    verif = verif && header->setSongVersion(du_song.s_version_song & 0x7FFFFFFF);
+
+    if (!verif)
+    {
+        delete header;
+        return NULL;
+    }
 
     return header;
 }
@@ -60,33 +67,53 @@ DuHeader *DuHeader::fromDuMusicFile(const music_song &du_song)
 
 DuHeader *DuHeader::fromJson(const QJsonObject &jsonHeader)
 {
-    DuHeader *header = new DuHeader();
-    const QStringList &keyList = header->keys();
+    QJsonValue jsonFileVersion      = jsonHeader[KEY_HEAD_FILEVERSION];
+    QJsonValue jsonOrigSerialNum    = jsonHeader[KEY_HEAD_ORIGINALSN];
+    QJsonValue jsonOrigName         = jsonHeader[KEY_HEAD_ORIGINALNAME];
+    QJsonValue jsonOrigUser         = jsonHeader[KEY_HEAD_ORIGINALUSER];
+    QJsonValue jsonOrigUserId       = jsonHeader[KEY_HEAD_ORIGINALUSERID];
+    QJsonValue jsonLastSerialNum    = jsonHeader[KEY_HEAD_LASTMODIFSN];
+    QJsonValue jsonLastName         = jsonHeader[KEY_HEAD_LASTMODIFNAME];
+    QJsonValue jsonLastUser         = jsonHeader[KEY_HEAD_LASTMODIFUSER];
+    QJsonValue jsonLastUserId       = jsonHeader[KEY_HEAD_LASTMODIFUSERID];
+    QJsonValue jsonSongId           = jsonHeader[KEY_HEAD_SONGID];
+    QJsonValue jsonSongName         = jsonHeader[KEY_HEAD_SONGNAME];
+    QJsonValue jsonSongVersion      = jsonHeader[KEY_HEAD_SONGVERSION];
 
-    bool test = true;
-    for (int i = 0; i < keyList.count(); i++)
-    {
-        test = test && jsonHeader.contains(keyList[i]);
-    }
+    if (        !jsonFileVersion.isDouble() ||  !jsonOrigSerialNum.isString()
+            ||  !jsonOrigName.isString()    ||  !jsonOrigUser.isString()
+            ||  !jsonOrigUserId.isString()  ||  !jsonLastSerialNum.isString()
+            ||  !jsonLastName.isString()    ||  !jsonLastUser.isString()
+            ||  !jsonLastUserId.isString()  ||  !jsonSongId.isDouble()
+            ||  !jsonSongName.isString()    ||  !jsonSongVersion.isDouble())
 
-    if (!test)
         return NULL;
 
-    header->setFileVersion(jsonHeader[KEY_HEAD_FILEVERSION].toInt());
 
-    header->setOriginalSerialNumber(jsonHeader[KEY_HEAD_ORIGINALSN].toString());
-    header->setOriginalName(jsonHeader[KEY_HEAD_ORIGINALNAME].toString());
-    header->setOriginalUser(jsonHeader[KEY_HEAD_ORIGINALUSER].toString());
-    header->setOriginalUserId(jsonHeader[KEY_HEAD_ORIGINALUSERID].toString());
+    DuHeader *header = new DuHeader;
+    bool verif = true;
 
-    header->setLastModifSerialNumber(jsonHeader[KEY_HEAD_LASTMODIFSN].toString());
-    header->setLastModifName(jsonHeader[KEY_HEAD_LASTMODIFNAME].toString());
-    header->setLastModifUser(jsonHeader[KEY_HEAD_LASTMODIFUSER].toString());
-    header->setLastModifUserId(jsonHeader[KEY_HEAD_LASTMODIFUSERID].toString());
+    verif = verif && header->setFileVersion(jsonFileVersion.toInt());
 
-    header->setSongId(jsonHeader[KEY_HEAD_SONGID].toInt());
-    header->setSongName(jsonHeader[KEY_HEAD_SONGNAME].toString());
-    header->setSongVersion(jsonHeader[KEY_HEAD_SONGVERSION].toInt());
+    verif = verif && header->setOriginalSerialNumber(jsonOrigSerialNum.toString());
+    verif = verif && header->setOriginalName(jsonOrigName.toString());
+    verif = verif && header->setOriginalUser(jsonOrigUser.toString());
+    verif = verif && header->setOriginalUserId(jsonOrigUserId.toString());
+
+    verif = verif && header->setLastModifSerialNumber(jsonLastSerialNum.toString());
+    verif = verif && header->setLastModifName(jsonLastName.toString());
+    verif = verif && header->setLastModifUser(jsonLastUser.toString());
+    verif = verif && header->setLastModifUserId(jsonLastUserId.toString());
+
+    verif = verif && header->setSongId(jsonSongId.toInt());
+    verif = verif && header->setSongName(jsonSongName.toString());
+    verif = verif && header->setSongVersion(jsonSongVersion.toInt());
+
+    if (!verif)
+    {
+        delete header;
+        return NULL;
+    }
 
     return header;
 }
@@ -97,19 +124,19 @@ int DuHeader::getFileVersion() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_HEAD_FILEVERSION));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuHeader::setFileVersion(int value)
+bool DuHeader::setFileVersion(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_HEAD_FILEVERSION));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -123,14 +150,14 @@ QString DuHeader::getOriginalSerialNumber() const
     return tmp->getString();
 }
 
-void DuHeader::setOriginalSerialNumber(const QString value)
+bool DuHeader::setOriginalSerialNumber(const QString value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_HEAD_ORIGINALSN));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setString(value);
+    return tmp->setString(value);
 }
 
 QString DuHeader::getOriginalName() const
@@ -143,14 +170,14 @@ QString DuHeader::getOriginalName() const
     return tmp->getString();
 }
 
-void DuHeader::setOriginalName(const QString value)
+bool DuHeader::setOriginalName(const QString value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_HEAD_ORIGINALNAME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setString(value);
+    return tmp->setString(value);
 }
 
 QString DuHeader::getOriginalUser() const
@@ -163,14 +190,14 @@ QString DuHeader::getOriginalUser() const
     return tmp->getString();
 }
 
-void DuHeader::setOriginalUser(const QString value)
+bool DuHeader::setOriginalUser(const QString value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_HEAD_ORIGINALUSER));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setString(value);
+    return tmp->setString(value);
 }
 
 QString DuHeader::getOriginalUserId() const
@@ -183,14 +210,14 @@ QString DuHeader::getOriginalUserId() const
     return tmp->getString();
 }
 
-void DuHeader::setOriginalUserId(const QString value)
+bool DuHeader::setOriginalUserId(const QString value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_HEAD_ORIGINALUSERID));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setString(value);
+    return tmp->setString(value);
 }
 
 
@@ -204,14 +231,14 @@ QString DuHeader::getLastModifSerialNumber() const
     return tmp->getString();
 }
 
-void DuHeader::setLastModifSerialNumber(const QString value)
+bool DuHeader::setLastModifSerialNumber(const QString value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_HEAD_LASTMODIFSN));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setString(value);
+    return tmp->setString(value);
 }
 
 QString DuHeader::getLastModifName() const
@@ -224,14 +251,14 @@ QString DuHeader::getLastModifName() const
     return tmp->getString();
 }
 
-void DuHeader::setLastModifName(const QString value)
+bool DuHeader::setLastModifName(const QString value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_HEAD_LASTMODIFNAME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setString(value);
+    return tmp->setString(value);
 }
 
 QString DuHeader::getLastModifUser() const
@@ -244,14 +271,14 @@ QString DuHeader::getLastModifUser() const
     return tmp->getString();
 }
 
-void DuHeader::setLastModifUser(const QString value)
+bool DuHeader::setLastModifUser(const QString value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_HEAD_LASTMODIFUSER));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setString(value);
+    return tmp->setString(value);
 }
 
 QString DuHeader::getLastModifUserId() const
@@ -264,14 +291,14 @@ QString DuHeader::getLastModifUserId() const
     return tmp->getString();
 }
 
-void DuHeader::setLastModifUserId(const QString value)
+bool DuHeader::setLastModifUserId(const QString value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_HEAD_LASTMODIFUSERID));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setString(value);
+    return tmp->setString(value);
 }
 
 
@@ -280,19 +307,19 @@ int DuHeader::getSongId() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_HEAD_SONGID));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuHeader::setSongId(int value)
+bool DuHeader::setSongId(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_HEAD_SONGID));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 QString DuHeader::getSongName() const
@@ -305,14 +332,14 @@ QString DuHeader::getSongName() const
     return tmp->getString();
 }
 
-void DuHeader::setSongName(const QString value)
+bool DuHeader::setSongName(const QString value)
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_HEAD_SONGNAME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setString(value);
+    return tmp->setString(value);
 }
 
 int DuHeader::getSongVersion() const
@@ -320,17 +347,17 @@ int DuHeader::getSongVersion() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_HEAD_SONGVERSION));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuHeader::setSongVersion(int value)
+bool DuHeader::setSongVersion(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_HEAD_SONGVERSION));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }

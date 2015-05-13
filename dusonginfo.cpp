@@ -57,23 +57,32 @@ DuSongInfo::~DuSongInfo()
 
 DuSongInfo *DuSongInfo::fromDuMusicFile(const music_song &du_song)
 {
-    DuSongInfo *songInfo = new DuSongInfo();
+    DuSongInfo *songInfo = new DuSongInfo;
+    bool verif = true;
 
-    songInfo->setReferenceTrack(du_song.s_reftrack);
-    songInfo->setReferenceLoopDuration(du_song.s_looptimer);
+    verif = verif && songInfo->setReferenceTrack(du_song.s_reftrack);
+    verif = verif && songInfo->setReferenceLoopDuration(du_song.s_looptimer);
 
-    songInfo->setVolume(du_song.s_volume);
-    songInfo->setTempo(du_song.s_tempo);
-    songInfo->setOffset(du_song.s_decaltempo);
-    songInfo->setClickVolume(du_song.s_voltempo);
+    verif = verif && songInfo->setVolume(du_song.s_volume);
+    verif = verif && songInfo->setTempo(du_song.s_tempo);
+    verif = verif && songInfo->setOffset(du_song.s_decaltempo);
+    verif = verif && songInfo->setClickVolume(du_song.s_voltempo);
 
-    songInfo->setGain(du_song.s_mix.m_inputgain);
-    songInfo->setLowCutFilterFrequency(du_song.s_mix.m_locutfilterfrequency);
-    songInfo->setHighCutFilterFrequency(du_song.s_mix.m_hicutfilterfrequency);
+    verif = verif && songInfo->setGain(du_song.s_mix.m_inputgain);
+    verif = verif && songInfo->setLowCutFilterFrequency(
+                du_song.s_mix.m_locutfilterfrequency);
+    verif = verif && songInfo->setHighCutFilterFrequency(
+                du_song.s_mix.m_hicutfilterfrequency);
 
-    songInfo->setTimeSignature(du_song.s_timesignature);
-    songInfo->setScale(du_song.s_displaynote);
-    songInfo->setTonality(du_song.s_scaletonality);
+    verif = verif && songInfo->setTimeSignature(du_song.s_timesignature);
+    verif = verif && songInfo->setScale(du_song.s_displaynote);
+    verif = verif && songInfo->setTonality(du_song.s_scaletonality);
+
+    if (!verif)
+    {
+        delete songInfo;
+        return NULL;
+    }
 
     return songInfo;
 }
@@ -81,34 +90,48 @@ DuSongInfo *DuSongInfo::fromDuMusicFile(const music_song &du_song)
 
 DuSongInfo *DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
 {
-    DuSongInfo *songInfo = new DuSongInfo();
-    const QStringList &keyList = songInfo->keys();
+    QJsonValue jsonRefTrack         = jsonSongInfo[KEY_SONG_REFERENCETRACK];
+    QJsonValue jsonRefDuration      = jsonSongInfo[KEY_SONG_REFERENCELOOPDURATION];
+    QJsonValue jsonTempo            = jsonSongInfo[KEY_SONG_TEMPO];
+    QJsonValue jsonOffset           = jsonSongInfo[KEY_SONG_OFFSET];
+    QJsonValue jsonGain             = jsonSongInfo[KEY_SONG_GAIN];
+    QJsonValue jsonLoCutFreq        = jsonSongInfo[KEY_SONG_LOWCUTFILTERFREQ];
+    QJsonValue jsonHiCutFreq        = jsonSongInfo[KEY_SONG_HIGHCUTFILTERFREQ];
+    QJsonValue jsonScale            = jsonSongInfo[KEY_SONG_SCALE];
+    QJsonValue jsonTonality         = jsonSongInfo[KEY_SONG_TONALITY];
+    QJsonValue jsonTimeSignature    = jsonSongInfo[KEY_SONG_TIMESIGNATURE];
 
-    bool test = true;
-    for (int i = 0; i < keyList.count(); i++)
-    {
-        test = test && jsonSongInfo.contains(keyList[i]);
-    }
+    if (!jsonRefTrack.isDouble()    ||  !jsonRefDuration.isDouble()
+            ||  !jsonTempo.isDouble()       ||  !jsonOffset.isDouble()
+            ||  !jsonGain.isDouble()        ||  !jsonLoCutFreq.isDouble()
+            ||  !jsonHiCutFreq.isDouble()   ||  !jsonScale.isDouble()
+            ||  !jsonTonality.isDouble()    ||  !jsonTimeSignature.isDouble())
 
-    if (!test)
         return NULL;
 
-    songInfo->setReferenceTrack(jsonSongInfo[KEY_SONG_REFERENCETRACK].toInt());
-    songInfo->setReferenceLoopDuration(
-                jsonSongInfo[KEY_SONG_REFERENCELOOPDURATION].toInt());
 
-    songInfo->setTempo(jsonSongInfo[KEY_SONG_TEMPO].toInt());
-    songInfo->setOffset(jsonSongInfo[KEY_SONG_OFFSET].toInt());
+    DuSongInfo *songInfo = new DuSongInfo;
+    bool verif = true;
 
-    songInfo->setGain(jsonSongInfo[KEY_SONG_GAIN].toInt());
-    songInfo->setLowCutFilterFrequency(
-                jsonSongInfo[KEY_SONG_LOWCUTFILTERFREQ].toInt());
-    songInfo->setHighCutFilterFrequency(
-                jsonSongInfo[KEY_SONG_HIGHCUTFILTERFREQ].toInt());
+    verif = verif && songInfo->setReferenceTrack(jsonRefTrack.toInt());
+    verif = verif && songInfo->setReferenceLoopDuration(jsonRefDuration.toInt());
 
-    songInfo->setScale(jsonSongInfo[KEY_SONG_SCALE].toInt());
-    songInfo->setTonality(jsonSongInfo[KEY_SONG_TONALITY].toInt());
-    songInfo->setTimeSignature(jsonSongInfo[KEY_SONG_TIMESIGNATURE].toInt());
+    verif = verif && songInfo->setTempo(jsonTempo.toInt());
+    verif = verif && songInfo->setOffset(jsonOffset.toInt());
+
+    verif = verif && songInfo->setGain(jsonGain.toInt());
+    verif = verif && songInfo->setLowCutFilterFrequency(jsonLoCutFreq.toInt());
+    verif = verif && songInfo->setHighCutFilterFrequency(jsonHiCutFreq.toInt());
+
+    verif = verif && songInfo->setScale(jsonScale.toInt());
+    verif = verif && songInfo->setTonality(jsonTonality.toInt());
+    verif = verif && songInfo->setTimeSignature(jsonTimeSignature.toInt());
+
+    if (!verif)
+    {
+        delete songInfo;
+        return NULL;
+    }
 
     return songInfo;
 }
@@ -119,19 +142,19 @@ int DuSongInfo::getReferenceTrack() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_REFERENCETRACK));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuSongInfo::setReferenceTrack(int value)
+bool DuSongInfo::setReferenceTrack(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_REFERENCETRACK));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuSongInfo::getReferenceLoopDuration() const
@@ -139,19 +162,19 @@ int DuSongInfo::getReferenceLoopDuration() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_REFERENCELOOPDURATION));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuSongInfo::setReferenceLoopDuration(int value)
+bool DuSongInfo::setReferenceLoopDuration(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_REFERENCELOOPDURATION));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -160,19 +183,19 @@ int DuSongInfo::getVolume() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_VOLUME));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuSongInfo::setVolume(int value)
+bool DuSongInfo::setVolume(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_VOLUME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuSongInfo::getTempo() const
@@ -180,19 +203,19 @@ int DuSongInfo::getTempo() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_TEMPO));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuSongInfo::setTempo(int value)
+bool DuSongInfo::setTempo(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_TEMPO));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuSongInfo::getOffset() const
@@ -200,19 +223,19 @@ int DuSongInfo::getOffset() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_OFFSET));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuSongInfo::setOffset(int value)
+bool DuSongInfo::setOffset(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_OFFSET));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuSongInfo::getClickVolume() const
@@ -220,19 +243,19 @@ int DuSongInfo::getClickVolume() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_CLICKVOLUME));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuSongInfo::setClickVolume(int value)
+bool DuSongInfo::setClickVolume(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_CLICKVOLUME));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -241,19 +264,19 @@ int DuSongInfo::getGain() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_GAIN));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuSongInfo::setGain(int value)
+bool DuSongInfo::setGain(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_GAIN));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuSongInfo::getLowCutFilterFrequency() const
@@ -261,19 +284,19 @@ int DuSongInfo::getLowCutFilterFrequency() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_LOWCUTFILTERFREQ));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuSongInfo::setLowCutFilterFrequency(int value)
+bool DuSongInfo::setLowCutFilterFrequency(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_LOWCUTFILTERFREQ));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuSongInfo::getHighCutFilterFrequency() const
@@ -281,19 +304,19 @@ int DuSongInfo::getHighCutFilterFrequency() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_HIGHCUTFILTERFREQ));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuSongInfo::setHighCutFilterFrequency(int value)
+bool DuSongInfo::setHighCutFilterFrequency(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_HIGHCUTFILTERFREQ));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 
@@ -302,19 +325,19 @@ int DuSongInfo::getTimeSignature() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_TIMESIGNATURE));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuSongInfo::setTimeSignature(int value)
+bool DuSongInfo::setTimeSignature(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_TIMESIGNATURE));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuSongInfo::getScale() const
@@ -322,19 +345,19 @@ int DuSongInfo::getScale() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_SCALE));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuSongInfo::setScale(int value)
+bool DuSongInfo::setScale(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_SCALE));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
 
 int DuSongInfo::getTonality() const
@@ -342,17 +365,17 @@ int DuSongInfo::getTonality() const
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_TONALITY));
 
     if (tmp == NULL)
-        return 0;
+        return -1;
 
     return tmp->getNumeric();
 }
 
-void DuSongInfo::setTonality(int value)
+bool DuSongInfo::setTonality(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_TONALITY));
 
     if (tmp == NULL)
-        return;
+        return false;
 
-    tmp->setNumeric(value);
+    return tmp->setNumeric(value);
 }
