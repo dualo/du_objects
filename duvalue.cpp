@@ -17,6 +17,12 @@ DuValue::~DuValue()
 }
 
 
+int DuValue::size() const
+{
+    return maxSize;
+}
+
+
 QVariant DuValue::getValue() const
 {
     return value;

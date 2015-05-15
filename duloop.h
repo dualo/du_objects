@@ -23,6 +23,8 @@ public:
                                    const music_sample *du_sample);
     static DuLoop *fromJson(const QJsonObject &jsonLoop);
 
+    int size() const;
+
     int getState() const;
     bool setState(int value);
 
@@ -37,6 +39,8 @@ public:
 
     DuArray *getEvents();
     void setEvents(DuArray *array);
+
+    int countEvents() const;
 };
 
 #endif // DULOOP_H

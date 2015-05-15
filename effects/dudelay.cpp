@@ -113,6 +113,12 @@ DuDelay *DuDelay::fromJson(const QJsonObject &jsonDelay)
 }
 
 
+int DuDelay::size() const
+{
+    return FX_DELAY_SIZE;
+}
+
+
 int DuDelay::getOnOff() const
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_ONOFF));

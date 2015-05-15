@@ -19,6 +19,8 @@ public:
     static DuVibrato *fromDuMusicFile(const FX_vibrato &du_vibrato);
     static DuVibrato *fromJson(const QJsonObject &jsonVibrato);
 
+    int size() const;
+
     int getDepth() const;
     bool setDepth(int value);
 

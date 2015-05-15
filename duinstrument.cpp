@@ -261,6 +261,12 @@ DuInstrument *DuInstrument::fromJson(const QJsonObject &jsonInstrument)
 }
 
 
+int DuInstrument::size() const
+{
+    return MUSIC_INSTRU_SIZE;
+}
+
+
 DuInstrumentInfo *DuInstrument::getInstrumentInfo()
 {
     return dynamic_cast<DuInstrumentInfo *>(getChild(KEY_INSTR_INSTRUMENTINFO));

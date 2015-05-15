@@ -103,6 +103,12 @@ DuInstrumentInfo *DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
 }
 
 
+int DuInstrumentInfo::size() const
+{
+    return INSTR_INFO_SIZE;
+}
+
+
 QString DuInstrumentInfo::getCategory() const
 {
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_INSTRINFO_CATEGORY));

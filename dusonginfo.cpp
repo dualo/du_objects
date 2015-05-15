@@ -137,6 +137,13 @@ DuSongInfo *DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
 }
 
 
+int DuSongInfo::size() const
+{
+    //TODO: add defines for dummy sizes in music_parameters_mng.h
+    return SONGINFO_SIZE;
+}
+
+
 int DuSongInfo::getReferenceTrack() const
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_REFERENCETRACK));

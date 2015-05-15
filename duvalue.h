@@ -12,6 +12,8 @@ public:
     explicit DuValue(int maxSize);
     virtual ~DuValue();
 
+    virtual int size() const;
+
     QVariant getValue() const;
     void setValue(const QVariant &value);
 

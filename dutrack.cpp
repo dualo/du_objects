@@ -103,6 +103,46 @@ DuTrack *DuTrack::fromJson(const QJsonObject &jsonTrack)
 }
 
 
+int DuTrack::size() const
+{
+    //TODO: add defines for dummy sizes in music_parameters_mng.h
+    int size = 0;
+    int tmpSize;
+
+    DuNumeric *channel = dynamic_cast<DuNumeric *>(getChild(KEY_TRACK_CHANNEL));
+    if (channel == NULL)
+        return -1;
+
+    tmpSize = channel->size();
+    if (tmpSize == -1)
+        return -1;
+
+    size += tmpSize;
+
+    DuNumeric *currentLoop = dynamic_cast<DuNumeric *>(getChild(KEY_TRACK_CURRENTLOOP));
+    if (currentLoop == NULL)
+        return -1;
+
+    tmpSize = currentLoop->size();
+    if (tmpSize == -1)
+        return -1;
+
+    size += tmpSize;
+
+    DuArray *loops = dynamic_cast<DuArray *>(getChild(KEY_TRACK_LOOPS));
+    if (loops == NULL)
+        return -1;
+
+    tmpSize = loops->size();
+    if (tmpSize == -1)
+        return -1;
+
+    size += tmpSize;
+
+    return size + TRACK_DUMMY_SIZE;
+}
+
+
 int DuTrack::getChannel() const
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_TRACK_CHANNEL));

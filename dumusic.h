@@ -20,6 +20,8 @@ public:
     static DuMusic *fromDuMusicFile(const s_total_buffer &du_music);
     static DuMusic *fromJson(const QJsonObject &jsonMusic);
 
+    int size() const;
+
     DuHeader *getHeader();
     void setHeader(DuHeader *header);
 

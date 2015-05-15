@@ -116,6 +116,12 @@ DuDistortion *DuDistortion::fromJson(const QJsonObject &jsonDistortion)
 }
 
 
+int DuDistortion::size() const
+{
+    return FX_DIST_SIZE;
+}
+
+
 int DuDistortion::getOnOff() const
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DIST_ONOFF));

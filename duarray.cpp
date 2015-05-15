@@ -16,13 +16,32 @@ DuArray::~DuArray()
 QJsonValue DuArray::toJson() const
 {
     QJsonArray jsonArray;
+    int count = array.count();
 
-    for (int i = 0; i < array.count(); i++)
+    for (int i = 0; i < count; i++)
     {
         jsonArray.append(array[i]->toJson());
     }
 
     return QJsonValue(jsonArray);
+}
+
+
+int DuArray::size() const
+{
+    int size = 0;
+    int count = array.count();
+
+    for (int i = 0; i < count; i++)
+    {
+        int tmpSize = array[i]->size();
+        if (tmpSize == -1)
+            return -1;
+
+        size += tmpSize;
+    }
+
+    return size;
 }
 
 

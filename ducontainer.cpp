@@ -38,6 +38,28 @@ QJsonValue DuContainer::toJson() const
 }
 
 
+int DuContainer::size() const
+{
+    QMapIterator<QString, DuObject *> i(children);
+    int size = 0;
+
+    while (i.hasNext())
+    {
+        i.next();
+        if (i.value() == NULL)
+            return -1;
+
+        int tmpSize = i.value()->size();
+        if (tmpSize == -1)
+            return -1;
+
+        size += tmpSize;
+    }
+
+    return size;
+}
+
+
 void DuContainer::addChild(const QString &key, DuObject *child)
 {
     children.insert(key, child);

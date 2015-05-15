@@ -23,6 +23,8 @@ public:
     static DuDistortion *fromDuMusicFile(const FX_distortion &du_distortion);
     static DuDistortion *fromJson(const QJsonObject &jsonDistortion);
 
+    int size() const;
+
     int getOnOff() const;
     bool setOnOff(int value);
 

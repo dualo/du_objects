@@ -20,6 +20,8 @@ public:
     static DuWah *fromDuMusicFile(const FX_wah &du_wah);
     static DuWah *fromJson(const QJsonObject &jsonWah);
 
+    int size() const;
+
     int getFilterType() const;
     bool setFilterType(int value);
 

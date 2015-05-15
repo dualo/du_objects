@@ -18,7 +18,7 @@
 #define KEY_PRESET_PITCHBENDSENSITIVITY     "PitchBendSensitivity"
 #define KEY_PRESET_DISPOSITION              "Disposition"
 
-//TODO: ADD MISSING PARAMETERS (GYRO, SLIDERS...)
+//TODO: add missing parameters (gyro, sliders...)
 
 
 class DuPreset : public DuContainer
@@ -29,6 +29,8 @@ public:
 
     static DuPreset *fromDuMusicFile(const preset_instr &du_preset);
     static DuPreset *fromJson(const QJsonObject &jsonPreset);
+
+    int size() const;
 
     int getVolume() const;
     bool setVolume(int value);

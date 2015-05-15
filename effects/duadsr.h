@@ -23,6 +23,8 @@ public:
 
     QByteArray toDuMusicFile();
 
+    int size() const;
+
     int getEnvelopeAttackTime() const;
     bool setEnvelopeAttackTime(int value);
 

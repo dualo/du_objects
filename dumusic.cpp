@@ -105,6 +105,45 @@ DuMusic *DuMusic::fromJson(const QJsonObject &jsonMusic)
 }
 
 
+int DuMusic::size() const
+{
+    int size = 0;
+    int tmpSize;
+
+    DuHeader *header = dynamic_cast<DuHeader *>(getChild(KEY_MUSIC_HEADER));
+    if (header == NULL)
+        return -1;
+
+    tmpSize = header->size();
+    if (tmpSize == -1)
+        return -1;
+
+    size += tmpSize;
+
+    DuSongInfo *songInfo = dynamic_cast<DuSongInfo *>(getChild(KEY_MUSIC_SONGINFO));
+    if (songInfo == NULL)
+        return -1;
+
+    tmpSize = songInfo->size();
+    if (tmpSize == -1)
+        return -1;
+
+    size += tmpSize;
+
+    DuArray *tracks = dynamic_cast<DuArray *>(getChild(KEY_MUSIC_TRACKS));
+    if (tracks == NULL)
+        return -1;
+
+    tmpSize = tracks->size();
+    if (tmpSize == -1)
+        return -1;
+
+    size += tmpSize;
+
+    return size;
+}
+
+
 DuHeader *DuMusic::getHeader()
 {
     return dynamic_cast<DuHeader *>(getChild(KEY_MUSIC_HEADER));

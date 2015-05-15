@@ -16,6 +16,8 @@ public:
 
     virtual QJsonValue toJson() const;
 
+    virtual int size() const;
+
     void addChild(const QString &key, DuObject *child);
     DuObject *getChild(const QString &key) const;
 

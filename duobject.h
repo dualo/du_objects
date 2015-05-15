@@ -19,8 +19,10 @@ public:
     explicit DuObject();
     virtual ~DuObject();
 
-    //virtual QByteArray toDuMusicFile() = 0;
+    //virtual QByteArray toDuMusicFile() const = 0;
     virtual QJsonValue toJson() const = 0;
+
+    virtual int size() const = 0;
 };
 
 //Q_DECLARE_METATYPE(DuObject *)

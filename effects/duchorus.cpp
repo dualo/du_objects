@@ -135,6 +135,12 @@ DuChorus *DuChorus::fromJson(const QJsonObject &jsonChorus)
 }
 
 
+int DuChorus::size() const
+{
+    return FX_CHORUS_SIZE;
+}
+
+
 int DuChorus::getMode() const
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_CHORUS_MODE));

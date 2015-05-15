@@ -119,6 +119,13 @@ DuHeader *DuHeader::fromJson(const QJsonObject &jsonHeader)
 }
 
 
+int DuHeader::size() const
+{
+    //TODO: add defines for dummy sizes in music_parameters_mng.h
+    return HEADER_SIZE;
+}
+
+
 int DuHeader::getFileVersion() const
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_HEAD_FILEVERSION));

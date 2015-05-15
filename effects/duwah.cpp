@@ -86,6 +86,12 @@ DuWah *DuWah::fromJson(const QJsonObject &jsonWah)
 }
 
 
+int DuWah::size() const
+{
+    return FX_WAH_SIZE;
+}
+
+
 int DuWah::getFilterType() const
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_WAH_FILTERTYPE));

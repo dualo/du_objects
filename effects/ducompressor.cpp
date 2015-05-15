@@ -112,6 +112,12 @@ DuCompressor *DuCompressor::fromJson(const QJsonObject &jsonCompressor)
 }
 
 
+int DuCompressor::size() const
+{
+    return FX_COMP_SIZE;
+}
+
+
 int DuCompressor::getOnOff() const
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_COMP_ONOFF));

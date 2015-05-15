@@ -23,6 +23,7 @@
 #define KEY_HEAD_SONGVERSION        "SongVersion"
 
 #define HEADER_NAME_SIZE            16
+#define HEADER_SIZE                 12 + 8*HEADER_NAME_SIZE + MUSIC_SONG_NAME_SIZE + 28
 
 
 class DuHeader : public DuContainer
@@ -33,6 +34,8 @@ public:
 
     static DuHeader *fromDuMusicFile(const music_song &du_song);
     static DuHeader *fromJson(const QJsonObject &jsonHeader);
+
+    int size() const;
 
     int getFileVersion() const;
     bool setFileVersion(int value);

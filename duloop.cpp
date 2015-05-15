@@ -125,6 +125,17 @@ DuLoop *DuLoop::fromJson(const QJsonObject &jsonLoop)
 }
 
 
+int DuLoop::size() const
+{
+    int numEvents = countEvents();
+
+    if (numEvents == -1)
+        return -1;
+
+    return MUSIC_LOOP_SIZE + MUSIC_SAMPLE_SIZE * numEvents;
+}
+
+
 int DuLoop::getState() const
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_LOOP_STATE));
@@ -210,4 +221,14 @@ void DuLoop::setEvents(DuArray *array)
         delete getChild(KEY_LOOP_EVENTS);
 
     addChild(KEY_LOOP_EVENTS, array);
+}
+
+int DuLoop::countEvents() const
+{
+    DuArray *tmp = dynamic_cast<DuArray *>(getChild(KEY_LOOP_EVENTS));
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->count();
 }

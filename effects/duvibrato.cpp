@@ -78,6 +78,12 @@ DuVibrato *DuVibrato::fromJson(const QJsonObject &jsonVibrato)
 }
 
 
+int DuVibrato::size() const
+{
+    return FX_VIB_SIZE;
+}
+
+
 int DuVibrato::getDepth() const
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_VIB_DEPTH));

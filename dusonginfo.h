@@ -21,6 +21,8 @@
 #define KEY_SONG_SCALE                  "Scale"
 #define KEY_SONG_TONALITY               "Tonality"
 
+#define SONGINFO_SIZE                   19 + NUM_LED_VALUE + FX_MIX_SIZE + 25
+
 
 class DuSongInfo : public DuContainer
 {
@@ -30,6 +32,8 @@ public:
 
     static DuSongInfo *fromDuMusicFile(const music_song &du_song);
     static DuSongInfo *fromJson(const QJsonObject &jsonSongInfo);
+
+    int size() const;
 
     int getReferenceTrack() const;
     bool setReferenceTrack(int value);

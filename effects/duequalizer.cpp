@@ -144,6 +144,12 @@ DuEqualizer *DuEqualizer::fromJson(const QJsonObject &jsonEqualizer)
 }
 
 
+int DuEqualizer::size() const
+{
+    return FX_EQ_SIZE;
+}
+
+
 int DuEqualizer::getOnOff() const
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_ONOFF));

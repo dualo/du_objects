@@ -13,6 +13,8 @@ public:
 
     QJsonValue toJson() const;
 
+    int size() const;
+
     void append(DuObject *element);
     int count();
 

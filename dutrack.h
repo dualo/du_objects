@@ -8,6 +8,8 @@
 #define KEY_TRACK_CURRENTLOOP   "CurrentLoop"
 #define KEY_TRACK_LOOPS         "Loops"
 
+#define TRACK_DUMMY_SIZE        2
+
 
 class DuTrack : public DuContainer
 {
@@ -18,6 +20,8 @@ public:
     static DuTrack *fromDuMusicFile(const music_track &du_track,
                                     const music_sample *du_sample);
     static DuTrack *fromJson(const QJsonObject &jsonTrack);
+
+    int size() const;
 
     int getChannel() const;
     bool setChannel(int value);

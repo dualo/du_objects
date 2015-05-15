@@ -109,6 +109,12 @@ DuMixer *DuMixer::fromJson(const QJsonObject &jsonMixer)
 }
 
 
+int DuMixer::size() const
+{
+    return FX_MIX_SIZE;
+}
+
+
 int DuMixer::getInputGain() const
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_INPUTGAIN));

@@ -117,6 +117,12 @@ QByteArray DuAdsr::toDuMusicFile()
 }
 
 
+int DuAdsr::size() const
+{
+    return FX_ADSR_SIZE;
+}
+
+
 int DuAdsr::getEnvelopeAttackTime() const
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_ADSR_ENVELOPEATTACKTIME));

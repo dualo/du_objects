@@ -116,6 +116,12 @@ QByteArray DuEvent::toDuMusicFile()
 }
 
 
+int DuEvent::size() const
+{
+    return MUSIC_SAMPLE_SIZE;
+}
+
+
 int DuEvent::getTime() const
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EVENT_TIME));

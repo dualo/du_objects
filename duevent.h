@@ -24,6 +24,8 @@ public:
 
     QByteArray toDuMusicFile();
 
+    int size() const;
+
     int getTime() const;
     bool setTime(int value);
 

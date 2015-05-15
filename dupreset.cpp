@@ -125,6 +125,12 @@ DuPreset *DuPreset::fromJson(const QJsonObject &jsonPreset)
 }
 
 
+int DuPreset::size() const
+{
+    return PRESET_STRUCT_SIZE;
+}
+
+
 int DuPreset::getVolume() const
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_VOLUME));
