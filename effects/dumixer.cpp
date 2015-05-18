@@ -109,6 +109,57 @@ DuMixer *DuMixer::fromJson(const QJsonObject &jsonMixer)
 }
 
 
+QByteArray DuMixer::toDuMusicFile() const
+{
+    FX_mix du_mixer;
+    int tmp = 0;
+
+
+    tmp = getInputGain();
+    if (tmp == -1)
+        return QByteArray();
+    du_mixer.m_inputgain = tmp;
+
+    tmp = getLowCutFilterFrequency();
+    if (tmp == -1)
+        return QByteArray();
+    du_mixer.m_locutfilterfrequency = tmp;
+
+    tmp = getHighCutFilterFrequency();
+    if (tmp == -1)
+        return QByteArray();
+    du_mixer.m_hicutfilterfrequency = tmp;
+
+    tmp = getOutputLevel();
+    if (tmp == -1)
+        return QByteArray();
+    du_mixer.m_ouputlevel = tmp;
+
+    tmp = getOutputPanning();
+    if (tmp == -1)
+        return QByteArray();
+    du_mixer.m_outputpanning = tmp;
+
+    tmp = getOutputFrontRear();
+    if (tmp == -1)
+        return QByteArray();
+    du_mixer.m_ouputfrontrear = tmp;
+
+    tmp = getSendToReverb();
+    if (tmp == -1)
+        return QByteArray();
+    du_mixer.m_sendtoreverb = tmp;
+
+    tmp = getSendToChorus();
+    if (tmp == -1)
+        return QByteArray();
+    du_mixer.m_sendtochorus = tmp;
+
+
+    return QByteArray((char *)&(du_mixer), FX_MIX_SIZE);
+}
+
+
 int DuMixer::size() const
 {
     return FX_MIX_SIZE;

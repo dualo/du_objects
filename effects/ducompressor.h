@@ -23,6 +23,8 @@ public:
     static DuCompressor *fromDuMusicFile(const FX_compressor &du_compressor);
     static DuCompressor *fromJson(const QJsonObject &jsonCompressor);
 
+    QByteArray toDuMusicFile() const;
+
     int size() const;
 
     int getOnOff() const;

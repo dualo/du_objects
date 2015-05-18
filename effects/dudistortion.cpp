@@ -116,6 +116,64 @@ DuDistortion *DuDistortion::fromJson(const QJsonObject &jsonDistortion)
 }
 
 
+QByteArray DuDistortion::toDuMusicFile() const
+{
+    FX_distortion du_distortion;
+    int tmp = 0;
+
+
+    tmp = getOnOff();
+    if (tmp == -1)
+        return QByteArray();
+    du_distortion.d_on_off = tmp;
+
+    tmp = getPreGain();
+    if (tmp == -1)
+        return QByteArray();
+    du_distortion.d_pre_gain = tmp;
+
+    tmp = getEffectType();
+    if (tmp == -1)
+        return QByteArray();
+    du_distortion.d_type = tmp;
+
+    tmp = getLowPassFilterFrequency();
+    if (tmp == -1)
+        return QByteArray();
+    du_distortion.d_lowpassfilterfreq = tmp;
+
+    tmp = getLowPassFilterResonance();
+    if (tmp == -1)
+        return QByteArray();
+    du_distortion.d_lowpassfilterres = tmp;
+
+    tmp = getPostGain();
+    if (tmp == -1)
+        return QByteArray();
+    du_distortion.d_postgain = tmp;
+
+    tmp = getDrive();
+    if (tmp == -1)
+        return QByteArray();
+    du_distortion.d_drive = tmp;
+
+
+    QByteArray tmpName(NAME_CARACT, (char)0x00);
+    tmpName.prepend(getEffectName().toUtf8());
+    if (tmpName == QString(""))
+        return QByteArray();
+
+#ifdef Q_OS_WIN
+    memcpy_s(du_distortion.d_name, NAME_CARACT, tmpName.data(), NAME_CARACT);
+#else
+    memcpy(du_distortion.d_name, tmpName.data(), NAME_CARACT);
+#endif
+
+
+    return QByteArray((char *)&(du_distortion), FX_DIST_SIZE);
+}
+
+
 int DuDistortion::size() const
 {
     return FX_DIST_SIZE;

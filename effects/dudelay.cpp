@@ -113,6 +113,64 @@ DuDelay *DuDelay::fromJson(const QJsonObject &jsonDelay)
 }
 
 
+QByteArray DuDelay::toDuMusicFile() const
+{
+    FX_delay du_delay;
+    int tmp = 0;
+
+
+    tmp = getOnOff();
+    if (tmp == -1)
+        return QByteArray();
+    du_delay.d_on_off = tmp;
+
+    tmp = getMode();
+    if (tmp == -1)
+        return QByteArray();
+    du_delay.d_mode = tmp;
+
+    tmp = getPreLowPassFilter();
+    if (tmp == -1)
+        return QByteArray();
+    du_delay.d_prelp = tmp;
+
+    tmp = getEffectLevel();
+    if (tmp == -1)
+        return QByteArray();
+    du_delay.d_level = tmp;
+
+    tmp = getEffectTime();
+    if (tmp == -1)
+        return QByteArray();
+    du_delay.d_time = tmp;
+
+    tmp = getFeedback();
+    if (tmp == -1)
+        return QByteArray();
+    du_delay.d_feedback = tmp;
+
+    tmp = getHDAmp();
+    if (tmp == -1)
+        return QByteArray();
+    du_delay.d_hdamp = tmp;
+
+
+    QByteArray tmpName(NAME_CARACT, (char)0x00);
+    tmpName.prepend(getEffectName().toUtf8());
+    if (tmpName == QString(""))
+        return QByteArray();
+
+#ifdef Q_OS_WIN
+    memcpy_s(du_delay.d_name, NAME_CARACT, tmpName.data(), NAME_CARACT);
+#else
+    memcpy(du_delay.d_name, tmpName.data(), NAME_CARACT);
+#endif
+
+
+    return QByteArray((char *)&(du_delay), FX_DELAY_SIZE);
+}
+
+
 int DuDelay::size() const
 {
     return FX_DELAY_SIZE;

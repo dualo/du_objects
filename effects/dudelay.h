@@ -23,6 +23,8 @@ public:
     static DuDelay *fromDuMusicFile(const FX_delay &du_delay);
     static DuDelay *fromJson(const QJsonObject &jsonDelay);
 
+    QByteArray toDuMusicFile() const;
+
     int size() const;
 
     int getOnOff() const;

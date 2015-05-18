@@ -27,6 +27,8 @@ public:
     static DuEqualizer *fromDuMusicFile(const FX_equalizer du_equalizer);
     static DuEqualizer *fromJson(const QJsonObject &jsonEqualizer);
 
+    QByteArray toDuMusicFile() const;
+
     int size() const;
 
     int getOnOff() const;

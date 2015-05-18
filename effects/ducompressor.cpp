@@ -111,6 +111,63 @@ DuCompressor *DuCompressor::fromJson(const QJsonObject &jsonCompressor)
     return compressor;
 }
 
+QByteArray DuCompressor::toDuMusicFile() const
+{
+    FX_compressor du_compressor;
+    int tmp = 0;
+
+
+    tmp = getOnOff();
+    if (tmp == -1)
+        return QByteArray();
+    du_compressor.c_on_off = tmp;
+
+    tmp = getAttackTime();
+    if (tmp == -1)
+        return QByteArray();
+    du_compressor.c_attacktime = tmp;
+
+    tmp = getReleaseTime();
+    if (tmp == -1)
+        return QByteArray();
+    du_compressor.c_releasetime = tmp;
+
+    tmp = getThreshold();
+    if (tmp == -1)
+        return QByteArray();
+    du_compressor.c_threshold = tmp;
+
+    tmp = getRatio();
+    if (tmp == -1)
+        return QByteArray();
+    du_compressor.c_ratio = tmp;
+
+    tmp = getBoost();
+    if (tmp == -1)
+        return QByteArray();
+    du_compressor.c_boost = tmp;
+
+    tmp = getKneeType();
+    if (tmp == -1)
+        return QByteArray();
+    du_compressor.c_kneetype = tmp;
+
+
+    QByteArray tmpName(NAME_CARACT, (char)0x00);
+    tmpName.prepend(getEffectName().toUtf8());
+    if (tmpName == QString(""))
+        return QByteArray();
+
+#ifdef Q_OS_WIN
+    memcpy_s(du_compressor.c_name, NAME_CARACT, tmpName.data(), NAME_CARACT);
+#else
+    memcpy(du_compressor.c_name, tmpName.data(), NAME_CARACT);
+#endif
+
+
+    return QByteArray((char *)&(du_compressor), FX_COMP_SIZE);
+}
+
 
 int DuCompressor::size() const
 {

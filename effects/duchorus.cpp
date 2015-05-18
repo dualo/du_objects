@@ -135,6 +135,79 @@ DuChorus *DuChorus::fromJson(const QJsonObject &jsonChorus)
 }
 
 
+QByteArray DuChorus::toDuMusicFile() const
+{
+    FX_chorus du_chorus;
+    int tmp = 0;
+
+
+    tmp = getMode();
+    if (tmp == -1)
+        return QByteArray();
+    du_chorus.c_mode = tmp;
+
+    tmp = getEffectLevel();
+    if (tmp == -1)
+        return QByteArray();
+    du_chorus.c_effectlevel = tmp;
+
+    tmp = getDelayTime();
+    if (tmp == -1)
+        return QByteArray();
+    du_chorus.c_delaytime = tmp;
+
+    tmp = getFeedback();
+    if (tmp == -1)
+        return QByteArray();
+    du_chorus.c_feedback = tmp;
+
+    tmp = getInputHighPassFilterFrequency();
+    if (tmp == -1)
+        return QByteArray();
+    du_chorus.c_inputhighpassfilter = tmp;
+
+    tmp = getHDAmp();
+    if (tmp == -1)
+        return QByteArray();
+    du_chorus.c_hdamp = tmp;
+
+    tmp = getModulationDepth();
+    if (tmp == -1)
+        return QByteArray();
+    du_chorus.c_modulationdepth = tmp;
+
+    tmp = getModulationRate();
+    if (tmp == -1)
+        return QByteArray();
+    du_chorus.c_modulationrate = tmp;
+
+    tmp = getTremoloShape();
+    if (tmp == -1)
+        return QByteArray();
+    du_chorus.c_tremoloshape = tmp;
+
+    tmp = getRotarySpeed();
+    if (tmp == -1)
+        return QByteArray();
+    du_chorus.c_rotaryspeed = tmp;
+
+
+    QByteArray tmpName(NAME_CARACT, (char)0x00);
+    tmpName.prepend(getEffectName().toUtf8());
+    if (tmpName == QString(""))
+        return QByteArray();
+
+#ifdef Q_OS_WIN
+    memcpy_s(du_chorus.c_name, NAME_CARACT, tmpName.data(), NAME_CARACT);
+#else
+    memcpy(du_chorus.c_name, tmpName.data(), NAME_CARACT);
+#endif
+
+
+    return QByteArray((char *)&(du_chorus), FX_CHORUS_SIZE);
+}
+
+
 int DuChorus::size() const
 {
     return FX_CHORUS_SIZE;

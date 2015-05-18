@@ -23,6 +23,8 @@ public:
     static DuMixer *fromDuMusicFile(const FX_mix &du_mixer);
     static DuMixer *fromJson(const QJsonObject &jsonMixer);
 
+    QByteArray toDuMusicFile() const;
+
     int size() const;
 
     int getInputGain() const;

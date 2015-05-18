@@ -78,6 +78,44 @@ DuVibrato *DuVibrato::fromJson(const QJsonObject &jsonVibrato)
 }
 
 
+QByteArray DuVibrato::toDuMusicFile() const
+{
+    FX_vibrato du_vibrato;
+    int tmp = 0;
+
+
+    tmp = getDepth();
+    if (tmp == -1)
+        return QByteArray();
+    du_vibrato.v_depth = tmp;
+
+    tmp = getDelay();
+    if (tmp == -1)
+        return QByteArray();
+    du_vibrato.v_delay = tmp;
+
+    tmp = getRate();
+    if (tmp == -1)
+        return QByteArray();
+    du_vibrato.v_rate = tmp;
+
+
+    QByteArray tmpName(NAME_CARACT, (char)0x00);
+    tmpName.prepend(getEffectName().toUtf8());
+    if (tmpName == QString(""))
+        return QByteArray();
+
+#ifdef Q_OS_WIN
+    memcpy_s(du_vibrato.v_name, NAME_CARACT, tmpName.data(), NAME_CARACT);
+#else
+    memcpy(du_vibrato.v_name, tmpName.data(), NAME_CARACT);
+#endif
+
+
+    return QByteArray((char *)&(du_vibrato), FX_VIB_SIZE);
+}
+
+
 int DuVibrato::size() const
 {
     return FX_VIB_SIZE;

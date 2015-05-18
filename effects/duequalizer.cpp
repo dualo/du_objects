@@ -144,6 +144,84 @@ DuEqualizer *DuEqualizer::fromJson(const QJsonObject &jsonEqualizer)
 }
 
 
+QByteArray DuEqualizer::toDuMusicFile() const
+{
+    FX_equalizer du_equalizer;
+    int tmp = 0;
+
+
+    tmp = getOnOff();
+    if (tmp == -1)
+        return QByteArray();
+    du_equalizer.e_on_off = tmp;
+
+    tmp = getLowBandGain();
+    if (tmp == -1)
+        return QByteArray();
+    du_equalizer.e_lowbandgain = tmp;
+
+    tmp = getLowMidBandGain();
+    if (tmp == -1)
+        return QByteArray();
+    du_equalizer.e_lowmidbandgain = tmp;
+
+    tmp = getHighMidBandGain();
+    if (tmp == -1)
+        return QByteArray();
+    du_equalizer.e_highmidbandgain = tmp;
+
+    tmp = getHighBandGain();
+    if (tmp == -1)
+        return QByteArray();
+    du_equalizer.e_highbandgain = tmp;
+
+    tmp = getLowBandFrequency();
+    if (tmp == -1)
+        return QByteArray();
+    du_equalizer.e_lowbandfrequency = tmp;
+
+    tmp = getLowMidBandFrequency();
+    if (tmp == -1)
+        return QByteArray();
+    du_equalizer.e_lowmidbandfrequency = tmp;
+
+    tmp = getHighMidBandFrequency();
+    if (tmp == -1)
+        return QByteArray();
+    du_equalizer.e_highmidbandfrequency = tmp;
+
+    tmp = getHighBandFrequency();
+    if (tmp == -1)
+        return QByteArray();
+    du_equalizer.e_highbandfrequency = tmp;
+
+    tmp = getLowMidBandQualityFactor();
+    if (tmp == -1)
+        return QByteArray();
+    du_equalizer.e_lowmidbandQ = tmp;
+
+    tmp = getHighMidBandQualityFactor();
+    if (tmp == -1)
+        return QByteArray();
+    du_equalizer.e_highmidbandQ = tmp;
+
+
+    QByteArray tmpName(NAME_CARACT, (char)0x00);
+    tmpName.prepend(getEffectName().toUtf8());
+    if (tmpName == QString(""))
+        return QByteArray();
+
+#ifdef Q_OS_WIN
+    memcpy_s(du_equalizer.e_name, NAME_CARACT, tmpName.data(), NAME_CARACT);
+#else
+    memcpy(du_equalizer.e_name, tmpName.data(), NAME_CARACT);
+#endif
+
+
+    return QByteArray((char *)&(du_equalizer), FX_EQ_SIZE);
+}
+
+
 int DuEqualizer::size() const
 {
     return FX_EQ_SIZE;

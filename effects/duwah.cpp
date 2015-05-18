@@ -86,6 +86,49 @@ DuWah *DuWah::fromJson(const QJsonObject &jsonWah)
 }
 
 
+QByteArray DuWah::toDuMusicFile() const
+{
+    FX_wah du_wah;
+    int tmp = 0;
+
+
+    tmp = getFilterType();
+    if (tmp == -1)
+        return QByteArray();
+    du_wah.w_filtertype = tmp;
+
+    tmp = getFilterFrequency();
+    if (tmp == -1)
+        return QByteArray();
+    du_wah.w_filterfreq = tmp;
+
+    tmp = getFilterResonance();
+    if (tmp == -1)
+        return QByteArray();
+    du_wah.w_filterres = tmp;
+
+    tmp = getAutoWahSensitivity();
+    if (tmp == -1)
+        return QByteArray();
+    du_wah.w_autowahsensitivity = tmp;
+
+
+    QByteArray tmpName(NAME_CARACT, (char)0x00);
+    tmpName.prepend(getEffectName().toUtf8());
+    if (tmpName == QString(""))
+        return QByteArray();
+
+#ifdef Q_OS_WIN
+    memcpy_s(du_wah.w_name, NAME_CARACT, tmpName.data(), NAME_CARACT);
+#else
+    memcpy(du_wah.w_name, tmpName.data(), NAME_CARACT);
+#endif
+
+
+    return QByteArray((char *)&(du_wah), FX_WAH_SIZE);
+}
+
+
 int DuWah::size() const
 {
     return FX_WAH_SIZE;

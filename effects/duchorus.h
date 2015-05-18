@@ -26,6 +26,8 @@ public:
     static DuChorus *fromDuMusicFile(const FX_chorus &du_chorus);
     static DuChorus *fromJson(const QJsonObject &jsonChorus);
 
+    QByteArray toDuMusicFile() const;
+
     int size() const;
 
     int getMode() const;

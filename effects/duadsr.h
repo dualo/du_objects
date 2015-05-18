@@ -21,7 +21,7 @@ public:
     static DuAdsr *fromDuMusicFile(const FX_adsr &du_adsr);
     static DuAdsr *fromJson(const QJsonObject &jsonAdsr);
 
-    QByteArray toDuMusicFile();
+    QByteArray toDuMusicFile() const;
 
     int size() const;
 
