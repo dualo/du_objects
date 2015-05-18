@@ -11,17 +11,13 @@ DuPreset::DuPreset() :
              new DuNumeric(MAIN_PANNING_DEFAULT, NUMERIC_DEFAULT_SIZE,
                            MAIN_PANNING_MAX, MAIN_PANNING_MIN));
 
-    addChild(KEY_PRESET_EXPRESSION,
-             new DuNumeric(MAIN_EXPRESSION_DEFAULT, NUMERIC_DEFAULT_SIZE,
-                           MAIN_EXPRESSION_MAX, MAIN_EXPRESSION_MIN));
+    addChild(KEY_PRESET_SENDTOREVERB,
+             new DuNumeric(MAIN_SENDTOREV_DEFAULT, NUMERIC_DEFAULT_SIZE,
+                           MAIN_SENDTOREV_MAX, MAIN_SENDTOREV_MIN));
 
     addChild(KEY_PRESET_OCTAVE,
              new DuNumeric(MAIN_OCTAVE_DEFAULT, NUMERIC_DEFAULT_SIZE,
                            MAIN_OCTAVE_MAX, MAIN_OCTAVE_MIN));
-
-    addChild(KEY_PRESET_SENDTOREVERB,
-             new DuNumeric(MAIN_SENDTOREV_DEFAULT, NUMERIC_DEFAULT_SIZE,
-                           MAIN_SENDTOREV_MAX, MAIN_SENDTOREV_MIN));
 
     addChild(KEY_PRESET_PORTAMENTOONOFF,
              new DuNumeric(MAIN_PORT_ONOFF_DEFAULT, NUMERIC_DEFAULT_SIZE,
@@ -34,6 +30,10 @@ DuPreset::DuPreset() :
     addChild(KEY_PRESET_PORTAMENTOTIME,
              new DuNumeric(MAIN_PORT_TIME_DEFAULT, NUMERIC_DEFAULT_SIZE,
                            MAIN_PORT_TIME_MAX, MAIN_PORT_TIME_MIN));
+
+    addChild(KEY_PRESET_EXPRESSION,
+             new DuNumeric(MAIN_EXPRESSION_DEFAULT, NUMERIC_DEFAULT_SIZE,
+                           MAIN_EXPRESSION_MAX, MAIN_EXPRESSION_MIN));
 
     addChild(KEY_PRESET_PITCHBENDSENSITIVITY,
              new DuNumeric(MAIN_PB_SENS_DEFAULT, NUMERIC_DEFAULT_SIZE,
@@ -56,14 +56,14 @@ DuPreset *DuPreset::fromDuMusicFile(const preset_instr &du_preset)
 
     verif = verif && preset->setVolume(du_preset.s_volume);
     verif = verif && preset->setPanning(du_preset.s_panning);
-    verif = verif && preset->setExpression(du_preset.s_expression);
-    verif = verif && preset->setOctave(du_preset.s_instr_octave);
     verif = verif && preset->setSendToReverb(du_preset.s_sendtorev);
+    verif = verif && preset->setOctave(du_preset.s_instr_octave);
 
     verif = verif && preset->setPortamentoOnOff(du_preset.s_portamento_on_off);
     verif = verif && preset->setPortamentoControl(du_preset.s_portamento_ctrl);
     verif = verif && preset->setPortamentoTime(du_preset.s_portamento_time);
 
+    verif = verif && preset->setExpression(du_preset.s_expression);
     verif = verif && preset->setPitchBendSensitivity(du_preset.s_pitch_bend_sensitivity);
     verif = verif && preset->setDisposition(du_preset.s_disposition);
 
@@ -81,12 +81,12 @@ DuPreset *DuPreset::fromJson(const QJsonObject &jsonPreset)
 {
     QJsonValue jsonVolume       = jsonPreset[KEY_PRESET_VOLUME];
     QJsonValue jsonPanning      = jsonPreset[KEY_PRESET_PANNING];
-    QJsonValue jsonExpression   = jsonPreset[KEY_PRESET_EXPRESSION];
-    QJsonValue jsonOctave       = jsonPreset[KEY_PRESET_OCTAVE];
     QJsonValue jsonToReverb     = jsonPreset[KEY_PRESET_SENDTOREVERB];
+    QJsonValue jsonOctave       = jsonPreset[KEY_PRESET_OCTAVE];
     QJsonValue jsonPortaOnOff   = jsonPreset[KEY_PRESET_PORTAMENTOONOFF];
     QJsonValue jsonPortaCtrl    = jsonPreset[KEY_PRESET_PORTAMENTOCONTROL];
     QJsonValue jsonPortaTime    = jsonPreset[KEY_PRESET_PORTAMENTOTIME];
+    QJsonValue jsonExpression   = jsonPreset[KEY_PRESET_EXPRESSION];
     QJsonValue jsonPitchBend    = jsonPreset[KEY_PRESET_PITCHBENDSENSITIVITY];
     QJsonValue jsonDisposition  = jsonPreset[KEY_PRESET_DISPOSITION];
 
@@ -104,14 +104,14 @@ DuPreset *DuPreset::fromJson(const QJsonObject &jsonPreset)
 
     verif = verif && preset->setVolume(jsonVolume.toInt());
     verif = verif && preset->setPanning(jsonPanning.toInt());
-    verif = verif && preset->setExpression(jsonExpression.toInt());
-    verif = verif && preset->setOctave(jsonOctave.toInt());
     verif = verif && preset->setSendToReverb(jsonToReverb.toInt());
+    verif = verif && preset->setOctave(jsonOctave.toInt());
 
     verif = verif && preset->setPortamentoOnOff(jsonPortaOnOff.toInt());
     verif = verif && preset->setPortamentoControl(jsonPortaCtrl.toInt());
     verif = verif && preset->setPortamentoTime(jsonPortaTime.toInt());
 
+    verif = verif && preset->setExpression(jsonExpression.toInt());
     verif = verif && preset->setPitchBendSensitivity(jsonPitchBend.toInt());
     verif = verif && preset->setDisposition(jsonDisposition.toInt());
 
@@ -122,6 +122,75 @@ DuPreset *DuPreset::fromJson(const QJsonObject &jsonPreset)
     }
 
     return preset;
+}
+
+
+QByteArray DuPreset::toDuMusicFile() const
+{
+    preset_instr du_preset;
+
+    int tmpNum = 0;
+
+    QByteArray tmpClear(size(), (char)0x00);
+#ifdef Q_OS_WIN
+    memcpy_s((char *)&(du_preset), size(), tmpClear.data(), size());
+#else
+    memcpy((char *)&(du_preset), tmpClear.data(), size());
+#endif
+
+
+    tmpNum = getVolume();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_preset.s_volume = tmpNum;
+
+    tmpNum = getPanning();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_preset.s_panning = tmpNum;
+
+    tmpNum = getSendToReverb();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_preset.s_sendtorev = tmpNum;
+
+    tmpNum = getOctave();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_preset.s_instr_octave = tmpNum;
+
+    tmpNum = getPortamentoOnOff();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_preset.s_portamento_on_off = tmpNum;
+
+    tmpNum = getPortamentoControl();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_preset.s_portamento_ctrl = tmpNum;
+
+    tmpNum = getPortamentoTime();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_preset.s_portamento_time = tmpNum;
+
+    tmpNum = getExpression();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_preset.s_expression = tmpNum;
+
+    tmpNum = getPitchBendSensitivity();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_preset.s_pitch_bend_sensitivity = tmpNum;
+
+    tmpNum = getDisposition();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_preset.s_disposition = tmpNum;
+
+
+    return QByteArray((char *)&(du_preset), size());
 }
 
 
@@ -171,9 +240,9 @@ bool DuPreset::setPanning(int value)
     return tmp->setNumeric(value);
 }
 
-int DuPreset::getExpression() const
+int DuPreset::getSendToReverb() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_EXPRESSION));
+    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_SENDTOREVERB));
 
     if (tmp == NULL)
         return -1;
@@ -181,9 +250,9 @@ int DuPreset::getExpression() const
     return tmp->getNumeric();
 }
 
-bool DuPreset::setExpression(int value)
+bool DuPreset::setSendToReverb(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_EXPRESSION));
+    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_SENDTOREVERB));
 
     if (tmp == NULL)
         return false;
@@ -204,26 +273,6 @@ int DuPreset::getOctave() const
 bool DuPreset::setOctave(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_OCTAVE));
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuPreset::getSendToReverb() const
-{
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_SENDTOREVERB));
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuPreset::setSendToReverb(int value)
-{
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_SENDTOREVERB));
 
     if (tmp == NULL)
         return false;
@@ -292,6 +341,26 @@ bool DuPreset::setPortamentoTime(int value)
     return tmp->setNumeric(value);
 }
 
+
+int DuPreset::getExpression() const
+{
+    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_EXPRESSION));
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuPreset::setExpression(int value)
+{
+    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_EXPRESSION));
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
+}
 
 int DuPreset::getPitchBendSensitivity() const
 {

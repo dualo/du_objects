@@ -81,29 +81,32 @@ DuVibrato *DuVibrato::fromJson(const QJsonObject &jsonVibrato)
 QByteArray DuVibrato::toDuMusicFile() const
 {
     FX_vibrato du_vibrato;
-    int tmp = 0;
+
+    QString tmpStr;
+    int tmpNum = 0;
 
 
-    tmp = getDepth();
-    if (tmp == -1)
+    tmpNum = getDepth();
+    if (tmpNum == -1)
         return QByteArray();
-    du_vibrato.v_depth = tmp;
+    du_vibrato.v_depth = tmpNum;
 
-    tmp = getDelay();
-    if (tmp == -1)
+    tmpNum = getDelay();
+    if (tmpNum == -1)
         return QByteArray();
-    du_vibrato.v_delay = tmp;
+    du_vibrato.v_delay = tmpNum;
 
-    tmp = getRate();
-    if (tmp == -1)
+    tmpNum = getRate();
+    if (tmpNum == -1)
         return QByteArray();
-    du_vibrato.v_rate = tmp;
+    du_vibrato.v_rate = tmpNum;
 
 
     QByteArray tmpName(NAME_CARACT, (char)0x00);
-    tmpName.prepend(getEffectName().toUtf8());
-    if (tmpName == QString(""))
+    tmpStr = getEffectName();
+    if (tmpStr.isNull())
         return QByteArray();
+    tmpName.prepend(tmpStr.toUtf8());
 
 #ifdef Q_OS_WIN
     memcpy_s(du_vibrato.v_name, NAME_CARACT, tmpName.data(), NAME_CARACT);
@@ -188,7 +191,7 @@ QString DuVibrato::getEffectName() const
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_VIB_EFFECTNAME));
 
     if (tmp == NULL)
-        return "";
+        return QString();
 
     return tmp->getString();
 }

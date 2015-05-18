@@ -116,49 +116,52 @@ DuDelay *DuDelay::fromJson(const QJsonObject &jsonDelay)
 QByteArray DuDelay::toDuMusicFile() const
 {
     FX_delay du_delay;
-    int tmp = 0;
+
+    QString tmpStr;
+    int tmpNum = 0;
 
 
-    tmp = getOnOff();
-    if (tmp == -1)
+    tmpNum = getOnOff();
+    if (tmpNum == -1)
         return QByteArray();
-    du_delay.d_on_off = tmp;
+    du_delay.d_on_off = tmpNum;
 
-    tmp = getMode();
-    if (tmp == -1)
+    tmpNum = getMode();
+    if (tmpNum == -1)
         return QByteArray();
-    du_delay.d_mode = tmp;
+    du_delay.d_mode = tmpNum;
 
-    tmp = getPreLowPassFilter();
-    if (tmp == -1)
+    tmpNum = getPreLowPassFilter();
+    if (tmpNum == -1)
         return QByteArray();
-    du_delay.d_prelp = tmp;
+    du_delay.d_prelp = tmpNum;
 
-    tmp = getEffectLevel();
-    if (tmp == -1)
+    tmpNum = getEffectLevel();
+    if (tmpNum == -1)
         return QByteArray();
-    du_delay.d_level = tmp;
+    du_delay.d_level = tmpNum;
 
-    tmp = getEffectTime();
-    if (tmp == -1)
+    tmpNum = getEffectTime();
+    if (tmpNum == -1)
         return QByteArray();
-    du_delay.d_time = tmp;
+    du_delay.d_time = tmpNum;
 
-    tmp = getFeedback();
-    if (tmp == -1)
+    tmpNum = getFeedback();
+    if (tmpNum == -1)
         return QByteArray();
-    du_delay.d_feedback = tmp;
+    du_delay.d_feedback = tmpNum;
 
-    tmp = getHDAmp();
-    if (tmp == -1)
+    tmpNum = getHDAmp();
+    if (tmpNum == -1)
         return QByteArray();
-    du_delay.d_hdamp = tmp;
+    du_delay.d_hdamp = tmpNum;
 
 
     QByteArray tmpName(NAME_CARACT, (char)0x00);
-    tmpName.prepend(getEffectName().toUtf8());
-    if (tmpName == QString(""))
+    tmpStr = getEffectName();
+    if (tmpStr.isNull())
         return QByteArray();
+    tmpName.prepend(tmpStr.toUtf8());
 
 #ifdef Q_OS_WIN
     memcpy_s(du_delay.d_name, NAME_CARACT, tmpName.data(), NAME_CARACT);
@@ -324,7 +327,7 @@ QString DuDelay::getEffectName() const
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_DELAY_EFFECTNAME));
 
     if (tmp == NULL)
-        return "";
+        return QString();
 
     return tmp->getString();
 }

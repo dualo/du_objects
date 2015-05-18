@@ -138,64 +138,67 @@ DuChorus *DuChorus::fromJson(const QJsonObject &jsonChorus)
 QByteArray DuChorus::toDuMusicFile() const
 {
     FX_chorus du_chorus;
-    int tmp = 0;
+
+    QString tmpStr;
+    int tmpNum = 0;
 
 
-    tmp = getMode();
-    if (tmp == -1)
+    tmpNum = getMode();
+    if (tmpNum == -1)
         return QByteArray();
-    du_chorus.c_mode = tmp;
+    du_chorus.c_mode = tmpNum;
 
-    tmp = getEffectLevel();
-    if (tmp == -1)
+    tmpNum = getEffectLevel();
+    if (tmpNum == -1)
         return QByteArray();
-    du_chorus.c_effectlevel = tmp;
+    du_chorus.c_effectlevel = tmpNum;
 
-    tmp = getDelayTime();
-    if (tmp == -1)
+    tmpNum = getDelayTime();
+    if (tmpNum == -1)
         return QByteArray();
-    du_chorus.c_delaytime = tmp;
+    du_chorus.c_delaytime = tmpNum;
 
-    tmp = getFeedback();
-    if (tmp == -1)
+    tmpNum = getFeedback();
+    if (tmpNum == -1)
         return QByteArray();
-    du_chorus.c_feedback = tmp;
+    du_chorus.c_feedback = tmpNum;
 
-    tmp = getInputHighPassFilterFrequency();
-    if (tmp == -1)
+    tmpNum = getInputHighPassFilterFrequency();
+    if (tmpNum == -1)
         return QByteArray();
-    du_chorus.c_inputhighpassfilter = tmp;
+    du_chorus.c_inputhighpassfilter = tmpNum;
 
-    tmp = getHDAmp();
-    if (tmp == -1)
+    tmpNum = getHDAmp();
+    if (tmpNum == -1)
         return QByteArray();
-    du_chorus.c_hdamp = tmp;
+    du_chorus.c_hdamp = tmpNum;
 
-    tmp = getModulationDepth();
-    if (tmp == -1)
+    tmpNum = getModulationDepth();
+    if (tmpNum == -1)
         return QByteArray();
-    du_chorus.c_modulationdepth = tmp;
+    du_chorus.c_modulationdepth = tmpNum;
 
-    tmp = getModulationRate();
-    if (tmp == -1)
+    tmpNum = getModulationRate();
+    if (tmpNum == -1)
         return QByteArray();
-    du_chorus.c_modulationrate = tmp;
+    du_chorus.c_modulationrate = tmpNum;
 
-    tmp = getTremoloShape();
-    if (tmp == -1)
+    tmpNum = getTremoloShape();
+    if (tmpNum == -1)
         return QByteArray();
-    du_chorus.c_tremoloshape = tmp;
+    du_chorus.c_tremoloshape = tmpNum;
 
-    tmp = getRotarySpeed();
-    if (tmp == -1)
+    tmpNum = getRotarySpeed();
+    if (tmpNum == -1)
         return QByteArray();
-    du_chorus.c_rotaryspeed = tmp;
+    du_chorus.c_rotaryspeed = tmpNum;
 
 
     QByteArray tmpName(NAME_CARACT, (char)0x00);
-    tmpName.prepend(getEffectName().toUtf8());
-    if (tmpName == QString(""))
+    tmpStr = getEffectName();
+    if (tmpStr.isNull())
         return QByteArray();
+    tmpName.prepend(tmpStr.toUtf8());
 
 #ifdef Q_OS_WIN
     memcpy_s(du_chorus.c_name, NAME_CARACT, tmpName.data(), NAME_CARACT);
@@ -421,7 +424,7 @@ QString DuChorus::getEffectName() const
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_CHORUS_EFFECTNAME));
 
     if (tmp == NULL)
-        return "";
+        return QString();
 
     return tmp->getString();
 }

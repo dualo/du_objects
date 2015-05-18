@@ -147,69 +147,72 @@ DuEqualizer *DuEqualizer::fromJson(const QJsonObject &jsonEqualizer)
 QByteArray DuEqualizer::toDuMusicFile() const
 {
     FX_equalizer du_equalizer;
-    int tmp = 0;
+
+    QString tmpStr;
+    int tmpNum = 0;
 
 
-    tmp = getOnOff();
-    if (tmp == -1)
+    tmpNum = getOnOff();
+    if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_on_off = tmp;
+    du_equalizer.e_on_off = tmpNum;
 
-    tmp = getLowBandGain();
-    if (tmp == -1)
+    tmpNum = getLowBandGain();
+    if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_lowbandgain = tmp;
+    du_equalizer.e_lowbandgain = tmpNum;
 
-    tmp = getLowMidBandGain();
-    if (tmp == -1)
+    tmpNum = getLowMidBandGain();
+    if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_lowmidbandgain = tmp;
+    du_equalizer.e_lowmidbandgain = tmpNum;
 
-    tmp = getHighMidBandGain();
-    if (tmp == -1)
+    tmpNum = getHighMidBandGain();
+    if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_highmidbandgain = tmp;
+    du_equalizer.e_highmidbandgain = tmpNum;
 
-    tmp = getHighBandGain();
-    if (tmp == -1)
+    tmpNum = getHighBandGain();
+    if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_highbandgain = tmp;
+    du_equalizer.e_highbandgain = tmpNum;
 
-    tmp = getLowBandFrequency();
-    if (tmp == -1)
+    tmpNum = getLowBandFrequency();
+    if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_lowbandfrequency = tmp;
+    du_equalizer.e_lowbandfrequency = tmpNum;
 
-    tmp = getLowMidBandFrequency();
-    if (tmp == -1)
+    tmpNum = getLowMidBandFrequency();
+    if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_lowmidbandfrequency = tmp;
+    du_equalizer.e_lowmidbandfrequency = tmpNum;
 
-    tmp = getHighMidBandFrequency();
-    if (tmp == -1)
+    tmpNum = getHighMidBandFrequency();
+    if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_highmidbandfrequency = tmp;
+    du_equalizer.e_highmidbandfrequency = tmpNum;
 
-    tmp = getHighBandFrequency();
-    if (tmp == -1)
+    tmpNum = getHighBandFrequency();
+    if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_highbandfrequency = tmp;
+    du_equalizer.e_highbandfrequency = tmpNum;
 
-    tmp = getLowMidBandQualityFactor();
-    if (tmp == -1)
+    tmpNum = getLowMidBandQualityFactor();
+    if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_lowmidbandQ = tmp;
+    du_equalizer.e_lowmidbandQ = tmpNum;
 
-    tmp = getHighMidBandQualityFactor();
-    if (tmp == -1)
+    tmpNum = getHighMidBandQualityFactor();
+    if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_highmidbandQ = tmp;
+    du_equalizer.e_highmidbandQ = tmpNum;
 
 
     QByteArray tmpName(NAME_CARACT, (char)0x00);
-    tmpName.prepend(getEffectName().toUtf8());
-    if (tmpName == QString(""))
+    tmpStr = getEffectName();
+    if (tmpStr.isNull())
         return QByteArray();
+    tmpName.prepend(tmpStr.toUtf8());
 
 #ifdef Q_OS_WIN
     memcpy_s(du_equalizer.e_name, NAME_CARACT, tmpName.data(), NAME_CARACT);
@@ -461,7 +464,7 @@ QString DuEqualizer::getEffectName() const
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_EQ_EFFECTNAME));
 
     if (tmp == NULL)
-        return "";
+        return QString();
 
     return tmp->getString();
 }

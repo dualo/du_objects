@@ -30,6 +30,8 @@ public:
     static DuPreset *fromDuMusicFile(const preset_instr &du_preset);
     static DuPreset *fromJson(const QJsonObject &jsonPreset);
 
+    QByteArray toDuMusicFile() const;
+
     int size() const;
 
     int getVolume() const;
@@ -38,14 +40,11 @@ public:
     int getPanning() const;
     bool setPanning(int value);
 
-    int getExpression() const;
-    bool setExpression(int value);
+    int getSendToReverb() const;
+    bool setSendToReverb(int value);
 
     int getOctave() const;
     bool setOctave(int value);
-
-    int getSendToReverb() const;
-    bool setSendToReverb(int value);
 
     int getPortamentoOnOff() const;
     bool setPortamentoOnOff(int value);
@@ -55,6 +54,9 @@ public:
 
     int getPortamentoTime() const;
     bool setPortamentoTime(int value);
+
+    int getExpression() const;
+    bool setExpression(int value);
 
     int getPitchBendSensitivity() const;
     bool setPitchBendSensitivity(int value);

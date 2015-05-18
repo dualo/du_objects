@@ -119,49 +119,52 @@ DuDistortion *DuDistortion::fromJson(const QJsonObject &jsonDistortion)
 QByteArray DuDistortion::toDuMusicFile() const
 {
     FX_distortion du_distortion;
-    int tmp = 0;
+
+    QString tmpStr;
+    int tmpNum = 0;
 
 
-    tmp = getOnOff();
-    if (tmp == -1)
+    tmpNum = getOnOff();
+    if (tmpNum == -1)
         return QByteArray();
-    du_distortion.d_on_off = tmp;
+    du_distortion.d_on_off = tmpNum;
 
-    tmp = getPreGain();
-    if (tmp == -1)
+    tmpNum = getPreGain();
+    if (tmpNum == -1)
         return QByteArray();
-    du_distortion.d_pre_gain = tmp;
+    du_distortion.d_pre_gain = tmpNum;
 
-    tmp = getEffectType();
-    if (tmp == -1)
+    tmpNum = getEffectType();
+    if (tmpNum == -1)
         return QByteArray();
-    du_distortion.d_type = tmp;
+    du_distortion.d_type = tmpNum;
 
-    tmp = getLowPassFilterFrequency();
-    if (tmp == -1)
+    tmpNum = getLowPassFilterFrequency();
+    if (tmpNum == -1)
         return QByteArray();
-    du_distortion.d_lowpassfilterfreq = tmp;
+    du_distortion.d_lowpassfilterfreq = tmpNum;
 
-    tmp = getLowPassFilterResonance();
-    if (tmp == -1)
+    tmpNum = getLowPassFilterResonance();
+    if (tmpNum == -1)
         return QByteArray();
-    du_distortion.d_lowpassfilterres = tmp;
+    du_distortion.d_lowpassfilterres = tmpNum;
 
-    tmp = getPostGain();
-    if (tmp == -1)
+    tmpNum = getPostGain();
+    if (tmpNum == -1)
         return QByteArray();
-    du_distortion.d_postgain = tmp;
+    du_distortion.d_postgain = tmpNum;
 
-    tmp = getDrive();
-    if (tmp == -1)
+    tmpNum = getDrive();
+    if (tmpNum == -1)
         return QByteArray();
-    du_distortion.d_drive = tmp;
+    du_distortion.d_drive = tmpNum;
 
 
     QByteArray tmpName(NAME_CARACT, (char)0x00);
-    tmpName.prepend(getEffectName().toUtf8());
-    if (tmpName == QString(""))
+    tmpStr = getEffectName();
+    if (tmpStr.isNull())
         return QByteArray();
+    tmpName.prepend(tmpStr.toUtf8());
 
 #ifdef Q_OS_WIN
     memcpy_s(du_distortion.d_name, NAME_CARACT, tmpName.data(), NAME_CARACT);
@@ -333,7 +336,7 @@ QString DuDistortion::getEffectName() const
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_DIST_EFFECTNAME));
 
     if (tmp == NULL)
-        return "";
+        return QString();
 
     return tmp->getString();
 }

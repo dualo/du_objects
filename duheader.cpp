@@ -152,7 +152,7 @@ QString DuHeader::getOriginalSerialNumber() const
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_HEAD_ORIGINALSN));
 
     if (tmp == NULL)
-        return "";
+        return QString();
 
     return tmp->getString();
 }
@@ -172,7 +172,7 @@ QString DuHeader::getOriginalName() const
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_HEAD_ORIGINALNAME));
 
     if (tmp == NULL)
-        return "";
+        return QString();
 
     return tmp->getString();
 }
@@ -192,7 +192,7 @@ QString DuHeader::getOriginalUser() const
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_HEAD_ORIGINALUSER));
 
     if (tmp == NULL)
-        return "";
+        return QString();
 
     return tmp->getString();
 }
@@ -212,7 +212,7 @@ QString DuHeader::getOriginalUserId() const
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_HEAD_ORIGINALUSERID));
 
     if (tmp == NULL)
-        return "";
+        return QString();
 
     return tmp->getString();
 }
@@ -233,7 +233,7 @@ QString DuHeader::getLastModifSerialNumber() const
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_HEAD_LASTMODIFSN));
 
     if (tmp == NULL)
-        return "";
+        return QString();
 
     return tmp->getString();
 }
@@ -253,7 +253,7 @@ QString DuHeader::getLastModifName() const
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_HEAD_LASTMODIFNAME));
 
     if (tmp == NULL)
-        return "";
+        return QString();
 
     return tmp->getString();
 }
@@ -273,7 +273,7 @@ QString DuHeader::getLastModifUser() const
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_HEAD_LASTMODIFUSER));
 
     if (tmp == NULL)
-        return "";
+        return QString();
 
     return tmp->getString();
 }
@@ -293,7 +293,7 @@ QString DuHeader::getLastModifUserId() const
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_HEAD_LASTMODIFUSERID));
 
     if (tmp == NULL)
-        return "";
+        return QString();
 
     return tmp->getString();
 }
@@ -334,7 +334,7 @@ QString DuHeader::getSongName() const
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_HEAD_SONGNAME));
 
     if (tmp == NULL)
-        return "";
+        return QString();
 
     return tmp->getString();
 }

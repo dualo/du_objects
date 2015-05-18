@@ -44,6 +44,7 @@ DuInstrumentInfo *DuInstrumentInfo::fromDuMusicFile(const s_instr &du_instrInfo)
             QString(QByteArray((char *)du_instrInfo.instr_name, NAME_CARACT)));
     verif = verif && instrInfo->setID(du_instrInfo.instr_id);
     //verif = verif && instrInfo->setUserID(instrInfo.instr_userid);
+    //TODO: add userID when possible.
 
     verif = verif && instrInfo->setMidiProgramChange(du_instrInfo.instr_midi_pc);
     verif = verif && instrInfo->setMidiControlChange0(du_instrInfo.instr_midi_C0);
@@ -103,6 +104,87 @@ DuInstrumentInfo *DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
 }
 
 
+QByteArray DuInstrumentInfo::toDuMusicFile() const
+{
+    s_instr du_instrumentinfo;
+
+    QString tmpStr;
+    int tmpNum = 0;
+
+    QByteArray tmpClear(size(), (char)0x00);
+#ifdef Q_OS_WIN
+    memcpy_s((char *)&(du_instrumentinfo), size(), tmpClear.data(), size());
+#else
+    memcpy((char *)&(du_instrumentinfo), tmpClear.data(), size());
+#endif
+
+
+    tmpNum = getMidiProgramChange();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_instrumentinfo.instr_midi_pc = tmpNum;
+
+    tmpNum = getMidiControlChange0();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_instrumentinfo.instr_midi_C0 = tmpNum;
+
+    tmpNum = getActiveNoteOff();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_instrumentinfo.instr_noteoff = tmpNum;
+
+    tmpNum = getID();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_instrumentinfo.instr_id = tmpNum;
+
+
+    QByteArray tmpCategory(NAME_CARACT, (char)0x00);
+    tmpStr = getCategory();
+    if (tmpStr.isNull())
+        return QByteArray();
+    tmpCategory.prepend(tmpStr.toUtf8());
+
+#ifdef Q_OS_WIN
+    memcpy_s(du_instrumentinfo.instr_cat, NAME_CARACT,
+             tmpCategory.data(), NAME_CARACT);
+#else
+    memcpy(du_instrumentinfo.instr_cat, tmpCategory.data(), NAME_CARACT);
+#endif
+
+    QByteArray tmpName(NAME_CARACT, (char)0x00);
+    tmpStr = getName();
+    if (tmpStr.isNull())
+        return QByteArray();
+    tmpName.prepend(tmpStr.toUtf8());
+
+#ifdef Q_OS_WIN
+    memcpy_s(du_instrumentinfo.instr_name, NAME_CARACT,
+             tmpName.data(), NAME_CARACT);
+#else
+    memcpy(du_instrumentinfo.instr_name, tmpName.data(), NAME_CARACT);
+#endif
+/*
+    QByteArray tmpUserID(NAME_CARACT, (char)0x00);
+    tmpString = getUserID();
+    if (tmpString.isNull())
+        return QByteArray();
+    tmpUserID.prepend(tmpString.toUtf8());
+
+#ifdef Q_OS_WIN
+    memcpy_s(du_instrumentinfo.instr_userid, NAME_CARACT,
+             tmpUserID.data(), NAME_CARACT);
+#else
+    memcpy(du_instrumentinfo.instr_userid, tmpUserID.data(), NAME_CARACT);
+#endif
+*/
+    //TODO: add userID when possible.
+
+    return QByteArray((char *)&(du_instrumentinfo), size());
+}
+
+
 int DuInstrumentInfo::size() const
 {
     return INSTR_INFO_SIZE;
@@ -114,7 +196,7 @@ QString DuInstrumentInfo::getCategory() const
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_INSTRINFO_CATEGORY));
 
     if (tmp == NULL)
-        return "";
+        return QString();
 
     return tmp->getString();
 }
@@ -134,7 +216,7 @@ QString DuInstrumentInfo::getName() const
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_INSTRINFO_NAME));
 
     if (tmp == NULL)
-        return "";
+        return QString();
 
     return tmp->getString();
 }
@@ -174,7 +256,7 @@ QString DuInstrumentInfo::getUserID() const
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_INSTRINFO_USERID));
 
     if (tmp == NULL)
-        return "";
+        return QString();
 
     return tmp->getString();
 }

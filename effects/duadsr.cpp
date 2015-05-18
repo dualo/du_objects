@@ -98,39 +98,42 @@ DuAdsr *DuAdsr::fromJson(const QJsonObject &jsonAdsr)
 QByteArray DuAdsr::toDuMusicFile() const
 {
     FX_adsr du_adsr;
-    int tmp = 0;
+
+    QString tmpStr;
+    int tmpNum = 0;
 
 
-    tmp = getEnvelopeAttackTime();
-    if (tmp == -1)
+    tmpNum = getEnvelopeAttackTime();
+    if (tmpNum == -1)
         return QByteArray();
-    du_adsr.a_env_attack_time = tmp;
+    du_adsr.a_env_attack_time = tmpNum;
 
-    tmp = getEnvelopeDecayTime();
-    if (tmp == -1)
+    tmpNum = getEnvelopeDecayTime();
+    if (tmpNum == -1)
         return QByteArray();
-    du_adsr.a_env_decay_time = tmp;
+    du_adsr.a_env_decay_time = tmpNum;
 
-    tmp = getTimeVariantFilterCutoffResonance();
-    if (tmp == -1)
+    tmpNum = getTimeVariantFilterCutoffResonance();
+    if (tmpNum == -1)
         return QByteArray();
-    du_adsr.a_tvf_cutoff_res = tmp;
+    du_adsr.a_tvf_cutoff_res = tmpNum;
 
-    tmp = getTimeVariantFilterCutoffFrequency();
-    if (tmp == -1)
+    tmpNum = getTimeVariantFilterCutoffFrequency();
+    if (tmpNum == -1)
         return QByteArray();
-    du_adsr.a_tvf_cutoff_freq = tmp;
+    du_adsr.a_tvf_cutoff_freq = tmpNum;
 
-    tmp = getEnvelopeReleaseTime();
-    if (tmp == -1)
+    tmpNum = getEnvelopeReleaseTime();
+    if (tmpNum == -1)
         return QByteArray();
-    du_adsr.a_env_release_time = tmp;
+    du_adsr.a_env_release_time = tmpNum;
 
 
     QByteArray tmpName(NAME_CARACT, (char)0x00);
-    tmpName.prepend(getEffectName().toUtf8());
-    if (tmpName == QString(""))
+    tmpStr = getEffectName();
+    if (tmpStr.isNull())
         return QByteArray();
+    tmpName.prepend(tmpStr.toUtf8());
 
 #ifdef Q_OS_WIN
     memcpy_s(du_adsr.a_name, NAME_CARACT, tmpName.data(), NAME_CARACT);
@@ -258,7 +261,7 @@ QString DuAdsr::getEffectName() const
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_ADSR_EFFECTNAME));
 
     if (tmp == NULL)
-        return "";
+        return QString();
 
     return tmp->getString();
 }

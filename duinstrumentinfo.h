@@ -25,6 +25,8 @@ public:
     static DuInstrumentInfo *fromDuMusicFile(const s_instr &du_instrInfo);
     static DuInstrumentInfo *fromJson(const QJsonObject &jsonInstrInfo);
 
+    QByteArray toDuMusicFile() const;
+
     int size() const;
 
     QString getCategory() const;

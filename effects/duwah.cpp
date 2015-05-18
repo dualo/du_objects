@@ -89,34 +89,37 @@ DuWah *DuWah::fromJson(const QJsonObject &jsonWah)
 QByteArray DuWah::toDuMusicFile() const
 {
     FX_wah du_wah;
-    int tmp = 0;
+
+    QString tmpStr;
+    int tmpNum = 0;
 
 
-    tmp = getFilterType();
-    if (tmp == -1)
+    tmpNum = getFilterType();
+    if (tmpNum == -1)
         return QByteArray();
-    du_wah.w_filtertype = tmp;
+    du_wah.w_filtertype = tmpNum;
 
-    tmp = getFilterFrequency();
-    if (tmp == -1)
+    tmpNum = getFilterFrequency();
+    if (tmpNum == -1)
         return QByteArray();
-    du_wah.w_filterfreq = tmp;
+    du_wah.w_filterfreq = tmpNum;
 
-    tmp = getFilterResonance();
-    if (tmp == -1)
+    tmpNum = getFilterResonance();
+    if (tmpNum == -1)
         return QByteArray();
-    du_wah.w_filterres = tmp;
+    du_wah.w_filterres = tmpNum;
 
-    tmp = getAutoWahSensitivity();
-    if (tmp == -1)
+    tmpNum = getAutoWahSensitivity();
+    if (tmpNum == -1)
         return QByteArray();
-    du_wah.w_autowahsensitivity = tmp;
+    du_wah.w_autowahsensitivity = tmpNum;
 
 
     QByteArray tmpName(NAME_CARACT, (char)0x00);
-    tmpName.prepend(getEffectName().toUtf8());
-    if (tmpName == QString(""))
+    tmpStr = getEffectName();
+    if (tmpStr.isNull())
         return QByteArray();
+    tmpName.prepend(tmpStr.toUtf8());
 
 #ifdef Q_OS_WIN
     memcpy_s(du_wah.w_name, NAME_CARACT, tmpName.data(), NAME_CARACT);
@@ -222,7 +225,7 @@ QString DuWah::getEffectName() const
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_WAH_EFFECTNAME));
 
     if (tmp == NULL)
-        return "";
+        return QString();
 
     return tmp->getString();
 }

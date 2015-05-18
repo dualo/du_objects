@@ -36,39 +36,41 @@ public:
     static DuInstrument *fromDuMusicFile(const music_instr &du_instr);
     static DuInstrument *fromJson(const QJsonObject &jsonInstrument);
 
+    QByteArray toDuMusicFile() const;
+
     int size() const;
 
-    DuInstrumentInfo *getInstrumentInfo();
+    DuInstrumentInfo *getInstrumentInfo() const;
     void setInstrumentInfo(DuInstrumentInfo *instrumentInfo);
 
-    DuPreset *getPreset();
+    DuPreset *getPreset() const;
     void setPreset(DuPreset *preset);
 
-    DuMixer *getMixer();
+    DuMixer *getMixer() const;
     void setMixer(DuMixer *mixer);
 
-    DuDistortion *getDistortion();
+    DuDistortion *getDistortion() const;
     void setDistortion(DuDistortion *distortion);
 
-    DuWah *getWah();
+    DuWah *getWah() const;
     void setWah(DuWah *wah);
 
-    DuCompressor *getCompressor();
+    DuCompressor *getCompressor() const;
     void setCompressor(DuCompressor *compressor);
 
-    DuEqualizer *getEqualizer();
+    DuEqualizer *getEqualizer() const;
     void setEqualizer(DuEqualizer *equalizer);
 
-    DuDelay *getDelay();
+    DuDelay *getDelay() const;
     void setDelay(DuDelay *delay);
 
-    DuChorus *getChorus();
+    DuChorus *getChorus() const;
     void setChorus(DuChorus *chorus);
 
-    DuVibrato *getVibrato();
+    DuVibrato *getVibrato() const;
     void setVibrato(DuVibrato *vibrato);
 
-    DuAdsr *getAdsr();
+    DuAdsr *getAdsr() const;
     void setAdsr(DuAdsr *adsr);
 };
 

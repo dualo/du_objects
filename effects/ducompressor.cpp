@@ -114,49 +114,52 @@ DuCompressor *DuCompressor::fromJson(const QJsonObject &jsonCompressor)
 QByteArray DuCompressor::toDuMusicFile() const
 {
     FX_compressor du_compressor;
-    int tmp = 0;
+
+    QString tmpStr;
+    int tmpNum = 0;
 
 
-    tmp = getOnOff();
-    if (tmp == -1)
+    tmpNum = getOnOff();
+    if (tmpNum == -1)
         return QByteArray();
-    du_compressor.c_on_off = tmp;
+    du_compressor.c_on_off = tmpNum;
 
-    tmp = getAttackTime();
-    if (tmp == -1)
+    tmpNum = getAttackTime();
+    if (tmpNum == -1)
         return QByteArray();
-    du_compressor.c_attacktime = tmp;
+    du_compressor.c_attacktime = tmpNum;
 
-    tmp = getReleaseTime();
-    if (tmp == -1)
+    tmpNum = getReleaseTime();
+    if (tmpNum == -1)
         return QByteArray();
-    du_compressor.c_releasetime = tmp;
+    du_compressor.c_releasetime = tmpNum;
 
-    tmp = getThreshold();
-    if (tmp == -1)
+    tmpNum = getThreshold();
+    if (tmpNum == -1)
         return QByteArray();
-    du_compressor.c_threshold = tmp;
+    du_compressor.c_threshold = tmpNum;
 
-    tmp = getRatio();
-    if (tmp == -1)
+    tmpNum = getRatio();
+    if (tmpNum == -1)
         return QByteArray();
-    du_compressor.c_ratio = tmp;
+    du_compressor.c_ratio = tmpNum;
 
-    tmp = getBoost();
-    if (tmp == -1)
+    tmpNum = getBoost();
+    if (tmpNum == -1)
         return QByteArray();
-    du_compressor.c_boost = tmp;
+    du_compressor.c_boost = tmpNum;
 
-    tmp = getKneeType();
-    if (tmp == -1)
+    tmpNum = getKneeType();
+    if (tmpNum == -1)
         return QByteArray();
-    du_compressor.c_kneetype = tmp;
+    du_compressor.c_kneetype = tmpNum;
 
 
     QByteArray tmpName(NAME_CARACT, (char)0x00);
-    tmpName.prepend(getEffectName().toUtf8());
-    if (tmpName == QString(""))
+    tmpStr = getEffectName();
+    if (tmpStr.isNull())
         return QByteArray();
+    tmpName.prepend(tmpStr.toUtf8());
 
 #ifdef Q_OS_WIN
     memcpy_s(du_compressor.c_name, NAME_CARACT, tmpName.data(), NAME_CARACT);
@@ -322,7 +325,7 @@ QString DuCompressor::getEffectName() const
     DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_COMP_EFFECTNAME));
 
     if (tmp == NULL)
-        return "";
+        return QString();
 
     return tmp->getString();
 }
