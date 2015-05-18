@@ -8,7 +8,6 @@ DuContainer::DuContainer() :
 DuContainer::~DuContainer()
 {
     QMutableMapIterator<QString, DuObject *> i(children);
-
     while (i.hasNext())
     {
         i.next();
@@ -26,7 +25,6 @@ QJsonValue DuContainer::toJson() const
     QJsonObject object;
 
     QMapIterator<QString, DuObject *> i(children);
-
     while (i.hasNext())
     {
         i.next();
@@ -40,9 +38,9 @@ QJsonValue DuContainer::toJson() const
 
 int DuContainer::size() const
 {
-    QMapIterator<QString, DuObject *> i(children);
     int size = 0;
 
+    QMapIterator<QString, DuObject *> i(children);
     while (i.hasNext())
     {
         i.next();
@@ -60,17 +58,6 @@ int DuContainer::size() const
 }
 
 
-void DuContainer::addChild(const QString &key, DuObject *child)
-{
-    children.insert(key, child);
-}
-
-DuObject *DuContainer::getChild(const QString &key) const
-{
-    return children.value(key);
-}
-
-
 QStringList DuContainer::keys() const
 {
     return children.keys();
@@ -83,4 +70,15 @@ DuObject *DuContainer::operator[](const QString &label)
         return NULL;
 
     return children[label];
+}
+
+
+void DuContainer::addChild(const QString &key, DuObject *child)
+{
+    children.insert(key, child);
+}
+
+DuObject *DuContainer::getChild(const QString &key) const
+{
+    return children.value(key);
 }

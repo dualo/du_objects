@@ -18,12 +18,13 @@ public:
 
     virtual int size() const;
 
-    void addChild(const QString &key, DuObject *child);
-    DuObject *getChild(const QString &key) const;
-
     QStringList keys() const;
 
     DuObject *operator[](const QString &label);
+
+protected:
+    void addChild(const QString &key, DuObject *child);
+    DuObject *getChild(const QString &key) const;
 
 private:
     QMap<QString, DuObject *> children;
