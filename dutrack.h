@@ -31,6 +31,8 @@ public:
 
     DuArray *getLoops();
     void setLoops(DuArray *array);
+
+    bool appendLoop(DuLoop *loop);
 };
 
 #endif // DUTRACK_H

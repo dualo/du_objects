@@ -16,9 +16,12 @@ public:
     int size() const;
 
     void append(DuObject *element);
-    int count();
+    void insert(int index, DuObject *element);
 
-    const QList<DuObject *> &getArray() const;
+    void removeAt(int index);
+    void replace(int index, DuObject *element);
+
+    int count() const;
 
     DuObject *at(int index);
     DuObject *operator[](int index);

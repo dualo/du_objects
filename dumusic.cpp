@@ -37,8 +37,6 @@ DuMusic *DuMusic::fromDuMusicFile(const s_total_buffer &du_music)
         return NULL;
     }
 
-    DuArray *tracks = music->getTracks();
-
     for (int i = 0; i < MUSIC_MAXTRACK; i++)
     {
         DuTrack *track = DuTrack::fromDuMusicFile(du_music.local_song.s_track[i],
@@ -48,7 +46,11 @@ DuMusic *DuMusic::fromDuMusicFile(const s_total_buffer &du_music)
             delete music;
             return NULL;
         }
-        tracks->append(track);
+        if (!music->appendTrack(track))
+        {
+            delete music;
+            return NULL;
+        }
     }
 
     return music;
@@ -87,9 +89,7 @@ DuMusic *DuMusic::fromJson(const QJsonObject &jsonMusic)
         return NULL;
     }
 
-    DuArray *tracks = music->getTracks();
     const QJsonArray &jsonTrackArray = jsonTracks.toArray();
-
     for (int i = 0; i < jsonTrackArray.count(); i++)
     {
         DuTrack *track = DuTrack::fromJson(jsonTrackArray[i].toObject());
@@ -98,7 +98,11 @@ DuMusic *DuMusic::fromJson(const QJsonObject &jsonMusic)
             delete music;
             return NULL;
         }
-        tracks->append(track);
+        if (!music->appendTrack(track))
+        {
+            delete music;
+            return NULL;
+        }
     }
 
     return music;
@@ -181,4 +185,16 @@ void DuMusic::setTracks(DuArray *array)
         delete getChild(KEY_MUSIC_TRACKS);
 
     addChild(KEY_MUSIC_TRACKS, array);
+}
+
+
+bool DuMusic::appendTrack(DuTrack *track)
+{
+    DuArray *tmp = dynamic_cast<DuArray *>(getChild(KEY_MUSIC_TRACKS));
+
+    if (tmp == NULL)
+        return false;
+
+    tmp->append(track);
+    return true;
 }

@@ -34,8 +34,6 @@ DuTrack *DuTrack::fromDuMusicFile(const music_track &du_track,
         return NULL;
     }
 
-    DuArray *loops = track->getLoops();
-
     for (int i = 0; i < MUSIC_MAXLAYER; i++)
     {
         const music_loop &du_loop = du_track.t_loop[i];
@@ -48,13 +46,11 @@ DuTrack *DuTrack::fromDuMusicFile(const music_track &du_track,
             delete track;
             return NULL;
         }
-        loops->append(loop);
-    }
-
-    if (loops->count() == 0)
-    {
-        delete track;
-        return NULL;
+        if (!track->appendLoop(loop))
+        {
+            delete track;
+            return NULL;
+        }
     }
 
     return track;
@@ -85,9 +81,7 @@ DuTrack *DuTrack::fromJson(const QJsonObject &jsonTrack)
         return NULL;
     }
 
-    DuArray *loops = track->getLoops();
     const QJsonArray &jsonLoopArray = jsonLoops.toArray();
-
     for (int i = 0; i < jsonLoopArray.count(); i++)
     {
         DuLoop *loop = DuLoop::fromJson(jsonLoopArray[i].toObject());
@@ -96,7 +90,11 @@ DuTrack *DuTrack::fromJson(const QJsonObject &jsonTrack)
             delete track;
             return NULL;
         }
-        loops->append(loop);
+        if (!track->appendLoop(loop))
+        {
+            delete track;
+            return NULL;
+        }
     }
 
     return track;
@@ -196,4 +194,16 @@ void DuTrack::setLoops(DuArray *array)
         delete tmp;
 
     addChild(KEY_TRACK_LOOPS, array);
+}
+
+
+bool DuTrack::appendLoop(DuLoop *loop)
+{
+    DuArray *tmp = dynamic_cast<DuArray *>(getChild(KEY_TRACK_LOOPS));
+
+    if (tmp == NULL)
+        return false;
+
+    tmp->append(loop);
+    return true;
 }

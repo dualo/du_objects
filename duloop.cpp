@@ -4,7 +4,7 @@ DuLoop::DuLoop() :
     DuContainer()
 {
     addChild(KEY_LOOP_STATE,
-             new DuNumeric(1, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(0, NUMERIC_DEFAULT_SIZE,
                            2, 0));
 
     addChild(KEY_LOOP_DURATIONMODIFIER,
@@ -28,9 +28,6 @@ DuLoop::~DuLoop()
 DuLoop *DuLoop::fromDuMusicFile(const music_loop &du_loop,
                                 const music_sample *du_sample)
 {
-    if (du_loop.l_state == 0)
-        return NULL;
-
     DuLoop *loop = new DuLoop;
     bool verif = true;
 
@@ -53,7 +50,8 @@ DuLoop *DuLoop::fromDuMusicFile(const music_loop &du_loop,
         return NULL;
     }
 
-    DuArray *events = loop->getEvents();
+    if (du_loop.l_state == 0)
+        return loop;
 
     for (int i = 0; i < du_loop.l_numsample; i++)
     {
@@ -63,7 +61,11 @@ DuLoop *DuLoop::fromDuMusicFile(const music_loop &du_loop,
             delete loop;
             return NULL;
         }
-        events->append(event);
+        if (!loop->appendEvent(event))
+        {
+            delete loop;
+            return NULL;
+        }
     }
 
     return loop;
@@ -107,9 +109,7 @@ DuLoop *DuLoop::fromJson(const QJsonObject &jsonLoop)
         return NULL;
     }
 
-    DuArray *events = loop->getEvents();
     const QJsonArray &jsonEventArray = jsonEvents.toArray();
-
     for (int i = 0; i < jsonEventArray.count(); i++)
     {
         DuEvent *event = DuEvent::fromJson(jsonEventArray[i].toObject());
@@ -118,7 +118,11 @@ DuLoop *DuLoop::fromJson(const QJsonObject &jsonLoop)
             delete loop;
             return NULL;
         }
-        events->append(event);
+        if (!loop->appendEvent(event))
+        {
+            delete loop;
+            return NULL;
+        }
     }
 
     return loop;
@@ -231,4 +235,15 @@ int DuLoop::countEvents() const
         return -1;
 
     return tmp->count();
+}
+
+bool DuLoop::appendEvent(DuEvent *event)
+{
+    DuArray *tmp = dynamic_cast<DuArray *>(getChild(KEY_LOOP_EVENTS));
+
+    if (tmp == NULL)
+        return false;
+
+    tmp->append(event);
+    return true;
 }

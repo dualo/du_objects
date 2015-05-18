@@ -50,16 +50,38 @@ void DuArray::append(DuObject *element)
     array.append(element);
 }
 
-int DuArray::count()
+
+void DuArray::insert(int index, DuObject *element)
+{
+    if (index >= array.count())
+        array.append(element);
+
+    array.insert(index, element);
+}
+
+
+void DuArray::removeAt(int index)
+{
+    if (index >= array.count())
+        return;
+
+    array.removeAt(index);
+}
+
+void DuArray::replace(int index, DuObject *element)
+{
+    if (index >= array.count())
+        array.append(element);
+
+    array.replace(index, element);
+}
+
+
+int DuArray::count() const
 {
     return array.count();
 }
 
-
-const QList<DuObject *> &DuArray::getArray() const
-{
-    return array;
-}
 
 DuObject *DuArray::at(int index)
 {

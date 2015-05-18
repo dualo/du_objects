@@ -30,6 +30,8 @@ public:
 
     DuArray *getTracks();
     void setTracks(DuArray *array);
+
+    bool appendTrack(DuTrack *track);
 };
 
 #endif // DUMUSIC_H

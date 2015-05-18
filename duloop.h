@@ -41,6 +41,7 @@ public:
     void setEvents(DuArray *array);
 
     int countEvents() const;
+    bool appendEvent(DuEvent *event);
 };
 
 #endif // DULOOP_H
