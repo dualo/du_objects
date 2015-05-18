@@ -7,8 +7,8 @@
 class DuString : public DuValue
 {
 public:
-    explicit DuString(const QString &value, int maxSize);
-    explicit DuString(int maxSize);
+    explicit DuString(const QString &value, int maxSize = -1);
+    explicit DuString(int maxSize = -1);
     virtual ~DuString();
 
     QByteArray toDuMusicFile() const;

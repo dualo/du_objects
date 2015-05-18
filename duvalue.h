@@ -8,13 +8,13 @@
 class DuValue : public DuObject
 {
 public:
-    explicit DuValue();
-    explicit DuValue(int maxSize);
+    explicit DuValue(int maxSize = -1);
+    explicit DuValue(const QVariant &value, int maxSize = -1);
     virtual ~DuValue();
 
     virtual int size() const;
 
-    QVariant getValue() const;
+    const QVariant &getValue() const;
     void setValue(const QVariant &value);
 
     int getMaxSize() const;
@@ -24,6 +24,10 @@ public:
 
 private:
     QVariant value;
+
+    /**
+     * @brief if -1, there is no max size (default)
+     */
     int maxSize;
 };
 

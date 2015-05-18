@@ -56,23 +56,19 @@ QString DuString::getString() const
 
 
 /**
- * @brief If the size of the parameter string is <= getMaxSize(), sets
- *        the value of the DuString to the parameter value and returns
- *        true, otherwise sets the value of the DuString to the
- *        getMaxSize() first characters of the parameter value and
- *        returns false;
+ * @brief If the size of the parameter string is <= getMaxSize() or getMaxSize() is -1,
+ *        sets the value of the DuString to the parameter value and returns true,
+ *        otherwise sets the value of the DuString to the getMaxSize()
+ *        first characters of the parameter value and returns false.
  * @param value
  * @return
  */
 
 bool DuString::setString(const QString &value)
 {
-    if (value.size() > getMaxSize())
+    if (getMaxSize() != -1 && value.size() > getMaxSize())
     {
-        QString tmp(value);
-        tmp.truncate(getMaxSize());
-
-        setValue(tmp);
+        setValue(value.left(getMaxSize()));
         return false;
     }
 

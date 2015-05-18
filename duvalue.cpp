@@ -2,14 +2,15 @@
 
 #include <QDebug>
 
-DuValue::DuValue() :
+DuValue::DuValue(int maxSize) :
     DuObject(),
-    maxSize(0)
+    maxSize(maxSize)
 {
 }
 
-DuValue::DuValue(int maxSize) :
+DuValue::DuValue(const QVariant& value, int maxSize) :
     DuObject(),
+    value(value),
     maxSize(maxSize)
 {
 }
@@ -25,7 +26,7 @@ int DuValue::size() const
 }
 
 
-QVariant DuValue::getValue() const
+const QVariant& DuValue::getValue() const
 {
     return value;
 }
