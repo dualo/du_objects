@@ -15,6 +15,7 @@ public:
     virtual ~DuContainer();
 
     virtual QJsonValue toJson() const;
+    QDebug debugPrint(QDebug dbg) const;
 
     virtual int size() const;
 

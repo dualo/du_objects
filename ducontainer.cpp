@@ -1,5 +1,7 @@
 #include "ducontainer.h"
 
+#include <QDebug>
+
 DuContainer::DuContainer() :
     DuObject()
 {
@@ -33,6 +35,26 @@ QJsonValue DuContainer::toJson() const
     }
 
     return QJsonValue(object);
+}
+
+QDebug DuContainer::debugPrint(QDebug dbg) const
+{
+    dbg.nospace() << "DuContainer(";
+
+    QMapIterator<QString, DuObject*> i(children);
+    while (i.hasNext())
+    {
+        i.next();
+        dbg.nospace() << i.key();
+        dbg.nospace() << "=";
+        dbg.nospace() << i.value();
+        if (i.hasNext())
+            dbg.nospace() << ", ";
+    }
+
+    dbg.nospace() << ")";
+
+    return dbg.space();
 }
 
 

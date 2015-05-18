@@ -1,5 +1,7 @@
 #include "dunumeric.h"
 
+#include <QDebug>
+
 DuNumeric::DuNumeric(int value) :
     DuValue(4),
     defaultValue(0),
@@ -52,6 +54,13 @@ QByteArray DuNumeric::toDuMusicFile() const
 QJsonValue DuNumeric::toJson() const
 {
     return QJsonValue(getNumeric());
+}
+
+QDebug DuNumeric::debugPrint(QDebug dbg) const
+{
+    dbg.nospace() << "DuNumeric(" << getNumeric() << ")";
+
+    return dbg.space();
 }
 
 

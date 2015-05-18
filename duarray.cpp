@@ -1,5 +1,7 @@
 #include "duarray.h"
 
+#include <QDebug>
+
 DuArray::DuArray(int maxSize) :
     DuObject(),
     maxSize(maxSize)
@@ -24,6 +26,23 @@ QJsonValue DuArray::toJson() const
     }
 
     return QJsonValue(jsonArray);
+}
+
+QDebug DuArray::debugPrint(QDebug dbg) const
+{
+    dbg.nospace() << "DuArray(";
+
+    QListIterator<DuObject*> i(array);
+    while (i.hasNext()) {
+        dbg.nospace() << i.next();
+
+        if (i.hasNext())
+            dbg.nospace() << ", ";
+    }
+
+    dbg.nospace() << ")";
+
+    return dbg.space();
 }
 
 

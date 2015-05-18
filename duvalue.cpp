@@ -1,5 +1,7 @@
 #include "duvalue.h"
 
+#include <QDebug>
+
 DuValue::DuValue() :
     DuObject(),
     maxSize(0)
@@ -41,4 +43,13 @@ int DuValue::getMaxSize() const
 void DuValue::setMaxSize(int value)
 {
     maxSize = value;
+}
+
+QDebug DuValue::debugPrint(QDebug dbg) const
+{
+    dbg.nospace() << "DuValue(";
+    dbg.nospace() << value;
+    dbg.nospace() << ")";
+
+    return dbg.space();
 }

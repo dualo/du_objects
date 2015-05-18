@@ -1,5 +1,7 @@
 #include "dustring.h"
 
+#include <QDebug>
+
 DuString::DuString(const QString &value, int maxSize) :
     DuValue(maxSize)
 {
@@ -37,6 +39,13 @@ QByteArray DuString::toDuMusicFile() const
 QJsonValue DuString::toJson() const
 {
     return QJsonValue(getString());
+}
+
+QDebug DuString::debugPrint(QDebug dbg) const
+{
+    dbg.nospace() << "DuString(" << getString() << ")";
+
+    return dbg.space();
 }
 
 

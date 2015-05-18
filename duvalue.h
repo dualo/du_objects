@@ -20,6 +20,8 @@ public:
     int getMaxSize() const;
     void setMaxSize(int value);
 
+    QDebug debugPrint(QDebug dbg) const;
+
 private:
     QVariant value;
     int maxSize;

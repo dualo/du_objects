@@ -12,6 +12,7 @@ public:
     ~DuArray();
 
     QJsonValue toJson() const;
+    QDebug debugPrint(QDebug dbg) const;
 
     int size() const;
 
