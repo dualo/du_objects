@@ -23,6 +23,8 @@ public:
                                    const music_sample *du_sample);
     static DuLoop *fromJson(const QJsonObject &jsonLoop);
 
+    QByteArray toDuMusicFile() const;
+
     int size() const;
 
     int getState() const;
@@ -34,11 +36,13 @@ public:
     int getMidiOutChannel() const;
     bool setMidiOutChannel(int value);
 
-    DuInstrument *getInstrument();
+    DuInstrument *getInstrument() const;
     void setInstrument(DuInstrument *instrument);
 
     DuArray *getEvents();
     void setEvents(DuArray *array);
+
+    int eventsSize() const;
 
     int countEvents() const;
     bool appendEvent(DuEvent *event);

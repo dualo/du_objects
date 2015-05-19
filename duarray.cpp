@@ -18,8 +18,8 @@ DuArray::~DuArray()
 QJsonValue DuArray::toJson() const
 {
     QJsonArray jsonArray;
-    int count = array.count();
 
+    int count = array.count();
     for (int i = 0; i < count; i++)
     {
         jsonArray.append(array[i]->toJson());
@@ -54,6 +54,21 @@ void DuArray::setMaxSize(int value)
 {
     maxSize = value;
 }
+
+QByteArray DuArray::toDuMusicFile() const
+{
+    QByteArray retArray;
+    retArray.clear();
+
+    int count = array.count();
+    for (int i = 0; i < count; i++)
+    {
+        retArray.append(array[i]->toDuMusicFile());
+    }
+
+    return retArray;
+}
+
 
 int DuArray::size() const
 {

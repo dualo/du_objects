@@ -35,6 +35,8 @@ public:
     static DuHeader *fromDuMusicFile(const music_song &du_song);
     static DuHeader *fromJson(const QJsonObject &jsonHeader);
 
+    QByteArray toDuMusicFile() const;
+
     int size() const;
 
     int getFileVersion() const;

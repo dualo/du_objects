@@ -101,43 +101,53 @@ DuTrack *DuTrack::fromJson(const QJsonObject &jsonTrack)
 }
 
 
+QByteArray DuTrack::toDuMusicFile() const
+{
+    music_track du_track;
+
+    int tmpNum = 0;
+
+    QByteArray tmpClear(size(), (char)0x00);
+#ifdef Q_OS_WIN
+    memcpy_s((char *)&(du_track), size(), tmpClear.data(), size());
+#else
+    memcpy((char *)&(du_track), tmpClear.data(), size());
+#endif
+
+
+    DuArray *loops = getLoops();
+    if (loops == NULL)
+        return QByteArray();
+    QByteArray &loopsArray = loops->toDuMusicFile();
+    if (loopsArray.isNull())
+        return QByteArray();
+
+#ifdef Q_OS_WIN
+    memcpy_s(&(du_track.t_loop), loops->size(),
+             loopsArray.data(), loops->size());
+#else
+    memcpy(du_track.t_loop, instrumentArray.data(), loops->size());
+#endif
+
+
+    tmpNum = getChannel();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_track.t_midichannel = tmpNum;
+
+    tmpNum = getCurrentLoop();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_track.t_currentloop = tmpNum;
+
+
+    return QByteArray((char *)&(du_track), size());
+}
+
+
 int DuTrack::size() const
 {
-    //TODO: add defines for dummy sizes in music_parameters_mng.h
-    int size = 0;
-    int tmpSize;
-
-    DuNumeric *channel = dynamic_cast<DuNumeric *>(getChild(KEY_TRACK_CHANNEL));
-    if (channel == NULL)
-        return -1;
-
-    tmpSize = channel->size();
-    if (tmpSize == -1)
-        return -1;
-
-    size += tmpSize;
-
-    DuNumeric *currentLoop = dynamic_cast<DuNumeric *>(getChild(KEY_TRACK_CURRENTLOOP));
-    if (currentLoop == NULL)
-        return -1;
-
-    tmpSize = currentLoop->size();
-    if (tmpSize == -1)
-        return -1;
-
-    size += tmpSize;
-
-    DuArray *loops = dynamic_cast<DuArray *>(getChild(KEY_TRACK_LOOPS));
-    if (loops == NULL)
-        return -1;
-
-    tmpSize = loops->size();
-    if (tmpSize == -1)
-        return -1;
-
-    size += tmpSize;
-
-    return size + TRACK_DUMMY_SIZE;
+    return MUSIC_TRACK_SIZE;
 }
 
 
@@ -181,7 +191,7 @@ bool DuTrack::setCurrentLoop(int value)
     return tmp->setNumeric(value);
 }
 
-DuArray *DuTrack::getLoops()
+DuArray *DuTrack::getLoops() const
 {
     return dynamic_cast<DuArray *>(getChild(KEY_TRACK_LOOPS));
 }
@@ -206,4 +216,31 @@ bool DuTrack::appendLoop(DuLoop *loop)
 
     tmp->append(loop);
     return true;
+}
+
+
+int DuTrack::eventsSize() const
+{
+    int eventsSize = 0;
+    int tmpSize = 0;
+
+    DuArray *loops = dynamic_cast<DuArray *>(getChild(KEY_TRACK_LOOPS));
+    if (loops == NULL)
+        return -1;
+
+    int count = loops->count();
+    for (int i = 0; i < count; i++)
+    {
+        DuLoop *loop = dynamic_cast<DuLoop *>(loops->at(i));
+        if (loop == NULL)
+            return -1;
+
+        tmpSize = loop->eventsSize();
+        if (tmpSize == -1)
+            return -1;
+
+        eventsSize += tmpSize;
+    }
+
+    return eventsSize;
 }

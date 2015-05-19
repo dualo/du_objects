@@ -119,6 +119,167 @@ DuHeader *DuHeader::fromJson(const QJsonObject &jsonHeader)
 }
 
 
+QByteArray DuHeader::toDuMusicFile() const
+{
+    //TODO: restructure music_song into music_header and music_info
+    music_song du_header;
+
+    QByteArray tmpArray;
+    QString tmpStr;
+    int tmpNum = 0;
+
+    QByteArray tmpClear(MUSIC_SONG_SIZE, (char)0x00);
+#ifdef Q_OS_WIN
+    memcpy_s((char *)&(du_header), MUSIC_SONG_SIZE,
+             tmpClear.data(), MUSIC_SONG_SIZE);
+#else
+    memcpy((char *)&(du_header), tmpClear.data(), MUSIC_SONG_SIZE);
+#endif
+
+
+    tmpNum = getFileVersion();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_header.s_version_music = tmpNum;
+
+    tmpNum = getSongId();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_header.s_id = tmpNum;
+
+    tmpNum = getSongVersion();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_header.s_version_song = tmpNum;
+
+
+    tmpClear = QByteArray(HEADER_NAME_SIZE, char(0x00));
+
+    tmpArray = tmpClear;
+    tmpStr = getOriginalSerialNumber();
+    if (tmpStr.isNull())
+        return QByteArray();
+    tmpArray.prepend(tmpStr.toUtf8());
+
+#ifdef Q_OS_WIN
+    memcpy_s(du_header.s_original_sn, HEADER_NAME_SIZE,
+             tmpArray.data(), HEADER_NAME_SIZE);
+#else
+    memcpy(du_header.s_original_sn, tmpArray.data(), HEADER_NAME_SIZE);
+#endif
+
+    tmpArray = tmpClear;
+    tmpStr = getOriginalName();
+    if (tmpStr.isNull())
+        return QByteArray();
+    tmpArray.prepend(tmpStr.toUtf8());
+
+#ifdef Q_OS_WIN
+    memcpy_s(du_header.s_original_name, HEADER_NAME_SIZE,
+             tmpArray.data(), HEADER_NAME_SIZE);
+#else
+    memcpy(du_header.s_original_name, tmpArray.data(), HEADER_NAME_SIZE);
+#endif
+
+    tmpArray = tmpClear;
+    tmpStr = getOriginalUser();
+    if (tmpStr.isNull())
+        return QByteArray();
+    tmpArray.prepend(tmpStr.toUtf8());
+
+#ifdef Q_OS_WIN
+    memcpy_s(du_header.s_original_user, HEADER_NAME_SIZE,
+             tmpArray.data(), HEADER_NAME_SIZE);
+#else
+    memcpy(du_header.s_original_user, tmpArray.data(), HEADER_NAME_SIZE);
+#endif
+
+    tmpArray = tmpClear;
+    tmpStr = getOriginalUserId();
+    if (tmpStr.isNull())
+        return QByteArray();
+    tmpArray.prepend(tmpStr.toUtf8());
+
+#ifdef Q_OS_WIN
+    memcpy_s(du_header.s_original_userid, HEADER_NAME_SIZE,
+             tmpArray.data(), HEADER_NAME_SIZE);
+#else
+    memcpy(du_header.s_original_userid, tmpArray.data(), HEADER_NAME_SIZE);
+#endif
+
+    tmpArray = tmpClear;
+    tmpStr = getLastModifSerialNumber();
+    if (tmpStr.isNull())
+        return QByteArray();
+    tmpArray.prepend(tmpStr.toUtf8());
+
+#ifdef Q_OS_WIN
+    memcpy_s(du_header.s_modif_sn, HEADER_NAME_SIZE,
+             tmpArray.data(), HEADER_NAME_SIZE);
+#else
+    memcpy(du_header.s_modif_sn, tmpArray.data(), HEADER_NAME_SIZE);
+#endif
+
+    tmpArray = tmpClear;
+    tmpStr = getLastModifName();
+    if (tmpStr.isNull())
+        return QByteArray();
+    tmpArray.prepend(tmpStr.toUtf8());
+
+#ifdef Q_OS_WIN
+    memcpy_s(du_header.s_modif_name, HEADER_NAME_SIZE,
+             tmpArray.data(), HEADER_NAME_SIZE);
+#else
+    memcpy(du_header.s_modif_name, tmpArray.data(), HEADER_NAME_SIZE);
+#endif
+
+    tmpArray = tmpClear;
+    tmpStr = getLastModifUser();
+    if (tmpStr.isNull())
+        return QByteArray();
+    tmpArray.prepend(tmpStr.toUtf8());
+
+#ifdef Q_OS_WIN
+    memcpy_s(du_header.s_modif_user, HEADER_NAME_SIZE,
+             tmpArray.data(), HEADER_NAME_SIZE);
+#else
+    memcpy(du_header.s_modif_user, tmpArray.data(), HEADER_NAME_SIZE);
+#endif
+
+    tmpArray = tmpClear;
+    tmpStr = getLastModifUserId();
+    if (tmpStr.isNull())
+        return QByteArray();
+    tmpArray.prepend(tmpStr.toUtf8());
+
+#ifdef Q_OS_WIN
+    memcpy_s(du_header.s_modif_userid, HEADER_NAME_SIZE,
+             tmpArray.data(), HEADER_NAME_SIZE);
+#else
+    memcpy(du_header.s_modif_userid, tmpArray.data(), HEADER_NAME_SIZE);
+#endif
+
+
+    tmpClear = QByteArray(MUSIC_SONG_NAME_SIZE, char(0x00));
+
+    tmpArray = tmpClear;
+    tmpStr = getSongName();
+    if (tmpStr.isNull())
+        return QByteArray();
+    tmpArray.prepend(tmpStr.toUtf8());
+
+#ifdef Q_OS_WIN
+    memcpy_s(du_header.s_name, HEADER_NAME_SIZE,
+             tmpArray.data(), HEADER_NAME_SIZE);
+#else
+    memcpy(du_header.s_name, tmpArray.data(), HEADER_NAME_SIZE);
+#endif
+
+
+    return QByteArray((char *)&(du_header), MUSIC_SONG_SIZE);
+}
+
+
 int DuHeader::size() const
 {
     //TODO: add defines for dummy sizes in music_parameters_mng.h

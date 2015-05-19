@@ -30,8 +30,14 @@ QJsonValue DuContainer::toJson() const
     while (i.hasNext())
     {
         i.next();
-        if (i.value() != NULL)
-            object[i.key()] = i.value()->toJson();
+        if (i.value() == NULL)
+            return QJsonValue();
+
+        QJsonValue &jsonValue = i.value()->toJson();
+        if (jsonValue.isNull())
+            return QJsonValue();
+
+        object[i.key()] = jsonValue;
     }
 
     return QJsonValue(object);
@@ -77,6 +83,28 @@ QDebug DuContainer::debugPrint(QDebug dbg) const
     dbg.nospace() << ")";
 
     return dbg.space();
+}
+
+
+QByteArray DuContainer::toDuMusicFile() const
+{
+    QByteArray retArray;
+
+    QMapIterator<QString, DuObject *> i(children);
+    while (i.hasNext())
+    {
+        i.next();
+        if (i.value() == NULL)
+            return QByteArray();
+
+        QByteArray &tmpArray = i.value()->toDuMusicFile();
+        if (tmpArray.isNull())
+            return QByteArray();
+
+        retArray.append(i.value()->toDuMusicFile());
+    }
+
+    return retArray;
 }
 
 

@@ -16,6 +16,8 @@ public:
     virtual ~DuContainer();
 
     virtual QJsonValue toJson() const;
+    virtual QByteArray toDuMusicFile() const;
+
     virtual QHttpMultiPart* toHttpMultiPart(const QByteArray &boundary) const;
     QDebug debugPrint(QDebug dbg) const;
 

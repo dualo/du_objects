@@ -20,15 +20,17 @@ public:
     static DuMusic *fromDuMusicFile(const s_total_buffer &du_music);
     static DuMusic *fromJson(const QJsonObject &jsonMusic);
 
+    QByteArray toDuMusicFile() const;
+
     int size() const;
 
-    DuHeader *getHeader();
+    DuHeader *getHeader() const;
     void setHeader(DuHeader *header);
 
-    DuSongInfo *getSongInfo();
+    DuSongInfo *getSongInfo() const;
     void setSongInfo(DuSongInfo *songInfo);
 
-    DuArray *getTracks();
+    DuArray *getTracks() const;
     void setTracks(DuArray *array);
 
     bool appendTrack(DuTrack *track);

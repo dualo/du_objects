@@ -129,14 +129,63 @@ DuLoop *DuLoop::fromJson(const QJsonObject &jsonLoop)
 }
 
 
+QByteArray DuLoop::toDuMusicFile() const
+{
+    music_loop du_loop;
+
+    int tmpNum = 0;
+
+    QByteArray tmpClear(size(), (char)0x00);
+#ifdef Q_OS_WIN
+    memcpy_s((char *)&(du_loop), size(), tmpClear.data(), size());
+#else
+    memcpy((char *)&(du_loop), tmpClear.data(), size());
+#endif
+
+
+    DuInstrument *instrument = getInstrument();
+    if (instrument == NULL)
+        return QByteArray();
+    QByteArray &instrumentArray = instrument->toDuMusicFile();
+    if (instrumentArray.isNull())
+        return QByteArray();
+
+#ifdef Q_OS_WIN
+    memcpy_s(&(du_loop.l_instr), instrument->size(),
+             instrumentArray.data(), instrument->size());
+#else
+    memcpy(du_loop.l_instr, instrumentArray.data(), instrument->size());
+#endif
+
+
+    tmpNum = getState();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_loop.l_state = tmpNum;
+
+    tmpNum = getDurationModifier();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_loop.l_loopmod = tmpNum;
+
+    tmpNum = getMidiOutChannel();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_loop.l_midioutchannel = tmpNum;
+
+    tmpNum = countEvents();
+    if(tmpNum == -1)
+        return QByteArray();
+    du_loop.l_numsample = tmpNum;
+
+
+    return QByteArray((char *)&(du_loop), size());
+}
+
+
 int DuLoop::size() const
 {
-    int numEvents = countEvents();
-
-    if (numEvents == -1)
-        return -1;
-
-    return MUSIC_LOOP_SIZE + MUSIC_SAMPLE_SIZE * numEvents;
+    return MUSIC_LOOP_SIZE;
 }
 
 
@@ -201,7 +250,7 @@ bool DuLoop::setMidiOutChannel(int value)
 }
 
 
-DuInstrument *DuLoop::getInstrument()
+DuInstrument *DuLoop::getInstrument() const
 {
     return dynamic_cast<DuInstrument *>(getChild(KEY_LOOP_INSTRUMENT));
 }
@@ -225,6 +274,17 @@ void DuLoop::setEvents(DuArray *array)
         delete getChild(KEY_LOOP_EVENTS);
 
     addChild(KEY_LOOP_EVENTS, array);
+}
+
+
+int DuLoop::eventsSize() const
+{
+    int numEvents = countEvents();
+
+    if (numEvents == -1)
+        return -1;
+
+    return MUSIC_SAMPLE_SIZE * numEvents;
 }
 
 int DuLoop::countEvents() const

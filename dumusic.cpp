@@ -109,46 +109,128 @@ DuMusic *DuMusic::fromJson(const QJsonObject &jsonMusic)
 }
 
 
+QByteArray DuMusic::toDuMusicFile() const
+{
+    s_total_buffer du_music;
+
+    QByteArray tmpArray;
+    tmpArray.clear();
+
+    int musicSize = size();
+    if (musicSize == -1)
+        return QByteArray();
+
+    QByteArray tmpClear(musicSize, (char)0x00);
+#ifdef Q_OS_WIN
+    memcpy_s((char *)&(du_music), musicSize, tmpClear.data(), musicSize);
+#else
+    memcpy((char *)&(du_music), tmpClear.data(), musicSize);
+#endif
+
+
+    DuHeader *header = getHeader();
+    if (header == NULL)
+        return QByteArray();
+    QByteArray &headerArray = header->toDuMusicFile();
+    if (headerArray.isNull())
+        return QByteArray();
+
+    DuSongInfo *songInfo = getSongInfo();
+    if (songInfo == NULL)
+        return QByteArray();
+    QByteArray &songInfoArray = songInfo->toDuMusicFile();
+    if (songInfoArray.isNull())
+        return QByteArray();
+
+    DuArray *tracks = getTracks();
+    if (tracks == NULL)
+        return QByteArray();
+    QByteArray &tracksArray = tracks->toDuMusicFile();
+    if (tracksArray.isNull())
+        return QByteArray();
+
+    tmpArray = headerArray.left(header->size())
+            + songInfoArray.mid(header->size(), songInfo->size())
+            + tracksArray;
+
+#ifdef Q_OS_WIN
+    memcpy_s(&(du_music.local_song), MUSIC_SONG_SIZE,
+             tmpArray.data(), MUSIC_SONG_SIZE);
+#else
+    memcpy(du_music.local_song, tmpArray.data(), MUSIC_SONG_SIZE);
+#endif
+
+
+    tmpArray.clear();
+    int eventTotal = 0;
+
+    int trackCount = tracks->count();
+    for (int i = 0; i < trackCount; i++)
+    {
+        DuTrack *track = dynamic_cast<DuTrack *>(tracks->at(i));
+        if (track == NULL)
+            return QByteArray();
+
+        DuArray *loops = track->getLoops();
+        if (loops == NULL)
+            return QByteArray();
+
+        int loopCount = loops->count();
+        for (int j = 0; j < loopCount; j++)
+        {
+            DuLoop *loop = dynamic_cast<DuLoop *>(loops->at(j));
+            if (loop == NULL)
+                return QByteArray();
+
+            int tmp = loop->countEvents();
+            if (tmp == -1)
+                return QByteArray();
+
+            if (tmp > 0)
+            {
+                music_loop *tmp_loop = &(du_music.local_song.s_track[i].t_loop[j]);
+
+                tmp_loop->l_numsample = tmp;
+                tmp_loop->l_adress = (music_sample_p *)eventTotal;
+
+                eventTotal += tmp;
+            }
+        }
+    }
+
+
+    return QByteArray((char *)&(du_music), musicSize);
+}
+
+
 int DuMusic::size() const
 {
-    int size = 0;
-    int tmpSize;
-
-    DuHeader *header = dynamic_cast<DuHeader *>(getChild(KEY_MUSIC_HEADER));
-    if (header == NULL)
-        return -1;
-
-    tmpSize = header->size();
-    if (tmpSize == -1)
-        return -1;
-
-    size += tmpSize;
-
-    DuSongInfo *songInfo = dynamic_cast<DuSongInfo *>(getChild(KEY_MUSIC_SONGINFO));
-    if (songInfo == NULL)
-        return -1;
-
-    tmpSize = songInfo->size();
-    if (tmpSize == -1)
-        return -1;
-
-    size += tmpSize;
+    int eventsSize = 0;
+    int tmpSize = 0;
 
     DuArray *tracks = dynamic_cast<DuArray *>(getChild(KEY_MUSIC_TRACKS));
     if (tracks == NULL)
         return -1;
 
-    tmpSize = tracks->size();
-    if (tmpSize == -1)
-        return -1;
+    int count = tracks->count();
+    for (int i = 0; i < count; i++)
+    {
+        DuTrack *track = dynamic_cast<DuTrack *>(tracks->at(i));
+        if (track == NULL)
+            return -1;
 
-    size += tmpSize;
+        tmpSize = track->eventsSize();
+        if (tmpSize == -1)
+            return -1;
 
-    return size;
+        eventsSize += tmpSize;
+    }
+
+    return eventsSize + MUSIC_SONG_SIZE;
 }
 
 
-DuHeader *DuMusic::getHeader()
+DuHeader *DuMusic::getHeader() const
 {
     return dynamic_cast<DuHeader *>(getChild(KEY_MUSIC_HEADER));
 }
@@ -161,7 +243,7 @@ void DuMusic::setHeader(DuHeader *header)
     addChild(KEY_MUSIC_HEADER, header);
 }
 
-DuSongInfo *DuMusic::getSongInfo()
+DuSongInfo *DuMusic::getSongInfo() const
 {
     return dynamic_cast<DuSongInfo *>(getChild(KEY_MUSIC_SONGINFO));
 }
@@ -174,7 +256,7 @@ void DuMusic::setSongInfo(DuSongInfo *songInfo)
     addChild(KEY_MUSIC_SONGINFO, songInfo);
 }
 
-DuArray *DuMusic::getTracks()
+DuArray *DuMusic::getTracks() const
 {
     return dynamic_cast<DuArray *>(getChild(KEY_MUSIC_TRACKS));
 }

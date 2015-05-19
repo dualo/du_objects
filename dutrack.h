@@ -21,6 +21,8 @@ public:
                                     const music_sample *du_sample);
     static DuTrack *fromJson(const QJsonObject &jsonTrack);
 
+    QByteArray toDuMusicFile() const;
+
     int size() const;
 
     int getChannel() const;
@@ -29,10 +31,12 @@ public:
     int getCurrentLoop() const;
     bool setCurrentLoop(int value);
 
-    DuArray *getLoops();
+    DuArray *getLoops() const;
     void setLoops(DuArray *array);
 
     bool appendLoop(DuLoop *loop);
+
+    int eventsSize() const;
 };
 
 #endif // DUTRACK_H

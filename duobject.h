@@ -19,8 +19,9 @@ public:
     explicit DuObject();
     virtual ~DuObject();
 
-    //virtual QByteArray toDuMusicFile() const = 0;
+    virtual QByteArray toDuMusicFile() const = 0;
     virtual QJsonValue toJson() const = 0;
+
     virtual QHttpPart toHttpPart(const QString& name) const;
     virtual QDebug debugPrint(QDebug dbg) const;
 

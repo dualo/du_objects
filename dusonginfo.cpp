@@ -145,7 +145,99 @@ DuSongInfo *DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
 
 QByteArray DuSongInfo::toDuMusicFile() const
 {
-    return QByteArray();
+    //TODO: restructure music_song into music_header and music_info
+    music_song du_songinfo;
+
+    int tmpNum = 0;
+
+    QByteArray tmpClear(MUSIC_SONG_SIZE, (char)0x00);
+#ifdef Q_OS_WIN
+    memcpy_s((char *)&(du_songinfo), MUSIC_SONG_SIZE,
+             tmpClear.data(), MUSIC_SONG_SIZE);
+#else
+    memcpy((char *)&(du_songinfo), tmpClear.data(), MUSIC_SONG_SIZE);
+#endif
+
+
+    tmpNum = getReferenceTrack();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_songinfo.s_reftrack = tmpNum;
+
+    tmpNum = getReferenceLoopDuration();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_songinfo.s_looptimer = tmpNum;
+
+    tmpNum = getVolume();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_songinfo.s_volume = tmpNum;
+
+    tmpNum = getTempo();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_songinfo.s_tempo = tmpNum;
+
+    tmpNum = getClickVolume();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_songinfo.s_voltempo = tmpNum;
+
+    tmpNum = getOffset();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_songinfo.s_decaltempo = tmpNum;
+
+    tmpNum = getGain();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_songinfo.s_mix.m_inputgain = tmpNum;
+
+    tmpNum = getLowCutFilterFrequency();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_songinfo.s_mix.m_locutfilterfrequency = tmpNum;
+
+    tmpNum = getHighCutFilterFrequency();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_songinfo.s_mix.m_hicutfilterfrequency = tmpNum;
+
+    tmpNum = getScale();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_songinfo.s_displaynote = tmpNum;
+
+    tmpNum = getTonality();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_songinfo.s_scaletonality = tmpNum;
+
+    tmpNum = getTimeSignature();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_songinfo.s_timesignature = tmpNum;
+
+
+    du_songinfo.s_currenttrack = 0x00;
+    du_songinfo.s_quantification = 0x00;
+    du_songinfo.s_totalsample = 0x00;
+
+    du_songinfo.s_mix.m_ouputlevel = 0x7F;
+    du_songinfo.s_mix.m_outputpanning = 0x40;
+    du_songinfo.s_mix.m_ouputfrontrear = 0x00;
+
+    du_songinfo.s_mix.m_sendtoreverb = 0x00;
+    du_songinfo.s_mix.m_sendtochorus = 0x00;
+
+    for(int i = 0; i < NUM_LED_VALUE; i++)
+    {
+        du_songinfo.s_leds[i] = 0x00;
+    }
+
+
+    return QByteArray((char *)&(du_songinfo), MUSIC_SONG_SIZE);
 }
 
 

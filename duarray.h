@@ -12,6 +12,8 @@ public:
     ~DuArray();
 
     QJsonValue toJson() const;
+    QByteArray toDuMusicFile() const;
+
     QDebug debugPrint(QDebug dbg) const;
 
     int getMaxSize() const;
