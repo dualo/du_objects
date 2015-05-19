@@ -7,7 +7,8 @@ DuSongInfo::DuSongInfo() :
              new DuNumeric(0, NUMERIC_DEFAULT_SIZE,
                            MUSIC_MAXTRACK, 0));
 
-    addChild(KEY_SONG_REFERENCELOOPDURATION, new DuNumeric(0));
+    addChild(KEY_SONG_REFERENCELOOPDURATION,
+             new DuNumeric(0));
 
     addChild(KEY_SONG_VOLUME,
              new DuNumeric(MUSIC_VOL_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
@@ -37,10 +38,6 @@ DuSongInfo::DuSongInfo() :
              new DuNumeric(0x7F, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
-    addChild(KEY_SONG_TIMESIGNATURE,
-             new DuNumeric(TIME_4_4, NUMERIC_DEFAULT_SIZE,
-                           NUM_TIMESIGNATURE, TIME_OFF));
-
     addChild(KEY_SONG_SCALE,
              new DuNumeric(1, NUMERIC_DEFAULT_SIZE,
                            5, 0));
@@ -48,6 +45,10 @@ DuSongInfo::DuSongInfo() :
     addChild(KEY_SONG_TONALITY,
              new DuNumeric(1, NUMERIC_DEFAULT_SIZE,
                            11, 0));
+
+    addChild(KEY_SONG_TIMESIGNATURE,
+             new DuNumeric(TIME_4_4, NUMERIC_DEFAULT_SIZE,
+                           NUM_TIMESIGNATURE, TIME_OFF));
 }
 
 DuSongInfo::~DuSongInfo()
@@ -74,9 +75,9 @@ DuSongInfo *DuSongInfo::fromDuMusicFile(const music_song &du_song)
     verif = verif && songInfo->setHighCutFilterFrequency(
                 du_song.s_mix.m_hicutfilterfrequency);
 
-    verif = verif && songInfo->setTimeSignature(du_song.s_timesignature);
     verif = verif && songInfo->setScale(du_song.s_displaynote);
     verif = verif && songInfo->setTonality(du_song.s_scaletonality);
+    verif = verif && songInfo->setTimeSignature(du_song.s_timesignature);
 
     if (!verif)
     {
@@ -92,7 +93,9 @@ DuSongInfo *DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
 {
     QJsonValue jsonRefTrack         = jsonSongInfo[KEY_SONG_REFERENCETRACK];
     QJsonValue jsonRefDuration      = jsonSongInfo[KEY_SONG_REFERENCELOOPDURATION];
+    QJsonValue jsonVolume           = jsonSongInfo[KEY_SONG_VOLUME];
     QJsonValue jsonTempo            = jsonSongInfo[KEY_SONG_TEMPO];
+    QJsonValue jsonClickVolume      = jsonSongInfo[KEY_SONG_CLICKVOLUME];
     QJsonValue jsonOffset           = jsonSongInfo[KEY_SONG_OFFSET];
     QJsonValue jsonGain             = jsonSongInfo[KEY_SONG_GAIN];
     QJsonValue jsonLoCutFreq        = jsonSongInfo[KEY_SONG_LOWCUTFILTERFREQ];
@@ -101,8 +104,9 @@ DuSongInfo *DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
     QJsonValue jsonTonality         = jsonSongInfo[KEY_SONG_TONALITY];
     QJsonValue jsonTimeSignature    = jsonSongInfo[KEY_SONG_TIMESIGNATURE];
 
-    if (!jsonRefTrack.isDouble()    ||  !jsonRefDuration.isDouble()
-            ||  !jsonTempo.isDouble()       ||  !jsonOffset.isDouble()
+    if (        !jsonRefTrack.isDouble()    ||  !jsonRefDuration.isDouble()
+            ||  !jsonVolume.isDouble()      ||  !jsonTempo.isDouble()
+            ||  !jsonClickVolume.isDouble() ||  !jsonOffset.isDouble()
             ||  !jsonGain.isDouble()        ||  !jsonLoCutFreq.isDouble()
             ||  !jsonHiCutFreq.isDouble()   ||  !jsonScale.isDouble()
             ||  !jsonTonality.isDouble()    ||  !jsonTimeSignature.isDouble())
@@ -116,7 +120,9 @@ DuSongInfo *DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
     verif = verif && songInfo->setReferenceTrack(jsonRefTrack.toInt());
     verif = verif && songInfo->setReferenceLoopDuration(jsonRefDuration.toInt());
 
+    verif = verif && songInfo->setVolume(jsonVolume.toInt());
     verif = verif && songInfo->setTempo(jsonTempo.toInt());
+    verif = verif && songInfo->setClickVolume(jsonClickVolume.toInt());
     verif = verif && songInfo->setOffset(jsonOffset.toInt());
 
     verif = verif && songInfo->setGain(jsonGain.toInt());
@@ -134,6 +140,12 @@ DuSongInfo *DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
     }
 
     return songInfo;
+}
+
+
+QByteArray DuSongInfo::toDuMusicFile() const
+{
+    return QByteArray();
 }
 
 
@@ -225,26 +237,6 @@ bool DuSongInfo::setTempo(int value)
     return tmp->setNumeric(value);
 }
 
-int DuSongInfo::getOffset() const
-{
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_OFFSET));
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuSongInfo::setOffset(int value)
-{
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_OFFSET));
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
 int DuSongInfo::getClickVolume() const
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_CLICKVOLUME));
@@ -258,6 +250,26 @@ int DuSongInfo::getClickVolume() const
 bool DuSongInfo::setClickVolume(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_CLICKVOLUME));
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
+}
+
+int DuSongInfo::getOffset() const
+{
+    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_OFFSET));
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuSongInfo::setOffset(int value)
+{
+    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_OFFSET));
 
     if (tmp == NULL)
         return false;
@@ -327,26 +339,6 @@ bool DuSongInfo::setHighCutFilterFrequency(int value)
 }
 
 
-int DuSongInfo::getTimeSignature() const
-{
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_TIMESIGNATURE));
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuSongInfo::setTimeSignature(int value)
-{
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_TIMESIGNATURE));
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
 int DuSongInfo::getScale() const
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_SCALE));
@@ -380,6 +372,26 @@ int DuSongInfo::getTonality() const
 bool DuSongInfo::setTonality(int value)
 {
     DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_TONALITY));
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
+}
+
+int DuSongInfo::getTimeSignature() const
+{
+    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_TIMESIGNATURE));
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuSongInfo::setTimeSignature(int value)
+{
+    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_TIMESIGNATURE));
 
     if (tmp == NULL)
         return false;

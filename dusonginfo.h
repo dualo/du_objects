@@ -33,6 +33,8 @@ public:
     static DuSongInfo *fromDuMusicFile(const music_song &du_song);
     static DuSongInfo *fromJson(const QJsonObject &jsonSongInfo);
 
+    QByteArray toDuMusicFile() const;
+
     int size() const;
 
     int getReferenceTrack() const;
@@ -47,11 +49,11 @@ public:
     int getTempo() const;
     bool setTempo(int value);
 
-    int getOffset() const;
-    bool setOffset(int value);
-
     int getClickVolume() const;
     bool setClickVolume(int value);
+
+    int getOffset() const;
+    bool setOffset(int value);
 
     int getGain() const;
     bool setGain(int value);
@@ -62,14 +64,14 @@ public:
     int getHighCutFilterFrequency() const;
     bool setHighCutFilterFrequency(int value);
 
-    int getTimeSignature() const;
-    bool setTimeSignature(int value);
-
     int getScale() const;
     bool setScale(int value);
 
     int getTonality() const;
     bool setTonality(int value);
+
+    int getTimeSignature() const;
+    bool setTimeSignature(int value);
 };
 
 #endif // DUSONGINFO_H
