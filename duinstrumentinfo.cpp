@@ -111,6 +111,7 @@ QByteArray DuInstrumentInfo::toDuMusicFile() const
     QString tmpStr;
     int tmpNum = 0;
 
+    QByteArray tmpClear(size(), (char)0x00);
     std::memcpy((char *)&(du_instrumentinfo), tmpClear.data(), size());
 
     tmpNum = getMidiProgramChange();
