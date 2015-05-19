@@ -128,7 +128,7 @@ QByteArray DuWah::toDuMusicFile() const
 #endif
 
 
-    return QByteArray((char *)&(du_wah), FX_WAH_SIZE);
+    return QByteArray((char *)&(du_wah), size());
 }
 
 

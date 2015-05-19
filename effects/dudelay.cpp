@@ -170,7 +170,7 @@ QByteArray DuDelay::toDuMusicFile() const
 #endif
 
 
-    return QByteArray((char *)&(du_delay), FX_DELAY_SIZE);
+    return QByteArray((char *)&(du_delay), size());
 }
 
 

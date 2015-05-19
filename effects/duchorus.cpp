@@ -207,7 +207,7 @@ QByteArray DuChorus::toDuMusicFile() const
 #endif
 
 
-    return QByteArray((char *)&(du_chorus), FX_CHORUS_SIZE);
+    return QByteArray((char *)&(du_chorus), size());
 }
 
 

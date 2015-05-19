@@ -142,7 +142,7 @@ QByteArray DuAdsr::toDuMusicFile() const
 #endif
 
 
-    return QByteArray((char *)&(du_adsr), FX_ADSR_SIZE);
+    return QByteArray((char *)&(du_adsr), size());
 }
 
 

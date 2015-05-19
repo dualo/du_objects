@@ -168,7 +168,7 @@ QByteArray DuCompressor::toDuMusicFile() const
 #endif
 
 
-    return QByteArray((char *)&(du_compressor), FX_COMP_SIZE);
+    return QByteArray((char *)&(du_compressor), size());
 }
 
 

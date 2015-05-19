@@ -156,7 +156,7 @@ QByteArray DuMixer::toDuMusicFile() const
     du_mixer.m_sendtochorus = tmp;
 
 
-    return QByteArray((char *)&(du_mixer), FX_MIX_SIZE);
+    return QByteArray((char *)&(du_mixer), size());
 }
 
 

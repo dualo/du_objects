@@ -221,7 +221,7 @@ QByteArray DuEqualizer::toDuMusicFile() const
 #endif
 
 
-    return QByteArray((char *)&(du_equalizer), FX_EQ_SIZE);
+    return QByteArray((char *)&(du_equalizer), size());
 }
 
 

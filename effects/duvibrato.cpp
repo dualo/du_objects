@@ -115,7 +115,7 @@ QByteArray DuVibrato::toDuMusicFile() const
 #endif
 
 
-    return QByteArray((char *)&(du_vibrato), FX_VIB_SIZE);
+    return QByteArray((char *)&(du_vibrato), size());
 }
 
 

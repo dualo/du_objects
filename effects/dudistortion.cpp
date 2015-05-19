@@ -173,7 +173,7 @@ QByteArray DuDistortion::toDuMusicFile() const
 #endif
 
 
-    return QByteArray((char *)&(du_distortion), FX_DIST_SIZE);
+    return QByteArray((char *)&(du_distortion), size());
 }
 
 
