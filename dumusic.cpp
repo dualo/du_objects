@@ -121,11 +121,7 @@ QByteArray DuMusic::toDuMusicFile() const
         return QByteArray();
 
     QByteArray tmpClear(musicSize, (char)0x00);
-#ifdef Q_OS_WIN
-    memcpy_s((char *)&(du_music), musicSize, tmpClear.data(), musicSize);
-#else
-    memcpy((char *)&(du_music), tmpClear.data(), musicSize);
-#endif
+    std::memcpy((char *)&(du_music), tmpClear.data(), musicSize);
 
 
     DuHeader *header = getHeader();
@@ -153,12 +149,7 @@ QByteArray DuMusic::toDuMusicFile() const
             + songInfoArray.mid(header->size(), songInfo->size())
             + tracksArray;
 
-#ifdef Q_OS_WIN
-    memcpy_s(&(du_music.local_song), MUSIC_SONG_SIZE,
-             tmpArray.data(), MUSIC_SONG_SIZE);
-#else
-    memcpy(&(du_music.local_song), tmpArray.data(), MUSIC_SONG_SIZE);
-#endif
+    std::memcpy(&(du_music.local_song), tmpArray.data(), MUSIC_SONG_SIZE);
 
 
     tmpArray.clear();

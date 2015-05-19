@@ -111,13 +111,7 @@ QByteArray DuInstrumentInfo::toDuMusicFile() const
     QString tmpStr;
     int tmpNum = 0;
 
-    QByteArray tmpClear(size(), (char)0x00);
-#ifdef Q_OS_WIN
-    memcpy_s((char *)&(du_instrumentinfo), size(), tmpClear.data(), size());
-#else
-    memcpy((char *)&(du_instrumentinfo), tmpClear.data(), size());
-#endif
-
+    std::memcpy((char *)&(du_instrumentinfo), tmpClear.data(), size());
 
     tmpNum = getMidiProgramChange();
     if (tmpNum == -1)
@@ -146,12 +140,7 @@ QByteArray DuInstrumentInfo::toDuMusicFile() const
         return QByteArray();
     tmpCategory.prepend(tmpStr.toUtf8());
 
-#ifdef Q_OS_WIN
-    memcpy_s(du_instrumentinfo.instr_cat, NAME_CARACT,
-             tmpCategory.data(), NAME_CARACT);
-#else
-    memcpy(du_instrumentinfo.instr_cat, tmpCategory.data(), NAME_CARACT);
-#endif
+    std::memcpy(du_instrumentinfo.instr_cat, tmpCategory.data(), NAME_CARACT);
 
     QByteArray tmpName(NAME_CARACT, (char)0x00);
     tmpStr = getName();
@@ -159,12 +148,8 @@ QByteArray DuInstrumentInfo::toDuMusicFile() const
         return QByteArray();
     tmpName.prepend(tmpStr.toUtf8());
 
-#ifdef Q_OS_WIN
-    memcpy_s(du_instrumentinfo.instr_name, NAME_CARACT,
-             tmpName.data(), NAME_CARACT);
-#else
-    memcpy(du_instrumentinfo.instr_name, tmpName.data(), NAME_CARACT);
-#endif
+    std::memcpy(du_instrumentinfo.instr_name, tmpName.data(), NAME_CARACT);
+
 /*
     QByteArray tmpUserID(NAME_CARACT, (char)0x00);
     tmpString = getUserID();
@@ -172,12 +157,7 @@ QByteArray DuInstrumentInfo::toDuMusicFile() const
         return QByteArray();
     tmpUserID.prepend(tmpString.toUtf8());
 
-#ifdef Q_OS_WIN
-    memcpy_s(du_instrumentinfo.instr_userid, NAME_CARACT,
-             tmpUserID.data(), NAME_CARACT);
-#else
-    memcpy(du_instrumentinfo.instr_userid, tmpUserID.data(), NAME_CARACT);
-#endif
+    std::memcpy(du_instrumentinfo.instr_userid, tmpUserID.data(), NAME_CARACT);
 */
     //TODO: add userID when possible.
 

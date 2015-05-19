@@ -128,13 +128,7 @@ QByteArray DuHeader::toDuMusicFile() const
     int tmpNum = 0;
 
     QByteArray tmpClear(MUSIC_SONG_SIZE, (char)0x00);
-#ifdef Q_OS_WIN
-    memcpy_s((char *)&(du_header), MUSIC_SONG_SIZE,
-             tmpClear.data(), MUSIC_SONG_SIZE);
-#else
-    memcpy((char *)&(du_header), tmpClear.data(), MUSIC_SONG_SIZE);
-#endif
-
+    std::memcpy((char *)&(du_header), tmpClear.data(), MUSIC_SONG_SIZE);
 
     tmpNum = getFileVersion();
     if (tmpNum == -1)
@@ -160,12 +154,7 @@ QByteArray DuHeader::toDuMusicFile() const
         return QByteArray();
     tmpArray.prepend(tmpStr.toUtf8());
 
-#ifdef Q_OS_WIN
-    memcpy_s(du_header.s_original_sn, HEADER_NAME_SIZE,
-             tmpArray.data(), HEADER_NAME_SIZE);
-#else
-    memcpy(du_header.s_original_sn, tmpArray.data(), HEADER_NAME_SIZE);
-#endif
+    std::memcpy(du_header.s_original_sn, tmpArray.data(), HEADER_NAME_SIZE);
 
     tmpArray = tmpClear;
     tmpStr = getOriginalName();
@@ -173,12 +162,7 @@ QByteArray DuHeader::toDuMusicFile() const
         return QByteArray();
     tmpArray.prepend(tmpStr.toUtf8());
 
-#ifdef Q_OS_WIN
-    memcpy_s(du_header.s_original_name, HEADER_NAME_SIZE,
-             tmpArray.data(), HEADER_NAME_SIZE);
-#else
-    memcpy(du_header.s_original_name, tmpArray.data(), HEADER_NAME_SIZE);
-#endif
+    std::memcpy(du_header.s_original_name, tmpArray.data(), HEADER_NAME_SIZE);
 
     tmpArray = tmpClear;
     tmpStr = getOriginalUser();
@@ -186,12 +170,7 @@ QByteArray DuHeader::toDuMusicFile() const
         return QByteArray();
     tmpArray.prepend(tmpStr.toUtf8());
 
-#ifdef Q_OS_WIN
-    memcpy_s(du_header.s_original_user, HEADER_NAME_SIZE,
-             tmpArray.data(), HEADER_NAME_SIZE);
-#else
-    memcpy(du_header.s_original_user, tmpArray.data(), HEADER_NAME_SIZE);
-#endif
+    std::memcpy(du_header.s_original_user, tmpArray.data(), HEADER_NAME_SIZE);
 
     tmpArray = tmpClear;
     tmpStr = getOriginalUserId();
@@ -199,12 +178,7 @@ QByteArray DuHeader::toDuMusicFile() const
         return QByteArray();
     tmpArray.prepend(tmpStr.toUtf8());
 
-#ifdef Q_OS_WIN
-    memcpy_s(du_header.s_original_userid, HEADER_NAME_SIZE,
-             tmpArray.data(), HEADER_NAME_SIZE);
-#else
-    memcpy(du_header.s_original_userid, tmpArray.data(), HEADER_NAME_SIZE);
-#endif
+    std::memcpy(du_header.s_original_userid, tmpArray.data(), HEADER_NAME_SIZE);
 
     tmpArray = tmpClear;
     tmpStr = getLastModifSerialNumber();
@@ -212,12 +186,7 @@ QByteArray DuHeader::toDuMusicFile() const
         return QByteArray();
     tmpArray.prepend(tmpStr.toUtf8());
 
-#ifdef Q_OS_WIN
-    memcpy_s(du_header.s_modif_sn, HEADER_NAME_SIZE,
-             tmpArray.data(), HEADER_NAME_SIZE);
-#else
-    memcpy(du_header.s_modif_sn, tmpArray.data(), HEADER_NAME_SIZE);
-#endif
+    std::memcpy(du_header.s_modif_sn, tmpArray.data(), HEADER_NAME_SIZE);
 
     tmpArray = tmpClear;
     tmpStr = getLastModifName();
@@ -225,12 +194,7 @@ QByteArray DuHeader::toDuMusicFile() const
         return QByteArray();
     tmpArray.prepend(tmpStr.toUtf8());
 
-#ifdef Q_OS_WIN
-    memcpy_s(du_header.s_modif_name, HEADER_NAME_SIZE,
-             tmpArray.data(), HEADER_NAME_SIZE);
-#else
-    memcpy(du_header.s_modif_name, tmpArray.data(), HEADER_NAME_SIZE);
-#endif
+    std::memcpy(du_header.s_modif_name, tmpArray.data(), HEADER_NAME_SIZE);
 
     tmpArray = tmpClear;
     tmpStr = getLastModifUser();
@@ -238,12 +202,7 @@ QByteArray DuHeader::toDuMusicFile() const
         return QByteArray();
     tmpArray.prepend(tmpStr.toUtf8());
 
-#ifdef Q_OS_WIN
-    memcpy_s(du_header.s_modif_user, HEADER_NAME_SIZE,
-             tmpArray.data(), HEADER_NAME_SIZE);
-#else
-    memcpy(du_header.s_modif_user, tmpArray.data(), HEADER_NAME_SIZE);
-#endif
+    std::memcpy(du_header.s_modif_user, tmpArray.data(), HEADER_NAME_SIZE);
 
     tmpArray = tmpClear;
     tmpStr = getLastModifUserId();
@@ -251,13 +210,7 @@ QByteArray DuHeader::toDuMusicFile() const
         return QByteArray();
     tmpArray.prepend(tmpStr.toUtf8());
 
-#ifdef Q_OS_WIN
-    memcpy_s(du_header.s_modif_userid, HEADER_NAME_SIZE,
-             tmpArray.data(), HEADER_NAME_SIZE);
-#else
-    memcpy(du_header.s_modif_userid, tmpArray.data(), HEADER_NAME_SIZE);
-#endif
-
+    std::memcpy(du_header.s_modif_userid, tmpArray.data(), HEADER_NAME_SIZE);
 
     tmpClear = QByteArray(MUSIC_SONG_NAME_SIZE, char(0x00));
 
@@ -267,12 +220,7 @@ QByteArray DuHeader::toDuMusicFile() const
         return QByteArray();
     tmpArray.prepend(tmpStr.toUtf8());
 
-#ifdef Q_OS_WIN
-    memcpy_s(du_header.s_name, HEADER_NAME_SIZE,
-             tmpArray.data(), HEADER_NAME_SIZE);
-#else
-    memcpy(du_header.s_name, tmpArray.data(), HEADER_NAME_SIZE);
-#endif
+    std::memcpy(du_header.s_name, tmpArray.data(), HEADER_NAME_SIZE);
 
 
     return QByteArray((char *)&(du_header), MUSIC_SONG_SIZE);

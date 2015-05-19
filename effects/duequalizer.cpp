@@ -214,11 +214,7 @@ QByteArray DuEqualizer::toDuMusicFile() const
         return QByteArray();
     tmpName.prepend(tmpStr.toUtf8());
 
-#ifdef Q_OS_WIN
-    memcpy_s(du_equalizer.e_name, NAME_CARACT, tmpName.data(), NAME_CARACT);
-#else
-    memcpy(du_equalizer.e_name, tmpName.data(), NAME_CARACT);
-#endif
+    std::memcpy(du_equalizer.e_name, tmpName.data(), NAME_CARACT);
 
 
     return QByteArray((char *)&(du_equalizer), size());

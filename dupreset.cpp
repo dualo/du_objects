@@ -132,11 +132,7 @@ QByteArray DuPreset::toDuMusicFile() const
     int tmpNum = 0;
 
     QByteArray tmpClear(size(), (char)0x00);
-#ifdef Q_OS_WIN
-    memcpy_s((char *)&(du_preset), size(), tmpClear.data(), size());
-#else
-    memcpy((char *)&(du_preset), tmpClear.data(), size());
-#endif
+    std::memcpy((char *)&(du_preset), tmpClear.data(), size());
 
 
     tmpNum = getVolume();

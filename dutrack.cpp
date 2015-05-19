@@ -108,11 +108,7 @@ QByteArray DuTrack::toDuMusicFile() const
     int tmpNum = 0;
 
     QByteArray tmpClear(size(), (char)0x00);
-#ifdef Q_OS_WIN
-    memcpy_s((char *)&(du_track), size(), tmpClear.data(), size());
-#else
-    memcpy((char *)&(du_track), tmpClear.data(), size());
-#endif
+    std::memcpy((char *)&(du_track), tmpClear.data(), size());
 
 
     DuArray *loops = getLoops();
@@ -122,12 +118,7 @@ QByteArray DuTrack::toDuMusicFile() const
     if (loopsArray.isNull())
         return QByteArray();
 
-#ifdef Q_OS_WIN
-    memcpy_s(&(du_track.t_loop), loops->size(),
-             loopsArray.data(), loops->size());
-#else
-    memcpy(&(du_track.t_loop), loopsArray.data(), loops->size());
-#endif
+    std::memcpy(&(du_track.t_loop), loopsArray.data(), loops->size());
 
 
     tmpNum = getChannel();

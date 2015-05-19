@@ -151,12 +151,7 @@ QByteArray DuSongInfo::toDuMusicFile() const
     int tmpNum = 0;
 
     QByteArray tmpClear(MUSIC_SONG_SIZE, (char)0x00);
-#ifdef Q_OS_WIN
-    memcpy_s((char *)&(du_songinfo), MUSIC_SONG_SIZE,
-             tmpClear.data(), MUSIC_SONG_SIZE);
-#else
-    memcpy((char *)&(du_songinfo), tmpClear.data(), MUSIC_SONG_SIZE);
-#endif
+    std::memcpy((char *)&(du_songinfo), tmpClear.data(), MUSIC_SONG_SIZE);
 
 
     tmpNum = getReferenceTrack();

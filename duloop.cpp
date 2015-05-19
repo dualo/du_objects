@@ -136,11 +136,7 @@ QByteArray DuLoop::toDuMusicFile() const
     int tmpNum = 0;
 
     QByteArray tmpClear(size(), (char)0x00);
-#ifdef Q_OS_WIN
-    memcpy_s((char *)&(du_loop), size(), tmpClear.data(), size());
-#else
-    memcpy((char *)&(du_loop), tmpClear.data(), size());
-#endif
+    std::memcpy((char *)&(du_loop), tmpClear.data(), size());
 
 
     DuInstrument *instrument = getInstrument();
@@ -150,12 +146,7 @@ QByteArray DuLoop::toDuMusicFile() const
     if (instrumentArray.isNull())
         return QByteArray();
 
-#ifdef Q_OS_WIN
-    memcpy_s(&(du_loop.l_instr), instrument->size(),
-             instrumentArray.data(), instrument->size());
-#else
-    memcpy(&(du_loop.l_instr), instrumentArray.data(), instrument->size());
-#endif
+    std::memcpy(&(du_loop.l_instr), instrumentArray.data(), instrument->size());
 
 
     tmpNum = getState();

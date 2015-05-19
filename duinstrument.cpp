@@ -270,133 +270,78 @@ QByteArray DuInstrument::toDuMusicFile() const
     if (instrInfo == NULL)
         return QByteArray();
 
-#ifdef Q_OS_WIN
-    memcpy_s((char *)&(du_instrument.i_instrument), instrInfo->size(),
-             instrInfo->toDuMusicFile().data(), instrInfo->size());
-#else
-    memcpy((char *)&(du_instrument.i_instrument),
-           instrInfo->toDuMusicFile().data(), instrInfo->size());
-#endif
+    std::memcpy((char *)&(du_instrument.i_instrument),
+                instrInfo->toDuMusicFile().data(), instrInfo->size());
 
     DuPreset *preset = getPreset();
     if (preset == NULL)
         return QByteArray();
 
-#ifdef Q_OS_WIN
-    memcpy_s((char *)&(du_instrument.i_preset), preset->size(),
-             preset->toDuMusicFile().data(), preset->size());
-#else
-    memcpy((char *)&(du_instrument.i_preset),
-           preset->toDuMusicFile().data(), preset->size());
-#endif
+    std::memcpy((char *)&(du_instrument.i_preset),
+                preset->toDuMusicFile().data(), preset->size());
 
     DuMixer *mixer = getMixer();
     if (mixer == NULL)
         return QByteArray();
 
-#ifdef Q_OS_WIN
-    memcpy_s((char *)&(du_instrument.i_mix), mixer->size(),
-             mixer->toDuMusicFile().data(), mixer->size());
-#else
-    memcpy((char *)&(du_instrument.i_mix),
-           mixer->toDuMusicFile().data(), mixer->size());
-#endif
+    std::memcpy((char *)&(du_instrument.i_mix),
+                mixer->toDuMusicFile().data(), mixer->size());
 
     DuDistortion *distortion = getDistortion();
     if (distortion == NULL)
         return QByteArray();
 
-#ifdef Q_OS_WIN
-    memcpy_s((char *)&(du_instrument.i_distortion), distortion->size(),
-             distortion->toDuMusicFile().data(), distortion->size());
-#else
-    memcpy((char *)&(du_instrument.i_distortion),
-           distortion->toDuMusicFile().data(), distortion->size());
-#endif
+    std::memcpy((char *)&(du_instrument.i_distortion),
+                distortion->toDuMusicFile().data(), distortion->size());
 
     DuWah *wah = getWah();
     if (wah == NULL)
         return QByteArray();
 
-#ifdef Q_OS_WIN
-    memcpy_s((char *)&(du_instrument.i_wah), wah->size(),
-             wah->toDuMusicFile().data(), wah->size());
-#else
-    memcpy((char *)&(du_instrument.i_wah),
-           wah->toDuMusicFile().data(), wah->size());
-#endif
+    std::memcpy((char *)&(du_instrument.i_wah),
+                wah->toDuMusicFile().data(), wah->size());
 
     DuCompressor *compressor = getCompressor();
     if (compressor == NULL)
         return QByteArray();
 
-#ifdef Q_OS_WIN
-    memcpy_s((char *)&(du_instrument.i_compressor), compressor->size(),
-             compressor->toDuMusicFile().data(), compressor->size());
-#else
-    memcpy((char *)&(du_instrument.i_compressor),
-           compressor->toDuMusicFile().data(), compressor->size());
-#endif
+    std::memcpy((char *)&(du_instrument.i_compressor),
+                compressor->toDuMusicFile().data(), compressor->size());
 
     DuEqualizer *equalizer = getEqualizer();
     if (equalizer == NULL)
         return QByteArray();
 
-#ifdef Q_OS_WIN
-    memcpy_s((char *)&(du_instrument.i_equalizer), equalizer->size(),
-             equalizer->toDuMusicFile().data(), equalizer->size());
-#else
-    memcpy((char *)&(du_instrument.i_equalizer),
-           equalizer->toDuMusicFile().data(), equalizer->size());
-#endif
+    std::memcpy((char *)&(du_instrument.i_equalizer),
+                equalizer->toDuMusicFile().data(), equalizer->size());
 
     DuDelay *delay = getDelay();
     if (delay == NULL)
         return QByteArray();
 
-#ifdef Q_OS_WIN
-    memcpy_s((char *)&(du_instrument.i_delay), delay->size(),
-             delay->toDuMusicFile().data(), delay->size());
-#else
-    memcpy((char *)&(du_instrument.i_delay),
-           delay->toDuMusicFile().data(), delay->size());
-#endif
+    std::memcpy((char *)&(du_instrument.i_delay),
+                delay->toDuMusicFile().data(), delay->size());
 
     DuChorus *chorus = getChorus();
     if (chorus == NULL)
         return QByteArray();
 
-#ifdef Q_OS_WIN
-    memcpy_s((char *)&(du_instrument.i_chorus), chorus->size(),
-             chorus->toDuMusicFile().data(), chorus->size());
-#else
-    memcpy((char *)&(du_instrument.i_chorus),
-           chorus->toDuMusicFile().data(), chorus->size());
-#endif
+    std::memcpy((char *)&(du_instrument.i_chorus),
+                chorus->toDuMusicFile().data(), chorus->size());
 
     DuVibrato *vibrato = getVibrato();
     if (vibrato == NULL)
         return QByteArray();
 
-#ifdef Q_OS_WIN
-    memcpy_s((char *)&(du_instrument.i_vibrato), vibrato->size(),
-             vibrato->toDuMusicFile().data(), vibrato->size());
-#else
-    memcpy((char *)&(du_instrument.i_vibrato),
-           vibrato->toDuMusicFile().data(), vibrato->size());
-#endif
+    std::memcpy((char *)&(du_instrument.i_vibrato),
+                vibrato->toDuMusicFile().data(), vibrato->size());
 
     DuAdsr *adsr = getAdsr();
     if (adsr == NULL)
         return QByteArray();
 
-#ifdef Q_OS_WIN
-    memcpy_s((char *)&(du_instrument.i_adsr), adsr->size(),
-             adsr->toDuMusicFile().data(), adsr->size());
-#else
-    memcpy((char *)&(du_instrument.i_adsr),
-           adsr->toDuMusicFile().data(), adsr->size());
-#endif
+    std::memcpy((char *)&(du_instrument.i_adsr),
+                adsr->toDuMusicFile().data(), adsr->size());
 
     return QByteArray((char *)&(du_instrument), size());
 }
