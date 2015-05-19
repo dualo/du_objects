@@ -25,7 +25,11 @@ HEADERS += \
     $$PWD/effects/duvibrato.h \
     $$PWD/effects/duwah.h \
     $$PWD/du-touch/parameters/music_parameters_mng.h \
-    $$PWD/du-touch/parameters/sound_parameters_mng.h
+    $$PWD/du-touch/parameters/sound_parameters_mng.h \
+    $$PWD/dudevice.h \
+    $$PWD/dudate.h \
+    $$PWD/dutouch.h \
+    $$PWD/duversion.h
 
 SOURCES += \
     $$PWD/duarray.cpp \
@@ -52,4 +56,8 @@ SOURCES += \
     $$PWD/effects/duequalizer.cpp \
     $$PWD/effects/dumixer.cpp \
     $$PWD/effects/duvibrato.cpp \
-    $$PWD/effects/duwah.cpp
+    $$PWD/effects/duwah.cpp \
+    $$PWD/dudevice.cpp \
+    $$PWD/dudate.cpp \
+    $$PWD/dutouch.cpp \
+    $$PWD/duversion.cpp

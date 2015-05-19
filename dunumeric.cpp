@@ -56,6 +56,15 @@ QJsonValue DuNumeric::toJson() const
     return QJsonValue(getNumeric());
 }
 
+QHttpPart DuNumeric::toHttpPart(const QString &name) const
+{
+    QHttpPart part;
+    part.setHeader(QNetworkRequest::ContentDispositionHeader, "form-data; name=\"" + name + "\"");
+    part.setBody(QByteArray::number(getNumeric()));
+
+    return part;
+}
+
 QDebug DuNumeric::debugPrint(QDebug dbg) const
 {
     dbg.nospace() << "DuNumeric(" << getNumeric() << ")";

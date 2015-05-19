@@ -45,6 +45,15 @@ QDebug DuArray::debugPrint(QDebug dbg) const
     return dbg.space();
 }
 
+int DuArray::getMaxSize() const
+{
+    return maxSize;
+}
+
+void DuArray::setMaxSize(int value)
+{
+    maxSize = value;
+}
 
 int DuArray::size() const
 {

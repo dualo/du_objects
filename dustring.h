@@ -13,6 +13,7 @@ public:
 
     QByteArray toDuMusicFile() const;
     QJsonValue toJson() const;
+    QHttpPart toHttpPart(const QString &name) const;
     virtual QDebug debugPrint(QDebug dbg) const;
 
     QString getString() const;

@@ -14,6 +14,9 @@ public:
     QJsonValue toJson() const;
     QDebug debugPrint(QDebug dbg) const;
 
+    int getMaxSize() const;
+    void setMaxSize(int value);
+
     int size() const;
 
     void append(DuObject *element);

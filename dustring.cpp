@@ -41,6 +41,15 @@ QJsonValue DuString::toJson() const
     return QJsonValue(getString());
 }
 
+QHttpPart DuString::toHttpPart(const QString &name) const
+{
+    QHttpPart part;
+    part.setHeader(QNetworkRequest::ContentDispositionHeader, "form-data; name=\"" + name + "\"");
+    part.setBody(getString().toUtf8());
+
+    return part;
+}
+
 QDebug DuString::debugPrint(QDebug dbg) const
 {
     dbg.nospace() << "DuString(" << getString() << ")";

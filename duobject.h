@@ -9,6 +9,7 @@
 #include <QJsonValue>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QHttpPart>
 
 #include "du-touch/parameters/music_parameters_mng.h"
 
@@ -20,6 +21,7 @@ public:
 
     //virtual QByteArray toDuMusicFile() const = 0;
     virtual QJsonValue toJson() const = 0;
+    virtual QHttpPart toHttpPart(const QString& name) const;
     virtual QDebug debugPrint(QDebug dbg) const;
 
     virtual int size() const = 0;

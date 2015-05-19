@@ -37,6 +37,28 @@ QJsonValue DuContainer::toJson() const
     return QJsonValue(object);
 }
 
+QHttpMultiPart *DuContainer::toHttpMultiPart(const QByteArray &boundary) const
+{
+    QHttpMultiPart* multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+    multiPart->setBoundary(boundary);
+
+    QMapIterator<QString, DuObject*> i(children);
+    while (i.hasNext())
+    {
+        i.next();
+        if (i.value() != NULL)
+        {
+            QHttpPart part = i.value()->toHttpPart(i.key());
+            if (part != QHttpPart())
+            {
+                multiPart->append(part);
+            }
+        }
+    }
+
+    return multiPart;
+}
+
 QDebug DuContainer::debugPrint(QDebug dbg) const
 {
     dbg.nospace() << "DuContainer(";
