@@ -22,7 +22,7 @@ public:
     static DuEvent *fromDuMusicFile(const music_sample &du_sample);
     static DuEvent *fromJson(const QJsonObject &jsonEvent);
 
-    QByteArray toDuMusicFile();
+    QByteArray toDuMusicFile() const;
 
     int size() const;
 

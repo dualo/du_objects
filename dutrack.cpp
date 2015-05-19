@@ -118,7 +118,7 @@ QByteArray DuTrack::toDuMusicFile() const
     DuArray *loops = getLoops();
     if (loops == NULL)
         return QByteArray();
-    QByteArray &loopsArray = loops->toDuMusicFile();
+    const QByteArray &loopsArray = loops->toDuMusicFile();
     if (loopsArray.isNull())
         return QByteArray();
 
@@ -126,7 +126,7 @@ QByteArray DuTrack::toDuMusicFile() const
     memcpy_s(&(du_track.t_loop), loops->size(),
              loopsArray.data(), loops->size());
 #else
-    memcpy(du_track.t_loop, instrumentArray.data(), loops->size());
+    memcpy(&(du_track.t_loop), loopsArray.data(), loops->size());
 #endif
 
 

@@ -33,7 +33,7 @@ QJsonValue DuContainer::toJson() const
         if (i.value() == NULL)
             return QJsonValue();
 
-        QJsonValue &jsonValue = i.value()->toJson();
+        const QJsonValue &jsonValue = i.value()->toJson();
         if (jsonValue.isNull())
             return QJsonValue();
 
@@ -97,7 +97,7 @@ QByteArray DuContainer::toDuMusicFile() const
         if (i.value() == NULL)
             return QByteArray();
 
-        QByteArray &tmpArray = i.value()->toDuMusicFile();
+        const QByteArray &tmpArray = i.value()->toDuMusicFile();
         if (tmpArray.isNull())
             return QByteArray();
 

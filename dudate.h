@@ -11,6 +11,7 @@ public:
     DuDate(const QDateTime& date = QDateTime());
 
     QJsonValue toJson() const;
+    QByteArray toDuMusicFile() const;
     QDebug debugPrint(QDebug dbg) const;
 
     QDateTime getDate() const;

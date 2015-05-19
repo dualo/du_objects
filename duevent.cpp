@@ -103,7 +103,7 @@ DuEvent *DuEvent::fromJson(const QJsonObject &jsonEvent)
 }
 
 
-QByteArray DuEvent::toDuMusicFile()
+QByteArray DuEvent::toDuMusicFile() const
 {
     music_sample du_sample;
     du_sample.time = getTime();

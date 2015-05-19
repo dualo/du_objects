@@ -12,6 +12,12 @@ QJsonValue DuDate::toJson() const
     return QJsonValue(getDate().toString());
 }
 
+QByteArray DuDate::toDuMusicFile() const
+{
+    Q_UNIMPLEMENTED();
+    return QByteArray();
+}
+
 QDebug DuDate::debugPrint(QDebug dbg) const
 {
     dbg.nospace() << "DuDate(";

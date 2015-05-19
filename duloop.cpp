@@ -146,7 +146,7 @@ QByteArray DuLoop::toDuMusicFile() const
     DuInstrument *instrument = getInstrument();
     if (instrument == NULL)
         return QByteArray();
-    QByteArray &instrumentArray = instrument->toDuMusicFile();
+    const QByteArray &instrumentArray = instrument->toDuMusicFile();
     if (instrumentArray.isNull())
         return QByteArray();
 
@@ -154,7 +154,7 @@ QByteArray DuLoop::toDuMusicFile() const
     memcpy_s(&(du_loop.l_instr), instrument->size(),
              instrumentArray.data(), instrument->size());
 #else
-    memcpy(du_loop.l_instr, instrumentArray.data(), instrument->size());
+    memcpy(&(du_loop.l_instr), instrumentArray.data(), instrument->size());
 #endif
 
 

@@ -118,7 +118,6 @@ DuHeader *DuHeader::fromJson(const QJsonObject &jsonHeader)
     return header;
 }
 
-
 QByteArray DuHeader::toDuMusicFile() const
 {
     //TODO: restructure music_song into music_header and music_info

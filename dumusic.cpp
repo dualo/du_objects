@@ -131,21 +131,21 @@ QByteArray DuMusic::toDuMusicFile() const
     DuHeader *header = getHeader();
     if (header == NULL)
         return QByteArray();
-    QByteArray &headerArray = header->toDuMusicFile();
+    const QByteArray &headerArray = header->toDuMusicFile();
     if (headerArray.isNull())
         return QByteArray();
 
     DuSongInfo *songInfo = getSongInfo();
     if (songInfo == NULL)
         return QByteArray();
-    QByteArray &songInfoArray = songInfo->toDuMusicFile();
+    const QByteArray &songInfoArray = songInfo->toDuMusicFile();
     if (songInfoArray.isNull())
         return QByteArray();
 
     DuArray *tracks = getTracks();
     if (tracks == NULL)
         return QByteArray();
-    QByteArray &tracksArray = tracks->toDuMusicFile();
+    const QByteArray &tracksArray = tracks->toDuMusicFile();
     if (tracksArray.isNull())
         return QByteArray();
 
@@ -157,12 +157,12 @@ QByteArray DuMusic::toDuMusicFile() const
     memcpy_s(&(du_music.local_song), MUSIC_SONG_SIZE,
              tmpArray.data(), MUSIC_SONG_SIZE);
 #else
-    memcpy(du_music.local_song, tmpArray.data(), MUSIC_SONG_SIZE);
+    memcpy(&(du_music.local_song), tmpArray.data(), MUSIC_SONG_SIZE);
 #endif
 
 
     tmpArray.clear();
-    int eventTotal = 0;
+    music_sample_p* eventTotal = 0;
 
     int trackCount = tracks->count();
     for (int i = 0; i < trackCount; i++)
@@ -191,7 +191,7 @@ QByteArray DuMusic::toDuMusicFile() const
                 music_loop *tmp_loop = &(du_music.local_song.s_track[i].t_loop[j]);
 
                 tmp_loop->l_numsample = tmp;
-                tmp_loop->l_adress = (music_sample_p *)eventTotal;
+                tmp_loop->l_adress = eventTotal;
 
                 eventTotal += tmp;
             }
