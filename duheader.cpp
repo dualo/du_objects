@@ -50,7 +50,7 @@ DuHeader *DuHeader::fromDuMusicFile(const music_song &du_song)
     verif = verif && header->setLastModifUserId(
             QString(QByteArray((char *)du_song.s_modif_userid, HEADER_NAME_SIZE)));
 
-    verif = verif && header->setSongId(du_song.s_id);
+    verif = verif && header->setSongId(du_song.s_id & 0x7FFFFFFF);
     verif = verif && header->setSongName(
             QString(QByteArray((char *)du_song.s_name, MUSIC_SONG_NAME_SIZE)));
     verif = verif && header->setSongVersion(du_song.s_version_song & 0x7FFFFFFF);

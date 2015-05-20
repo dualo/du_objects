@@ -28,103 +28,92 @@ DuInstrument *DuInstrument::fromDuMusicFile(const music_instr &du_instr)
 
     DuInstrumentInfo *instrInfo =
             DuInstrumentInfo::fromDuMusicFile(du_instr.i_instrument);
-    if (instrInfo != NULL)
-        instrument->setInstrumentInfo(instrInfo);
-    else
+    if (instrInfo == NULL)
     {
         delete instrument;
         return NULL;
     }
+    instrument->setInstrumentInfo(instrInfo);
 
     DuPreset *preset = DuPreset::fromDuMusicFile(du_instr.i_preset);
-    if (preset != NULL)
-        instrument->setPreset(preset);
-    else
+    if (preset == NULL)
     {
         delete instrument;
         return NULL;
     }
+    instrument->setPreset(preset);
 
     DuMixer *mixer = DuMixer::fromDuMusicFile(du_instr.i_mix);
-    if (mixer != NULL)
-        instrument->setMixer(mixer);
-    else
+    if (mixer == NULL)
     {
         delete instrument;
         return NULL;
     }
+    instrument->setMixer(mixer);
 
     DuDistortion *distortion = DuDistortion::fromDuMusicFile(du_instr.i_distortion);
-    if (distortion != NULL)
-        instrument->setDistortion(distortion);
-    else
+    if (distortion == NULL)
     {
         delete instrument;
         return NULL;
     }
+    instrument->setDistortion(distortion);
 
     DuWah *wah = DuWah::fromDuMusicFile(du_instr.i_wah);
-    if (wah != NULL)
-        instrument->setWah(wah);
-    else
+    if (wah == NULL)
     {
         delete instrument;
         return NULL;
     }
+    instrument->setWah(wah);
 
     DuCompressor *compressor = DuCompressor::fromDuMusicFile(du_instr.i_compressor);
-    if (compressor != NULL)
-        instrument->setCompressor(compressor);
-    else
+    if (compressor == NULL)
     {
         delete instrument;
         return NULL;
     }
+    instrument->setCompressor(compressor);
 
     DuEqualizer *equalizer = DuEqualizer::fromDuMusicFile(du_instr.i_equalizer);
-    if (equalizer != NULL)
-        instrument->setEqualizer(equalizer);
-    else
+    if (equalizer == NULL)
     {
         delete instrument;
         return NULL;
     }
+    instrument->setEqualizer(equalizer);
 
     DuDelay *delay = DuDelay::fromDuMusicFile(du_instr.i_delay);
-    if (delay != NULL)
-        instrument->setDelay(delay);
-    else
+    if (delay == NULL)
     {
         delete instrument;
         return NULL;
     }
+    instrument->setDelay(delay);
 
     DuChorus *chorus = DuChorus::fromDuMusicFile(du_instr.i_chorus);
-    if (chorus != NULL)
-        instrument->setChorus(chorus);
-    else
+    if (chorus == NULL)
     {
         delete instrument;
         return NULL;
     }
+    instrument->setChorus(chorus);
 
     DuVibrato *vibrato = DuVibrato::fromDuMusicFile(du_instr.i_vibrato);
-    if (vibrato != NULL)
-        instrument->setVibrato(vibrato);
-    else
+    if (vibrato == NULL)
     {
         delete instrument;
         return NULL;
     }
+    instrument->setVibrato(vibrato);
 
     DuAdsr *adsr = DuAdsr::fromDuMusicFile(du_instr.i_adsr);
-    if (adsr != NULL)
-        instrument->setAdsr(adsr);
-    else
+    if (adsr == NULL)
     {
         delete instrument;
         return NULL;
     }
+    instrument->setAdsr(adsr);
 
     return instrument;
 }

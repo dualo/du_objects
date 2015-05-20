@@ -5,7 +5,7 @@ DuLoop::DuLoop() :
 {
     addChild(KEY_LOOP_STATE,
              new DuNumeric(0, NUMERIC_DEFAULT_SIZE,
-                           2, 0));
+                           3, 0));
 
     addChild(KEY_LOOP_DURATIONMODIFIER,
              new DuNumeric(MUSIC_LOOPMOD_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
@@ -42,13 +42,12 @@ DuLoop *DuLoop::fromDuMusicFile(const music_loop &du_loop,
     }
 
     DuInstrument *instrument = DuInstrument::fromDuMusicFile(du_loop.l_instr);
-    if (instrument != NULL)
-        loop->setInstrument(instrument);
-    else
+    if (instrument == NULL)
     {
         delete loop;
         return NULL;
     }
+    loop->setInstrument(instrument);
 
     if (du_loop.l_state == 0)
         return loop;

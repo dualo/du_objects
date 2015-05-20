@@ -3,9 +3,11 @@
 DuDelay::DuDelay() :
     DuEffectSettings()
 {
+    //TODO: define correct maxima
+
     addChild(KEY_DELAY_ONOFF,
              new DuNumeric(FX_DELAY_ONOFF_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
-                           FX_DELAY_ONOFF_MAXVALUE, FX_DELAY_ONOFF_MINVALUE));
+                           0x7F, FX_DELAY_ONOFF_MINVALUE));
 
     addChild(KEY_DELAY_MODE,
              new DuNumeric(FX_DELAY_MODE_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
@@ -25,7 +27,7 @@ DuDelay::DuDelay() :
 
     addChild(KEY_DELAY_FEEDBACK,
              new DuNumeric(FX_DELAY_FEEDBACK_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
-                           FX_DELAY_FEEDBACK_MAXVALUE, FX_DELAY_FEEDBACK_MINVALUE));
+                           0x7F, FX_DELAY_FEEDBACK_MINVALUE));
 
     addChild(KEY_DELAY_HDAMP,
              new DuNumeric(FX_DELAY_HDAMP_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,

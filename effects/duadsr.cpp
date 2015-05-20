@@ -3,9 +3,11 @@
 DuAdsr::DuAdsr() :
     DuEffectSettings()
 {
+    //TODO: define correct minima.
+
     addChild(KEY_ADSR_ENVELOPEATTACKTIME,
              new DuNumeric(FX_ADSR_ATTACK_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
-                           FX_ADSR_ATTACK_MAXVALUE, FX_ADSR_ATTACK_MINVALUE));
+                           FX_ADSR_ATTACK_MAXVALUE, 0));
 
     addChild(KEY_ADSR_ENVELOPEDECAYTIME,
              new DuNumeric(FX_ADSR_DECAY_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
@@ -21,7 +23,7 @@ DuAdsr::DuAdsr() :
 
     addChild(KEY_ADSR_ENVELOPERELEASETIME,
              new DuNumeric(FX_ADSR_RELEAS_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
-                           FX_ADSR_RELEAS_MAXVALUE, FX_ADSR_RELEAS_MINVALUE));
+                           FX_ADSR_RELEAS_MAXVALUE, 0));
 
     addChild(KEY_ADSR_EFFECTNAME,
              new DuString(QString(DEFAULT_EFFECTNAME), NAME_CARACT));
