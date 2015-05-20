@@ -29,6 +29,8 @@ public:
     QString getName() const;
     bool setName(const QString& value);
 
+    QString getDisplayName() const;
+
     QString getOwner() const;
     bool setOwner(const QString& value);
 

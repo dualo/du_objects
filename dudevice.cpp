@@ -76,6 +76,12 @@ bool DuDevice::setName(const QString &value)
     return tmp->setString(value);
 }
 
+QString DuDevice::getDisplayName() const
+{
+    const QString& name = getName();
+    return name.isEmpty() ? getSerialNumber() : name;
+}
+
 QString DuDevice::getOwner() const
 {
     const DuString* owner = getOwnerObject();
