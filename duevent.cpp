@@ -106,11 +106,35 @@ DuEvent *DuEvent::fromJson(const QJsonObject &jsonEvent)
 QByteArray DuEvent::toDuMusicFile() const
 {
     music_sample du_sample;
-    du_sample.time = getTime();
-    du_sample.control = getControl();
-    du_sample.canal = getKeyboard();
-    du_sample.note = ((du_sample.canal << 4) & 0x80) | getNote();
-    du_sample.value = getValue();
+
+    int tmpNum = 0;
+
+
+    tmpNum = getTime();
+    if (tmpNum = -1)
+        return QByteArray();
+    du_sample.time = tmpNum;
+
+    tmpNum = getControl();
+    if (tmpNum = -1)
+        return QByteArray();
+    du_sample.control = tmpNum;
+
+    tmpNum = getKeyboard();
+    if (tmpNum = -1)
+        return QByteArray();
+    du_sample.canal = tmpNum;
+
+    tmpNum = getNote();
+    if (tmpNum = -1)
+        return QByteArray();
+    du_sample.note = ((du_sample.canal << 4) & 0x80) | tmpNum;
+
+    tmpNum = getValue();
+    if (tmpNum = -1)
+        return QByteArray();
+    du_sample.value = tmpNum;
+
 
     return QByteArray((char *)&(du_sample), MUSIC_SAMPLE_SIZE);
 }

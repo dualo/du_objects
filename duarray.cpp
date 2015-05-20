@@ -60,6 +60,9 @@ QByteArray DuArray::toDuMusicFile() const
     QByteArray retArray;
     retArray.clear();
 
+    if (array.isEmpty())
+        return QByteArray("");
+
     int count = array.count();
     for (int i = 0; i < count; i++)
     {

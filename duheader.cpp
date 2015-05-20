@@ -220,7 +220,7 @@ QByteArray DuHeader::toDuMusicFile() const
         return QByteArray();
     tmpArray.prepend(tmpStr.toUtf8());
 
-    std::memcpy(du_header.s_name, tmpArray.data(), HEADER_NAME_SIZE);
+    std::memcpy(du_header.s_name, tmpArray.data(), MUSIC_SONG_NAME_SIZE);
 
 
     return QByteArray((char *)&(du_header), MUSIC_SONG_SIZE);

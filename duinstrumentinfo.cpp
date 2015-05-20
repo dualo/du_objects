@@ -129,6 +129,11 @@ QByteArray DuInstrumentInfo::toDuMusicFile() const
         return QByteArray();
     du_instrumentinfo.instr_noteoff = tmpNum;
 
+    tmpNum = getRelativeVolume();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_instrumentinfo.instr_relvolume = tmpNum;
+
     tmpNum = getID();
     if (tmpNum == -1)
         return QByteArray();
