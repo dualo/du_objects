@@ -153,7 +153,7 @@ QByteArray DuMusic::toDuMusicFile() const
 
 
     tmpArray.clear();
-    music_sample_p* eventTotal = 0;
+    int eventTotal = 0;
 
     int trackCount = tracks->count();
     for (int i = 0; i < trackCount; i++)
@@ -177,17 +177,19 @@ QByteArray DuMusic::toDuMusicFile() const
             if (tmp == -1)
                 return QByteArray();
 
+            music_loop *tmp_loop = &(du_music.local_song.s_track[i].t_loop[j]);
+            tmp_loop->l_numsample = tmp;
+
             if (tmp > 0)
-            {
-                music_loop *tmp_loop = &(du_music.local_song.s_track[i].t_loop[j]);
+                tmp_loop->l_adress = eventTotal * MUSIC_SAMPLE_SIZE;
+            else
+                tmp_loop->l_adress = NULL;
 
-                tmp_loop->l_numsample = tmp;
-                tmp_loop->l_adress = eventTotal;
-
-                eventTotal += tmp;
-            }
+            eventTotal += tmp;
         }
     }
+
+    du_music.local_song.s_totalsample = eventTotal;
 
 
     return QByteArray((char *)&(du_music), musicSize);

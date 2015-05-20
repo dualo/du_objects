@@ -44,7 +44,7 @@ DuSongInfo::DuSongInfo() :
 
     addChild(KEY_SONG_TONALITY,
              new DuNumeric(1, NUMERIC_DEFAULT_SIZE,
-                           11, 0));
+                           23, 0));
 
     addChild(KEY_SONG_TIMESIGNATURE,
              new DuNumeric(TIME_4_4, NUMERIC_DEFAULT_SIZE,

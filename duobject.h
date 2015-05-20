@@ -11,7 +11,9 @@
 #include <QJsonObject>
 #include <QHttpPart>
 
+#pragma pack(push, 4)
 #include "du-touch/parameters/music_parameters_mng.h"
+#pragma pack(pop)
 
 class DuObject
 {

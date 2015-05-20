@@ -3,17 +3,19 @@
 DuVibrato::DuVibrato() :
     DuEffectSettings()
 {
+    //TODO: define correct values for minima.
+
     addChild(KEY_VIB_DEPTH,
              new DuNumeric(FX_VIB_DEPTH_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
-                           FX_VIB_DEPTH_MAXVALUE, FX_VIB_DEPTH_MINVALUE));
+                           FX_VIB_DEPTH_MAXVALUE, 0));
 
     addChild(KEY_VIB_DELAY,
              new DuNumeric(FX_VIB_DELAY_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
-                           FX_VIB_DELAY_MAXVALUE, FX_VIB_DELAY_MINVALUE));
+                           FX_VIB_DELAY_MAXVALUE, 0));
 
     addChild(KEY_VIB_RATE,
              new DuNumeric(FX_VIB_RATE_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
-                           FX_VIB_RATE_MAXVALUE, FX_VIB_RATE_MINVALUE));
+                           FX_VIB_RATE_MAXVALUE, 0));
 
     addChild(KEY_VIB_EFFECTNAME,
              new DuString(QString(DEFAULT_EFFECTNAME), NAME_CARACT));
