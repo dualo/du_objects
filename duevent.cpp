@@ -111,27 +111,27 @@ QByteArray DuEvent::toDuMusicFile() const
 
 
     tmpNum = getTime();
-    if (tmpNum = -1)
+    if (tmpNum == -1)
         return QByteArray();
     du_sample.time = tmpNum;
 
     tmpNum = getControl();
-    if (tmpNum = -1)
+    if (tmpNum == -1)
         return QByteArray();
     du_sample.control = tmpNum;
 
     tmpNum = getKeyboard();
-    if (tmpNum = -1)
+    if (tmpNum == -1)
         return QByteArray();
     du_sample.canal = tmpNum;
 
     tmpNum = getNote();
-    if (tmpNum = -1)
+    if (tmpNum == -1)
         return QByteArray();
     du_sample.note = ((du_sample.canal << 4) & 0x80) | tmpNum;
 
     tmpNum = getValue();
-    if (tmpNum = -1)
+    if (tmpNum == -1)
         return QByteArray();
     du_sample.value = tmpNum;
 

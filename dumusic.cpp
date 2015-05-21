@@ -113,8 +113,8 @@ QByteArray DuMusic::toDuMusicFile() const
 {
     s_total_buffer du_music;
 
-    QByteArray tmpArray;
-    tmpArray.clear();
+    QByteArray tmpLocalSong;
+    tmpLocalSong.clear();
 
     int musicSize = size();
     if (musicSize == -1)
@@ -145,14 +145,15 @@ QByteArray DuMusic::toDuMusicFile() const
     if (tracksArray.isNull())
         return QByteArray();
 
-    tmpArray = headerArray.left(header->size())
+    tmpLocalSong = headerArray.left(header->size())
             + songInfoArray.mid(header->size(), songInfo->size())
             + tracksArray;
 
-    std::memcpy(&(du_music.local_song), tmpArray.data(), MUSIC_SONG_SIZE);
+    std::memcpy(&(du_music.local_song), tmpLocalSong.data(), MUSIC_SONG_SIZE);
 
 
-    tmpArray.clear();
+    QByteArray tmpLocalBuffer;
+    tmpLocalBuffer.clear();
     int eventTotal = 0;
 
     int trackCount = tracks->count();
@@ -185,11 +186,19 @@ QByteArray DuMusic::toDuMusicFile() const
             else
                 tmp_loop->l_adress = NULL;
 
+            DuArray *events = loop->getEvents();
+            if (events == NULL)
+                return QByteArray();
+            tmpLocalBuffer.append(events->toDuMusicFile());
+
             eventTotal += tmp;
         }
     }
 
     du_music.local_song.s_totalsample = eventTotal;
+
+    std::memcpy(du_music.local_buffer, tmpLocalBuffer.data(),
+                eventTotal * MUSIC_SAMPLE_SIZE);
 
 
     return QByteArray((char *)&(du_music), musicSize);
