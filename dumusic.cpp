@@ -184,7 +184,7 @@ QByteArray DuMusic::toDuMusicFile() const
             if (tmp > 0)
                 tmp_loop->l_adress = eventTotal * MUSIC_SAMPLE_SIZE;
             else
-                tmp_loop->l_adress = NULL;
+                tmp_loop->l_adress = 0;
 
             DuArray *events = loop->getEvents();
             if (events == NULL)
