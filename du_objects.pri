@@ -31,7 +31,9 @@ HEADERS += \
     $$PWD/dutouch.h \
     $$PWD/duversion.h \
     $$PWD/dumusiclist.h \
-    $$PWD/dudevicemusiclist.h
+    $$PWD/dudevicemusiclist.h \
+    $$PWD/duprofile.h \
+    $$PWD/duurl.h
 
 SOURCES += \
     $$PWD/duarray.cpp \
@@ -64,4 +66,6 @@ SOURCES += \
     $$PWD/dutouch.cpp \
     $$PWD/duversion.cpp \
     $$PWD/dumusiclist.cpp \
-    $$PWD/dudevicemusiclist.cpp
+    $$PWD/dudevicemusiclist.cpp \
+    $$PWD/duprofile.cpp \
+    $$PWD/duurl.cpp
