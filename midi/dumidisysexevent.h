@@ -1,12 +1,24 @@
 #ifndef DUMIDISYSEXEVENT_H
 #define DUMIDISYSEXEVENT_H
 
+#include "duabstractmidievent.h"
 
-class DuMidiSysExEvent
+
+class DuMidiSysExEvent : public DuAbstractMidiEvent
 {
 public:
-    DuMidiSysExEvent();
+    explicit DuMidiSysExEvent();
     ~DuMidiSysExEvent();
+
+    QByteArray toByteArray(bool runningStatusActive = false);
+    void setDataBytes(QDataStream &stream);
+    void setDataBytes(QByteArray &array);
+    quint32 size();
+
+    void setLength(quint32 value);
+
+private:
+    QByteArray data;
 };
 
 #endif // DUMIDISYSEXEVENT_H
