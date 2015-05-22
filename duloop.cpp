@@ -138,7 +138,7 @@ QByteArray DuLoop::toDuMusicFile() const
     std::memcpy((char *)&(du_loop), tmpClear.data(), size());
 
 
-    DuInstrument *instrument = getInstrument();
+    QSharedPointer<DuInstrument> instrument = getInstrument();
     if (instrument == NULL)
         return QByteArray();
     const QByteArray &instrumentArray = instrument->toDuMusicFile();
@@ -181,7 +181,7 @@ int DuLoop::size() const
 
 int DuLoop::getState() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_LOOP_STATE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_LOOP_STATE);
 
     if (tmp == NULL)
         return -1;
@@ -191,7 +191,7 @@ int DuLoop::getState() const
 
 bool DuLoop::setState(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_LOOP_STATE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_LOOP_STATE);
 
     if (tmp == NULL)
         return false;
@@ -201,7 +201,7 @@ bool DuLoop::setState(int value)
 
 int DuLoop::getDurationModifier() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_LOOP_DURATIONMODIFIER));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_LOOP_DURATIONMODIFIER);
 
     if (tmp == NULL)
         return -1;
@@ -211,7 +211,7 @@ int DuLoop::getDurationModifier() const
 
 bool DuLoop::setDurationModifier(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_LOOP_DURATIONMODIFIER));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_LOOP_DURATIONMODIFIER);
 
     if (tmp == NULL)
         return false;
@@ -221,7 +221,7 @@ bool DuLoop::setDurationModifier(int value)
 
 int DuLoop::getMidiOutChannel() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_LOOP_MIDIOUTCHANNEL));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_LOOP_MIDIOUTCHANNEL);
 
     if (tmp == NULL)
         return -1;
@@ -231,7 +231,7 @@ int DuLoop::getMidiOutChannel() const
 
 bool DuLoop::setMidiOutChannel(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_LOOP_MIDIOUTCHANNEL));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_LOOP_MIDIOUTCHANNEL);
 
     if (tmp == NULL)
         return false;
@@ -240,29 +240,23 @@ bool DuLoop::setMidiOutChannel(int value)
 }
 
 
-DuInstrument *DuLoop::getInstrument() const
+QSharedPointer<DuInstrument> DuLoop::getInstrument() const
 {
-    return dynamic_cast<DuInstrument *>(getChild(KEY_LOOP_INSTRUMENT));
+    return getChildAs<DuInstrument>(KEY_LOOP_INSTRUMENT);
 }
 
 void DuLoop::setInstrument(DuInstrument *instrument)
 {
-    if (getChild(KEY_LOOP_INSTRUMENT) != NULL)
-        delete getChild(KEY_LOOP_INSTRUMENT);
-
     addChild(KEY_LOOP_INSTRUMENT, instrument);
 }
 
-DuArray *DuLoop::getEvents()
+QSharedPointer<DuArray> DuLoop::getEvents()
 {
-    return dynamic_cast<DuArray *>(getChild(KEY_LOOP_EVENTS));
+    return getChildAs<DuArray>(KEY_LOOP_EVENTS);
 }
 
 void DuLoop::setEvents(DuArray *array)
 {
-    if (getChild(KEY_LOOP_EVENTS) != NULL)
-        delete getChild(KEY_LOOP_EVENTS);
-
     addChild(KEY_LOOP_EVENTS, array);
 }
 
@@ -279,7 +273,7 @@ int DuLoop::eventsSize() const
 
 int DuLoop::countEvents() const
 {
-    DuArray *tmp = dynamic_cast<DuArray *>(getChild(KEY_LOOP_EVENTS));
+    QSharedPointer<DuArray> tmp = getChildAs<DuArray>(KEY_LOOP_EVENTS);
 
     if (tmp == NULL)
         return -1;
@@ -289,7 +283,7 @@ int DuLoop::countEvents() const
 
 bool DuLoop::appendEvent(DuEvent *event)
 {
-    DuArray *tmp = dynamic_cast<DuArray *>(getChild(KEY_LOOP_EVENTS));
+    QSharedPointer<DuArray> tmp = getChildAs<DuArray>(KEY_LOOP_EVENTS);
 
     if (tmp == NULL)
         return false;

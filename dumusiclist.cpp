@@ -19,7 +19,7 @@ bool DuMusicList::equals(const DuMusicList *other) const
 
 QString DuMusicList::getName() const
 {
-    const DuString* name = getChildAs<DuString*>(KEY_MUSIC_LIST_NAME);
+    const QSharedPointer<DuString> name = getChildAs<DuString>(KEY_MUSIC_LIST_NAME);
 
     if (name == NULL)
     {
@@ -32,7 +32,7 @@ QString DuMusicList::getName() const
 
 bool DuMusicList::setName(const QString &value)
 {
-    DuString *tmp = getChildAs<DuString*>(KEY_MUSIC_LIST_NAME);
+    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_MUSIC_LIST_NAME);
 
     if (tmp == NULL)
         return false;
@@ -42,7 +42,7 @@ bool DuMusicList::setName(const QString &value)
 
 DuMusicList::Type DuMusicList::getType() const
 {
-    const DuNumeric* type = getChildAs<DuNumeric*>(KEY_MUSIC_LIST_TYPE);
+    const QSharedPointer<DuNumeric> type = getChildAs<DuNumeric>(KEY_MUSIC_LIST_TYPE);
 
     if (type == NULL)
     {
@@ -55,7 +55,7 @@ DuMusicList::Type DuMusicList::getType() const
 
 bool DuMusicList::setType(DuMusicList::Type value)
 {
-    DuNumeric *tmp = getChildAs<DuNumeric*>(KEY_MUSIC_LIST_TYPE);
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_MUSIC_LIST_TYPE);
 
     if (tmp == NULL)
         return false;

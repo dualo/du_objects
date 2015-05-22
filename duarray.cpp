@@ -10,8 +10,6 @@ DuArray::DuArray(int maxSize) :
 
 DuArray::~DuArray()
 {
-    while (!array.isEmpty())
-        delete array.takeFirst();
 }
 
 
@@ -32,7 +30,7 @@ QDebug DuArray::debugPrint(QDebug dbg) const
 {
     dbg.nospace() << "DuArray(";
 
-    QListIterator<DuObject*> i(array);
+    QListIterator< QSharedPointer<DuObject> > i(array);
     while (i.hasNext()) {
         dbg.nospace() << i.next();
 
@@ -93,16 +91,19 @@ int DuArray::size() const
 
 void DuArray::append(DuObject *element)
 {
-    array.append(element);
+    array.append(QSharedPointer<DuObject>(element));
 }
 
 
 void DuArray::insert(int index, DuObject *element)
 {
     if (index >= array.count())
-        array.append(element);
+    {
+        array.append(QSharedPointer<DuObject>(element));
+        return;
+    }
 
-    array.insert(index, element);
+    array.insert(index, QSharedPointer<DuObject>(element));
 }
 
 
@@ -117,9 +118,12 @@ void DuArray::removeAt(int index)
 void DuArray::replace(int index, DuObject *element)
 {
     if (index >= array.count())
-        array.append(element);
+    {
+        array.append(QSharedPointer<DuObject>(element));
+        return;
+    }
 
-    array.replace(index, element);
+    array.replace(index, QSharedPointer<DuObject>(element));
 }
 
 
@@ -129,18 +133,18 @@ int DuArray::count() const
 }
 
 
-DuObject *DuArray::at(int index)
+QSharedPointer<DuObject> DuArray::at(int index)
 {
     if (index >= array.count())
-        return NULL;
+        return QSharedPointer<DuObject>();
 
     return array.at(index);
 }
 
-DuObject *DuArray::operator[](int index)
+QSharedPointer<DuObject> DuArray::operator[](int index)
 {
     if (index >= array.count())
-        return NULL;
+        return QSharedPointer<DuObject>();
 
     return array[index];
 }

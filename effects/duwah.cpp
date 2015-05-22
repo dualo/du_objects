@@ -136,7 +136,7 @@ int DuWah::size() const
 
 int DuWah::getFilterType() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_WAH_FILTERTYPE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERTYPE);
 
     if (tmp == NULL)
         return -1;
@@ -146,7 +146,7 @@ int DuWah::getFilterType() const
 
 bool DuWah::setFilterType(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_WAH_FILTERTYPE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERTYPE);
 
     if (tmp == NULL)
         return false;
@@ -156,7 +156,7 @@ bool DuWah::setFilterType(int value)
 
 int DuWah::getFilterFrequency() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_WAH_FILTERFREQUENCY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERFREQUENCY);
 
     if (tmp == NULL)
         return -1;
@@ -166,7 +166,7 @@ int DuWah::getFilterFrequency() const
 
 bool DuWah::setFilterFrequency(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_WAH_FILTERFREQUENCY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERFREQUENCY);
 
     if (tmp == NULL)
         return false;
@@ -176,7 +176,7 @@ bool DuWah::setFilterFrequency(int value)
 
 int DuWah::getFilterResonance() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_WAH_FILTERRESONANCE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERRESONANCE);
 
     if (tmp == NULL)
         return -1;
@@ -186,7 +186,7 @@ int DuWah::getFilterResonance() const
 
 bool DuWah::setFilterResonance(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_WAH_FILTERRESONANCE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERRESONANCE);
 
     if (tmp == NULL)
         return false;
@@ -197,7 +197,7 @@ bool DuWah::setFilterResonance(int value)
 
 int DuWah::getAutoWahSensitivity() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_WAH_AUTOWAHSENSITIVITY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_WAH_AUTOWAHSENSITIVITY);
 
     if (tmp == NULL)
         return -1;
@@ -207,7 +207,7 @@ int DuWah::getAutoWahSensitivity() const
 
 bool DuWah::setAutoWahSensitivity(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_WAH_AUTOWAHSENSITIVITY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_WAH_AUTOWAHSENSITIVITY);
 
     if (tmp == NULL)
         return false;
@@ -218,7 +218,7 @@ bool DuWah::setAutoWahSensitivity(int value)
 
 QString DuWah::getEffectName() const
 {
-    DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_WAH_EFFECTNAME));
+    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_WAH_EFFECTNAME);
 
     if (tmp == NULL)
         return QString();
@@ -228,7 +228,7 @@ QString DuWah::getEffectName() const
 
 bool DuWah::setEffectName(const QString &value)
 {
-    DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_WAH_EFFECTNAME));
+    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_WAH_EFFECTNAME);
 
     if (tmp == NULL)
         return false;

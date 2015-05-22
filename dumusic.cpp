@@ -124,21 +124,21 @@ QByteArray DuMusic::toDuMusicFile() const
     std::memcpy((char *)&(du_music), tmpClear.data(), musicSize);
 
 
-    DuHeader *header = getHeader();
+    QSharedPointer<DuHeader> header = getHeader();
     if (header == NULL)
         return QByteArray();
     const QByteArray &headerArray = header->toDuMusicFile();
     if (headerArray.isNull())
         return QByteArray();
 
-    DuSongInfo *songInfo = getSongInfo();
+    QSharedPointer<DuSongInfo> songInfo = getSongInfo();
     if (songInfo == NULL)
         return QByteArray();
     const QByteArray &songInfoArray = songInfo->toDuMusicFile();
     if (songInfoArray.isNull())
         return QByteArray();
 
-    DuArray *tracks = getTracks();
+    QSharedPointer<DuArray> tracks = getTracks();
     if (tracks == NULL)
         return QByteArray();
     const QByteArray &tracksArray = tracks->toDuMusicFile();
@@ -159,18 +159,18 @@ QByteArray DuMusic::toDuMusicFile() const
     int trackCount = tracks->count();
     for (int i = 0; i < trackCount; i++)
     {
-        DuTrack *track = dynamic_cast<DuTrack *>(tracks->at(i));
+        QSharedPointer<DuTrack> track = tracks->at(i).dynamicCast<DuTrack>();
         if (track == NULL)
             return QByteArray();
 
-        DuArray *loops = track->getLoops();
+        QSharedPointer<DuArray> loops = track->getLoops();
         if (loops == NULL)
             return QByteArray();
 
         int loopCount = loops->count();
         for (int j = 0; j < loopCount; j++)
         {
-            DuLoop *loop = dynamic_cast<DuLoop *>(loops->at(j));
+            QSharedPointer<DuLoop> loop = loops->at(j).dynamicCast<DuLoop>();
             if (loop == NULL)
                 return QByteArray();
 
@@ -186,7 +186,7 @@ QByteArray DuMusic::toDuMusicFile() const
             else
                 tmp_loop->l_adress = 0;
 
-            DuArray *events = loop->getEvents();
+            QSharedPointer<DuArray> events = loop->getEvents();
             if (events == NULL)
                 return QByteArray();
             tmpLocalBuffer.append(events->toDuMusicFile());
@@ -210,14 +210,14 @@ int DuMusic::size() const
     int eventsSize = 0;
     int tmpSize = 0;
 
-    DuArray *tracks = dynamic_cast<DuArray *>(getChild(KEY_MUSIC_TRACKS));
+    QSharedPointer<DuArray> tracks = getChildAs<DuArray>(KEY_MUSIC_TRACKS);
     if (tracks == NULL)
         return -1;
 
     int count = tracks->count();
     for (int i = 0; i < count; i++)
     {
-        DuTrack *track = dynamic_cast<DuTrack *>(tracks->at(i));
+        QSharedPointer<DuTrack> track = tracks->at(i).dynamicCast<DuTrack>();
         if (track == NULL)
             return -1;
 
@@ -232,49 +232,40 @@ int DuMusic::size() const
 }
 
 
-DuHeader *DuMusic::getHeader() const
+QSharedPointer<DuHeader> DuMusic::getHeader() const
 {
-    return dynamic_cast<DuHeader *>(getChild(KEY_MUSIC_HEADER));
+    return getChildAs<DuHeader>(KEY_MUSIC_HEADER);
 }
 
 void DuMusic::setHeader(DuHeader *header)
 {
-    if (getChild(KEY_MUSIC_HEADER) != NULL)
-        delete getChild(KEY_MUSIC_HEADER);
-
     addChild(KEY_MUSIC_HEADER, header);
 }
 
-DuSongInfo *DuMusic::getSongInfo() const
+QSharedPointer<DuSongInfo> DuMusic::getSongInfo() const
 {
-    return dynamic_cast<DuSongInfo *>(getChild(KEY_MUSIC_SONGINFO));
+    return getChildAs<DuSongInfo>(KEY_MUSIC_SONGINFO);
 }
 
 void DuMusic::setSongInfo(DuSongInfo *songInfo)
 {
-    if (getChild(KEY_MUSIC_SONGINFO) != NULL)
-        delete getChild(KEY_MUSIC_SONGINFO);
-
     addChild(KEY_MUSIC_SONGINFO, songInfo);
 }
 
-DuArray *DuMusic::getTracks() const
+QSharedPointer<DuArray> DuMusic::getTracks() const
 {
-    return dynamic_cast<DuArray *>(getChild(KEY_MUSIC_TRACKS));
+    return getChildAs<DuArray>(KEY_MUSIC_TRACKS);
 }
 
 void DuMusic::setTracks(DuArray *array)
 {
-    if (getChild(KEY_MUSIC_TRACKS) != NULL)
-        delete getChild(KEY_MUSIC_TRACKS);
-
     addChild(KEY_MUSIC_TRACKS, array);
 }
 
 
 bool DuMusic::appendTrack(DuTrack *track)
 {
-    DuArray *tmp = dynamic_cast<DuArray *>(getChild(KEY_MUSIC_TRACKS));
+    QSharedPointer<DuArray> tmp = getChildAs<DuArray>(KEY_MUSIC_TRACKS);
 
     if (tmp == NULL)
         return false;

@@ -181,7 +181,7 @@ int DuDistortion::size() const
 
 int DuDistortion::getOnOff() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DIST_ONOFF));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DIST_ONOFF);
 
     if (tmp == NULL)
         return -1;
@@ -191,7 +191,7 @@ int DuDistortion::getOnOff() const
 
 bool DuDistortion::setOnOff(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DIST_ONOFF));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DIST_ONOFF);
 
     if (tmp == NULL)
         return false;
@@ -202,7 +202,7 @@ bool DuDistortion::setOnOff(int value)
 
 int DuDistortion::getPreGain() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DIST_PREGAIN));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DIST_PREGAIN);
 
     if (tmp == NULL)
         return -1;
@@ -212,7 +212,7 @@ int DuDistortion::getPreGain() const
 
 bool DuDistortion::setPreGain(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DIST_PREGAIN));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DIST_PREGAIN);
 
     if (tmp == NULL)
         return false;
@@ -222,7 +222,7 @@ bool DuDistortion::setPreGain(int value)
 
 int DuDistortion::getEffectType() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DIST_TYPE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DIST_TYPE);
 
     if (tmp == NULL)
         return -1;
@@ -232,7 +232,7 @@ int DuDistortion::getEffectType() const
 
 bool DuDistortion::setEffectType(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DIST_TYPE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DIST_TYPE);
 
     if (tmp == NULL)
         return false;
@@ -243,8 +243,7 @@ bool DuDistortion::setEffectType(int value)
 
 int DuDistortion::getLowPassFilterFrequency() const
 {
-    DuNumeric *tmp =
-            dynamic_cast<DuNumeric *>(getChild(KEY_DIST_LOWPASSFILTERFREQUENCY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DIST_LOWPASSFILTERFREQUENCY);
 
     if (tmp == NULL)
         return -1;
@@ -254,8 +253,7 @@ int DuDistortion::getLowPassFilterFrequency() const
 
 bool DuDistortion::setLowPassFilterFrequency(int value)
 {
-    DuNumeric *tmp =
-            dynamic_cast<DuNumeric *>(getChild(KEY_DIST_LOWPASSFILTERFREQUENCY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DIST_LOWPASSFILTERFREQUENCY);
 
     if (tmp == NULL)
         return false;
@@ -265,8 +263,7 @@ bool DuDistortion::setLowPassFilterFrequency(int value)
 
 int DuDistortion::getLowPassFilterResonance() const
 {
-    DuNumeric *tmp =
-            dynamic_cast<DuNumeric *>(getChild(KEY_DIST_LOWPASSFILTERRESONANCE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DIST_LOWPASSFILTERRESONANCE);
 
     if (tmp == NULL)
         return -1;
@@ -276,8 +273,7 @@ int DuDistortion::getLowPassFilterResonance() const
 
 bool DuDistortion::setLowPassFilterResonance(int value)
 {
-    DuNumeric *tmp =
-            dynamic_cast<DuNumeric *>(getChild(KEY_DIST_LOWPASSFILTERRESONANCE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DIST_LOWPASSFILTERRESONANCE);
 
     if (tmp == NULL)
         return false;
@@ -288,7 +284,7 @@ bool DuDistortion::setLowPassFilterResonance(int value)
 
 int DuDistortion::getPostGain() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DIST_POSTGAIN));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DIST_POSTGAIN);
 
     if (tmp == NULL)
         return -1;
@@ -298,7 +294,7 @@ int DuDistortion::getPostGain() const
 
 bool DuDistortion::setPostGain(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DIST_POSTGAIN));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DIST_POSTGAIN);
 
     if (tmp == NULL)
         return false;
@@ -308,7 +304,7 @@ bool DuDistortion::setPostGain(int value)
 
 int DuDistortion::getDrive() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DIST_DRIVE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DIST_DRIVE);
 
     if (tmp == NULL)
         return -1;
@@ -318,7 +314,7 @@ int DuDistortion::getDrive() const
 
 bool DuDistortion::setDrive(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DIST_DRIVE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DIST_DRIVE);
 
     if (tmp == NULL)
         return false;
@@ -329,7 +325,7 @@ bool DuDistortion::setDrive(int value)
 
 QString DuDistortion::getEffectName() const
 {
-    DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_DIST_EFFECTNAME));
+    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_DIST_EFFECTNAME);
 
     if (tmp == NULL)
         return QString();
@@ -339,7 +335,7 @@ QString DuDistortion::getEffectName() const
 
 bool DuDistortion::setEffectName(const QString &value)
 {
-    DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_DIST_EFFECTNAME));
+    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_DIST_EFFECTNAME);
 
     if (tmp == NULL)
         return false;

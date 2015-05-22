@@ -198,7 +198,7 @@ int DuPreset::size() const
 
 int DuPreset::getVolume() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_VOLUME));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_VOLUME);
 
     if (tmp == NULL)
         return -1;
@@ -208,7 +208,7 @@ int DuPreset::getVolume() const
 
 bool DuPreset::setVolume(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_VOLUME));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_VOLUME);
 
     if (tmp == NULL)
         return false;
@@ -218,7 +218,7 @@ bool DuPreset::setVolume(int value)
 
 int DuPreset::getPanning() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_PANNING));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_PANNING);
 
     if (tmp == NULL)
         return -1;
@@ -228,7 +228,7 @@ int DuPreset::getPanning() const
 
 bool DuPreset::setPanning(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_PANNING));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_PANNING);
 
     if (tmp == NULL)
         return false;
@@ -238,7 +238,7 @@ bool DuPreset::setPanning(int value)
 
 int DuPreset::getSendToReverb() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_SENDTOREVERB));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_SENDTOREVERB);
 
     if (tmp == NULL)
         return -1;
@@ -248,7 +248,7 @@ int DuPreset::getSendToReverb() const
 
 bool DuPreset::setSendToReverb(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_SENDTOREVERB));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_SENDTOREVERB);
 
     if (tmp == NULL)
         return false;
@@ -258,7 +258,7 @@ bool DuPreset::setSendToReverb(int value)
 
 int DuPreset::getOctave() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_OCTAVE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_OCTAVE);
 
     if (tmp == NULL)
         return -1;
@@ -268,7 +268,7 @@ int DuPreset::getOctave() const
 
 bool DuPreset::setOctave(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_OCTAVE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_OCTAVE);
 
     if (tmp == NULL)
         return false;
@@ -279,7 +279,7 @@ bool DuPreset::setOctave(int value)
 
 int DuPreset::getPortamentoOnOff() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_PORTAMENTOONOFF));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOONOFF);
 
     if (tmp == NULL)
         return -1;
@@ -289,7 +289,7 @@ int DuPreset::getPortamentoOnOff() const
 
 bool DuPreset::setPortamentoOnOff(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_PORTAMENTOONOFF));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOONOFF);
 
     if (tmp == NULL)
         return false;
@@ -299,7 +299,7 @@ bool DuPreset::setPortamentoOnOff(int value)
 
 int DuPreset::getPortamentoControl() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_PORTAMENTOCONTROL));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOCONTROL);
 
     if (tmp == NULL)
         return -1;
@@ -309,7 +309,7 @@ int DuPreset::getPortamentoControl() const
 
 bool DuPreset::setPortamentoControl(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_PORTAMENTOCONTROL));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOCONTROL);
 
     if (tmp == NULL)
         return false;
@@ -319,7 +319,7 @@ bool DuPreset::setPortamentoControl(int value)
 
 int DuPreset::getPortamentoTime() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_PORTAMENTOTIME));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOTIME);
 
     if (tmp == NULL)
         return -1;
@@ -329,7 +329,7 @@ int DuPreset::getPortamentoTime() const
 
 bool DuPreset::setPortamentoTime(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_PORTAMENTOTIME));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOTIME);
 
     if (tmp == NULL)
         return false;
@@ -340,7 +340,7 @@ bool DuPreset::setPortamentoTime(int value)
 
 int DuPreset::getExpression() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_EXPRESSION));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_EXPRESSION);
 
     if (tmp == NULL)
         return -1;
@@ -350,7 +350,7 @@ int DuPreset::getExpression() const
 
 bool DuPreset::setExpression(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_EXPRESSION));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_EXPRESSION);
 
     if (tmp == NULL)
         return false;
@@ -360,8 +360,7 @@ bool DuPreset::setExpression(int value)
 
 int DuPreset::getPitchBendSensitivity() const
 {
-    DuNumeric *tmp =
-            dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_PITCHBENDSENSITIVITY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_PITCHBENDSENSITIVITY);
 
     if (tmp == NULL)
         return -1;
@@ -371,8 +370,7 @@ int DuPreset::getPitchBendSensitivity() const
 
 bool DuPreset::setPitchBendSensitivity(int value)
 {
-    DuNumeric *tmp =
-            dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_PITCHBENDSENSITIVITY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_PITCHBENDSENSITIVITY);
 
     if (tmp == NULL)
         return false;
@@ -382,7 +380,7 @@ bool DuPreset::setPitchBendSensitivity(int value)
 
 int DuPreset::getDisposition() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_DISPOSITION));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_DISPOSITION);
 
     if (tmp == NULL)
         return -1;
@@ -392,7 +390,7 @@ int DuPreset::getDisposition() const
 
 bool DuPreset::setDisposition(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_PRESET_DISPOSITION));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_DISPOSITION);
 
     if (tmp == NULL)
         return false;

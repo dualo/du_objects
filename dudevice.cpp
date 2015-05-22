@@ -32,7 +32,7 @@ QHttpMultiPart *DuDevice::toHttpMultiPart(const QByteArray& boundary) const
 
 QString DuDevice::getSerialNumber() const
 {
-    const DuString* serialNumber = getSerialNumberObject();
+    const QSharedPointer<DuString>& serialNumber = getSerialNumberObject();
 
     if (serialNumber == NULL)
     {
@@ -45,7 +45,7 @@ QString DuDevice::getSerialNumber() const
 
 bool DuDevice::setSerialNumber(const QString &value)
 {
-    DuString *tmp = getChildAs<DuString*>(KEY_DEVICE_SERIAL_NUMBER);
+    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_DEVICE_SERIAL_NUMBER);
 
     if (tmp == NULL)
         return false;
@@ -55,7 +55,7 @@ bool DuDevice::setSerialNumber(const QString &value)
 
 QString DuDevice::getName() const
 {
-    const DuString* name = getNameObject();
+    const QSharedPointer<DuString>& name = getNameObject();
 
     if (name == NULL)
     {
@@ -68,7 +68,7 @@ QString DuDevice::getName() const
 
 bool DuDevice::setName(const QString &value)
 {
-    DuString *tmp = getChildAs<DuString*>(KEY_DEVICE_NAME);
+    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_DEVICE_NAME);
 
     if (tmp == NULL)
         return false;
@@ -84,7 +84,7 @@ QString DuDevice::getDisplayName() const
 
 QString DuDevice::getOwner() const
 {
-    const DuString* owner = getOwnerObject();
+    const QSharedPointer<DuString>& owner = getOwnerObject();
 
     if (owner == NULL)
     {
@@ -97,7 +97,7 @@ QString DuDevice::getOwner() const
 
 bool DuDevice::setOwner(const QString &value)
 {
-    DuString *tmp = getChildAs<DuString*>(KEY_DEVICE_OWNER);
+    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_DEVICE_OWNER);
 
     if (tmp == NULL)
         return false;
@@ -107,7 +107,7 @@ bool DuDevice::setOwner(const QString &value)
 
 int DuDevice::getOwnerId() const
 {
-    const DuNumeric* ownerId = getOwnerIdObject();
+    const QSharedPointer<DuNumeric>& ownerId = getOwnerIdObject();
 
     if (ownerId == NULL)
     {
@@ -120,7 +120,7 @@ int DuDevice::getOwnerId() const
 
 bool DuDevice::setOwnerId(int value)
 {
-    DuNumeric *tmp = getChildAs<DuNumeric*>(KEY_DEVICE_OWNER_ID);
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DEVICE_OWNER_ID);
 
     if (tmp == NULL)
         return false;
@@ -128,14 +128,14 @@ bool DuDevice::setOwnerId(int value)
     return tmp->setNumeric(value);
 }
 
-const DuVersion *DuDevice::getVersion() const
+const QSharedPointer<DuVersion> DuDevice::getVersion() const
 {
-    const DuVersion* version = getVersionObject();
+    const QSharedPointer<DuVersion>& version = getVersionObject();
 
     if (version == NULL)
     {
         qCritical() << "Unable to cast" << KEY_DEVICE_VERSION << "to DuVersion*";
-        return NULL;
+        return QSharedPointer<DuVersion>();
     }
 
     return version;
@@ -143,7 +143,7 @@ const DuVersion *DuDevice::getVersion() const
 
 bool DuDevice::setVersion(const QString &value)
 {
-    DuVersion *tmp = getChildAs<DuVersion*>(KEY_DEVICE_VERSION);
+    QSharedPointer<DuVersion> tmp = getChildAs<DuVersion>(KEY_DEVICE_VERSION);
 
     if (tmp == NULL)
         return false;
@@ -153,7 +153,7 @@ bool DuDevice::setVersion(const QString &value)
 
 bool DuDevice::setVersion(int major, int minor, int patch)
 {
-    DuVersion *tmp = getChildAs<DuVersion*>(KEY_DEVICE_VERSION);
+    QSharedPointer<DuVersion> tmp = getChildAs<DuVersion>(KEY_DEVICE_VERSION);
 
     if (tmp == NULL)
         return false;
@@ -163,7 +163,7 @@ bool DuDevice::setVersion(int major, int minor, int patch)
 
 QDateTime DuDevice::getUpdateDate() const
 {
-    const DuDate* updateDate = getUpdateDateObject();
+    const QSharedPointer<DuDate>& updateDate = getUpdateDateObject();
 
     if (updateDate == NULL)
     {
@@ -176,7 +176,7 @@ QDateTime DuDevice::getUpdateDate() const
 
 bool DuDevice::setUpdateDate(const QDateTime &value)
 {
-    DuDate *tmp = getChildAs<DuDate*>(KEY_DEVICE_UPDATE_DATE);
+    QSharedPointer<DuDate> tmp = getChildAs<DuDate>(KEY_DEVICE_UPDATE_DATE);
 
     if (tmp == NULL)
         return false;
@@ -215,32 +215,32 @@ void DuDevice::setBusy(bool value)
     busy = value;
 }
 
-const DuString *DuDevice::getSerialNumberObject() const
+const QSharedPointer<DuString> DuDevice::getSerialNumberObject() const
 {
-    return getChildAs<DuString*>(KEY_DEVICE_SERIAL_NUMBER);
+    return getChildAs<DuString>(KEY_DEVICE_SERIAL_NUMBER);
 }
 
-const DuString *DuDevice::getNameObject() const
+const QSharedPointer<DuString> DuDevice::getNameObject() const
 {
-    return getChildAs<DuString*>(KEY_DEVICE_NAME);
+    return getChildAs<DuString>(KEY_DEVICE_NAME);
 }
 
-const DuString *DuDevice::getOwnerObject() const
+const QSharedPointer<DuString> DuDevice::getOwnerObject() const
 {
-    return getChildAs<DuString*>(KEY_DEVICE_OWNER);
+    return getChildAs<DuString>(KEY_DEVICE_OWNER);
 }
 
-const DuNumeric *DuDevice::getOwnerIdObject() const
+const QSharedPointer<DuNumeric> DuDevice::getOwnerIdObject() const
 {
-    return getChildAs<DuNumeric*>(KEY_DEVICE_OWNER_ID);
+    return getChildAs<DuNumeric>(KEY_DEVICE_OWNER_ID);
 }
 
-const DuVersion *DuDevice::getVersionObject() const
+const QSharedPointer<DuVersion> DuDevice::getVersionObject() const
 {
-    return getChildAs<DuVersion*>(KEY_DEVICE_VERSION);
+    return getChildAs<DuVersion>(KEY_DEVICE_VERSION);
 }
 
-const DuDate *DuDevice::getUpdateDateObject() const
+const QSharedPointer<DuDate> DuDevice::getUpdateDateObject() const
 {
-    return getChildAs<DuDate*>(KEY_DEVICE_UPDATE_DATE);
+    return getChildAs<DuDate>(KEY_DEVICE_UPDATE_DATE);
 }

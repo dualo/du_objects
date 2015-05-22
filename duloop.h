@@ -36,10 +36,10 @@ public:
     int getMidiOutChannel() const;
     bool setMidiOutChannel(int value);
 
-    DuInstrument *getInstrument() const;
+    QSharedPointer<DuInstrument> getInstrument() const;
     void setInstrument(DuInstrument *instrument);
 
-    DuArray *getEvents();
+    QSharedPointer<DuArray> getEvents();
     void setEvents(DuArray *array);
 
     int eventsSize() const;

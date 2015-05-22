@@ -13,7 +13,7 @@ public:
 
     QHttpMultiPart *toHttpMultiPart(const QByteArray &boundary) const;
 
-    const DuVersion* getSoundbankVersion() const;
+    const QSharedPointer<DuVersion> getSoundbankVersion() const;
     bool setSoundbankVersion(const QString& value);
     bool setSoundbankVersion(int major, int minor, int patch);
 
@@ -21,8 +21,8 @@ public:
     bool setSoundbankUpdateDate(const QDateTime& value);
 
 private:
-    const DuVersion* getSoundbankVersionObject() const;
-    const DuDate* getSoundbankUpdateDateObject() const;
+    const QSharedPointer<DuVersion> getSoundbankVersionObject() const;
+    const QSharedPointer<DuDate> getSoundbankUpdateDateObject() const;
 };
 
 #endif // DUTOUCH_H

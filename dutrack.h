@@ -31,7 +31,7 @@ public:
     int getCurrentLoop() const;
     bool setCurrentLoop(int value);
 
-    DuArray *getLoops() const;
+    QSharedPointer<DuArray> getLoops() const;
     void setLoops(DuArray *array);
 
     bool appendLoop(DuLoop *loop);

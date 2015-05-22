@@ -245,7 +245,7 @@ int DuSongInfo::size() const
 
 int DuSongInfo::getReferenceTrack() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_REFERENCETRACK));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_REFERENCETRACK);
 
     if (tmp == NULL)
         return -1;
@@ -255,7 +255,7 @@ int DuSongInfo::getReferenceTrack() const
 
 bool DuSongInfo::setReferenceTrack(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_REFERENCETRACK));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_REFERENCETRACK);
 
     if (tmp == NULL)
         return false;
@@ -265,7 +265,7 @@ bool DuSongInfo::setReferenceTrack(int value)
 
 int DuSongInfo::getReferenceLoopDuration() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_REFERENCELOOPDURATION));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_REFERENCELOOPDURATION);
 
     if (tmp == NULL)
         return -1;
@@ -275,7 +275,7 @@ int DuSongInfo::getReferenceLoopDuration() const
 
 bool DuSongInfo::setReferenceLoopDuration(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_REFERENCELOOPDURATION));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_REFERENCELOOPDURATION);
 
     if (tmp == NULL)
         return false;
@@ -286,7 +286,7 @@ bool DuSongInfo::setReferenceLoopDuration(int value)
 
 int DuSongInfo::getVolume() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_VOLUME));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_VOLUME);
 
     if (tmp == NULL)
         return -1;
@@ -296,7 +296,7 @@ int DuSongInfo::getVolume() const
 
 bool DuSongInfo::setVolume(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_VOLUME));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_VOLUME);
 
     if (tmp == NULL)
         return false;
@@ -306,7 +306,7 @@ bool DuSongInfo::setVolume(int value)
 
 int DuSongInfo::getTempo() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_TEMPO));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_TEMPO);
 
     if (tmp == NULL)
         return -1;
@@ -316,7 +316,7 @@ int DuSongInfo::getTempo() const
 
 bool DuSongInfo::setTempo(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_TEMPO));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_TEMPO);
 
     if (tmp == NULL)
         return false;
@@ -326,7 +326,7 @@ bool DuSongInfo::setTempo(int value)
 
 int DuSongInfo::getClickVolume() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_CLICKVOLUME));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_CLICKVOLUME);
 
     if (tmp == NULL)
         return -1;
@@ -336,7 +336,7 @@ int DuSongInfo::getClickVolume() const
 
 bool DuSongInfo::setClickVolume(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_CLICKVOLUME));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_CLICKVOLUME);
 
     if (tmp == NULL)
         return false;
@@ -346,7 +346,7 @@ bool DuSongInfo::setClickVolume(int value)
 
 int DuSongInfo::getOffset() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_OFFSET));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_OFFSET);
 
     if (tmp == NULL)
         return -1;
@@ -356,7 +356,7 @@ int DuSongInfo::getOffset() const
 
 bool DuSongInfo::setOffset(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_OFFSET));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_OFFSET);
 
     if (tmp == NULL)
         return false;
@@ -367,7 +367,7 @@ bool DuSongInfo::setOffset(int value)
 
 int DuSongInfo::getGain() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_GAIN));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_GAIN);
 
     if (tmp == NULL)
         return -1;
@@ -377,7 +377,7 @@ int DuSongInfo::getGain() const
 
 bool DuSongInfo::setGain(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_GAIN));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_GAIN);
 
     if (tmp == NULL)
         return false;
@@ -387,7 +387,7 @@ bool DuSongInfo::setGain(int value)
 
 int DuSongInfo::getLowCutFilterFrequency() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_LOWCUTFILTERFREQ));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_LOWCUTFILTERFREQ);
 
     if (tmp == NULL)
         return -1;
@@ -397,7 +397,7 @@ int DuSongInfo::getLowCutFilterFrequency() const
 
 bool DuSongInfo::setLowCutFilterFrequency(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_LOWCUTFILTERFREQ));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_LOWCUTFILTERFREQ);
 
     if (tmp == NULL)
         return false;
@@ -407,7 +407,7 @@ bool DuSongInfo::setLowCutFilterFrequency(int value)
 
 int DuSongInfo::getHighCutFilterFrequency() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_HIGHCUTFILTERFREQ));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_HIGHCUTFILTERFREQ);
 
     if (tmp == NULL)
         return -1;
@@ -417,7 +417,7 @@ int DuSongInfo::getHighCutFilterFrequency() const
 
 bool DuSongInfo::setHighCutFilterFrequency(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_HIGHCUTFILTERFREQ));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_HIGHCUTFILTERFREQ);
 
     if (tmp == NULL)
         return false;
@@ -428,7 +428,7 @@ bool DuSongInfo::setHighCutFilterFrequency(int value)
 
 int DuSongInfo::getScale() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_SCALE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_SCALE);
 
     if (tmp == NULL)
         return -1;
@@ -438,7 +438,7 @@ int DuSongInfo::getScale() const
 
 bool DuSongInfo::setScale(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_SCALE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_SCALE);
 
     if (tmp == NULL)
         return false;
@@ -448,7 +448,7 @@ bool DuSongInfo::setScale(int value)
 
 int DuSongInfo::getTonality() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_TONALITY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_TONALITY);
 
     if (tmp == NULL)
         return -1;
@@ -458,7 +458,7 @@ int DuSongInfo::getTonality() const
 
 bool DuSongInfo::setTonality(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_TONALITY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_TONALITY);
 
     if (tmp == NULL)
         return false;
@@ -468,7 +468,7 @@ bool DuSongInfo::setTonality(int value)
 
 int DuSongInfo::getTimeSignature() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_TIMESIGNATURE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_TIMESIGNATURE);
 
     if (tmp == NULL)
         return -1;
@@ -478,7 +478,7 @@ int DuSongInfo::getTimeSignature() const
 
 bool DuSongInfo::setTimeSignature(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_SONG_TIMESIGNATURE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_SONG_TIMESIGNATURE);
 
     if (tmp == NULL)
         return false;

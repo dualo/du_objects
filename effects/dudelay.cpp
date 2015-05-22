@@ -180,7 +180,7 @@ int DuDelay::size() const
 
 int DuDelay::getOnOff() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_ONOFF));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DELAY_ONOFF);
 
     if (tmp == NULL)
         return -1;
@@ -190,7 +190,7 @@ int DuDelay::getOnOff() const
 
 bool DuDelay::setOnOff(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_ONOFF));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DELAY_ONOFF);
 
     if (tmp == NULL)
         return false;
@@ -201,7 +201,7 @@ bool DuDelay::setOnOff(int value)
 
 int DuDelay::getMode() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_MODE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DELAY_MODE);
 
     if (tmp == NULL)
         return -1;
@@ -211,7 +211,7 @@ int DuDelay::getMode() const
 
 bool DuDelay::setMode(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_MODE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DELAY_MODE);
 
     if (tmp == NULL)
         return false;
@@ -221,7 +221,7 @@ bool DuDelay::setMode(int value)
 
 int DuDelay::getPreLowPassFilter() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_PRELOWPASSFILTER));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DELAY_PRELOWPASSFILTER);
 
     if (tmp == NULL)
         return -1;
@@ -231,7 +231,7 @@ int DuDelay::getPreLowPassFilter() const
 
 bool DuDelay::setPreLowPassFilter(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_PRELOWPASSFILTER));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DELAY_PRELOWPASSFILTER);
 
     if (tmp == NULL)
         return false;
@@ -241,7 +241,7 @@ bool DuDelay::setPreLowPassFilter(int value)
 
 int DuDelay::getEffectLevel() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_EFFECTLEVEL));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DELAY_EFFECTLEVEL);
 
     if (tmp == NULL)
         return -1;
@@ -251,7 +251,7 @@ int DuDelay::getEffectLevel() const
 
 bool DuDelay::setEffectLevel(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_EFFECTLEVEL));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DELAY_EFFECTLEVEL);
 
     if (tmp == NULL)
         return false;
@@ -261,7 +261,7 @@ bool DuDelay::setEffectLevel(int value)
 
 int DuDelay::getEffectTime() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_EFFECTTIME));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DELAY_EFFECTTIME);
 
     if (tmp == NULL)
         return -1;
@@ -271,7 +271,7 @@ int DuDelay::getEffectTime() const
 
 bool DuDelay::setEffectTime(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_EFFECTTIME));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DELAY_EFFECTTIME);
 
     if (tmp == NULL)
         return false;
@@ -281,7 +281,7 @@ bool DuDelay::setEffectTime(int value)
 
 int DuDelay::getFeedback() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_FEEDBACK));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DELAY_FEEDBACK);
 
     if (tmp == NULL)
         return -1;
@@ -291,7 +291,7 @@ int DuDelay::getFeedback() const
 
 bool DuDelay::setFeedback(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_FEEDBACK));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DELAY_FEEDBACK);
 
     if (tmp == NULL)
         return false;
@@ -301,7 +301,7 @@ bool DuDelay::setFeedback(int value)
 
 int DuDelay::getHDAmp() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_HDAMP));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DELAY_HDAMP);
 
     if (tmp == NULL)
         return -1;
@@ -311,7 +311,7 @@ int DuDelay::getHDAmp() const
 
 bool DuDelay::setHDAmp(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_DELAY_HDAMP));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_DELAY_HDAMP);
 
     if (tmp == NULL)
         return false;
@@ -322,7 +322,7 @@ bool DuDelay::setHDAmp(int value)
 
 QString DuDelay::getEffectName() const
 {
-    DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_DELAY_EFFECTNAME));
+    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_DELAY_EFFECTNAME);
 
     if (tmp == NULL)
         return QString();
@@ -332,7 +332,7 @@ QString DuDelay::getEffectName() const
 
 bool DuDelay::setEffectName(const QString &value)
 {
-    DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_DELAY_EFFECTNAME));
+    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_DELAY_EFFECTNAME);
 
     if (tmp == NULL)
         return false;

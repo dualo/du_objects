@@ -229,7 +229,7 @@ int DuEqualizer::size() const
 
 int DuEqualizer::getOnOff() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_ONOFF));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_ONOFF);
 
     if (tmp == NULL)
         return -1;
@@ -239,7 +239,7 @@ int DuEqualizer::getOnOff() const
 
 bool DuEqualizer::setOnOff(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_ONOFF));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_ONOFF);
 
     if (tmp == NULL)
         return false;
@@ -250,7 +250,7 @@ bool DuEqualizer::setOnOff(int value)
 
 int DuEqualizer::getLowBandGain() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_LOWBANDGAIN));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_LOWBANDGAIN);
 
     if (tmp == NULL)
         return -1;
@@ -260,7 +260,7 @@ int DuEqualizer::getLowBandGain() const
 
 bool DuEqualizer::setLowBandGain(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_LOWBANDGAIN));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_LOWBANDGAIN);
 
     if (tmp == NULL)
         return false;
@@ -270,7 +270,7 @@ bool DuEqualizer::setLowBandGain(int value)
 
 int DuEqualizer::getLowMidBandGain() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_LOWMIDBANDGAIN));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_LOWMIDBANDGAIN);
 
     if (tmp == NULL)
         return -1;
@@ -280,7 +280,7 @@ int DuEqualizer::getLowMidBandGain() const
 
 bool DuEqualizer::setLowMidBandGain(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_LOWMIDBANDGAIN));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_LOWMIDBANDGAIN);
 
     if (tmp == NULL)
         return false;
@@ -290,7 +290,7 @@ bool DuEqualizer::setLowMidBandGain(int value)
 
 int DuEqualizer::getHighMidBandGain() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_HIGHMIDBANDGAIN));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_HIGHMIDBANDGAIN);
 
     if (tmp == NULL)
         return -1;
@@ -300,7 +300,7 @@ int DuEqualizer::getHighMidBandGain() const
 
 bool DuEqualizer::setHighMidBandGain(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_HIGHMIDBANDGAIN));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_HIGHMIDBANDGAIN);
 
     if (tmp == NULL)
         return false;
@@ -310,7 +310,7 @@ bool DuEqualizer::setHighMidBandGain(int value)
 
 int DuEqualizer::getHighBandGain() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_HIGHBANDGAIN));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_HIGHBANDGAIN);
 
     if (tmp == NULL)
         return -1;
@@ -320,7 +320,7 @@ int DuEqualizer::getHighBandGain() const
 
 bool DuEqualizer::setHighBandGain(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_HIGHBANDGAIN));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_HIGHBANDGAIN);
 
     if (tmp == NULL)
         return false;
@@ -331,7 +331,7 @@ bool DuEqualizer::setHighBandGain(int value)
 
 int DuEqualizer::getLowBandFrequency() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_LOWBANDFREQUENCY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_LOWBANDFREQUENCY);
 
     if (tmp == NULL)
         return -1;
@@ -341,7 +341,7 @@ int DuEqualizer::getLowBandFrequency() const
 
 bool DuEqualizer::setLowBandFrequency(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_LOWBANDFREQUENCY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_LOWBANDFREQUENCY);
 
     if (tmp == NULL)
         return false;
@@ -351,7 +351,7 @@ bool DuEqualizer::setLowBandFrequency(int value)
 
 int DuEqualizer::getLowMidBandFrequency() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_LOWMIDBANDFREQUENCY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_LOWMIDBANDFREQUENCY);
 
     if (tmp == NULL)
         return -1;
@@ -361,7 +361,7 @@ int DuEqualizer::getLowMidBandFrequency() const
 
 bool DuEqualizer::setLowMidBandFrequency(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_LOWMIDBANDFREQUENCY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_LOWMIDBANDFREQUENCY);
 
     if (tmp == NULL)
         return false;
@@ -371,7 +371,7 @@ bool DuEqualizer::setLowMidBandFrequency(int value)
 
 int DuEqualizer::getHighMidBandFrequency() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_HIGHMIDBANDFREQUENCY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_HIGHMIDBANDFREQUENCY);
 
     if (tmp == NULL)
         return -1;
@@ -381,7 +381,7 @@ int DuEqualizer::getHighMidBandFrequency() const
 
 bool DuEqualizer::setHighMidBandFrequency(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_HIGHMIDBANDFREQUENCY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_HIGHMIDBANDFREQUENCY);
 
     if (tmp == NULL)
         return false;
@@ -391,7 +391,7 @@ bool DuEqualizer::setHighMidBandFrequency(int value)
 
 int DuEqualizer::getHighBandFrequency() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_HIGHBANDFREQUENCY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_HIGHBANDFREQUENCY);
 
     if (tmp == NULL)
         return -1;
@@ -401,7 +401,7 @@ int DuEqualizer::getHighBandFrequency() const
 
 bool DuEqualizer::setHighBandFrequency(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EQ_HIGHBANDFREQUENCY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_HIGHBANDFREQUENCY);
 
     if (tmp == NULL)
         return false;
@@ -412,8 +412,7 @@ bool DuEqualizer::setHighBandFrequency(int value)
 
 int DuEqualizer::getLowMidBandQualityFactor() const
 {
-    DuNumeric *tmp =
-            dynamic_cast<DuNumeric *>(getChild(KEY_EQ_LOWMIDBANDQUALITYFACTOR));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_LOWMIDBANDQUALITYFACTOR);
 
     if (tmp == NULL)
         return -1;
@@ -423,8 +422,7 @@ int DuEqualizer::getLowMidBandQualityFactor() const
 
 bool DuEqualizer::setLowMidBandQualityFactor(int value)
 {
-    DuNumeric *tmp =
-            dynamic_cast<DuNumeric *>(getChild(KEY_EQ_LOWMIDBANDQUALITYFACTOR));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_LOWMIDBANDQUALITYFACTOR);
 
     if (tmp == NULL)
         return false;
@@ -434,8 +432,7 @@ bool DuEqualizer::setLowMidBandQualityFactor(int value)
 
 int DuEqualizer::getHighMidBandQualityFactor() const
 {
-    DuNumeric *tmp =
-            dynamic_cast<DuNumeric *>(getChild(KEY_EQ_HIGHMIDBANDQUALITYFACTOR));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_HIGHMIDBANDQUALITYFACTOR);
 
     if (tmp == NULL)
         return -1;
@@ -445,8 +442,7 @@ int DuEqualizer::getHighMidBandQualityFactor() const
 
 bool DuEqualizer::setHighMidBandQualityFactor(int value)
 {
-    DuNumeric *tmp =
-            dynamic_cast<DuNumeric *>(getChild(KEY_EQ_HIGHMIDBANDQUALITYFACTOR));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EQ_HIGHMIDBANDQUALITYFACTOR);
 
     if (tmp == NULL)
         return false;
@@ -457,7 +453,7 @@ bool DuEqualizer::setHighMidBandQualityFactor(int value)
 
 QString DuEqualizer::getEffectName() const
 {
-    DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_EQ_EFFECTNAME));
+    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_EQ_EFFECTNAME);
 
     if (tmp == NULL)
         return QString();
@@ -467,7 +463,7 @@ QString DuEqualizer::getEffectName() const
 
 bool DuEqualizer::setEffectName(const QString &value)
 {
-    DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_EQ_EFFECTNAME));
+    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_EQ_EFFECTNAME);
 
     if (tmp == NULL)
         return false;

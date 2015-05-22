@@ -7,6 +7,7 @@
 #include <QList>
 #include <QStringList>
 #include <QHttpMultiPart>
+#include <QSharedPointer>
 
 
 class DuContainer : public DuObject
@@ -25,23 +26,23 @@ public:
 
     QStringList keys() const;
 
-    DuObject *operator[](const QString &label);
+    QSharedPointer<DuObject> operator[](const QString &label);
 
 protected:
     void addChild(const QString &key, DuObject *child);
-    DuObject *getChild(const QString &key) const;
+    QSharedPointer<DuObject> getChild(const QString &key) const;
 
     template <class T>
-    T getChildAs(const QString &key) const;
+    QSharedPointer<T> getChildAs(const QString &key) const;
 
 private:
-    QMap<QString, DuObject *> children;
+    QMap<QString, QSharedPointer<DuObject> > children;
 };
 
 template <class T>
-inline T DuContainer::getChildAs(const QString &key) const
+inline QSharedPointer<T> DuContainer::getChildAs(const QString &key) const
 {
-    return dynamic_cast<T>(getChild(key));
+    return getChild(key).dynamicCast<T>();
 }
 
 #endif // DUCONTAINER_H

@@ -168,7 +168,7 @@ int DuMixer::size() const
 
 int DuMixer::getInputGain() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_INPUTGAIN));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_MIXER_INPUTGAIN);
 
     if (tmp == NULL)
         return -1;
@@ -178,7 +178,7 @@ int DuMixer::getInputGain() const
 
 bool DuMixer::setInputGain(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_INPUTGAIN));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_MIXER_INPUTGAIN);
 
     if (tmp == NULL)
         return false;
@@ -188,8 +188,7 @@ bool DuMixer::setInputGain(int value)
 
 int DuMixer::getLowCutFilterFrequency() const
 {
-    DuNumeric *tmp =
-            dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_LOWCUTFILTERFREQUENCY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_MIXER_LOWCUTFILTERFREQUENCY);
 
     if (tmp == NULL)
         return -1;
@@ -199,8 +198,7 @@ int DuMixer::getLowCutFilterFrequency() const
 
 bool DuMixer::setLowCutFilterFrequency(int value)
 {
-    DuNumeric *tmp =
-            dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_LOWCUTFILTERFREQUENCY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_MIXER_LOWCUTFILTERFREQUENCY);
 
     if (tmp == NULL)
         return false;
@@ -210,8 +208,7 @@ bool DuMixer::setLowCutFilterFrequency(int value)
 
 int DuMixer::getHighCutFilterFrequency() const
 {
-    DuNumeric *tmp =
-            dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_HIGHCUTFILTERFREQUENCY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_MIXER_HIGHCUTFILTERFREQUENCY);
 
     if (tmp == NULL)
         return -1;
@@ -221,8 +218,7 @@ int DuMixer::getHighCutFilterFrequency() const
 
 bool DuMixer::setHighCutFilterFrequency(int value)
 {
-    DuNumeric *tmp =
-            dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_HIGHCUTFILTERFREQUENCY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_MIXER_HIGHCUTFILTERFREQUENCY);
 
     if (tmp == NULL)
         return false;
@@ -233,7 +229,7 @@ bool DuMixer::setHighCutFilterFrequency(int value)
 
 int DuMixer::getOutputLevel() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_OUTPUTLEVEL));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_MIXER_OUTPUTLEVEL);
 
     if (tmp == NULL)
         return -1;
@@ -243,7 +239,7 @@ int DuMixer::getOutputLevel() const
 
 bool DuMixer::setOutputLevel(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_OUTPUTLEVEL));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_MIXER_OUTPUTLEVEL);
 
     if (tmp == NULL)
         return false;
@@ -253,7 +249,7 @@ bool DuMixer::setOutputLevel(int value)
 
 int DuMixer::getOutputPanning() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_OUTPUTPANNING));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_MIXER_OUTPUTPANNING);
 
     if (tmp == NULL)
         return -1;
@@ -263,7 +259,7 @@ int DuMixer::getOutputPanning() const
 
 bool DuMixer::setOutputPanning(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_OUTPUTPANNING));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_MIXER_OUTPUTPANNING);
 
     if (tmp == NULL)
         return false;
@@ -273,7 +269,7 @@ bool DuMixer::setOutputPanning(int value)
 
 int DuMixer::getOutputFrontRear() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_OUTPUTFRONTREAR));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_MIXER_OUTPUTFRONTREAR);
 
     if (tmp == NULL)
         return -1;
@@ -283,7 +279,7 @@ int DuMixer::getOutputFrontRear() const
 
 bool DuMixer::setOutputFrontRear(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_OUTPUTFRONTREAR));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_MIXER_OUTPUTFRONTREAR);
 
     if (tmp == NULL)
         return false;
@@ -294,7 +290,7 @@ bool DuMixer::setOutputFrontRear(int value)
 
 int DuMixer::getSendToReverb() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_SENDTOREVERB));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_MIXER_SENDTOREVERB);
 
     if (tmp == NULL)
         return -1;
@@ -304,7 +300,7 @@ int DuMixer::getSendToReverb() const
 
 bool DuMixer::setSendToReverb(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_SENDTOREVERB));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_MIXER_SENDTOREVERB);
 
     if (tmp == NULL)
         return false;
@@ -314,7 +310,7 @@ bool DuMixer::setSendToReverb(int value)
 
 int DuMixer::getSendToChorus() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_SENDTOCHORUS));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_MIXER_SENDTOCHORUS);
 
     if (tmp == NULL)
         return -1;
@@ -324,7 +320,7 @@ int DuMixer::getSendToChorus() const
 
 bool DuMixer::setSendToChorus(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_MIXER_SENDTOCHORUS));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_MIXER_SENDTOCHORUS);
 
     if (tmp == NULL)
         return false;

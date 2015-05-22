@@ -148,7 +148,7 @@ int DuEvent::size() const
 
 int DuEvent::getTime() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EVENT_TIME));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EVENT_TIME);
 
     if (tmp == NULL)
         return -1;
@@ -158,7 +158,7 @@ int DuEvent::getTime() const
 
 bool DuEvent::setTime(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EVENT_TIME));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EVENT_TIME);
 
     if (tmp == NULL)
         return false;
@@ -169,7 +169,7 @@ bool DuEvent::setTime(int value)
 
 int DuEvent::getControl() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EVENT_CONTROL));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EVENT_CONTROL);
 
     if (tmp == NULL)
         return -1;
@@ -179,7 +179,7 @@ int DuEvent::getControl() const
 
 bool DuEvent::setControl(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EVENT_CONTROL));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EVENT_CONTROL);
 
     if (tmp == NULL)
         return false;
@@ -190,7 +190,7 @@ bool DuEvent::setControl(int value)
 
 int DuEvent::getKeyboard() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EVENT_KEYBOARD));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EVENT_KEYBOARD);
 
     if (tmp == NULL)
         return -1;
@@ -200,7 +200,7 @@ int DuEvent::getKeyboard() const
 
 bool DuEvent::setKeyboard(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EVENT_KEYBOARD));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EVENT_KEYBOARD);
 
     if (tmp == NULL)
         return false;
@@ -211,7 +211,7 @@ bool DuEvent::setKeyboard(int value)
 
 int DuEvent::getNote() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EVENT_NOTE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EVENT_NOTE);
 
     if (tmp == NULL)
         return -1;
@@ -221,7 +221,7 @@ int DuEvent::getNote() const
 
 bool DuEvent::setNote(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EVENT_NOTE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EVENT_NOTE);
 
     if (tmp == NULL)
         return false;
@@ -232,7 +232,7 @@ bool DuEvent::setNote(int value)
 
 int DuEvent::getValue() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EVENT_VALUE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EVENT_VALUE);
 
     if (tmp == NULL)
         return -1;
@@ -242,7 +242,7 @@ int DuEvent::getValue() const
 
 bool DuEvent::setValue(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_EVENT_VALUE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EVENT_VALUE);
 
     if (tmp == NULL)
         return false;

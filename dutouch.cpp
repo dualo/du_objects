@@ -18,14 +18,14 @@ QHttpMultiPart *DuTouch::toHttpMultiPart(const QByteArray& boundary) const
     return multiPart;
 }
 
-const DuVersion* DuTouch::getSoundbankVersion() const
+const QSharedPointer<DuVersion> DuTouch::getSoundbankVersion() const
 {
-    const DuVersion* version = getSoundbankVersionObject();
+    const QSharedPointer<DuVersion>& version = getSoundbankVersionObject();
 
     if (version == NULL)
     {
         qCritical() << "Unable to cast" << KEY_TOUCH_SOUNDBANK_VERSION << "to DuVersion*";
-        return NULL;
+        return QSharedPointer<DuVersion>();
     }
 
     return version;
@@ -33,7 +33,7 @@ const DuVersion* DuTouch::getSoundbankVersion() const
 
 bool DuTouch::setSoundbankVersion(const QString &value)
 {
-    DuVersion *tmp = dynamic_cast<DuVersion*>(getChild(KEY_TOUCH_SOUNDBANK_VERSION));
+    QSharedPointer<DuVersion> tmp = getChildAs<DuVersion>(KEY_TOUCH_SOUNDBANK_VERSION);
 
     if (tmp == NULL)
         return false;
@@ -43,7 +43,7 @@ bool DuTouch::setSoundbankVersion(const QString &value)
 
 bool DuTouch::setSoundbankVersion(int major, int minor, int patch)
 {
-    DuVersion *tmp = dynamic_cast<DuVersion*>(getChild(KEY_TOUCH_SOUNDBANK_VERSION));
+    QSharedPointer<DuVersion> tmp = getChildAs<DuVersion>(KEY_TOUCH_SOUNDBANK_VERSION);
 
     if (tmp == NULL)
         return false;
@@ -53,7 +53,7 @@ bool DuTouch::setSoundbankVersion(int major, int minor, int patch)
 
 QDateTime DuTouch::getSoundbankUpdateDate() const
 {
-    const DuDate* updateDate = getSoundbankUpdateDateObject();
+    const QSharedPointer<DuDate>& updateDate = getSoundbankUpdateDateObject();
 
     if (updateDate == NULL)
     {
@@ -66,7 +66,7 @@ QDateTime DuTouch::getSoundbankUpdateDate() const
 
 bool DuTouch::setSoundbankUpdateDate(const QDateTime &value)
 {
-    DuDate *tmp = dynamic_cast<DuDate*>(getChild(KEY_TOUCH_SOUNDBANK_UPDATE_DATE));
+    QSharedPointer<DuDate> tmp = getChildAs<DuDate>(KEY_TOUCH_SOUNDBANK_UPDATE_DATE);
 
     if (tmp == NULL)
         return false;
@@ -75,12 +75,12 @@ bool DuTouch::setSoundbankUpdateDate(const QDateTime &value)
     return true;
 }
 
-const DuVersion *DuTouch::getSoundbankVersionObject() const
+const QSharedPointer<DuVersion> DuTouch::getSoundbankVersionObject() const
 {
-    return dynamic_cast<DuVersion*>(getChild(KEY_TOUCH_SOUNDBANK_VERSION));
+    return getChildAs<DuVersion>(KEY_TOUCH_SOUNDBANK_VERSION);
 }
 
-const DuDate *DuTouch::getSoundbankUpdateDateObject() const
+const QSharedPointer<DuDate> DuTouch::getSoundbankUpdateDateObject() const
 {
-    return dynamic_cast<DuDate*>(getChild(KEY_TOUCH_SOUNDBANK_UPDATE_DATE));
+    return getChildAs<DuDate>(KEY_TOUCH_SOUNDBANK_UPDATE_DATE);
 }

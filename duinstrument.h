@@ -40,37 +40,37 @@ public:
 
     int size() const;
 
-    DuInstrumentInfo *getInstrumentInfo() const;
+    QSharedPointer<DuInstrumentInfo> getInstrumentInfo() const;
     void setInstrumentInfo(DuInstrumentInfo *instrumentInfo);
 
-    DuPreset *getPreset() const;
+    QSharedPointer<DuPreset> getPreset() const;
     void setPreset(DuPreset *preset);
 
-    DuMixer *getMixer() const;
+    QSharedPointer<DuMixer> getMixer() const;
     void setMixer(DuMixer *mixer);
 
-    DuDistortion *getDistortion() const;
+    QSharedPointer<DuDistortion> getDistortion() const;
     void setDistortion(DuDistortion *distortion);
 
-    DuWah *getWah() const;
+    QSharedPointer<DuWah> getWah() const;
     void setWah(DuWah *wah);
 
-    DuCompressor *getCompressor() const;
+    QSharedPointer<DuCompressor> getCompressor() const;
     void setCompressor(DuCompressor *compressor);
 
-    DuEqualizer *getEqualizer() const;
+    QSharedPointer<DuEqualizer> getEqualizer() const;
     void setEqualizer(DuEqualizer *equalizer);
 
-    DuDelay *getDelay() const;
+    QSharedPointer<DuDelay> getDelay() const;
     void setDelay(DuDelay *delay);
 
-    DuChorus *getChorus() const;
+    QSharedPointer<DuChorus> getChorus() const;
     void setChorus(DuChorus *chorus);
 
-    DuVibrato *getVibrato() const;
+    QSharedPointer<DuVibrato> getVibrato() const;
     void setVibrato(DuVibrato *vibrato);
 
-    DuAdsr *getAdsr() const;
+    QSharedPointer<DuAdsr> getAdsr() const;
     void setAdsr(DuAdsr *adsr);
 };
 

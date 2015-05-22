@@ -37,7 +37,7 @@ public:
     int getOwnerId() const;
     bool setOwnerId(int value);
 
-    const DuVersion* getVersion() const;
+    const QSharedPointer<DuVersion> getVersion() const;
     bool setVersion(const QString& value);
     bool setVersion(int major, int minor, int patch);
 
@@ -54,12 +54,12 @@ public:
     void setBusy(bool value);
 
 private:
-    const DuString* getSerialNumberObject() const;
-    const DuString* getNameObject() const;
-    const DuString* getOwnerObject() const;
-    const DuNumeric* getOwnerIdObject() const;
-    const DuVersion* getVersionObject() const;
-    const DuDate* getUpdateDateObject() const;
+    const QSharedPointer<DuString> getSerialNumberObject() const;
+    const QSharedPointer<DuString> getNameObject() const;
+    const QSharedPointer<DuString> getOwnerObject() const;
+    const QSharedPointer<DuNumeric> getOwnerIdObject() const;
+    const QSharedPointer<DuVersion> getVersionObject() const;
+    const QSharedPointer<DuDate> getUpdateDateObject() const;
 
 private:
     bool plugged;

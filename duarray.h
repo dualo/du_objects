@@ -3,6 +3,7 @@
 
 #include "duobject.h"
 #include <QList>
+#include <QSharedPointer>
 
 
 class DuArray : public DuObject
@@ -29,11 +30,11 @@ public:
 
     int count() const;
 
-    DuObject *at(int index);
-    DuObject *operator[](int index);
+    QSharedPointer<DuObject> at(int index);
+    QSharedPointer<DuObject> operator[](int index);
 
 private:
-    QList<DuObject *> array;
+    QList< QSharedPointer<DuObject> > array;
     int maxSize;
 };
 

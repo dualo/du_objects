@@ -111,7 +111,7 @@ QByteArray DuTrack::toDuMusicFile() const
     std::memcpy((char *)&(du_track), tmpClear.data(), size());
 
 
-    DuArray *loops = getLoops();
+    QSharedPointer<DuArray> loops = getLoops();
     if (loops == NULL)
         return QByteArray();
     const QByteArray &loopsArray = loops->toDuMusicFile();
@@ -144,7 +144,7 @@ int DuTrack::size() const
 
 int DuTrack::getChannel() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_TRACK_CHANNEL));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_TRACK_CHANNEL);
 
     if (tmp == NULL)
         return -1;
@@ -154,7 +154,7 @@ int DuTrack::getChannel() const
 
 bool DuTrack::setChannel(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_TRACK_CHANNEL));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_TRACK_CHANNEL);
 
     if (tmp == NULL)
         return false;
@@ -164,7 +164,7 @@ bool DuTrack::setChannel(int value)
 
 int DuTrack::getCurrentLoop() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_TRACK_CURRENTLOOP));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_TRACK_CURRENTLOOP);
 
     if (tmp == NULL)
         return -1;
@@ -174,7 +174,7 @@ int DuTrack::getCurrentLoop() const
 
 bool DuTrack::setCurrentLoop(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_TRACK_CURRENTLOOP));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_TRACK_CURRENTLOOP);
 
     if (tmp == NULL)
         return false;
@@ -182,25 +182,20 @@ bool DuTrack::setCurrentLoop(int value)
     return tmp->setNumeric(value);
 }
 
-DuArray *DuTrack::getLoops() const
+QSharedPointer<DuArray> DuTrack::getLoops() const
 {
-    return dynamic_cast<DuArray *>(getChild(KEY_TRACK_LOOPS));
+    return getChildAs<DuArray>(KEY_TRACK_LOOPS);
 }
 
 void DuTrack::setLoops(DuArray *array)
 {
-    DuObject *tmp = getChild(KEY_TRACK_LOOPS);
-
-    if (tmp != NULL)
-        delete tmp;
-
     addChild(KEY_TRACK_LOOPS, array);
 }
 
 
 bool DuTrack::appendLoop(DuLoop *loop)
 {
-    DuArray *tmp = dynamic_cast<DuArray *>(getChild(KEY_TRACK_LOOPS));
+    QSharedPointer<DuArray> tmp = getChildAs<DuArray>(KEY_TRACK_LOOPS);
 
     if (tmp == NULL)
         return false;
@@ -215,14 +210,14 @@ int DuTrack::eventsSize() const
     int eventsSize = 0;
     int tmpSize = 0;
 
-    DuArray *loops = dynamic_cast<DuArray *>(getChild(KEY_TRACK_LOOPS));
+    QSharedPointer<DuArray> loops = getChildAs<DuArray>(KEY_TRACK_LOOPS);
     if (loops == NULL)
         return -1;
 
     int count = loops->count();
     for (int i = 0; i < count; i++)
     {
-        DuLoop *loop = dynamic_cast<DuLoop *>(loops->at(i));
+        QSharedPointer<DuLoop> loop = loops->at(i).dynamicCast<DuLoop>();
         if (loop == NULL)
             return -1;
 

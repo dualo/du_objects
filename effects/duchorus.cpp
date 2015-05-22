@@ -215,7 +215,7 @@ int DuChorus::size() const
 
 int DuChorus::getMode() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_CHORUS_MODE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODE);
 
     if (tmp == NULL)
         return -1;
@@ -225,7 +225,7 @@ int DuChorus::getMode() const
 
 bool DuChorus::setMode(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_CHORUS_MODE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODE);
 
     if (tmp == NULL)
         return false;
@@ -235,7 +235,7 @@ bool DuChorus::setMode(int value)
 
 int DuChorus::getEffectLevel() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_CHORUS_EFFECTLEVEL));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_EFFECTLEVEL);
 
     if (tmp == NULL)
         return -1;
@@ -245,7 +245,7 @@ int DuChorus::getEffectLevel() const
 
 bool DuChorus::setEffectLevel(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_CHORUS_EFFECTLEVEL));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_EFFECTLEVEL);
 
     if (tmp == NULL)
         return false;
@@ -255,7 +255,7 @@ bool DuChorus::setEffectLevel(int value)
 
 int DuChorus::getDelayTime() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_CHORUS_DELAYTIME));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_DELAYTIME);
 
     if (tmp == NULL)
         return -1;
@@ -265,7 +265,7 @@ int DuChorus::getDelayTime() const
 
 bool DuChorus::setDelayTime(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_CHORUS_DELAYTIME));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_DELAYTIME);
 
     if (tmp == NULL)
         return false;
@@ -275,7 +275,7 @@ bool DuChorus::setDelayTime(int value)
 
 int DuChorus::getFeedback() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_CHORUS_FEEDBACK));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_FEEDBACK);
 
     if (tmp == NULL)
         return -1;
@@ -285,7 +285,7 @@ int DuChorus::getFeedback() const
 
 bool DuChorus::setFeedback(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_CHORUS_FEEDBACK));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_FEEDBACK);
 
     if (tmp == NULL)
         return false;
@@ -295,7 +295,7 @@ bool DuChorus::setFeedback(int value)
 
 int DuChorus::getInputHighPassFilterFrequency() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_CHORUS_INPUTHIGHPASSFILTER));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_INPUTHIGHPASSFILTER);
 
     if (tmp == NULL)
         return -1;
@@ -305,7 +305,7 @@ int DuChorus::getInputHighPassFilterFrequency() const
 
 bool DuChorus::setInputHighPassFilterFrequency(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_CHORUS_INPUTHIGHPASSFILTER));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_INPUTHIGHPASSFILTER);
 
     if (tmp == NULL)
         return false;
@@ -315,7 +315,7 @@ bool DuChorus::setInputHighPassFilterFrequency(int value)
 
 int DuChorus::getHDAmp() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_CHORUS_HDAMP));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_HDAMP);
 
     if (tmp == NULL)
         return -1;
@@ -325,7 +325,7 @@ int DuChorus::getHDAmp() const
 
 bool DuChorus::setHDAmp(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_CHORUS_HDAMP));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_HDAMP);
 
     if (tmp == NULL)
         return false;
@@ -336,7 +336,7 @@ bool DuChorus::setHDAmp(int value)
 
 int DuChorus::getModulationDepth() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_CHORUS_MODULATIONDEPTH));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODULATIONDEPTH);
 
     if (tmp == NULL)
         return -1;
@@ -346,7 +346,7 @@ int DuChorus::getModulationDepth() const
 
 bool DuChorus::setModulationDepth(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_CHORUS_MODULATIONDEPTH));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODULATIONDEPTH);
 
     if (tmp == NULL)
         return false;
@@ -356,7 +356,7 @@ bool DuChorus::setModulationDepth(int value)
 
 int DuChorus::getModulationRate() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_CHORUS_MODULATIONRATE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODULATIONRATE);
 
     if (tmp == NULL)
         return -1;
@@ -366,7 +366,7 @@ int DuChorus::getModulationRate() const
 
 bool DuChorus::setModulationRate(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_CHORUS_MODULATIONRATE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODULATIONRATE);
 
     if (tmp == NULL)
         return false;
@@ -376,7 +376,7 @@ bool DuChorus::setModulationRate(int value)
 
 int DuChorus::getTremoloShape() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_CHORUS_TREMOLOSHAPE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_TREMOLOSHAPE);
 
     if (tmp == NULL)
         return -1;
@@ -386,7 +386,7 @@ int DuChorus::getTremoloShape() const
 
 bool DuChorus::setTremoloShape(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_CHORUS_TREMOLOSHAPE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_TREMOLOSHAPE);
 
     if (tmp == NULL)
         return false;
@@ -396,7 +396,7 @@ bool DuChorus::setTremoloShape(int value)
 
 int DuChorus::getRotarySpeed() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_CHORUS_ROTARYSPEED));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_ROTARYSPEED);
 
     if (tmp == NULL)
         return -1;
@@ -406,7 +406,7 @@ int DuChorus::getRotarySpeed() const
 
 bool DuChorus::setRotarySpeed(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_CHORUS_ROTARYSPEED));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_ROTARYSPEED);
 
     if (tmp == NULL)
         return false;
@@ -417,7 +417,7 @@ bool DuChorus::setRotarySpeed(int value)
 
 QString DuChorus::getEffectName() const
 {
-    DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_CHORUS_EFFECTNAME));
+    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_CHORUS_EFFECTNAME);
 
     if (tmp == NULL)
         return QString();
@@ -427,7 +427,7 @@ QString DuChorus::getEffectName() const
 
 bool DuChorus::setEffectName(const QString &value)
 {
-    DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_CHORUS_EFFECTNAME));
+    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_CHORUS_EFFECTNAME);
 
     if (tmp == NULL)
         return false;

@@ -125,7 +125,7 @@ int DuVibrato::size() const
 
 int DuVibrato::getDepth() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_VIB_DEPTH));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_VIB_DEPTH);
 
     if (tmp == NULL)
         return -1;
@@ -135,7 +135,7 @@ int DuVibrato::getDepth() const
 
 bool DuVibrato::setDepth(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_VIB_DEPTH));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_VIB_DEPTH);
 
     if (tmp == NULL)
         return false;
@@ -145,7 +145,7 @@ bool DuVibrato::setDepth(int value)
 
 int DuVibrato::getDelay() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_VIB_DELAY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_VIB_DELAY);
 
     if (tmp == NULL)
         return -1;
@@ -155,7 +155,7 @@ int DuVibrato::getDelay() const
 
 bool DuVibrato::setDelay(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_VIB_DELAY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_VIB_DELAY);
 
     if (tmp == NULL)
         return false;
@@ -165,7 +165,7 @@ bool DuVibrato::setDelay(int value)
 
 int DuVibrato::getRate() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_VIB_RATE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_VIB_RATE);
 
     if (tmp == NULL)
         return -1;
@@ -175,7 +175,7 @@ int DuVibrato::getRate() const
 
 bool DuVibrato::setRate(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_VIB_RATE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_VIB_RATE);
 
     if (tmp == NULL)
         return false;
@@ -186,7 +186,7 @@ bool DuVibrato::setRate(int value)
 
 QString DuVibrato::getEffectName() const
 {
-    DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_VIB_EFFECTNAME));
+    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_VIB_EFFECTNAME);
 
     if (tmp == NULL)
         return QString();
@@ -196,7 +196,7 @@ QString DuVibrato::getEffectName() const
 
 bool DuVibrato::setEffectName(const QString &value)
 {
-    DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_VIB_EFFECTNAME));
+    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_VIB_EFFECTNAME);
 
     if (tmp == NULL)
         return false;

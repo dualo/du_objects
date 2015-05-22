@@ -255,77 +255,77 @@ QByteArray DuInstrument::toDuMusicFile() const
     music_instr du_instrument;
 
 
-    DuInstrumentInfo *instrInfo = getInstrumentInfo();
+    QSharedPointer<DuInstrumentInfo> instrInfo = getInstrumentInfo();
     if (instrInfo == NULL)
         return QByteArray();
 
     std::memcpy((char *)&(du_instrument.i_instrument),
                 instrInfo->toDuMusicFile().data(), instrInfo->size());
 
-    DuPreset *preset = getPreset();
+    QSharedPointer<DuPreset> preset = getPreset();
     if (preset == NULL)
         return QByteArray();
 
     std::memcpy((char *)&(du_instrument.i_preset),
                 preset->toDuMusicFile().data(), preset->size());
 
-    DuMixer *mixer = getMixer();
+    QSharedPointer<DuMixer> mixer = getMixer();
     if (mixer == NULL)
         return QByteArray();
 
     std::memcpy((char *)&(du_instrument.i_mix),
                 mixer->toDuMusicFile().data(), mixer->size());
 
-    DuDistortion *distortion = getDistortion();
+    QSharedPointer<DuDistortion> distortion = getDistortion();
     if (distortion == NULL)
         return QByteArray();
 
     std::memcpy((char *)&(du_instrument.i_distortion),
                 distortion->toDuMusicFile().data(), distortion->size());
 
-    DuWah *wah = getWah();
+    QSharedPointer<DuWah> wah = getWah();
     if (wah == NULL)
         return QByteArray();
 
     std::memcpy((char *)&(du_instrument.i_wah),
                 wah->toDuMusicFile().data(), wah->size());
 
-    DuCompressor *compressor = getCompressor();
+    QSharedPointer<DuCompressor> compressor = getCompressor();
     if (compressor == NULL)
         return QByteArray();
 
     std::memcpy((char *)&(du_instrument.i_compressor),
                 compressor->toDuMusicFile().data(), compressor->size());
 
-    DuEqualizer *equalizer = getEqualizer();
+    QSharedPointer<DuEqualizer> equalizer = getEqualizer();
     if (equalizer == NULL)
         return QByteArray();
 
     std::memcpy((char *)&(du_instrument.i_equalizer),
                 equalizer->toDuMusicFile().data(), equalizer->size());
 
-    DuDelay *delay = getDelay();
+    QSharedPointer<DuDelay> delay = getDelay();
     if (delay == NULL)
         return QByteArray();
 
     std::memcpy((char *)&(du_instrument.i_delay),
                 delay->toDuMusicFile().data(), delay->size());
 
-    DuChorus *chorus = getChorus();
+    QSharedPointer<DuChorus> chorus = getChorus();
     if (chorus == NULL)
         return QByteArray();
 
     std::memcpy((char *)&(du_instrument.i_chorus),
                 chorus->toDuMusicFile().data(), chorus->size());
 
-    DuVibrato *vibrato = getVibrato();
+    QSharedPointer<DuVibrato> vibrato = getVibrato();
     if (vibrato == NULL)
         return QByteArray();
 
     std::memcpy((char *)&(du_instrument.i_vibrato),
                 vibrato->toDuMusicFile().data(), vibrato->size());
 
-    DuAdsr *adsr = getAdsr();
+    QSharedPointer<DuAdsr> adsr = getAdsr();
     if (adsr == NULL)
         return QByteArray();
 
@@ -342,147 +342,114 @@ int DuInstrument::size() const
 }
 
 
-DuInstrumentInfo *DuInstrument::getInstrumentInfo() const
+QSharedPointer<DuInstrumentInfo> DuInstrument::getInstrumentInfo() const
 {
-    return dynamic_cast<DuInstrumentInfo *>(getChild(KEY_INSTR_INSTRUMENTINFO));
+    return getChildAs<DuInstrumentInfo>(KEY_INSTR_INSTRUMENTINFO);
 }
 
 void DuInstrument::setInstrumentInfo(DuInstrumentInfo *instrumentInfo)
 {
-    if (getChild(KEY_INSTR_INSTRUMENTINFO) != NULL)
-        delete getChild(KEY_INSTR_INSTRUMENTINFO);
-
     addChild(KEY_INSTR_INSTRUMENTINFO, instrumentInfo);
 }
 
 
-DuPreset *DuInstrument::getPreset() const
+QSharedPointer<DuPreset> DuInstrument::getPreset() const
 {
-    return dynamic_cast<DuPreset *>(getChild(KEY_INSTR_PRESET));
+    return getChildAs<DuPreset>(KEY_INSTR_PRESET);
 }
 
 void DuInstrument::setPreset(DuPreset *preset)
 {
-    if (getChild(KEY_INSTR_PRESET) != NULL)
-        delete getChild(KEY_INSTR_PRESET);
-
     addChild(KEY_INSTR_PRESET, preset);
 }
 
 
-DuMixer *DuInstrument::getMixer() const
+QSharedPointer<DuMixer> DuInstrument::getMixer() const
 {
-    return dynamic_cast<DuMixer *>(getChild(KEY_INSTR_MIXERSETTINGS));
+    return getChildAs<DuMixer>(KEY_INSTR_MIXERSETTINGS);
 }
 
 void DuInstrument::setMixer(DuMixer *mixer)
 {
-    if (getChild(KEY_INSTR_MIXERSETTINGS) != NULL)
-        delete getChild(KEY_INSTR_MIXERSETTINGS);
-
     addChild(KEY_INSTR_MIXERSETTINGS, mixer);
 }
 
-DuDistortion *DuInstrument::getDistortion() const
+QSharedPointer<DuDistortion> DuInstrument::getDistortion() const
 {
-    return dynamic_cast<DuDistortion *>(getChild(KEY_INSTR_DISTORTIONSETTINGS));
+    return getChildAs<DuDistortion>(KEY_INSTR_DISTORTIONSETTINGS);
 }
 
 void DuInstrument::setDistortion(DuDistortion *distortion)
 {
-    if (getChild(KEY_INSTR_DISTORTIONSETTINGS) != NULL)
-        delete getChild(KEY_INSTR_DISTORTIONSETTINGS);
-
     addChild(KEY_INSTR_DISTORTIONSETTINGS, distortion);
 }
 
-DuWah *DuInstrument::getWah() const
+QSharedPointer<DuWah> DuInstrument::getWah() const
 {
-    return dynamic_cast<DuWah *>(getChild(KEY_INSTR_WAHSETTINGS));
+    return getChildAs<DuWah>(KEY_INSTR_WAHSETTINGS);
 }
 
 void DuInstrument::setWah(DuWah *wah)
 {
-    if (getChild(KEY_INSTR_WAHSETTINGS) != NULL)
-        delete getChild(KEY_INSTR_WAHSETTINGS);
-
     addChild(KEY_INSTR_WAHSETTINGS, wah);
 }
 
-DuCompressor *DuInstrument::getCompressor() const
+QSharedPointer<DuCompressor> DuInstrument::getCompressor() const
 {
-    return dynamic_cast<DuCompressor *>(getChild(KEY_INSTR_COMPRESSORSETTINGS));
+    return getChildAs<DuCompressor>(KEY_INSTR_COMPRESSORSETTINGS);
 }
 
 void DuInstrument::setCompressor(DuCompressor *compressor)
 {
-    if (getChild(KEY_INSTR_COMPRESSORSETTINGS) != NULL)
-        delete getChild(KEY_INSTR_COMPRESSORSETTINGS);
-
     addChild(KEY_INSTR_COMPRESSORSETTINGS, compressor);
 }
 
-DuEqualizer *DuInstrument::getEqualizer() const
+QSharedPointer<DuEqualizer> DuInstrument::getEqualizer() const
 {
-    return dynamic_cast<DuEqualizer *>(getChild(KEY_INSTR_EQUALIZERSETTINGS));
+    return getChildAs<DuEqualizer>(KEY_INSTR_EQUALIZERSETTINGS);
 }
 
 void DuInstrument::setEqualizer(DuEqualizer *equalizer)
 {
-    if (getChild(KEY_INSTR_EQUALIZERSETTINGS) != NULL)
-        delete getChild(KEY_INSTR_EQUALIZERSETTINGS);
-
     addChild(KEY_INSTR_EQUALIZERSETTINGS, equalizer);
 }
 
-DuDelay *DuInstrument::getDelay() const
+QSharedPointer<DuDelay> DuInstrument::getDelay() const
 {
-    return dynamic_cast<DuDelay *>(getChild(KEY_INSTR_DELAYSETTINGS));
+    return getChildAs<DuDelay>(KEY_INSTR_DELAYSETTINGS);
 }
 
 void DuInstrument::setDelay(DuDelay *delay)
 {
-    if (getChild(KEY_INSTR_DELAYSETTINGS) != NULL)
-        delete getChild(KEY_INSTR_DELAYSETTINGS);
-
     addChild(KEY_INSTR_DELAYSETTINGS, delay);
 }
 
-DuChorus *DuInstrument::getChorus() const
+QSharedPointer<DuChorus> DuInstrument::getChorus() const
 {
-    return dynamic_cast<DuChorus *>(getChild(KEY_INSTR_CHORUSSETTINGS));
+    return getChildAs<DuChorus>(KEY_INSTR_CHORUSSETTINGS);
 }
 
 void DuInstrument::setChorus(DuChorus *chorus)
 {
-    if (getChild(KEY_INSTR_CHORUSSETTINGS) != NULL)
-        delete getChild(KEY_INSTR_CHORUSSETTINGS);
-
     addChild(KEY_INSTR_CHORUSSETTINGS, chorus);
 }
 
-DuVibrato *DuInstrument::getVibrato() const
+QSharedPointer<DuVibrato> DuInstrument::getVibrato() const
 {
-    return dynamic_cast<DuVibrato *>(getChild(KEY_INSTR_VIBRATOSETTINGS));
+    return getChildAs<DuVibrato>(KEY_INSTR_VIBRATOSETTINGS);
 }
 
 void DuInstrument::setVibrato(DuVibrato *vibrato)
 {
-    if (getChild(KEY_INSTR_VIBRATOSETTINGS) != NULL)
-        delete getChild(KEY_INSTR_VIBRATOSETTINGS);
-
     addChild(KEY_INSTR_VIBRATOSETTINGS, vibrato);
 }
 
-DuAdsr *DuInstrument::getAdsr() const
+QSharedPointer<DuAdsr> DuInstrument::getAdsr() const
 {
-    return dynamic_cast<DuAdsr *>(getChild(KEY_INSTR_ADSRSETTINGS));
+    return getChildAs<DuAdsr>(KEY_INSTR_ADSRSETTINGS);
 }
 
 void DuInstrument::setAdsr(DuAdsr *adsr)
 {
-    if (getChild(KEY_INSTR_ADSRSETTINGS) != NULL)
-        delete getChild(KEY_INSTR_ADSRSETTINGS);
-
     addChild(KEY_INSTR_ADSRSETTINGS, adsr);
 }

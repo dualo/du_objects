@@ -152,7 +152,7 @@ int DuAdsr::size() const
 
 int DuAdsr::getEnvelopeAttackTime() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_ADSR_ENVELOPEATTACKTIME));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_ADSR_ENVELOPEATTACKTIME);
 
     if (tmp == NULL)
         return -1;
@@ -162,7 +162,7 @@ int DuAdsr::getEnvelopeAttackTime() const
 
 bool DuAdsr::setEnvelopeAttackTime(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_ADSR_ENVELOPEATTACKTIME));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_ADSR_ENVELOPEATTACKTIME);
 
     if (tmp == NULL)
         return false;
@@ -172,7 +172,7 @@ bool DuAdsr::setEnvelopeAttackTime(int value)
 
 int DuAdsr::getEnvelopeDecayTime() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_ADSR_ENVELOPEDECAYTIME));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_ADSR_ENVELOPEDECAYTIME);
 
     if (tmp == NULL)
         return -1;
@@ -182,7 +182,7 @@ int DuAdsr::getEnvelopeDecayTime() const
 
 bool DuAdsr::setEnvelopeDecayTime(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_ADSR_ENVELOPEDECAYTIME));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_ADSR_ENVELOPEDECAYTIME);
 
     if (tmp == NULL)
         return false;
@@ -192,8 +192,7 @@ bool DuAdsr::setEnvelopeDecayTime(int value)
 
 int DuAdsr::getTimeVariantFilterCutoffResonance() const
 {
-    DuNumeric *tmp =
-        dynamic_cast<DuNumeric *>(getChild(KEY_ADSR_TIMEVARIANTFILTERCUTOFFRESONANCE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_ADSR_TIMEVARIANTFILTERCUTOFFRESONANCE);
 
     if (tmp == NULL)
         return -1;
@@ -203,8 +202,7 @@ int DuAdsr::getTimeVariantFilterCutoffResonance() const
 
 bool DuAdsr::setTimeVariantFilterCutoffResonance(int value)
 {
-    DuNumeric *tmp =
-        dynamic_cast<DuNumeric *>(getChild(KEY_ADSR_TIMEVARIANTFILTERCUTOFFRESONANCE));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_ADSR_TIMEVARIANTFILTERCUTOFFRESONANCE);
 
     if (tmp == NULL)
         return false;
@@ -214,8 +212,7 @@ bool DuAdsr::setTimeVariantFilterCutoffResonance(int value)
 
 int DuAdsr::getTimeVariantFilterCutoffFrequency() const
 {
-    DuNumeric *tmp =
-        dynamic_cast<DuNumeric *>(getChild(KEY_ADSR_TIMEVARIANTFILTERCUTOFFFREQUENCY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_ADSR_TIMEVARIANTFILTERCUTOFFFREQUENCY);
 
     if (tmp == NULL)
         return -1;
@@ -225,8 +222,7 @@ int DuAdsr::getTimeVariantFilterCutoffFrequency() const
 
 bool DuAdsr::setTimeVariantFilterCutoffFrequency(int value)
 {
-    DuNumeric *tmp =
-        dynamic_cast<DuNumeric *>(getChild(KEY_ADSR_TIMEVARIANTFILTERCUTOFFFREQUENCY));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_ADSR_TIMEVARIANTFILTERCUTOFFFREQUENCY);
 
     if (tmp == NULL)
         return false;
@@ -236,7 +232,7 @@ bool DuAdsr::setTimeVariantFilterCutoffFrequency(int value)
 
 int DuAdsr::getEnvelopeReleaseTime() const
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_ADSR_ENVELOPERELEASETIME));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_ADSR_ENVELOPERELEASETIME);
 
     if (tmp == NULL)
         return -1;
@@ -246,7 +242,7 @@ int DuAdsr::getEnvelopeReleaseTime() const
 
 bool DuAdsr::setEnvelopeReleaseTime(int value)
 {
-    DuNumeric *tmp = dynamic_cast<DuNumeric *>(getChild(KEY_ADSR_ENVELOPERELEASETIME));
+    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_ADSR_ENVELOPERELEASETIME);
 
     if (tmp == NULL)
         return false;
@@ -256,7 +252,7 @@ bool DuAdsr::setEnvelopeReleaseTime(int value)
 
 QString DuAdsr::getEffectName() const
 {
-    DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_ADSR_EFFECTNAME));
+    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_ADSR_EFFECTNAME);
 
     if (tmp == NULL)
         return QString();
@@ -266,7 +262,7 @@ QString DuAdsr::getEffectName() const
 
 bool DuAdsr::setEffectName(const QString &value)
 {
-    DuString *tmp = dynamic_cast<DuString *>(getChild(KEY_ADSR_EFFECTNAME));
+    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_ADSR_EFFECTNAME);
 
     if (tmp == NULL)
         return false;

@@ -30,7 +30,7 @@ bool DuDeviceMusicList::equals(const DuMusicList *other) const
 
 QString DuDeviceMusicList::getSerialNumber() const
 {
-    const DuString* serialNumber = getChildAs<DuString*>(KEY_DEVICE_MUSIC_LIST_SERIAL_NUMBER);
+    const QSharedPointer<DuString> serialNumber = getChildAs<DuString>(KEY_DEVICE_MUSIC_LIST_SERIAL_NUMBER);
 
     if (serialNumber == NULL)
     {
@@ -43,7 +43,7 @@ QString DuDeviceMusicList::getSerialNumber() const
 
 bool DuDeviceMusicList::setSerialNumber(const QString &value)
 {
-    DuString *tmp = getChildAs<DuString*>(KEY_DEVICE_MUSIC_LIST_SERIAL_NUMBER);
+    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_DEVICE_MUSIC_LIST_SERIAL_NUMBER);
 
     if (tmp == NULL)
         return false;

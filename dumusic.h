@@ -24,13 +24,13 @@ public:
 
     int size() const;
 
-    DuHeader *getHeader() const;
+    QSharedPointer<DuHeader> getHeader() const;
     void setHeader(DuHeader *header);
 
-    DuSongInfo *getSongInfo() const;
+    QSharedPointer<DuSongInfo> getSongInfo() const;
     void setSongInfo(DuSongInfo *songInfo);
 
-    DuArray *getTracks() const;
+    QSharedPointer<DuArray> getTracks() const;
     void setTracks(DuArray *array);
 
     bool appendTrack(DuTrack *track);
