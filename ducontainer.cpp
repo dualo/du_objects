@@ -147,6 +147,11 @@ DuObject *DuContainer::operator[](const QString &label)
 
 void DuContainer::addChild(const QString &key, DuObject *child)
 {
+    if (children.value(key, NULL) != NULL)
+    {
+        delete children.take(key);
+    }
+
     children.insert(key, child);
 }
 
