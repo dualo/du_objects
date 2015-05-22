@@ -33,7 +33,19 @@ HEADERS += \
     $$PWD/dumusiclist.h \
     $$PWD/dudevicemusiclist.h \
     $$PWD/duprofile.h \
-    $$PWD/duurl.h
+    $$PWD/duurl.h \
+    $$PWD/du-touch/parameters/controler_parameters_mng.h \
+    $$PWD/du-touch/parameters/display_convert.h \
+    $$PWD/du-touch/parameters/g_parameters_mng.h \
+    $$PWD/du-touch/parameters/instr_mapping.h \
+    $$PWD/du-touch/parameters/parameters_mng.h \
+    $$PWD/midi/duabstractmidievent.h \
+    $$PWD/midi/dumidichannelevent.h \
+    $$PWD/midi/dumidivariablelength.h \
+    $$PWD/midi/dumidimetaevent.h \
+    $$PWD/midi/dumidisysexevent.h \
+    $$PWD/midi/dumiditrack.h \
+    $$PWD/midi/dumidifile.h
 
 SOURCES += \
     $$PWD/duarray.cpp \
@@ -68,4 +80,18 @@ SOURCES += \
     $$PWD/dumusiclist.cpp \
     $$PWD/dudevicemusiclist.cpp \
     $$PWD/duprofile.cpp \
-    $$PWD/duurl.cpp
+    $$PWD/duurl.cpp \
+    $$PWD/du-touch/parameters/controler_parameters_mng.c \
+    $$PWD/du-touch/parameters/display_convert.c \
+    $$PWD/du-touch/parameters/g_parameters_mng.c \
+    $$PWD/du-touch/parameters/instr_mapping.c \
+    $$PWD/du-touch/parameters/music_parameters_mng.c \
+    $$PWD/du-touch/parameters/parameters_mng.c \
+    $$PWD/du-touch/parameters/sound_parameters_mng.c \
+    $$PWD/midi/duabstractmidievent.cpp \
+    $$PWD/midi/dumidichannelevent.cpp \
+    $$PWD/midi/dumidivariablelength.cpp \
+    $$PWD/midi/dumidimetaevent.cpp \
+    $$PWD/midi/dumidisysexevent.cpp \
+    $$PWD/midi/dumiditrack.cpp \
+    $$PWD/midi/dumidifile.cpp

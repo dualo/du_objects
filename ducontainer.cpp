@@ -52,6 +52,29 @@ QJsonValue DuContainer::toJson() const
     return QJsonValue(object);
 }
 
+
+QByteArray DuContainer::toDuMusicFile() const
+{
+    QByteArray retArray;
+
+    QMapIterator<QString, DuObjectPtr> i(children);
+    while (i.hasNext())
+    {
+        i.next();
+        if (i.value() == NULL)
+            return QByteArray();
+
+        const QByteArray &tmpArray = i.value()->toDuMusicFile();
+        if (tmpArray.isNull())
+            return QByteArray();
+
+        retArray.append(i.value()->toDuMusicFile());
+    }
+
+    return retArray;
+}
+
+
 QHttpMultiPart *DuContainer::toHttpMultiPart(const QByteArray &boundary) const
 {
     QHttpMultiPart* multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
@@ -74,6 +97,7 @@ QHttpMultiPart *DuContainer::toHttpMultiPart(const QByteArray &boundary) const
     return multiPart;
 }
 
+
 QDebug DuContainer::debugPrint(QDebug dbg) const
 {
     dbg.nospace() << "DuContainer(";
@@ -92,28 +116,6 @@ QDebug DuContainer::debugPrint(QDebug dbg) const
     dbg.nospace() << ")";
 
     return dbg.space();
-}
-
-
-QByteArray DuContainer::toDuMusicFile() const
-{
-    QByteArray retArray;
-
-    QMapIterator<QString, DuObjectPtr> i(children);
-    while (i.hasNext())
-    {
-        i.next();
-        if (i.value() == NULL)
-            return QByteArray();
-
-        const QByteArray &tmpArray = i.value()->toDuMusicFile();
-        if (tmpArray.isNull())
-            return QByteArray();
-
-        retArray.append(i.value()->toDuMusicFile());
-    }
-
-    return retArray;
 }
 
 
