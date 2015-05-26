@@ -19,7 +19,7 @@ QJsonValue DuContainer::toJson() const
 {
     QJsonObject object;
 
-    QMapIterator<QString, DuObjectPtr > i(children);
+    QMapIterator<QString, DuObjectPtr> i(children);
     while (i.hasNext())
     {
         i.next();
@@ -41,7 +41,7 @@ QHttpMultiPart *DuContainer::toHttpMultiPart(const QByteArray &boundary) const
     QHttpMultiPart* multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
     multiPart->setBoundary(boundary);
 
-    QMapIterator<QString, DuObjectPtr > i(children);
+    QMapIterator<QString, DuObjectPtr> i(children);
     while (i.hasNext())
     {
         i.next();
@@ -83,7 +83,7 @@ QByteArray DuContainer::toDuMusicFile() const
 {
     QByteArray retArray;
 
-    QMapIterator<QString, DuObjectPtr > i(children);
+    QMapIterator<QString, DuObjectPtr> i(children);
     while (i.hasNext())
     {
         i.next();
@@ -105,7 +105,7 @@ int DuContainer::size() const
 {
     int size = 0;
 
-    QMapIterator<QString, DuObjectPtr > i(children);
+    QMapIterator<QString, DuObjectPtr> i(children);
     while (i.hasNext())
     {
         i.next();
