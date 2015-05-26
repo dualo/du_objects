@@ -38,5 +38,6 @@ public:
 };
 
 Q_DECLARE_METATYPE(DuMusicListPtr)
+Q_DECLARE_METATYPE(DuMusicListConstPtr)
 
 #endif // DUMUSICLIST_H

@@ -61,5 +61,6 @@ private:
 };
 
 Q_DECLARE_METATYPE(DuDevicePtr)
+Q_DECLARE_METATYPE(DuDeviceConstPtr)
 
 #endif // DUDEVICE_H
