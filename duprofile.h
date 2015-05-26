@@ -1,6 +1,7 @@
 #ifndef DUPROFILE_H
 #define DUPROFILE_H
 
+#include "duarray.h"
 #include "ducontainer.h"
 
 #define KEY_PROFILE_FIRSTNAME     "Firstname"
@@ -11,6 +12,8 @@
 #define KEY_PROFILE_CREATION_DATE "CreationDate"
 #define KEY_PROFILE_ROLE          "Role"
 #define KEY_PROFILE_GUID          "GUID"
+#define KEY_PROFILE_DUTOUCH_LIST  "DuTouchList"
+#define KEY_PROFILE_FRIENDS       "Friends"
 
 
 DU_OBJECT(DuProfile)
@@ -31,6 +34,16 @@ public:
     };
 
     DuProfile();
+
+    /**
+     * @brief Parse a json object to extract the profile infos
+     * @param jsonProfile  The json object we want to parse
+     * @param recursionLevel  0: don't get friends, 1: get friends, 2: get friends and friends of friends, etc.
+     * @return A DuProfilePtr (NULL if error occured)
+     */
+    static DuProfilePtr fromJson(const QJsonObject &jsonProfile, int recursionLevel);
+
+    QHttpMultiPart *toHttpMultiPart(const QByteArray &boundary) const;
 
     QString getFirstname() const;
     bool setFirstname(const QString& value);
@@ -55,6 +68,12 @@ public:
 
     int getGUID() const;
     bool setGUID(int value);
+
+    DuArrayConstPtr getDuTouchList() const;
+    void setDuTouchList(const DuArrayPtr& value);
+
+    DuArrayConstPtr getFriends() const;
+    void setFriends(const DuArrayPtr& value);
 };
 
 Q_DECLARE_METATYPE(DuProfilePtr)

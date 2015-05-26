@@ -3,9 +3,15 @@
 #include "dudate.h"
 #include "dunumeric.h"
 #include "dustring.h"
+#include "dutouch.h"
 #include "duurl.h"
 
 #include <QDebug>
+#include <QFile>
+#include <QFileInfo>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QMimeDatabase>
 
 DU_OBJECT_IMPL(DuProfile)
 
@@ -19,6 +25,139 @@ DuProfile::DuProfile()
     addChild(KEY_PROFILE_CREATION_DATE, new DuDate);
     addChild(KEY_PROFILE_ROLE,          new DuNumeric(None));
     addChild(KEY_PROFILE_GUID,          new DuNumeric(-1));
+    addChild(KEY_PROFILE_DUTOUCH_LIST,  new DuArray);
+    addChild(KEY_PROFILE_FRIENDS,       new DuArray);
+}
+
+DuProfilePtr DuProfile::fromJson(const QJsonObject &jsonProfile, int recursionLevel)
+{
+    if (jsonProfile.isEmpty())
+    {
+        return DuProfilePtr();
+    }
+
+    DuProfilePtr outProfile(new DuProfile);
+
+    outProfile->setFirstname(jsonProfile.value("Firstname").toString());
+    outProfile->setLastname(jsonProfile.value("Lastname").toString());
+    outProfile->setPseudo(jsonProfile.value("username").toString());
+    outProfile->setMail(jsonProfile.value("email").toString());
+    outProfile->setCreationDate(QDateTime::fromTime_t(jsonProfile.value("time_created").toInt()));
+    outProfile->setGUID(jsonProfile.value("global_id").toInt());
+
+    QString role = jsonProfile.value("role").toString();
+    if (role == "default" || role == "")
+        outProfile->setRole(Default);
+    else if (role == "beta")
+        outProfile->setRole(Beta);
+    else if (role == "temp")
+        outProfile->setRole(Temp);
+    else if (role == "test")
+        outProfile->setRole(Test);
+    else if (role == "dev")
+        outProfile->setRole(Dev);
+    else
+    {
+        qCritical() << "Unknown role :" << role;
+        outProfile->setRole(Default);
+    }
+
+    // DU-TOUCH LIST
+    DuArrayPtr list(new DuArray);
+    QJsonArray array = jsonProfile.value("device_list").toArray();
+    for (QJsonArray::iterator it = array.begin(); it != array.end(); ++it)
+    {
+        QString serial = (*it).toObject().value("dutouch_serial").toString();
+        QString name = (*it).toObject().value("dutouch_name").toString();
+        QString firmware = (*it).toObject().value("firmware").toString();
+        QString firmwareUpdateDate = (*it).toObject().value("firmware_update_date").toString();
+        QString soundbank = (*it).toObject().value("soundbank").toString();
+        QString soundbankUpdateDate = (*it).toObject().value("soundbank_update_date").toString();
+
+        DuTouchPtr device(new DuTouch);
+        device->setSerialNumber(serial);
+        device->setName(name);
+        device->setOwner(outProfile->getPseudo());
+        device->setOwnerId(outProfile->getGUID());
+        device->setPlugged(false);
+        device->setConnected(false);
+        device->setBusy(false);
+        device->setVersion(firmware);
+        device->setUpdateDate(QDateTime::fromString(firmwareUpdateDate, "yyyy-MM-dd HH:mm:ss"));
+        device->setSoundbankVersion(soundbank);
+        device->setSoundbankUpdateDate(QDateTime::fromString(soundbankUpdateDate, "yyyy-MM-dd HH:mm:ss"));
+
+        list->append(device);
+    }
+    outProfile->setDuTouchList(list);
+
+    // AVATAR
+    outProfile->setAvatarUrl(jsonProfile.value("avatar").toString());
+
+    // FRIENDS
+    if (recursionLevel > 0)
+    {
+        QJsonArray friendsList = jsonProfile.value("friends").toArray();
+
+        DuArrayPtr friends(new DuArray);
+        for (QJsonArray::iterator it = friendsList.begin(); it != friendsList.end(); ++it)
+        {
+            if (!(*it).isObject())
+            {
+                qCritical() << "user not an object :" << *it;
+                continue;
+            }
+
+            DuProfilePtr friendProfile = fromJson((*it).toObject(), recursionLevel - 1);
+
+            if (friendProfile != NULL)
+            {
+                friends->append(friendProfile);
+            }
+        }
+
+        outProfile->setFriends(friends);
+    }
+
+    return outProfile;
+}
+
+QHttpMultiPart *DuProfile::toHttpMultiPart(const QByteArray &boundary) const
+{
+    QHttpMultiPart* multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+    multiPart->setBoundary(boundary);
+
+    multiPart->append(getChild(KEY_PROFILE_GUID)->toHttpPart("guid"));
+    multiPart->append(getChild(KEY_PROFILE_LASTNAME)->toHttpPart("Lastname"));
+    multiPart->append(getChild(KEY_PROFILE_FIRSTNAME)->toHttpPart("Firstname"));
+    multiPart->append(getChild(KEY_PROFILE_MAIL)->toHttpPart("email"));
+
+    QUrl avatarUrl = getAvatarUrl();
+    if (!avatarUrl.isEmpty() && avatarUrl.isLocalFile())
+    {
+        QFile* avatar = new QFile(avatarUrl.toLocalFile());
+        if (avatar->open(QIODevice::ReadOnly))
+        {
+            QFileInfo info(*avatar);
+            QMimeDatabase db;
+            QMimeType mimeType = db.mimeTypeForFile(info);
+
+            QHttpPart avatarPart;
+            avatarPart.setHeader(QNetworkRequest::ContentDispositionHeader, "form-data; name=\"avatar\"; filename=\"" + info.fileName() + "\"");
+            avatarPart.setHeader(QNetworkRequest::ContentTypeHeader, mimeType.name());
+            avatarPart.setBodyDevice(avatar);
+            avatar->setParent(multiPart);
+
+            multiPart->append(avatarPart);
+        }
+        else
+        {
+            qCritical() << "Can't open file" << avatarUrl.toString();
+            delete avatar;
+        }
+    }
+
+    return multiPart;
 }
 
 QString DuProfile::getFirstname() const
@@ -205,4 +344,24 @@ bool DuProfile::setGUID(int value)
         return false;
 
     return tmp->setNumeric(value);
+}
+
+DuArrayConstPtr DuProfile::getDuTouchList() const
+{
+    return getChildAs<const DuArray>(KEY_PROFILE_DUTOUCH_LIST);
+}
+
+void DuProfile::setDuTouchList(const DuArrayPtr &value)
+{
+    addChild(KEY_PROFILE_DUTOUCH_LIST, value);
+}
+
+DuArrayConstPtr DuProfile::getFriends() const
+{
+    return getChildAs<const DuArray>(KEY_PROFILE_FRIENDS);
+}
+
+void DuProfile::setFriends(const DuArrayPtr &value)
+{
+    addChild(KEY_PROFILE_FRIENDS, value);
 }

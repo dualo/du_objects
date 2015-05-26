@@ -10,7 +10,7 @@ DU_OBJECT(DuArray)
 class DuArray : public DuObject
 {
 public:
-    explicit DuArray(int maxSize);
+    explicit DuArray(int maxSize = -1);
     ~DuArray();
 
     QJsonValue toJson() const;
