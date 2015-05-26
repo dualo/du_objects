@@ -1,10 +1,11 @@
 #ifndef DUMIDIDATA_H
 #define DUMIDIDATA_H
 
-
 #include "../duvalue.h"
 #include <QDataStream>
 
+
+DU_OBJECT(DuMidiData)
 
 class DuMidiData : public DuValue
 {
@@ -17,14 +18,13 @@ public:
 
     virtual int size() const;
 
-    const QByteArray getConstData() const;
+    QByteArray data();
+    const QByteArray getData() const;
     bool setData(const QByteArray &value);
     void setData(QDataStream &stream);
 
+    void resize(int size);
     QByteArray &append(char c);
-
-protected:
-    QByteArray getData();
 };
 
 #endif // DUMIDIDATA_H

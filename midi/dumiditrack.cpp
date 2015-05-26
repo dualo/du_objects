@@ -20,8 +20,6 @@ void DuMidiTrack::appendEvent(DuAbstractMidiEvent *event)
 
 QByteArray DuMidiTrack::toByteArray()
 {
-    DuMidiVariableLength::getInstance()->resetTime();
-
     QByteArray array;
     array.clear();
 
@@ -32,6 +30,7 @@ QByteArray DuMidiTrack::toByteArray()
     {
         runningStatusActive = ((tmpStatus == events[i]->getStatus())
                                && (tmpStatus < 0xF0));
+        //TODO: refactoring
         array += events[i]->toByteArray(runningStatusActive);
 
         tmpStatus = events[i]->getStatus();

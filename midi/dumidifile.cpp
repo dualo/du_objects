@@ -164,8 +164,6 @@ void DuMidiFile::parseFile(QIODevice *input)
 
 DuMidiTrack* DuMidiFile::parseTrack(QDataStream &stream)
 {
-    DuMidiVariableLength::getInstance()->resetTime();
-
     DuMidiTrack* track = new DuMidiTrack();
     QByteArray trackId;
 
@@ -203,7 +201,8 @@ DuAbstractMidiEvent* DuMidiFile::parseEvent(QDataStream &stream,
     quint32 tmpTime;
     quint8 tmp;
 
-    tmpTime = DuMidiVariableLength::getInstance()->getTime(stream);
+    //TODO: refactoring
+    //tmpTime = DuMidiVariableLength::getInstance()->getTime(stream);
     stream >> tmp;
 
     if (tmp > 0x7F)
@@ -228,7 +227,8 @@ DuAbstractMidiEvent* DuMidiFile::parseEvent(QDataStream &stream,
     else
         event = parseChannelEvent(stream, runningStatus, &tmp);
 
-    if (event != NULL) event->setTime(tmpTime);
+    //TODO: refactoring
+    //if (event != NULL) event->setTime(tmpTime);
 
     return event;
 }
@@ -297,7 +297,8 @@ DuMidiMetaEvent* DuMidiFile::parseMetaEvent(QDataStream &stream, bool *trackEnde
     quint32 tmpLength;
 
     stream >> tmpType;
-    tmpLength = DuMidiVariableLength::getInstance()->getLength(stream);
+    //TODO: refactoring
+    //tmpLength = DuMidiVariableLength::getInstance()->getLength(stream);
 
     metaEvent->setType(tmpType);
     metaEvent->setLength(tmpLength);
@@ -314,7 +315,8 @@ DuMidiSysExEvent* DuMidiFile::parseSysExEvent(QDataStream &stream, quint8 status
     DuMidiSysExEvent* sysExEvent = new DuMidiSysExEvent();
 
     sysExEvent->setStatus(status);
-    sysExEvent->setLength(DuMidiVariableLength::getInstance()->getLength(stream));
+    //TODO: refactoring
+    //sysExEvent->setLength(DuMidiVariableLength::getInstance()->getLength(stream));
     sysExEvent->setDataBytes(stream);
 
     return sysExEvent;

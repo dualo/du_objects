@@ -43,7 +43,7 @@ public:
     QByteArray toByteArray(bool runningStatusActive = false);
     void setDataBytes(QDataStream &stream);
     void setDataBytes(const QByteArray &array);
-    quint32 size();
+    quint32 size() const;
 
     quint8 getType() const;
     void setType(quint8 value);

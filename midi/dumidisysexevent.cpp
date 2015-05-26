@@ -1,50 +1,62 @@
 #include "dumidisysexevent.h"
 
 DuMidiSysExEvent::DuMidiSysExEvent() :
-    DuAbstractMidiEvent(),
-    data(QByteArray())
+    DuAbstractMidiEvent()
 {
-    data.clear();
+    data = new DuMidiData();
 }
 
 DuMidiSysExEvent::~DuMidiSysExEvent()
 {
+    delete data;
 }
 
 
 QByteArray DuMidiSysExEvent::toByteArray(bool runningStatusActive)
 {
-    DuMidiVariableLength *conv = DuMidiVariableLength::getInstance();
-
-    QByteArray array = conv->formattedTimeArray(getTime());
+    QByteArray array = time->toMidiFile();
     array.append(getStatus());
 
-    array += conv->formattedLengthArray(data.size());
-    array += data;
+    //TODO: refactoring
+    //array += conv->formattedLengthArray(getData().size());
+    array += getData();
 
     return array;
 }
 
 void DuMidiSysExEvent::setDataBytes(QDataStream &stream)
 {
-    stream.readRawData(data.data(), data.size());
+    data->setData(stream);
 }
 
 void DuMidiSysExEvent::setDataBytes(const QByteArray &array)
 {
-    data = array;
+    data->setData(array);
 }
 
-quint32 DuMidiSysExEvent::size()
+quint32 DuMidiSysExEvent::size() const
 {
-    DuMidiVariableLength *conv = DuMidiVariableLength::getInstance();
-    quint32 length = data.size();
+    quint32 length = getData().size();
 
-    return (conv->formattedSize(getTime()) + 1 + conv->formattedSize(length) + length);
+    //TODO: refactoring
+    //return (time->size() + 1 + conv->formattedSize(length) + length);
+
+    return (time->size() + 1 + length);
+}
+
+
+const QByteArray DuMidiSysExEvent::getData() const
+{
+    return data->getData();
+}
+
+void DuMidiSysExEvent::setData(const QByteArray &value)
+{
+    data->setData(value);
 }
 
 
 void DuMidiSysExEvent::setLength(quint32 value)
 {
-    data.resize(value);
+    data->resize(value);
 }

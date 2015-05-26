@@ -16,8 +16,7 @@ DuMidiChannelEvent::~DuMidiChannelEvent()
 
 QByteArray DuMidiChannelEvent::toByteArray(bool runningStatusActive)
 {
-    QByteArray array =
-            DuMidiVariableLength::getInstance()->formattedTimeArray(getTime());
+    QByteArray array = time->toMidiFile();
     if (!runningStatusActive) array.append(getStatus());
 
     switch (getType())
@@ -110,7 +109,7 @@ void DuMidiChannelEvent::setDataBytes(const QByteArray &array)
 }
 
 
-quint32 DuMidiChannelEvent::size()
+quint32 DuMidiChannelEvent::size() const
 {
     quint32 size;
 
@@ -122,13 +121,13 @@ quint32 DuMidiChannelEvent::size()
     case ControlChange:
     case PitchWheelChange:
     {
-        size = DuMidiVariableLength::getInstance()->formattedSize(getTime()) + 3;
+        size = time->size() + 3;
         break;
     }
     case ProgramChange:
     case ChannelPressure:
     {
-        size = DuMidiVariableLength::getInstance()->formattedSize(getTime()) + 2;
+        size = time->size() + 2;
         break;
     }
     default:

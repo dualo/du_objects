@@ -16,13 +16,12 @@ DuMidiMetaEvent::~DuMidiMetaEvent()
 
 QByteArray DuMidiMetaEvent::toByteArray(bool runningStatusActive)
 {
-    DuMidiVariableLength *conv = DuMidiVariableLength::getInstance();
-
-    QByteArray array = conv->formattedTimeArray(getTime());
+    QByteArray array = time->toMidiFile();
     array.append(getStatus());
 
     array.append(getType());
-    array += conv->formattedLengthArray(getData().size());
+    //TODO: refactoring
+    //array += conv->formattedLengthArray(getData().size());
     array += getData();
 
     return array;
@@ -39,13 +38,14 @@ void DuMidiMetaEvent::setDataBytes(const QByteArray &array)
 }
 
 
-quint32 DuMidiMetaEvent::size()
+quint32 DuMidiMetaEvent::size() const
 {
-    DuMidiVariableLength *conv = DuMidiVariableLength::getInstance();
     quint32 length = getData().size();
 
-    return (conv->formattedSize(getTime()) + 2
-            + conv->formattedSize(getData().size()) + length);
+    //TODO: refactoring
+    return (time->size() + 2 + length);
+            //+ conv->formattedSize(getData().size()) + length);
+
 }
 
 
@@ -67,11 +67,11 @@ quint32 DuMidiMetaEvent::getLength() const
 
 void DuMidiMetaEvent::setLength(quint32 value)
 {
-    data->setMaxSize(value);
+    data->resize(value);
 }
 
 
 const QByteArray DuMidiMetaEvent::getData() const
 {
-    return data->getConstData();
+    return data->getData();
 }

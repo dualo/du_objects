@@ -23,11 +23,11 @@ QJsonValue DuMidiData::toJson() const
 
 int DuMidiData::size() const
 {
-    return getConstData().size();
+    return getData().size();
 }
 
 
-const QByteArray DuMidiData::getConstData() const
+const QByteArray DuMidiData::getData() const
 {
     return getValue().toByteArray();
 }
@@ -55,14 +55,19 @@ void DuMidiData::setData(QDataStream &stream)
     setData(array);
 }
 
-
-QByteArray &DuMidiData::append(char c)
+void DuMidiData::resize(int size)
 {
-    return getData().append(c);
+    data().resize(size);
 }
 
 
-QByteArray DuMidiData::getData()
+QByteArray &DuMidiData::append(char c)
+{
+    return data().append(c);
+}
+
+
+QByteArray DuMidiData::data()
 {
     return getValue().toByteArray();
 }

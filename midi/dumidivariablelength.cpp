@@ -1,11 +1,8 @@
 #include "dumidivariablelength.h"
 
-DuMidiVariableLength *DuMidiVariableLength::_instance = NULL;
-
-
-DuMidiVariableLength::DuMidiVariableLength()
+DuMidiVariableLength::DuMidiVariableLength(int offset) :
+    offset(offset)
 {
-    previousTime = 0;
 }
 
 DuMidiVariableLength::~DuMidiVariableLength()
@@ -13,20 +10,37 @@ DuMidiVariableLength::~DuMidiVariableLength()
 }
 
 
-DuMidiVariableLength *DuMidiVariableLength::getInstance()
+QByteArray DuMidiVariableLength::toDuMusicFile() const
 {
-    if (_instance == NULL) _instance = new DuMidiVariableLength();
+    return QByteArray();
+}
 
-    return _instance;
+QJsonValue DuMidiVariableLength::toJson() const
+{
+    return QJsonValue();
 }
 
 
-void DuMidiVariableLength::resetTime(quint32 time)
+int DuMidiVariableLength::size() const
 {
-    previousTime = time;
+    quint32 value = getValue().toUInt();
+
+    if (value > FOUR_BYTES_MAX_UINT_VALUE)
+        return -1;
+
+    if (value > THREE_BYTES_MAX_UINT_VALUE)
+        return 4;
+
+    if (value > TWO_BYTES_MAX_UINT_VALUE)
+        return 3;
+
+    if (value > ONE_BYTE_MAX_UINT_VALUE)
+        return 2;
+
+    return 1;
 }
 
-
+/*
 quint32 DuMidiVariableLength::getTime(QDataStream &stream)
 {
     quint32 value = 0;
@@ -67,9 +81,11 @@ quint32 DuMidiVariableLength::getTime(QDataStream &stream)
     value = ((value1 << 21) & 0x0FE00000) + ((value2 << 14) & 0x001FC000)
             + ((value3 << 7) & 0x00003F80) + value4;
 
-    previousTime += value;
+    offset += value;
 
-    return previousTime;
+    setValue(offset);
+
+    return offset;
 }
 
 
@@ -113,17 +129,71 @@ quint32 DuMidiVariableLength::getLength(QDataStream &stream)
     value = ((value1 << 21) & 0x0FE00000) + ((value2 << 14) & 0x001FC000)
             + ((value3 << 7) & 0x00003F80) + value4;
 
+    setValue(value);
+
     return value;
+}
+*/
+
+quint32 DuMidiVariableLength::getAbsolute() const
+{
+    return getOffset() + getValue().toInt();
+}
+
+quint32 DuMidiVariableLength::getRelative() const
+{
+    return getValue().toInt();
+}
+
+void DuMidiVariableLength::setDelta(quint32 value)
+{
+    setValue(value);
 }
 
 
+quint32 DuMidiVariableLength::getOffset() const
+{
+    return offset;
+}
+
+void DuMidiVariableLength::setOffset(quint32 value)
+{
+    offset = value;
+}
+
+
+const QByteArray DuMidiVariableLength::toMidiFile() const
+{
+    QByteArray array;
+    array.clear();
+
+    quint32 value = getValue().toInt();
+
+    if (value > FOUR_BYTES_MAX_UINT_VALUE)
+        return QByteArray();
+
+    array.prepend((quint8)(value & 0x7F));
+
+    if (value > ONE_BYTE_MAX_UINT_VALUE)
+        array.prepend((quint8)(((value >> 7) & 0x7F) + 0x80));
+
+    if (value > TWO_BYTES_MAX_UINT_VALUE)
+        array.prepend((quint8)(((value >> 14) & 0x7F) + 0x80));
+
+    if (value > THREE_BYTES_MAX_UINT_VALUE)
+        array.prepend((quint8)(((value >> 21) & 0x7F) + 0x80));
+
+    return array;
+}
+
+/*
 QByteArray DuMidiVariableLength::formattedTimeArray(quint32 value)
 {
     QByteArray array;
     array.clear();
 
-    quint32 tmpValue = value - previousTime;
-    previousTime = value;
+    quint32 tmpValue = value - offset;
+    offset = value;
 
     if (tmpValue > FOUR_BYTES_MAX_UINT_VALUE)
         return array;
@@ -182,3 +252,4 @@ quint32 DuMidiVariableLength::formattedSize(quint32 value)
 
     return 1;
 }
+*/

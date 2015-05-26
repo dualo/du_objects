@@ -15,15 +15,15 @@ public:
     virtual QByteArray toByteArray(bool runningStatusActive = false) = 0;
     virtual void setDataBytes(QDataStream &stream) = 0;
     virtual void setDataBytes(const QByteArray &array) = 0;
-    virtual quint32 size() = 0;
+    virtual quint32 size() const = 0;
 
     quint32 getTime() const;
     quint8 getStatus() const;
-    void setTime(quint32 value);
+    void setTime(quint32 offset, quint32 delta);
     void setStatus(quint8 value);
 
-private:
-    DuNumeric *time;
+protected:
+    DuMidiVariableLength *time;
     DuNumeric *status;              // Status bytes are > 0x7F, data bytes are < 0x80
 };
 
