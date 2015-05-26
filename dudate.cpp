@@ -2,6 +2,8 @@
 
 #include <QDebug>
 
+DU_OBJECT_IMPL(DuDate)
+
 DuDate::DuDate(const QDateTime &date) :
     DuValue(date)
 {

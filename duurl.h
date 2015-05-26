@@ -3,6 +3,9 @@
 
 #include "duvalue.h"
 
+
+DU_OBJECT(DuUrl)
+
 class DuUrl : public DuValue
 {
 public:

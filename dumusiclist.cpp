@@ -5,6 +5,8 @@
 
 #include <QDebug>
 
+DU_OBJECT_IMPL(DuMusicList)
+
 DuMusicList::DuMusicList(const QString &name, DuMusicList::Type type) :
     DuContainer()
 {
@@ -12,14 +14,14 @@ DuMusicList::DuMusicList(const QString &name, DuMusicList::Type type) :
     addChild(KEY_MUSIC_LIST_TYPE,   new DuNumeric(type));
 }
 
-bool DuMusicList::equals(const DuMusicList *other) const
+bool DuMusicList::equals(const DuMusicListConstPtr &other) const
 {
     return this->getName() == other->getName() && this->getType() == other->getType();
 }
 
 QString DuMusicList::getName() const
 {
-    const QSharedPointer<DuString> name = getChildAs<DuString>(KEY_MUSIC_LIST_NAME);
+    const DuStringConstPtr name = getChildAs<DuString>(KEY_MUSIC_LIST_NAME);
 
     if (name == NULL)
     {
@@ -32,7 +34,7 @@ QString DuMusicList::getName() const
 
 bool DuMusicList::setName(const QString &value)
 {
-    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_MUSIC_LIST_NAME);
+    DuStringPtr tmp = getChildAs<DuString>(KEY_MUSIC_LIST_NAME);
 
     if (tmp == NULL)
         return false;
@@ -42,7 +44,7 @@ bool DuMusicList::setName(const QString &value)
 
 DuMusicList::Type DuMusicList::getType() const
 {
-    const QSharedPointer<DuNumeric> type = getChildAs<DuNumeric>(KEY_MUSIC_LIST_TYPE);
+    const DuNumericConstPtr type = getChildAs<DuNumeric>(KEY_MUSIC_LIST_TYPE);
 
     if (type == NULL)
     {
@@ -55,7 +57,7 @@ DuMusicList::Type DuMusicList::getType() const
 
 bool DuMusicList::setType(DuMusicList::Type value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_MUSIC_LIST_TYPE);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_MUSIC_LIST_TYPE);
 
     if (tmp == NULL)
         return false;

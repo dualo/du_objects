@@ -1,5 +1,10 @@
 #include "duchorus.h"
 
+#include <QJsonObject>
+#include <QDebug>
+
+DU_OBJECT_IMPL(DuChorus)
+
 DuChorus::DuChorus() :
     DuEffectSettings()
 {
@@ -52,9 +57,9 @@ DuChorus::~DuChorus()
 }
 
 
-DuChorus *DuChorus::fromDuMusicFile(const FX_chorus &du_chorus)
+DuChorusPtr DuChorus::fromDuMusicFile(const FX_chorus &du_chorus)
 {
-    DuChorus *chorus = new DuChorus;
+    DuChorusPtr chorus(new DuChorus);
     bool verif = true;
 
     verif = verif && chorus->setMode(du_chorus.c_mode);
@@ -76,15 +81,14 @@ DuChorus *DuChorus::fromDuMusicFile(const FX_chorus &du_chorus)
 
     if (!verif)
     {
-        delete chorus;
-        return NULL;
+        return DuChorusPtr();
     }
 
     return chorus;
 }
 
 
-DuChorus *DuChorus::fromJson(const QJsonObject &jsonChorus)
+DuChorusPtr DuChorus::fromJson(const QJsonObject &jsonChorus)
 {
     QJsonValue jsonMode         = jsonChorus[KEY_CHORUS_MODE];
     QJsonValue jsonEffectLvl    = jsonChorus[KEY_CHORUS_EFFECTLEVEL];
@@ -105,10 +109,10 @@ DuChorus *DuChorus::fromJson(const QJsonObject &jsonChorus)
             ||  !jsonTremShape.isDouble()   ||  !jsonRotSpeed.isDouble()
             ||  !jsonEffectName.isString())
 
-        return NULL;
+        return DuChorusPtr();
 
 
-    DuChorus *chorus = new DuChorus;
+    DuChorusPtr chorus(new DuChorus);
     bool verif = true;
 
     verif = verif && chorus->setMode(jsonMode.toInt());
@@ -127,8 +131,7 @@ DuChorus *DuChorus::fromJson(const QJsonObject &jsonChorus)
 
     if (!verif)
     {
-        delete chorus;
-        return NULL;
+        return DuChorusPtr();
     }
 
     return chorus;
@@ -215,7 +218,7 @@ int DuChorus::size() const
 
 int DuChorus::getMode() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODE);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODE);
 
     if (tmp == NULL)
         return -1;
@@ -225,7 +228,7 @@ int DuChorus::getMode() const
 
 bool DuChorus::setMode(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODE);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODE);
 
     if (tmp == NULL)
         return false;
@@ -235,7 +238,7 @@ bool DuChorus::setMode(int value)
 
 int DuChorus::getEffectLevel() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_EFFECTLEVEL);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_CHORUS_EFFECTLEVEL);
 
     if (tmp == NULL)
         return -1;
@@ -245,7 +248,7 @@ int DuChorus::getEffectLevel() const
 
 bool DuChorus::setEffectLevel(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_EFFECTLEVEL);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_CHORUS_EFFECTLEVEL);
 
     if (tmp == NULL)
         return false;
@@ -255,7 +258,7 @@ bool DuChorus::setEffectLevel(int value)
 
 int DuChorus::getDelayTime() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_DELAYTIME);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_CHORUS_DELAYTIME);
 
     if (tmp == NULL)
         return -1;
@@ -265,7 +268,7 @@ int DuChorus::getDelayTime() const
 
 bool DuChorus::setDelayTime(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_DELAYTIME);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_CHORUS_DELAYTIME);
 
     if (tmp == NULL)
         return false;
@@ -275,7 +278,7 @@ bool DuChorus::setDelayTime(int value)
 
 int DuChorus::getFeedback() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_FEEDBACK);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_CHORUS_FEEDBACK);
 
     if (tmp == NULL)
         return -1;
@@ -285,7 +288,7 @@ int DuChorus::getFeedback() const
 
 bool DuChorus::setFeedback(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_FEEDBACK);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_CHORUS_FEEDBACK);
 
     if (tmp == NULL)
         return false;
@@ -295,7 +298,7 @@ bool DuChorus::setFeedback(int value)
 
 int DuChorus::getInputHighPassFilterFrequency() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_INPUTHIGHPASSFILTER);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_CHORUS_INPUTHIGHPASSFILTER);
 
     if (tmp == NULL)
         return -1;
@@ -305,7 +308,7 @@ int DuChorus::getInputHighPassFilterFrequency() const
 
 bool DuChorus::setInputHighPassFilterFrequency(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_INPUTHIGHPASSFILTER);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_CHORUS_INPUTHIGHPASSFILTER);
 
     if (tmp == NULL)
         return false;
@@ -315,7 +318,7 @@ bool DuChorus::setInputHighPassFilterFrequency(int value)
 
 int DuChorus::getHDAmp() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_HDAMP);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_CHORUS_HDAMP);
 
     if (tmp == NULL)
         return -1;
@@ -325,7 +328,7 @@ int DuChorus::getHDAmp() const
 
 bool DuChorus::setHDAmp(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_HDAMP);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_CHORUS_HDAMP);
 
     if (tmp == NULL)
         return false;
@@ -336,7 +339,7 @@ bool DuChorus::setHDAmp(int value)
 
 int DuChorus::getModulationDepth() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODULATIONDEPTH);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODULATIONDEPTH);
 
     if (tmp == NULL)
         return -1;
@@ -346,7 +349,7 @@ int DuChorus::getModulationDepth() const
 
 bool DuChorus::setModulationDepth(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODULATIONDEPTH);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODULATIONDEPTH);
 
     if (tmp == NULL)
         return false;
@@ -356,7 +359,7 @@ bool DuChorus::setModulationDepth(int value)
 
 int DuChorus::getModulationRate() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODULATIONRATE);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODULATIONRATE);
 
     if (tmp == NULL)
         return -1;
@@ -366,7 +369,7 @@ int DuChorus::getModulationRate() const
 
 bool DuChorus::setModulationRate(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODULATIONRATE);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODULATIONRATE);
 
     if (tmp == NULL)
         return false;
@@ -376,7 +379,7 @@ bool DuChorus::setModulationRate(int value)
 
 int DuChorus::getTremoloShape() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_TREMOLOSHAPE);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_CHORUS_TREMOLOSHAPE);
 
     if (tmp == NULL)
         return -1;
@@ -386,7 +389,7 @@ int DuChorus::getTremoloShape() const
 
 bool DuChorus::setTremoloShape(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_TREMOLOSHAPE);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_CHORUS_TREMOLOSHAPE);
 
     if (tmp == NULL)
         return false;
@@ -396,7 +399,7 @@ bool DuChorus::setTremoloShape(int value)
 
 int DuChorus::getRotarySpeed() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_ROTARYSPEED);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_CHORUS_ROTARYSPEED);
 
     if (tmp == NULL)
         return -1;
@@ -406,7 +409,7 @@ int DuChorus::getRotarySpeed() const
 
 bool DuChorus::setRotarySpeed(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_CHORUS_ROTARYSPEED);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_CHORUS_ROTARYSPEED);
 
     if (tmp == NULL)
         return false;
@@ -417,7 +420,7 @@ bool DuChorus::setRotarySpeed(int value)
 
 QString DuChorus::getEffectName() const
 {
-    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_CHORUS_EFFECTNAME);
+    const DuStringConstPtr& tmp = getChildAs<DuString>(KEY_CHORUS_EFFECTNAME);
 
     if (tmp == NULL)
         return QString();
@@ -427,7 +430,7 @@ QString DuChorus::getEffectName() const
 
 bool DuChorus::setEffectName(const QString &value)
 {
-    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_CHORUS_EFFECTNAME);
+    DuStringPtr tmp = getChildAs<DuString>(KEY_CHORUS_EFFECTNAME);
 
     if (tmp == NULL)
         return false;

@@ -2,6 +2,8 @@
 
 #include <QDebug>
 
+DU_OBJECT_IMPL(DuVersion)
+
 DuVersion::DuVersion(const QString &version) :
     DuString(),
     m_major(0),

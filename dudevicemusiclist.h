@@ -6,12 +6,15 @@
 
 #define KEY_DEVICE_MUSIC_LIST_SERIAL_NUMBER "SerialNumber"
 
+
+DU_OBJECT(DuDeviceMusicList)
+
 class DuDeviceMusicList : public DuMusicList
 {
 public:
-    DuDeviceMusicList(const DuDevice* device);
+    DuDeviceMusicList(const DuDeviceConstPtr &device);
 
-    bool equals(const DuMusicList *other) const;
+    bool equals(const DuMusicListConstPtr& other) const;
 
     QString getSerialNumber() const;
     bool setSerialNumber(const QString& value);

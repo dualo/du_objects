@@ -14,14 +14,16 @@
 #define KEY_DIST_EFFECTNAME                 "EffectName"
 
 
+DU_OBJECT(DuDistortion)
+
 class DuDistortion : public DuEffectSettings
 {
 public:
     explicit DuDistortion();
     ~DuDistortion();
 
-    static DuDistortion *fromDuMusicFile(const FX_distortion &du_distortion);
-    static DuDistortion *fromJson(const QJsonObject &jsonDistortion);
+    static DuDistortionPtr fromDuMusicFile(const FX_distortion &du_distortion);
+    static DuDistortionPtr fromJson(const QJsonObject &jsonDistortion);
 
     QByteArray toDuMusicFile() const;
 

@@ -10,14 +10,16 @@
 #define KEY_VIB_EFFECTNAME          "EffectName"
 
 
+DU_OBJECT(DuVibrato)
+
 class DuVibrato : public DuEffectSettings
 {
 public:
     explicit DuVibrato();
     ~DuVibrato();
 
-    static DuVibrato *fromDuMusicFile(const FX_vibrato &du_vibrato);
-    static DuVibrato *fromJson(const QJsonObject &jsonVibrato);
+    static DuVibratoPtr fromDuMusicFile(const FX_vibrato &du_vibrato);
+    static DuVibratoPtr fromJson(const QJsonObject &jsonVibrato);
 
     QByteArray toDuMusicFile() const;
 

@@ -14,14 +14,16 @@
 #define KEY_MIXER_SENDTOCHORUS                  "SendToChorus"
 
 
+DU_OBJECT(DuMixer)
+
 class DuMixer : public DuEffectSettings
 {
 public:
     explicit DuMixer();
     ~DuMixer();
 
-    static DuMixer *fromDuMusicFile(const FX_mix &du_mixer);
-    static DuMixer *fromJson(const QJsonObject &jsonMixer);
+    static DuMixerPtr fromDuMusicFile(const FX_mix &du_mixer);
+    static DuMixerPtr fromJson(const QJsonObject &jsonMixer);
 
     QByteArray toDuMusicFile() const;
 

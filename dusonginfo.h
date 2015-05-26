@@ -24,14 +24,16 @@
 #define SONGINFO_SIZE                   19 + NUM_LED_VALUE + FX_MIX_SIZE + 25
 
 
+DU_OBJECT(DuSongInfo)
+
 class DuSongInfo : public DuContainer
 {
 public:
     DuSongInfo();
     ~DuSongInfo();
 
-    static DuSongInfo *fromDuMusicFile(const music_song &du_song);
-    static DuSongInfo *fromJson(const QJsonObject &jsonSongInfo);
+    static DuSongInfoPtr fromDuMusicFile(const music_song &du_song);
+    static DuSongInfoPtr fromJson(const QJsonObject &jsonSongInfo);
 
     QByteArray toDuMusicFile() const;
 

@@ -12,6 +12,8 @@
 #define KEY_EVENT_VALUE         "Value"
 
 
+DU_OBJECT(DuEvent)
+
 class DuEvent : public DuContainer
 {
 public:
@@ -19,8 +21,8 @@ public:
     explicit DuEvent();
     ~DuEvent();
 
-    static DuEvent *fromDuMusicFile(const music_sample &du_sample);
-    static DuEvent *fromJson(const QJsonObject &jsonEvent);
+    static DuEventPtr fromDuMusicFile(const music_sample &du_sample);
+    static DuEventPtr fromJson(const QJsonObject &jsonEvent);
 
     QByteArray toDuMusicFile() const;
 

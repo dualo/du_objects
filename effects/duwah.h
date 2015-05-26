@@ -11,14 +11,16 @@
 #define KEY_WAH_EFFECTNAME              "EffectName"
 
 
+DU_OBJECT(DuWah)
+
 class DuWah : public DuEffectSettings
 {
 public:
     explicit DuWah();
     ~DuWah();
 
-    static DuWah *fromDuMusicFile(const FX_wah &du_wah);
-    static DuWah *fromJson(const QJsonObject &jsonWah);
+    static DuWahPtr fromDuMusicFile(const FX_wah &du_wah);
+    static DuWahPtr fromJson(const QJsonObject &jsonWah);
 
     QByteArray toDuMusicFile() const;
 

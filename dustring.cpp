@@ -2,6 +2,8 @@
 
 #include <QDebug>
 
+DU_OBJECT_IMPL(DuString)
+
 DuString::DuString(const QString &value, int maxSize) :
     DuValue(maxSize)
 {

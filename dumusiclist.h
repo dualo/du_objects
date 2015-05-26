@@ -3,10 +3,11 @@
 
 #include "ducontainer.h"
 
-#include <QSharedPointer>
-
 #define KEY_MUSIC_LIST_NAME "Name"
 #define KEY_MUSIC_LIST_TYPE "Type"
+
+
+DU_OBJECT(DuMusicList)
 
 class DuMusicList : public DuContainer
 {
@@ -27,7 +28,7 @@ public:
 
     DuMusicList(const QString& name = "", Type type = None);
 
-    virtual bool equals(const DuMusicList* other) const;
+    virtual bool equals(const DuMusicListConstPtr& other) const;
 
     QString getName() const;
     bool setName(const QString& value);
@@ -36,7 +37,6 @@ public:
     virtual bool setType(Type value);
 };
 
-Q_DECLARE_METATYPE(DuMusicList*)
-Q_DECLARE_METATYPE(QSharedPointer<DuMusicList>)
+Q_DECLARE_METATYPE(DuMusicListPtr)
 
 #endif // DUMUSICLIST_H

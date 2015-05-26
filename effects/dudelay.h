@@ -14,14 +14,16 @@
 #define KEY_DELAY_EFFECTNAME            "EffectName"
 
 
+DU_OBJECT(DuDelay)
+
 class DuDelay : public DuEffectSettings
 {
 public:
     explicit DuDelay();
     ~DuDelay();
 
-    static DuDelay *fromDuMusicFile(const FX_delay &du_delay);
-    static DuDelay *fromJson(const QJsonObject &jsonDelay);
+    static DuDelayPtr fromDuMusicFile(const FX_delay &du_delay);
+    static DuDelayPtr fromJson(const QJsonObject &jsonDelay);
 
     QByteArray toDuMusicFile() const;
 

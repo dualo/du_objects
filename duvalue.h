@@ -5,6 +5,8 @@
 #include <QVariant>
 
 
+DU_OBJECT(DuValue)
+
 class DuValue : public DuObject
 {
 public:

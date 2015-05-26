@@ -3,6 +3,9 @@
 
 #include "dustring.h"
 
+
+DU_OBJECT(DuVersion)
+
 class DuVersion : public DuString
 {
 public:

@@ -11,15 +11,17 @@
 #define TRACK_DUMMY_SIZE        2
 
 
+DU_OBJECT(DuTrack)
+
 class DuTrack : public DuContainer
 {
 public:
     explicit DuTrack();
     ~DuTrack();
 
-    static DuTrack *fromDuMusicFile(const music_track &du_track,
+    static DuTrackPtr fromDuMusicFile(const music_track &du_track,
                                     const music_sample *du_sample);
-    static DuTrack *fromJson(const QJsonObject &jsonTrack);
+    static DuTrackPtr fromJson(const QJsonObject &jsonTrack);
 
     QByteArray toDuMusicFile() const;
 
@@ -31,10 +33,10 @@ public:
     int getCurrentLoop() const;
     bool setCurrentLoop(int value);
 
-    QSharedPointer<DuArray> getLoops() const;
-    void setLoops(DuArray *array);
+    DuArrayConstPtr getLoops() const;
+    void setLoops(const DuArrayPtr &array);
 
-    bool appendLoop(DuLoop *loop);
+    bool appendLoop(const DuLoopPtr& loop);
 
     int eventsSize() const;
 };

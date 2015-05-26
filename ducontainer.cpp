@@ -1,6 +1,9 @@
 #include "ducontainer.h"
 
 #include <QDebug>
+#include <QJsonObject>
+
+DU_OBJECT_IMPL(DuContainer)
 
 DuContainer::DuContainer() :
     DuObject()
@@ -16,7 +19,7 @@ QJsonValue DuContainer::toJson() const
 {
     QJsonObject object;
 
-    QMapIterator<QString, QSharedPointer<DuObject> > i(children);
+    QMapIterator<QString, DuObjectPtr > i(children);
     while (i.hasNext())
     {
         i.next();
@@ -38,7 +41,7 @@ QHttpMultiPart *DuContainer::toHttpMultiPart(const QByteArray &boundary) const
     QHttpMultiPart* multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
     multiPart->setBoundary(boundary);
 
-    QMapIterator<QString, QSharedPointer<DuObject> > i(children);
+    QMapIterator<QString, DuObjectPtr > i(children);
     while (i.hasNext())
     {
         i.next();
@@ -59,7 +62,7 @@ QDebug DuContainer::debugPrint(QDebug dbg) const
 {
     dbg.nospace() << "DuContainer(";
 
-    QMapIterator<QString, QSharedPointer<DuObject> > i(children);
+    QMapIterator<QString, DuObjectPtr> i(children);
     while (i.hasNext())
     {
         i.next();
@@ -80,7 +83,7 @@ QByteArray DuContainer::toDuMusicFile() const
 {
     QByteArray retArray;
 
-    QMapIterator<QString, QSharedPointer<DuObject> > i(children);
+    QMapIterator<QString, DuObjectPtr > i(children);
     while (i.hasNext())
     {
         i.next();
@@ -102,7 +105,7 @@ int DuContainer::size() const
 {
     int size = 0;
 
-    QMapIterator<QString, QSharedPointer<DuObject> > i(children);
+    QMapIterator<QString, DuObjectPtr > i(children);
     while (i.hasNext())
     {
         i.next();
@@ -126,26 +129,30 @@ QStringList DuContainer::keys() const
 }
 
 
-QSharedPointer<DuObject> DuContainer::operator[](const QString &label)
+DuObjectPtr DuContainer::operator[](const QString &label)
 {
     if (!children.contains(label))
-        return QSharedPointer<DuObject>();
+        return DuObjectPtr();
 
     return children[label];
 }
 
-
-void DuContainer::addChild(const QString &key, DuObject* child)
+void DuContainer::addChild(const QString &key, const DuObjectPtr& child)
 {
-    if (children.value(key, NULL) != NULL)
-    {
-        delete children.take(key);
-    }
-
-    children.insert(key, QSharedPointer<DuObject>(child));
+    children.insert(key, child);
 }
 
-QSharedPointer<DuObject> DuContainer::getChild(const QString &key) const
+void DuContainer::addChild(const QString &key, DuObject *child)
+{
+    addChild(key, DuObjectPtr(child));
+}
+
+DuObjectPtr DuContainer::getChild(const QString &key)
+{
+    return children.value(key);
+}
+
+DuObjectConstPtr DuContainer::getChild(const QString &key) const
 {
     return children.value(key);
 }

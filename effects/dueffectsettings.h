@@ -9,6 +9,8 @@
 #define DEFAULT_EFFECTNAME      "off"
 
 
+DU_OBJECT(DuEffectSettings)
+
 class DuEffectSettings : public DuContainer
 {
 public:

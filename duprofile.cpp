@@ -7,6 +7,8 @@
 
 #include <QDebug>
 
+DU_OBJECT_IMPL(DuProfile)
+
 DuProfile::DuProfile()
 {
     addChild(KEY_PROFILE_FIRSTNAME,     new DuString(""));
@@ -21,7 +23,7 @@ DuProfile::DuProfile()
 
 QString DuProfile::getFirstname() const
 {
-    const DuString* firstname = getChildAs<DuString*>(KEY_PROFILE_FIRSTNAME);
+    const DuStringConstPtr& firstname = getChildAs<DuString>(KEY_PROFILE_FIRSTNAME);
 
     if (firstname == NULL)
     {
@@ -34,7 +36,7 @@ QString DuProfile::getFirstname() const
 
 bool DuProfile::setFirstname(const QString &value)
 {
-    DuString *tmp = getChildAs<DuString*>(KEY_PROFILE_FIRSTNAME);
+    DuStringPtr tmp = getChildAs<DuString>(KEY_PROFILE_FIRSTNAME);
 
     if (tmp == NULL)
         return false;
@@ -44,7 +46,7 @@ bool DuProfile::setFirstname(const QString &value)
 
 QString DuProfile::getLastname() const
 {
-    const DuString* lastname = getChildAs<DuString*>(KEY_PROFILE_LASTNAME);
+    const DuStringConstPtr& lastname = getChildAs<DuString>(KEY_PROFILE_LASTNAME);
 
     if (lastname == NULL)
     {
@@ -57,7 +59,7 @@ QString DuProfile::getLastname() const
 
 bool DuProfile::setLastname(const QString &value)
 {
-    DuString *tmp = getChildAs<DuString*>(KEY_PROFILE_LASTNAME);
+    DuStringPtr tmp = getChildAs<DuString>(KEY_PROFILE_LASTNAME);
 
     if (tmp == NULL)
         return false;
@@ -67,7 +69,7 @@ bool DuProfile::setLastname(const QString &value)
 
 QString DuProfile::getPseudo() const
 {
-    const DuString* pseudo = getChildAs<DuString*>(KEY_PROFILE_PSEUDO);
+    const DuStringConstPtr& pseudo = getChildAs<DuString>(KEY_PROFILE_PSEUDO);
 
     if (pseudo == NULL)
     {
@@ -80,7 +82,7 @@ QString DuProfile::getPseudo() const
 
 bool DuProfile::setPseudo(const QString &value)
 {
-    DuString *tmp = getChildAs<DuString*>(KEY_PROFILE_PSEUDO);
+    DuStringPtr tmp = getChildAs<DuString>(KEY_PROFILE_PSEUDO);
 
     if (tmp == NULL)
         return false;
@@ -90,7 +92,7 @@ bool DuProfile::setPseudo(const QString &value)
 
 QString DuProfile::getMail() const
 {
-    const DuString* mail = getChildAs<DuString*>(KEY_PROFILE_MAIL);
+    const DuStringConstPtr& mail = getChildAs<DuString>(KEY_PROFILE_MAIL);
 
     if (mail == NULL)
     {
@@ -103,7 +105,7 @@ QString DuProfile::getMail() const
 
 bool DuProfile::setMail(const QString &value)
 {
-    DuString *tmp = getChildAs<DuString*>(KEY_PROFILE_MAIL);
+    DuStringPtr tmp = getChildAs<DuString>(KEY_PROFILE_MAIL);
 
     if (tmp == NULL)
         return false;
@@ -113,7 +115,7 @@ bool DuProfile::setMail(const QString &value)
 
 QUrl DuProfile::getAvatarUrl() const
 {
-    const DuUrl* avatarUrl = getChildAs<DuUrl*>(KEY_PROFILE_AVATAR_URL);
+    const DuUrlConstPtr& avatarUrl = getChildAs<DuUrl>(KEY_PROFILE_AVATAR_URL);
 
     if (avatarUrl == NULL)
     {
@@ -126,7 +128,7 @@ QUrl DuProfile::getAvatarUrl() const
 
 bool DuProfile::setAvatarUrl(const QUrl &value)
 {
-    DuUrl *tmp = getChildAs<DuUrl*>(KEY_PROFILE_AVATAR_URL);
+    DuUrlPtr tmp = getChildAs<DuUrl>(KEY_PROFILE_AVATAR_URL);
 
     if (tmp == NULL)
         return false;
@@ -137,7 +139,7 @@ bool DuProfile::setAvatarUrl(const QUrl &value)
 
 QDateTime DuProfile::getCreationDate() const
 {
-    const DuDate* creationDate = getChildAs<DuDate*>(KEY_PROFILE_CREATION_DATE);
+    const DuDateConstPtr& creationDate = getChildAs<DuDate>(KEY_PROFILE_CREATION_DATE);
 
     if (creationDate == NULL)
     {
@@ -150,7 +152,7 @@ QDateTime DuProfile::getCreationDate() const
 
 bool DuProfile::setCreationDate(const QDateTime &value)
 {
-    DuDate *tmp = getChildAs<DuDate*>(KEY_PROFILE_CREATION_DATE);
+    DuDatePtr tmp = getChildAs<DuDate>(KEY_PROFILE_CREATION_DATE);
 
     if (tmp == NULL)
         return false;
@@ -161,7 +163,7 @@ bool DuProfile::setCreationDate(const QDateTime &value)
 
 DuProfile::Role DuProfile::getRole() const
 {
-    const DuNumeric* role = getChildAs<DuNumeric*>(KEY_PROFILE_ROLE);
+    const DuNumericConstPtr& role = getChildAs<DuNumeric>(KEY_PROFILE_ROLE);
 
     if (role == NULL)
     {
@@ -174,7 +176,7 @@ DuProfile::Role DuProfile::getRole() const
 
 bool DuProfile::setRole(DuProfile::Role value)
 {
-    DuNumeric *tmp = getChildAs<DuNumeric*>(KEY_PROFILE_ROLE);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PROFILE_ROLE);
 
     if (tmp == NULL)
         return false;
@@ -184,7 +186,7 @@ bool DuProfile::setRole(DuProfile::Role value)
 
 int DuProfile::getGUID() const
 {
-    const DuNumeric* guid = getChildAs<DuNumeric*>(KEY_PROFILE_GUID);
+    const DuNumericConstPtr& guid = getChildAs<DuNumeric>(KEY_PROFILE_GUID);
 
     if (guid == NULL)
     {
@@ -197,7 +199,7 @@ int DuProfile::getGUID() const
 
 bool DuProfile::setGUID(int value)
 {
-    DuNumeric *tmp = getChildAs<DuNumeric*>(KEY_PROFILE_GUID);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PROFILE_GUID);
 
     if (tmp == NULL)
         return false;

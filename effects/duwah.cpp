@@ -1,5 +1,10 @@
 #include "duwah.h"
 
+#include <QJsonObject>
+#include <QDebug>
+
+DU_OBJECT_IMPL(DuWah)
+
 DuWah::DuWah() :
     DuEffectSettings()
 {
@@ -28,9 +33,9 @@ DuWah::~DuWah()
 }
 
 
-DuWah *DuWah::fromDuMusicFile(const FX_wah &du_wah)
+DuWahPtr DuWah::fromDuMusicFile(const FX_wah &du_wah)
 {
-    DuWah *wah = new DuWah;
+    DuWahPtr wah(new DuWah);
     bool verif = true;
 
     verif = verif && wah->setFilterType(du_wah.w_filtertype);
@@ -43,15 +48,14 @@ DuWah *DuWah::fromDuMusicFile(const FX_wah &du_wah)
 
     if (!verif)
     {
-        delete wah;
-        return NULL;
+        return DuWahPtr();
     }
 
     return wah;
 }
 
 
-DuWah *DuWah::fromJson(const QJsonObject &jsonWah)
+DuWahPtr DuWah::fromJson(const QJsonObject &jsonWah)
 {
     QJsonValue jsonFilterType   = jsonWah[KEY_WAH_FILTERTYPE];
     QJsonValue jsonFilterFreq   = jsonWah[KEY_WAH_FILTERFREQUENCY];
@@ -63,10 +67,10 @@ DuWah *DuWah::fromJson(const QJsonObject &jsonWah)
             ||  !jsonFilterRes.isDouble()   ||  !jsonSensitivity.isDouble()
             ||  !jsonEffectName.isString())
 
-        return NULL;
+        return DuWahPtr();
 
 
-    DuWah *wah = new DuWah;
+    DuWahPtr wah(new DuWah);
     bool verif = true;
 
     verif = verif && wah->setFilterType(jsonFilterType.toInt());
@@ -78,8 +82,7 @@ DuWah *DuWah::fromJson(const QJsonObject &jsonWah)
 
     if (!verif)
     {
-        delete wah;
-        return NULL;
+        return DuWahPtr();
     }
 
     return wah;
@@ -136,7 +139,7 @@ int DuWah::size() const
 
 int DuWah::getFilterType() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERTYPE);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERTYPE);
 
     if (tmp == NULL)
         return -1;
@@ -146,7 +149,7 @@ int DuWah::getFilterType() const
 
 bool DuWah::setFilterType(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERTYPE);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERTYPE);
 
     if (tmp == NULL)
         return false;
@@ -156,7 +159,7 @@ bool DuWah::setFilterType(int value)
 
 int DuWah::getFilterFrequency() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERFREQUENCY);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERFREQUENCY);
 
     if (tmp == NULL)
         return -1;
@@ -166,7 +169,7 @@ int DuWah::getFilterFrequency() const
 
 bool DuWah::setFilterFrequency(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERFREQUENCY);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERFREQUENCY);
 
     if (tmp == NULL)
         return false;
@@ -176,7 +179,7 @@ bool DuWah::setFilterFrequency(int value)
 
 int DuWah::getFilterResonance() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERRESONANCE);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERRESONANCE);
 
     if (tmp == NULL)
         return -1;
@@ -186,7 +189,7 @@ int DuWah::getFilterResonance() const
 
 bool DuWah::setFilterResonance(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERRESONANCE);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERRESONANCE);
 
     if (tmp == NULL)
         return false;
@@ -197,7 +200,7 @@ bool DuWah::setFilterResonance(int value)
 
 int DuWah::getAutoWahSensitivity() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_WAH_AUTOWAHSENSITIVITY);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_WAH_AUTOWAHSENSITIVITY);
 
     if (tmp == NULL)
         return -1;
@@ -207,7 +210,7 @@ int DuWah::getAutoWahSensitivity() const
 
 bool DuWah::setAutoWahSensitivity(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_WAH_AUTOWAHSENSITIVITY);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_WAH_AUTOWAHSENSITIVITY);
 
     if (tmp == NULL)
         return false;
@@ -218,7 +221,7 @@ bool DuWah::setAutoWahSensitivity(int value)
 
 QString DuWah::getEffectName() const
 {
-    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_WAH_EFFECTNAME);
+    const DuStringConstPtr& tmp = getChildAs<DuString>(KEY_WAH_EFFECTNAME);
 
     if (tmp == NULL)
         return QString();
@@ -228,7 +231,7 @@ QString DuWah::getEffectName() const
 
 bool DuWah::setEffectName(const QString &value)
 {
-    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_WAH_EFFECTNAME);
+    DuStringPtr tmp = getChildAs<DuString>(KEY_WAH_EFFECTNAME);
 
     if (tmp == NULL)
         return false;

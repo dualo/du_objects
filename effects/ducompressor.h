@@ -14,14 +14,16 @@
 #define KEY_COMP_EFFECTNAME         "EffectName"
 
 
+DU_OBJECT(DuCompressor)
+
 class DuCompressor : public DuEffectSettings
 {
 public:
     explicit DuCompressor();
     ~DuCompressor();
 
-    static DuCompressor *fromDuMusicFile(const FX_compressor &du_compressor);
-    static DuCompressor *fromJson(const QJsonObject &jsonCompressor);
+    static DuCompressorPtr fromDuMusicFile(const FX_compressor &du_compressor);
+    static DuCompressorPtr fromJson(const QJsonObject &jsonCompressor);
 
     QByteArray toDuMusicFile() const;
 

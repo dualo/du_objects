@@ -17,14 +17,16 @@
 #define KEY_CHORUS_EFFECTNAME               "EffectName"
 
 
+DU_OBJECT(DuChorus)
+
 class DuChorus : public DuEffectSettings
 {
 public:
     explicit DuChorus();
     ~DuChorus();
 
-    static DuChorus *fromDuMusicFile(const FX_chorus &du_chorus);
-    static DuChorus *fromJson(const QJsonObject &jsonChorus);
+    static DuChorusPtr fromDuMusicFile(const FX_chorus &du_chorus);
+    static DuChorusPtr fromJson(const QJsonObject &jsonChorus);
 
     QByteArray toDuMusicFile() const;
 

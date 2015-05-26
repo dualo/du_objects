@@ -1,5 +1,11 @@
 #include "dutrack.h"
 
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QDebug>
+
+DU_OBJECT_IMPL(DuTrack)
+
 DuTrack::DuTrack() :
     DuContainer()
 {
@@ -19,10 +25,10 @@ DuTrack::~DuTrack()
 }
 
 
-DuTrack *DuTrack::fromDuMusicFile(const music_track &du_track,
+DuTrackPtr DuTrack::fromDuMusicFile(const music_track &du_track,
                                   const music_sample *du_sample)
 {
-    DuTrack *track = new DuTrack;
+    const DuTrackPtr track(new DuTrack);
     bool verif = true;
 
     verif = verif && track->setChannel(du_track.t_midichannel);
@@ -30,8 +36,7 @@ DuTrack *DuTrack::fromDuMusicFile(const music_track &du_track,
 
     if (!verif)
     {
-        delete track;
-        return NULL;
+        return DuTrackPtr();
     }
 
     for (int i = 0; i < MUSIC_MAXLAYER; i++)
@@ -40,16 +45,14 @@ DuTrack *DuTrack::fromDuMusicFile(const music_track &du_track,
         const music_sample *du_sample_address = (music_sample*)
                 ((long)du_sample + du_loop.l_adress);
 
-        DuLoop *loop = DuLoop::fromDuMusicFile(du_loop, du_sample_address);
+        const DuLoopPtr& loop = DuLoop::fromDuMusicFile(du_loop, du_sample_address);
         if (loop == NULL)
         {
-            delete track;
-            return NULL;
+            return DuTrackPtr();
         }
         if (!track->appendLoop(loop))
         {
-            delete track;
-            return NULL;
+            return DuTrackPtr();
         }
     }
 
@@ -57,7 +60,7 @@ DuTrack *DuTrack::fromDuMusicFile(const music_track &du_track,
 }
 
 
-DuTrack *DuTrack::fromJson(const QJsonObject &jsonTrack)
+DuTrackPtr DuTrack::fromJson(const QJsonObject &jsonTrack)
 {
     QJsonValue jsonChannel      = jsonTrack[KEY_TRACK_CHANNEL];
     QJsonValue jsonCurrentLoop  = jsonTrack[KEY_TRACK_CURRENTLOOP];
@@ -66,10 +69,10 @@ DuTrack *DuTrack::fromJson(const QJsonObject &jsonTrack)
     if (        !jsonChannel.isDouble() ||  !jsonCurrentLoop.isDouble()
             ||  !jsonLoops.isArray())
 
-        return NULL;
+        return DuTrackPtr();
 
 
-    DuTrack *track = new DuTrack;
+    DuTrackPtr track(new DuTrack);
     bool verif = true;
 
     verif = verif && track->setChannel(jsonChannel.toInt());
@@ -77,23 +80,20 @@ DuTrack *DuTrack::fromJson(const QJsonObject &jsonTrack)
 
     if (!verif)
     {
-        delete track;
-        return NULL;
+        return DuTrackPtr();
     }
 
     const QJsonArray &jsonLoopArray = jsonLoops.toArray();
     for (int i = 0; i < jsonLoopArray.count(); i++)
     {
-        DuLoop *loop = DuLoop::fromJson(jsonLoopArray[i].toObject());
+        const DuLoopPtr& loop = DuLoop::fromJson(jsonLoopArray[i].toObject());
         if (loop == NULL)
         {
-            delete track;
-            return NULL;
+            return DuTrackPtr();
         }
         if (!track->appendLoop(loop))
         {
-            delete track;
-            return NULL;
+            return DuTrackPtr();
         }
     }
 
@@ -111,7 +111,7 @@ QByteArray DuTrack::toDuMusicFile() const
     std::memcpy((char *)&(du_track), tmpClear.data(), size());
 
 
-    QSharedPointer<DuArray> loops = getLoops();
+    const DuArrayConstPtr& loops = getLoops();
     if (loops == NULL)
         return QByteArray();
     const QByteArray &loopsArray = loops->toDuMusicFile();
@@ -144,7 +144,7 @@ int DuTrack::size() const
 
 int DuTrack::getChannel() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_TRACK_CHANNEL);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_TRACK_CHANNEL);
 
     if (tmp == NULL)
         return -1;
@@ -154,7 +154,7 @@ int DuTrack::getChannel() const
 
 bool DuTrack::setChannel(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_TRACK_CHANNEL);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_TRACK_CHANNEL);
 
     if (tmp == NULL)
         return false;
@@ -164,7 +164,7 @@ bool DuTrack::setChannel(int value)
 
 int DuTrack::getCurrentLoop() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_TRACK_CURRENTLOOP);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_TRACK_CURRENTLOOP);
 
     if (tmp == NULL)
         return -1;
@@ -174,7 +174,7 @@ int DuTrack::getCurrentLoop() const
 
 bool DuTrack::setCurrentLoop(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_TRACK_CURRENTLOOP);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_TRACK_CURRENTLOOP);
 
     if (tmp == NULL)
         return false;
@@ -182,20 +182,19 @@ bool DuTrack::setCurrentLoop(int value)
     return tmp->setNumeric(value);
 }
 
-QSharedPointer<DuArray> DuTrack::getLoops() const
+DuArrayConstPtr DuTrack::getLoops() const
 {
     return getChildAs<DuArray>(KEY_TRACK_LOOPS);
 }
 
-void DuTrack::setLoops(DuArray *array)
+void DuTrack::setLoops(const DuArrayPtr& array)
 {
     addChild(KEY_TRACK_LOOPS, array);
 }
 
-
-bool DuTrack::appendLoop(DuLoop *loop)
+bool DuTrack::appendLoop(const DuLoopPtr &loop)
 {
-    QSharedPointer<DuArray> tmp = getChildAs<DuArray>(KEY_TRACK_LOOPS);
+    DuArrayPtr tmp = getChildAs<DuArray>(KEY_TRACK_LOOPS);
 
     if (tmp == NULL)
         return false;
@@ -210,14 +209,14 @@ int DuTrack::eventsSize() const
     int eventsSize = 0;
     int tmpSize = 0;
 
-    QSharedPointer<DuArray> loops = getChildAs<DuArray>(KEY_TRACK_LOOPS);
+    const DuArrayConstPtr& loops = getChildAs<DuArray>(KEY_TRACK_LOOPS);
     if (loops == NULL)
         return -1;
 
     int count = loops->count();
     for (int i = 0; i < count; i++)
     {
-        QSharedPointer<DuLoop> loop = loops->at(i).dynamicCast<DuLoop>();
+        const DuLoopConstPtr& loop = loops->at(i).dynamicCast<const DuLoop>();
         if (loop == NULL)
             return -1;
 

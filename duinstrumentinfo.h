@@ -16,14 +16,16 @@
 #define KEY_INSTRINFO_RELVOLUME             "RelativeVolume"
 
 
+DU_OBJECT(DuInstrumentInfo)
+
 class DuInstrumentInfo : public DuContainer
 {
 public:
     explicit DuInstrumentInfo();
     ~DuInstrumentInfo();
 
-    static DuInstrumentInfo *fromDuMusicFile(const s_instr &du_instrInfo);
-    static DuInstrumentInfo *fromJson(const QJsonObject &jsonInstrInfo);
+    static DuInstrumentInfoPtr fromDuMusicFile(const s_instr &du_instrInfo);
+    static DuInstrumentInfoPtr fromJson(const QJsonObject &jsonInstrInfo);
 
     QByteArray toDuMusicFile() const;
 

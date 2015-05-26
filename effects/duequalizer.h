@@ -18,14 +18,16 @@
 #define KEY_EQ_EFFECTNAME                   "EffectName"
 
 
+DU_OBJECT(DuEqualizer)
+
 class DuEqualizer : public DuEffectSettings
 {
 public:
     explicit DuEqualizer();
     ~DuEqualizer();
 
-    static DuEqualizer *fromDuMusicFile(const FX_equalizer du_equalizer);
-    static DuEqualizer *fromJson(const QJsonObject &jsonEqualizer);
+    static DuEqualizerPtr fromDuMusicFile(const FX_equalizer du_equalizer);
+    static DuEqualizerPtr fromJson(const QJsonObject &jsonEqualizer);
 
     QByteArray toDuMusicFile() const;
 

@@ -11,29 +11,31 @@
 #define KEY_MUSIC_TRACKS        "Tracks"
 
 
+DU_OBJECT(DuMusic)
+
 class DuMusic : public DuContainer
 {
 public:
     explicit DuMusic();
     ~DuMusic();
 
-    static DuMusic *fromDuMusicFile(const s_total_buffer &du_music);
-    static DuMusic *fromJson(const QJsonObject &jsonMusic);
+    static DuMusicPtr fromDuMusicFile(const s_total_buffer &du_music);
+    static DuMusicPtr fromJson(const QJsonObject &jsonMusic);
 
     QByteArray toDuMusicFile() const;
 
     int size() const;
 
-    QSharedPointer<DuHeader> getHeader() const;
-    void setHeader(DuHeader *header);
+    DuHeaderConstPtr getHeader() const;
+    void setHeader(const DuHeaderPtr &header);
 
-    QSharedPointer<DuSongInfo> getSongInfo() const;
-    void setSongInfo(DuSongInfo *songInfo);
+    DuSongInfoConstPtr getSongInfo() const;
+    void setSongInfo(const DuSongInfoPtr &songInfo);
 
-    QSharedPointer<DuArray> getTracks() const;
-    void setTracks(DuArray *array);
+    DuArrayConstPtr getTracks() const;
+    void setTracks(const DuArrayPtr& array);
 
-    bool appendTrack(DuTrack *track);
+    bool appendTrack(const DuTrackPtr& track);
 };
 
 #endif // DUMUSIC_H

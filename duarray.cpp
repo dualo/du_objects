@@ -1,6 +1,9 @@
 #include "duarray.h"
 
 #include <QDebug>
+#include <QJsonArray>
+
+DU_OBJECT_IMPL(DuArray)
 
 DuArray::DuArray(int maxSize) :
     DuObject(),
@@ -30,7 +33,7 @@ QDebug DuArray::debugPrint(QDebug dbg) const
 {
     dbg.nospace() << "DuArray(";
 
-    QListIterator< QSharedPointer<DuObject> > i(array);
+    QListIterator<DuObjectPtr> i(array);
     while (i.hasNext()) {
         dbg.nospace() << i.next();
 
@@ -88,22 +91,20 @@ int DuArray::size() const
     return size;
 }
 
-
-void DuArray::append(DuObject *element)
+void DuArray::append(const DuObjectPtr &element)
 {
-    array.append(QSharedPointer<DuObject>(element));
+    array.append(element);
 }
 
-
-void DuArray::insert(int index, DuObject *element)
+void DuArray::insert(int index, const DuObjectPtr &element)
 {
     if (index >= array.count())
     {
-        array.append(QSharedPointer<DuObject>(element));
+        array.append(element);
         return;
     }
 
-    array.insert(index, QSharedPointer<DuObject>(element));
+    array.insert(index, element);
 }
 
 
@@ -115,15 +116,15 @@ void DuArray::removeAt(int index)
     array.removeAt(index);
 }
 
-void DuArray::replace(int index, DuObject *element)
+void DuArray::replace(int index, const DuObjectPtr &element)
 {
     if (index >= array.count())
     {
-        array.append(QSharedPointer<DuObject>(element));
+        array.append(element);
         return;
     }
 
-    array.replace(index, QSharedPointer<DuObject>(element));
+    array.replace(index, element);
 }
 
 
@@ -133,18 +134,26 @@ int DuArray::count() const
 }
 
 
-QSharedPointer<DuObject> DuArray::at(int index)
+DuObjectPtr DuArray::at(int index)
 {
     if (index >= array.count())
-        return QSharedPointer<DuObject>();
+        return DuObjectPtr();
 
     return array.at(index);
 }
 
-QSharedPointer<DuObject> DuArray::operator[](int index)
+DuObjectConstPtr DuArray::at(int index) const
 {
     if (index >= array.count())
-        return QSharedPointer<DuObject>();
+        return DuObjectConstPtr();
+
+    return array.at(index);
+}
+
+DuObjectPtr DuArray::operator[](int index)
+{
+    if (index >= array.count())
+        return DuObjectPtr();
 
     return array[index];
 }

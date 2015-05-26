@@ -1,5 +1,10 @@
 #include "duinstrumentinfo.h"
 
+#include <QJsonObject>
+#include <QDebug>
+
+DU_OBJECT_IMPL(DuInstrumentInfo)
+
 DuInstrumentInfo::DuInstrumentInfo() :
     DuContainer()
 {
@@ -33,9 +38,9 @@ DuInstrumentInfo::~DuInstrumentInfo()
 }
 
 
-DuInstrumentInfo *DuInstrumentInfo::fromDuMusicFile(const s_instr &du_instrInfo)
+DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicFile(const s_instr &du_instrInfo)
 {
-    DuInstrumentInfo *instrInfo = new DuInstrumentInfo;
+    DuInstrumentInfoPtr instrInfo(new DuInstrumentInfo);
     bool verif = true;
 
     verif = verif && instrInfo->setCategory(
@@ -54,15 +59,14 @@ DuInstrumentInfo *DuInstrumentInfo::fromDuMusicFile(const s_instr &du_instrInfo)
 
     if (!verif)
     {
-        delete instrInfo;
-        return NULL;
+        return DuInstrumentInfoPtr();
     }
 
     return instrInfo;
 }
 
 
-DuInstrumentInfo *DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
+DuInstrumentInfoPtr DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
 {
     QJsonValue jsonCategory     = jsonInstrInfo[KEY_INSTRINFO_CATEGORY];
     QJsonValue jsonName         = jsonInstrInfo[KEY_INSTRINFO_NAME];
@@ -78,10 +82,10 @@ DuInstrumentInfo *DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
             ||  !jsonProgChange.isDouble()  ||  !jsonCtrlChange.isDouble()
             ||  !jsonNoteOff.isDouble()     ||  !jsonRelVolume.isDouble())
 
-        return NULL;
+        return DuInstrumentInfoPtr();
 
 
-    DuInstrumentInfo *instrInfo = new DuInstrumentInfo;
+    DuInstrumentInfoPtr instrInfo(new DuInstrumentInfo);
     bool verif = true;
 
     verif = verif && instrInfo->setCategory(jsonCategory.toString());
@@ -96,8 +100,7 @@ DuInstrumentInfo *DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
 
     if (!verif)
     {
-        delete instrInfo;
-        return NULL;
+        return DuInstrumentInfoPtr();
     }
 
     return instrInfo;
@@ -179,7 +182,7 @@ int DuInstrumentInfo::size() const
 
 QString DuInstrumentInfo::getCategory() const
 {
-    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_INSTRINFO_CATEGORY);
+    const DuStringConstPtr& tmp = getChildAs<DuString>(KEY_INSTRINFO_CATEGORY);
 
     if (tmp == NULL)
         return QString();
@@ -189,7 +192,7 @@ QString DuInstrumentInfo::getCategory() const
 
 bool DuInstrumentInfo::setCategory(const QString &value)
 {
-    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_INSTRINFO_CATEGORY);
+    DuStringPtr tmp = getChildAs<DuString>(KEY_INSTRINFO_CATEGORY);
 
     if (tmp == NULL)
         return false;
@@ -199,7 +202,7 @@ bool DuInstrumentInfo::setCategory(const QString &value)
 
 QString DuInstrumentInfo::getName() const
 {
-    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_INSTRINFO_NAME);
+    const DuStringConstPtr& tmp = getChildAs<DuString>(KEY_INSTRINFO_NAME);
 
     if (tmp == NULL)
         return QString();
@@ -209,7 +212,7 @@ QString DuInstrumentInfo::getName() const
 
 bool DuInstrumentInfo::setName(const QString &value)
 {
-    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_INSTRINFO_NAME);
+    DuStringPtr tmp = getChildAs<DuString>(KEY_INSTRINFO_NAME);
 
     if (tmp == NULL)
         return false;
@@ -219,7 +222,7 @@ bool DuInstrumentInfo::setName(const QString &value)
 
 int DuInstrumentInfo::getID() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_INSTRINFO_ID);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_INSTRINFO_ID);
 
     if (tmp == NULL)
         return -1;
@@ -229,7 +232,7 @@ int DuInstrumentInfo::getID() const
 
 bool DuInstrumentInfo::setID(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_INSTRINFO_ID);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_INSTRINFO_ID);
 
     if (tmp == NULL)
         return false;
@@ -239,7 +242,7 @@ bool DuInstrumentInfo::setID(int value)
 
 QString DuInstrumentInfo::getUserID() const
 {
-    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_INSTRINFO_USERID);
+    const DuStringConstPtr& tmp = getChildAs<DuString>(KEY_INSTRINFO_USERID);
 
     if (tmp == NULL)
         return QString();
@@ -249,7 +252,7 @@ QString DuInstrumentInfo::getUserID() const
 
 bool DuInstrumentInfo::setUserID(const QString &value)
 {
-    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_INSTRINFO_USERID);
+    DuStringPtr tmp = getChildAs<DuString>(KEY_INSTRINFO_USERID);
 
     if (tmp == NULL)
         return false;
@@ -260,7 +263,7 @@ bool DuInstrumentInfo::setUserID(const QString &value)
 
 int DuInstrumentInfo::getMidiProgramChange() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_INSTRINFO_MIDIPROGRAMCHANGE);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_INSTRINFO_MIDIPROGRAMCHANGE);
 
     if (tmp == NULL)
         return -1;
@@ -270,7 +273,7 @@ int DuInstrumentInfo::getMidiProgramChange() const
 
 bool DuInstrumentInfo::setMidiProgramChange(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_INSTRINFO_MIDIPROGRAMCHANGE);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_INSTRINFO_MIDIPROGRAMCHANGE);
 
     if (tmp == NULL)
         return false;
@@ -280,7 +283,7 @@ bool DuInstrumentInfo::setMidiProgramChange(int value)
 
 int DuInstrumentInfo::getMidiControlChange0() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_INSTRINFO_MIDICONTROLCHANGE0);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_INSTRINFO_MIDICONTROLCHANGE0);
 
     if (tmp == NULL)
         return -1;
@@ -290,7 +293,7 @@ int DuInstrumentInfo::getMidiControlChange0() const
 
 bool DuInstrumentInfo::setMidiControlChange0(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_INSTRINFO_MIDICONTROLCHANGE0);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_INSTRINFO_MIDICONTROLCHANGE0);
 
     if (tmp == NULL)
         return false;
@@ -301,7 +304,7 @@ bool DuInstrumentInfo::setMidiControlChange0(int value)
 
 int DuInstrumentInfo::getActiveNoteOff() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_INSTRINFO_ACTIVENOTEOFF);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_INSTRINFO_ACTIVENOTEOFF);
 
     if (tmp == NULL)
         return -1;
@@ -311,7 +314,7 @@ int DuInstrumentInfo::getActiveNoteOff() const
 
 bool DuInstrumentInfo::setActiveNoteOff(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_INSTRINFO_ACTIVENOTEOFF);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_INSTRINFO_ACTIVENOTEOFF);
 
     if (tmp == NULL)
         return false;
@@ -321,7 +324,7 @@ bool DuInstrumentInfo::setActiveNoteOff(int value)
 
 int DuInstrumentInfo::getRelativeVolume() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_INSTRINFO_RELVOLUME);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_INSTRINFO_RELVOLUME);
 
     if (tmp == NULL)
         return -1;
@@ -331,7 +334,7 @@ int DuInstrumentInfo::getRelativeVolume() const
 
 bool DuInstrumentInfo::setRelativeVolume(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_INSTRINFO_RELVOLUME);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_INSTRINFO_RELVOLUME);
 
     if (tmp == NULL)
         return false;

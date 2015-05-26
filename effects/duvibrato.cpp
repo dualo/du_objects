@@ -1,5 +1,10 @@
 #include "duvibrato.h"
 
+#include <QJsonObject>
+#include <QDebug>
+
+DU_OBJECT_IMPL(DuVibrato)
+
 DuVibrato::DuVibrato() :
     DuEffectSettings()
 {
@@ -26,9 +31,9 @@ DuVibrato::~DuVibrato()
 }
 
 
-DuVibrato *DuVibrato::fromDuMusicFile(const FX_vibrato &du_vibrato)
+DuVibratoPtr DuVibrato::fromDuMusicFile(const FX_vibrato &du_vibrato)
 {
-    DuVibrato *vibrato = new DuVibrato;
+    DuVibratoPtr vibrato(new DuVibrato);
     bool verif = true;
 
     verif = verif && vibrato->setDepth(du_vibrato.v_depth);
@@ -40,15 +45,14 @@ DuVibrato *DuVibrato::fromDuMusicFile(const FX_vibrato &du_vibrato)
 
     if (!verif)
     {
-        delete vibrato;
-        return NULL;
+        return DuVibratoPtr();
     }
 
     return vibrato;
 }
 
 
-DuVibrato *DuVibrato::fromJson(const QJsonObject &jsonVibrato)
+DuVibratoPtr DuVibrato::fromJson(const QJsonObject &jsonVibrato)
 {
     QJsonValue jsonDepth        = jsonVibrato[KEY_VIB_DEPTH];
     QJsonValue jsonDelay        = jsonVibrato[KEY_VIB_DELAY];
@@ -58,10 +62,10 @@ DuVibrato *DuVibrato::fromJson(const QJsonObject &jsonVibrato)
     if (        !jsonDepth.isDouble()   ||  !jsonDelay.isDouble()
             ||  !jsonRate.isDouble()    ||  !jsonEffectName.isString())
 
-        return NULL;
+        return DuVibratoPtr();
 
 
-    DuVibrato *vibrato = new DuVibrato;
+    DuVibratoPtr vibrato(new DuVibrato);
     bool verif = true;
 
     verif = verif && vibrato->setDepth(jsonDepth.toInt());
@@ -72,8 +76,7 @@ DuVibrato *DuVibrato::fromJson(const QJsonObject &jsonVibrato)
 
     if (!verif)
     {
-        delete vibrato;
-        return NULL;
+        return DuVibratoPtr();
     }
 
     return vibrato;
@@ -125,7 +128,7 @@ int DuVibrato::size() const
 
 int DuVibrato::getDepth() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_VIB_DEPTH);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_VIB_DEPTH);
 
     if (tmp == NULL)
         return -1;
@@ -135,7 +138,7 @@ int DuVibrato::getDepth() const
 
 bool DuVibrato::setDepth(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_VIB_DEPTH);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_VIB_DEPTH);
 
     if (tmp == NULL)
         return false;
@@ -145,7 +148,7 @@ bool DuVibrato::setDepth(int value)
 
 int DuVibrato::getDelay() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_VIB_DELAY);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_VIB_DELAY);
 
     if (tmp == NULL)
         return -1;
@@ -155,7 +158,7 @@ int DuVibrato::getDelay() const
 
 bool DuVibrato::setDelay(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_VIB_DELAY);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_VIB_DELAY);
 
     if (tmp == NULL)
         return false;
@@ -165,7 +168,7 @@ bool DuVibrato::setDelay(int value)
 
 int DuVibrato::getRate() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_VIB_RATE);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_VIB_RATE);
 
     if (tmp == NULL)
         return -1;
@@ -175,7 +178,7 @@ int DuVibrato::getRate() const
 
 bool DuVibrato::setRate(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_VIB_RATE);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_VIB_RATE);
 
     if (tmp == NULL)
         return false;
@@ -186,7 +189,7 @@ bool DuVibrato::setRate(int value)
 
 QString DuVibrato::getEffectName() const
 {
-    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_VIB_EFFECTNAME);
+    const DuStringConstPtr& tmp = getChildAs<DuString>(KEY_VIB_EFFECTNAME);
 
     if (tmp == NULL)
         return QString();
@@ -196,7 +199,7 @@ QString DuVibrato::getEffectName() const
 
 bool DuVibrato::setEffectName(const QString &value)
 {
-    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_VIB_EFFECTNAME);
+    DuStringPtr tmp = getChildAs<DuString>(KEY_VIB_EFFECTNAME);
 
     if (tmp == NULL)
         return false;

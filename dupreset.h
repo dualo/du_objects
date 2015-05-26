@@ -21,14 +21,16 @@
 //TODO: add missing parameters (gyro, sliders...)
 
 
+DU_OBJECT(DuPreset)
+
 class DuPreset : public DuContainer
 {
 public:
     explicit DuPreset();
     ~DuPreset();
 
-    static DuPreset *fromDuMusicFile(const preset_instr &du_preset);
-    static DuPreset *fromJson(const QJsonObject &jsonPreset);
+    static DuPresetPtr fromDuMusicFile(const preset_instr &du_preset);
+    static DuPresetPtr fromJson(const QJsonObject &jsonPreset);
 
     QByteArray toDuMusicFile() const;
 

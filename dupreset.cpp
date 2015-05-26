@@ -1,5 +1,10 @@
 #include "dupreset.h"
 
+#include <QJsonObject>
+#include <QDebug>
+
+DU_OBJECT_IMPL(DuPreset)
+
 DuPreset::DuPreset() :
     DuContainer()
 {
@@ -49,9 +54,9 @@ DuPreset::~DuPreset()
 }
 
 
-DuPreset *DuPreset::fromDuMusicFile(const preset_instr &du_preset)
+DuPresetPtr DuPreset::fromDuMusicFile(const preset_instr &du_preset)
 {
-    DuPreset *preset = new DuPreset;
+    DuPresetPtr preset(new DuPreset);
     bool verif = true;
 
     verif = verif && preset->setVolume(du_preset.s_volume);
@@ -69,15 +74,14 @@ DuPreset *DuPreset::fromDuMusicFile(const preset_instr &du_preset)
 
     if (!verif)
     {
-        delete preset;
-        return NULL;
+        return DuPresetPtr();
     }
 
     return preset;
 }
 
 
-DuPreset *DuPreset::fromJson(const QJsonObject &jsonPreset)
+DuPresetPtr DuPreset::fromJson(const QJsonObject &jsonPreset)
 {
     QJsonValue jsonVolume       = jsonPreset[KEY_PRESET_VOLUME];
     QJsonValue jsonPanning      = jsonPreset[KEY_PRESET_PANNING];
@@ -96,10 +100,10 @@ DuPreset *DuPreset::fromJson(const QJsonObject &jsonPreset)
             ||  !jsonPortaCtrl.isDouble()   ||  !jsonPortaTime.isDouble()
             ||  !jsonPitchBend.isDouble()   ||  !jsonDisposition.isDouble())
 
-        return NULL;
+        return DuPresetPtr();
 
 
-    DuPreset *preset = new DuPreset;
+    DuPresetPtr preset(new DuPreset);
     bool verif = true;
 
     verif = verif && preset->setVolume(jsonVolume.toInt());
@@ -117,8 +121,7 @@ DuPreset *DuPreset::fromJson(const QJsonObject &jsonPreset)
 
     if (!verif)
     {
-        delete preset;
-        return NULL;
+        return DuPresetPtr();
     }
 
     return preset;
@@ -198,7 +201,7 @@ int DuPreset::size() const
 
 int DuPreset::getVolume() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_VOLUME);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_PRESET_VOLUME);
 
     if (tmp == NULL)
         return -1;
@@ -208,7 +211,7 @@ int DuPreset::getVolume() const
 
 bool DuPreset::setVolume(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_VOLUME);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PRESET_VOLUME);
 
     if (tmp == NULL)
         return false;
@@ -218,7 +221,7 @@ bool DuPreset::setVolume(int value)
 
 int DuPreset::getPanning() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_PANNING);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_PRESET_PANNING);
 
     if (tmp == NULL)
         return -1;
@@ -228,7 +231,7 @@ int DuPreset::getPanning() const
 
 bool DuPreset::setPanning(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_PANNING);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PRESET_PANNING);
 
     if (tmp == NULL)
         return false;
@@ -238,7 +241,7 @@ bool DuPreset::setPanning(int value)
 
 int DuPreset::getSendToReverb() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_SENDTOREVERB);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_PRESET_SENDTOREVERB);
 
     if (tmp == NULL)
         return -1;
@@ -248,7 +251,7 @@ int DuPreset::getSendToReverb() const
 
 bool DuPreset::setSendToReverb(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_SENDTOREVERB);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PRESET_SENDTOREVERB);
 
     if (tmp == NULL)
         return false;
@@ -258,7 +261,7 @@ bool DuPreset::setSendToReverb(int value)
 
 int DuPreset::getOctave() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_OCTAVE);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_PRESET_OCTAVE);
 
     if (tmp == NULL)
         return -1;
@@ -268,7 +271,7 @@ int DuPreset::getOctave() const
 
 bool DuPreset::setOctave(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_OCTAVE);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PRESET_OCTAVE);
 
     if (tmp == NULL)
         return false;
@@ -279,7 +282,7 @@ bool DuPreset::setOctave(int value)
 
 int DuPreset::getPortamentoOnOff() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOONOFF);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOONOFF);
 
     if (tmp == NULL)
         return -1;
@@ -289,7 +292,7 @@ int DuPreset::getPortamentoOnOff() const
 
 bool DuPreset::setPortamentoOnOff(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOONOFF);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOONOFF);
 
     if (tmp == NULL)
         return false;
@@ -299,7 +302,7 @@ bool DuPreset::setPortamentoOnOff(int value)
 
 int DuPreset::getPortamentoControl() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOCONTROL);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOCONTROL);
 
     if (tmp == NULL)
         return -1;
@@ -309,7 +312,7 @@ int DuPreset::getPortamentoControl() const
 
 bool DuPreset::setPortamentoControl(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOCONTROL);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOCONTROL);
 
     if (tmp == NULL)
         return false;
@@ -319,7 +322,7 @@ bool DuPreset::setPortamentoControl(int value)
 
 int DuPreset::getPortamentoTime() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOTIME);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOTIME);
 
     if (tmp == NULL)
         return -1;
@@ -329,7 +332,7 @@ int DuPreset::getPortamentoTime() const
 
 bool DuPreset::setPortamentoTime(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOTIME);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOTIME);
 
     if (tmp == NULL)
         return false;
@@ -340,7 +343,7 @@ bool DuPreset::setPortamentoTime(int value)
 
 int DuPreset::getExpression() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_EXPRESSION);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_PRESET_EXPRESSION);
 
     if (tmp == NULL)
         return -1;
@@ -350,7 +353,7 @@ int DuPreset::getExpression() const
 
 bool DuPreset::setExpression(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_EXPRESSION);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PRESET_EXPRESSION);
 
     if (tmp == NULL)
         return false;
@@ -360,7 +363,7 @@ bool DuPreset::setExpression(int value)
 
 int DuPreset::getPitchBendSensitivity() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_PITCHBENDSENSITIVITY);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_PRESET_PITCHBENDSENSITIVITY);
 
     if (tmp == NULL)
         return -1;
@@ -370,7 +373,7 @@ int DuPreset::getPitchBendSensitivity() const
 
 bool DuPreset::setPitchBendSensitivity(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_PITCHBENDSENSITIVITY);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PRESET_PITCHBENDSENSITIVITY);
 
     if (tmp == NULL)
         return false;
@@ -380,7 +383,7 @@ bool DuPreset::setPitchBendSensitivity(int value)
 
 int DuPreset::getDisposition() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_DISPOSITION);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_PRESET_DISPOSITION);
 
     if (tmp == NULL)
         return -1;
@@ -390,7 +393,7 @@ int DuPreset::getDisposition() const
 
 bool DuPreset::setDisposition(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_PRESET_DISPOSITION);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PRESET_DISPOSITION);
 
     if (tmp == NULL)
         return false;

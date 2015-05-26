@@ -13,15 +13,17 @@
 #define KEY_LOOP_EVENTS             "Events"
 
 
+DU_OBJECT(DuLoop)
+
 class DuLoop : public DuContainer
 {
 public:
     explicit DuLoop();
     ~DuLoop();
 
-    static DuLoop *fromDuMusicFile(const music_loop &du_loop,
+    static DuLoopPtr fromDuMusicFile(const music_loop &du_loop,
                                    const music_sample *du_sample);
-    static DuLoop *fromJson(const QJsonObject &jsonLoop);
+    static DuLoopPtr fromJson(const QJsonObject &jsonLoop);
 
     QByteArray toDuMusicFile() const;
 
@@ -36,16 +38,16 @@ public:
     int getMidiOutChannel() const;
     bool setMidiOutChannel(int value);
 
-    QSharedPointer<DuInstrument> getInstrument() const;
-    void setInstrument(DuInstrument *instrument);
+    DuInstrumentConstPtr getInstrument() const;
+    void setInstrument(const DuInstrumentPtr &instrument);
 
-    QSharedPointer<DuArray> getEvents();
-    void setEvents(DuArray *array);
+    DuArrayConstPtr getEvents() const;
+    void setEvents(const DuArrayPtr& array);
 
     int eventsSize() const;
 
     int countEvents() const;
-    bool appendEvent(DuEvent *event);
+    bool appendEvent(const DuEventPtr &event);
 };
 
 #endif // DULOOP_H

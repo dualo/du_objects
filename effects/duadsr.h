@@ -12,14 +12,16 @@
 #define KEY_ADSR_EFFECTNAME                         "EffectName"
 
 
+DU_OBJECT(DuAdsr)
+
 class DuAdsr : public DuEffectSettings
 {
 public:
     explicit DuAdsr();
     ~DuAdsr();
 
-    static DuAdsr *fromDuMusicFile(const FX_adsr &du_adsr);
-    static DuAdsr *fromJson(const QJsonObject &jsonAdsr);
+    static DuAdsrPtr fromDuMusicFile(const FX_adsr &du_adsr);
+    static DuAdsrPtr fromJson(const QJsonObject &jsonAdsr);
 
     QByteArray toDuMusicFile() const;
 

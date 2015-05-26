@@ -26,14 +26,16 @@
 #define HEADER_SIZE                 12 + 8*HEADER_NAME_SIZE + MUSIC_SONG_NAME_SIZE + 28
 
 
+DU_OBJECT(DuHeader)
+
 class DuHeader : public DuContainer
 {
 public:
     explicit DuHeader();
     ~DuHeader();
 
-    static DuHeader *fromDuMusicFile(const music_song &du_song);
-    static DuHeader *fromJson(const QJsonObject &jsonHeader);
+    static DuHeaderPtr fromDuMusicFile(const music_song &du_song);
+    static DuHeaderPtr fromJson(const QJsonObject &jsonHeader);
 
     QByteArray toDuMusicFile() const;
 

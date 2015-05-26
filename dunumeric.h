@@ -8,6 +8,8 @@
 #define NUMERIC_DEFAULT_SIZE    1
 
 
+DU_OBJECT(DuNumeric)
+
 class DuNumeric : public DuValue
 {
 public:

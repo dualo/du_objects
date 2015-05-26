@@ -2,6 +2,8 @@
 
 #include <QDebug>
 
+DU_OBJECT_IMPL(DuNumeric)
+
 DuNumeric::DuNumeric(int value) :
     DuValue(4),
     defaultValue(0),

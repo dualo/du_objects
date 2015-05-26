@@ -1,5 +1,10 @@
 #include "ducompressor.h"
 
+#include <QJsonObject>
+#include <QDebug>
+
+DU_OBJECT_IMPL(DuCompressor)
+
 DuCompressor::DuCompressor() :
     DuEffectSettings()
 {
@@ -40,9 +45,9 @@ DuCompressor::~DuCompressor()
 }
 
 
-DuCompressor *DuCompressor::fromDuMusicFile(const FX_compressor &du_compressor)
+DuCompressorPtr DuCompressor::fromDuMusicFile(const FX_compressor &du_compressor)
 {
-    DuCompressor *compressor = new DuCompressor;
+    DuCompressorPtr compressor(new DuCompressor);
     bool verif = true;
 
     verif = verif && compressor->setOnOff(du_compressor.c_on_off);
@@ -60,15 +65,14 @@ DuCompressor *DuCompressor::fromDuMusicFile(const FX_compressor &du_compressor)
 
     if (!verif)
     {
-        delete compressor;
-        return NULL;
+        return DuCompressorPtr();
     }
 
     return compressor;
 }
 
 
-DuCompressor *DuCompressor::fromJson(const QJsonObject &jsonCompressor)
+DuCompressorPtr DuCompressor::fromJson(const QJsonObject &jsonCompressor)
 {
     QJsonValue jsonOnOff        = jsonCompressor[KEY_COMP_ONOFF];
     QJsonValue jsonAttTime      = jsonCompressor[KEY_COMP_ATTACKTIME];
@@ -84,10 +88,10 @@ DuCompressor *DuCompressor::fromJson(const QJsonObject &jsonCompressor)
             ||  !jsonRatio.isDouble()       ||  !jsonBoost.isDouble()
             ||  !jsonKneeType.isDouble()    ||  !jsonEffectName.isString())
 
-        return NULL;
+        return DuCompressorPtr();
 
 
-    DuCompressor *compressor = new DuCompressor;
+    DuCompressorPtr compressor(new DuCompressor);
     bool verif = true;
 
     verif = verif && compressor->setOnOff(jsonOnOff.toInt());
@@ -104,8 +108,7 @@ DuCompressor *DuCompressor::fromJson(const QJsonObject &jsonCompressor)
 
     if (!verif)
     {
-        delete compressor;
-        return NULL;
+        return DuCompressorPtr();
     }
 
     return compressor;
@@ -176,7 +179,7 @@ int DuCompressor::size() const
 
 int DuCompressor::getOnOff() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_COMP_ONOFF);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_COMP_ONOFF);
 
     if (tmp == NULL)
         return -1;
@@ -186,7 +189,7 @@ int DuCompressor::getOnOff() const
 
 bool DuCompressor::setOnOff(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_COMP_ONOFF);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_COMP_ONOFF);
 
     if (tmp == NULL)
         return false;
@@ -197,7 +200,7 @@ bool DuCompressor::setOnOff(int value)
 
 int DuCompressor::getAttackTime() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_COMP_ATTACKTIME);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_COMP_ATTACKTIME);
 
     if (tmp == NULL)
         return -1;
@@ -207,7 +210,7 @@ int DuCompressor::getAttackTime() const
 
 bool DuCompressor::setAttackTime(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_COMP_ATTACKTIME);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_COMP_ATTACKTIME);
 
     if (tmp == NULL)
         return false;
@@ -217,7 +220,7 @@ bool DuCompressor::setAttackTime(int value)
 
 int DuCompressor::getReleaseTime() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_COMP_RELEASETIME);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_COMP_RELEASETIME);
 
     if (tmp == NULL)
         return -1;
@@ -227,7 +230,7 @@ int DuCompressor::getReleaseTime() const
 
 bool DuCompressor::setReleaseTime(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_COMP_RELEASETIME);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_COMP_RELEASETIME);
 
     if (tmp == NULL)
         return false;
@@ -237,7 +240,7 @@ bool DuCompressor::setReleaseTime(int value)
 
 int DuCompressor::getThreshold() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_COMP_THRESHOLD);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_COMP_THRESHOLD);
 
     if (tmp == NULL)
         return -1;
@@ -247,7 +250,7 @@ int DuCompressor::getThreshold() const
 
 bool DuCompressor::setThreshold(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_COMP_THRESHOLD);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_COMP_THRESHOLD);
 
     if (tmp == NULL)
         return false;
@@ -257,7 +260,7 @@ bool DuCompressor::setThreshold(int value)
 
 int DuCompressor::getRatio() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_COMP_RATIO);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_COMP_RATIO);
 
     if (tmp == NULL)
         return -1;
@@ -267,7 +270,7 @@ int DuCompressor::getRatio() const
 
 bool DuCompressor::setRatio(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_COMP_RATIO);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_COMP_RATIO);
 
     if (tmp == NULL)
         return false;
@@ -277,7 +280,7 @@ bool DuCompressor::setRatio(int value)
 
 int DuCompressor::getBoost() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_COMP_BOOST);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_COMP_BOOST);
 
     if (tmp == NULL)
         return -1;
@@ -287,7 +290,7 @@ int DuCompressor::getBoost() const
 
 bool DuCompressor::setBoost(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_COMP_BOOST);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_COMP_BOOST);
 
     if (tmp == NULL)
         return false;
@@ -297,7 +300,7 @@ bool DuCompressor::setBoost(int value)
 
 int DuCompressor::getKneeType() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_COMP_KNEETYPE);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_COMP_KNEETYPE);
 
     if (tmp == NULL)
         return -1;
@@ -307,7 +310,7 @@ int DuCompressor::getKneeType() const
 
 bool DuCompressor::setKneeType(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_COMP_KNEETYPE);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_COMP_KNEETYPE);
 
     if (tmp == NULL)
         return false;
@@ -318,7 +321,7 @@ bool DuCompressor::setKneeType(int value)
 
 QString DuCompressor::getEffectName() const
 {
-    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_COMP_EFFECTNAME);
+    const DuStringConstPtr& tmp = getChildAs<DuString>(KEY_COMP_EFFECTNAME);
 
     if (tmp == NULL)
         return QString();
@@ -328,7 +331,7 @@ QString DuCompressor::getEffectName() const
 
 bool DuCompressor::setEffectName(const QString &value)
 {
-    QSharedPointer<DuString> tmp = getChildAs<DuString>(KEY_COMP_EFFECTNAME);
+    DuStringPtr tmp = getChildAs<DuString>(KEY_COMP_EFFECTNAME);
 
     if (tmp == NULL)
         return false;

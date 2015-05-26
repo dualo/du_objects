@@ -3,8 +3,6 @@
 
 #include "ducontainer.h"
 
-#include <QSharedPointer>
-
 #define KEY_PROFILE_FIRSTNAME     "Firstname"
 #define KEY_PROFILE_LASTNAME      "Lastname"
 #define KEY_PROFILE_PSEUDO        "Pseudo"
@@ -13,6 +11,9 @@
 #define KEY_PROFILE_CREATION_DATE "CreationDate"
 #define KEY_PROFILE_ROLE          "Role"
 #define KEY_PROFILE_GUID          "GUID"
+
+
+DU_OBJECT(DuProfile)
 
 class DuProfile : public DuContainer
 {
@@ -56,7 +57,6 @@ public:
     bool setGUID(int value);
 };
 
-Q_DECLARE_METATYPE(DuProfile*)
-Q_DECLARE_METATYPE(QSharedPointer<DuProfile>)
+Q_DECLARE_METATYPE(DuProfilePtr)
 
 #endif // DUPROFILE_H

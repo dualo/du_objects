@@ -6,8 +6,6 @@
 #include "dunumeric.h"
 #include "duversion.h"
 
-#include <QSharedPointer>
-
 #define KEY_DEVICE_SERIAL_NUMBER    "SerialNumber"
 #define KEY_DEVICE_NAME             "Name"
 #define KEY_DEVICE_OWNER            "Owner"
@@ -15,6 +13,9 @@
 
 #define KEY_DEVICE_VERSION          "Version"
 #define KEY_DEVICE_UPDATE_DATE      "UpdateDate"
+
+
+DU_OBJECT(DuDevice)
 
 class DuDevice : public DuContainer
 {
@@ -37,7 +38,7 @@ public:
     int getOwnerId() const;
     bool setOwnerId(int value);
 
-    const QSharedPointer<DuVersion> getVersion() const;
+    DuVersionConstPtr getVersion() const;
     bool setVersion(const QString& value);
     bool setVersion(int major, int minor, int patch);
 
@@ -54,20 +55,11 @@ public:
     void setBusy(bool value);
 
 private:
-    const QSharedPointer<DuString> getSerialNumberObject() const;
-    const QSharedPointer<DuString> getNameObject() const;
-    const QSharedPointer<DuString> getOwnerObject() const;
-    const QSharedPointer<DuNumeric> getOwnerIdObject() const;
-    const QSharedPointer<DuVersion> getVersionObject() const;
-    const QSharedPointer<DuDate> getUpdateDateObject() const;
-
-private:
     bool plugged;
     bool connected;
     bool busy;
 };
 
-Q_DECLARE_METATYPE(DuDevice*)
-Q_DECLARE_METATYPE(QSharedPointer<DuDevice>)
+Q_DECLARE_METATYPE(DuDevicePtr)
 
 #endif // DUDEVICE_H

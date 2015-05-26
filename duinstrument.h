@@ -27,51 +27,53 @@
 #define KEY_INSTR_ADSRSETTINGS          "AttackDecaySustainReleaseSettings"
 
 
+DU_OBJECT(DuInstrument)
+
 class DuInstrument : public DuContainer
 {
 public:
     explicit DuInstrument();
     ~DuInstrument();
 
-    static DuInstrument *fromDuMusicFile(const music_instr &du_instr);
-    static DuInstrument *fromJson(const QJsonObject &jsonInstrument);
+    static DuInstrumentPtr fromDuMusicFile(const music_instr &du_instr);
+    static DuInstrumentPtr fromJson(const QJsonObject &jsonInstrument);
 
     QByteArray toDuMusicFile() const;
 
     int size() const;
 
-    QSharedPointer<DuInstrumentInfo> getInstrumentInfo() const;
-    void setInstrumentInfo(DuInstrumentInfo *instrumentInfo);
+    DuInstrumentInfoConstPtr getInstrumentInfo() const;
+    void setInstrumentInfo(const DuInstrumentInfoPtr &instrumentInfo);
 
-    QSharedPointer<DuPreset> getPreset() const;
-    void setPreset(DuPreset *preset);
+    DuPresetConstPtr getPreset() const;
+    void setPreset(const DuPresetPtr& preset);
 
-    QSharedPointer<DuMixer> getMixer() const;
-    void setMixer(DuMixer *mixer);
+    DuMixerConstPtr getMixer() const;
+    void setMixer(const DuMixerPtr& mixer);
 
-    QSharedPointer<DuDistortion> getDistortion() const;
-    void setDistortion(DuDistortion *distortion);
+    DuDistortionConstPtr getDistortion() const;
+    void setDistortion(const DuDistortionPtr& distortion);
 
-    QSharedPointer<DuWah> getWah() const;
-    void setWah(DuWah *wah);
+    DuWahConstPtr getWah() const;
+    void setWah(const DuWahPtr& wah);
 
-    QSharedPointer<DuCompressor> getCompressor() const;
-    void setCompressor(DuCompressor *compressor);
+    DuCompressorConstPtr getCompressor() const;
+    void setCompressor(const DuCompressorPtr& compressor);
 
-    QSharedPointer<DuEqualizer> getEqualizer() const;
-    void setEqualizer(DuEqualizer *equalizer);
+    DuEqualizerConstPtr getEqualizer() const;
+    void setEqualizer(const DuEqualizerPtr& equalizer);
 
-    QSharedPointer<DuDelay> getDelay() const;
-    void setDelay(DuDelay *delay);
+    DuDelayConstPtr getDelay() const;
+    void setDelay(const DuDelayPtr& delay);
 
-    QSharedPointer<DuChorus> getChorus() const;
-    void setChorus(DuChorus *chorus);
+    DuChorusConstPtr getChorus() const;
+    void setChorus(const DuChorusPtr& chorus);
 
-    QSharedPointer<DuVibrato> getVibrato() const;
-    void setVibrato(DuVibrato *vibrato);
+    DuVibratoConstPtr getVibrato() const;
+    void setVibrato(const DuVibratoPtr& vibrato);
 
-    QSharedPointer<DuAdsr> getAdsr() const;
-    void setAdsr(DuAdsr *adsr);
+    DuAdsrConstPtr getAdsr() const;
+    void setAdsr(const DuAdsrPtr& adsr);
 };
 
 #endif // DUINSTRUMENT_H

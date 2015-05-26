@@ -4,6 +4,8 @@
 #include "duvalue.h"
 
 
+DU_OBJECT(DuString)
+
 class DuString : public DuValue
 {
 public:

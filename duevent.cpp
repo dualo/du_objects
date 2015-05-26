@@ -1,5 +1,10 @@
 #include "duevent.h"
 
+#include <QJsonObject>
+#include <QDebug>
+
+DU_OBJECT_IMPL(DuEvent)
+
 DuEvent::DuEvent(int time, int control, int keyboard, int note, int value) :
     DuContainer()
 {
@@ -48,9 +53,9 @@ DuEvent::~DuEvent()
 }
 
 
-DuEvent *DuEvent::fromDuMusicFile(const music_sample &du_sample)
+DuEventPtr DuEvent::fromDuMusicFile(const music_sample &du_sample)
 {
-    DuEvent *event = new DuEvent;
+    DuEventPtr event(new DuEvent);
     bool verif = true;
 
     verif = verif && event->setTime(du_sample.time);
@@ -61,15 +66,14 @@ DuEvent *DuEvent::fromDuMusicFile(const music_sample &du_sample)
 
     if (!verif)
     {
-        delete event;
-        return NULL;
+        return DuEventPtr();
     }
 
     return event;
 }
 
 
-DuEvent *DuEvent::fromJson(const QJsonObject &jsonEvent)
+DuEventPtr DuEvent::fromJson(const QJsonObject &jsonEvent)
 {
     QJsonValue jsonTime = jsonEvent[KEY_EVENT_TIME];
     QJsonValue jsonCtrl = jsonEvent[KEY_EVENT_CONTROL];
@@ -81,10 +85,10 @@ DuEvent *DuEvent::fromJson(const QJsonObject &jsonEvent)
             ||  !jsonKbrd.isDouble()    ||  !jsonNote.isDouble()
             ||  !jsonVal.isDouble())
 
-        return NULL;
+        return DuEventPtr();
 
 
-    DuEvent *event = new DuEvent;
+    DuEventPtr event(new DuEvent);
     bool verif = true;
 
     verif = verif && event->setTime(jsonTime.toInt());
@@ -95,8 +99,7 @@ DuEvent *DuEvent::fromJson(const QJsonObject &jsonEvent)
 
     if (!verif)
     {
-        delete event;
-        return NULL;
+        return DuEventPtr();
     }
 
     return event;
@@ -148,7 +151,7 @@ int DuEvent::size() const
 
 int DuEvent::getTime() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EVENT_TIME);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_EVENT_TIME);
 
     if (tmp == NULL)
         return -1;
@@ -158,7 +161,7 @@ int DuEvent::getTime() const
 
 bool DuEvent::setTime(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EVENT_TIME);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_EVENT_TIME);
 
     if (tmp == NULL)
         return false;
@@ -169,7 +172,7 @@ bool DuEvent::setTime(int value)
 
 int DuEvent::getControl() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EVENT_CONTROL);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_EVENT_CONTROL);
 
     if (tmp == NULL)
         return -1;
@@ -179,7 +182,7 @@ int DuEvent::getControl() const
 
 bool DuEvent::setControl(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EVENT_CONTROL);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_EVENT_CONTROL);
 
     if (tmp == NULL)
         return false;
@@ -190,7 +193,7 @@ bool DuEvent::setControl(int value)
 
 int DuEvent::getKeyboard() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EVENT_KEYBOARD);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_EVENT_KEYBOARD);
 
     if (tmp == NULL)
         return -1;
@@ -200,7 +203,7 @@ int DuEvent::getKeyboard() const
 
 bool DuEvent::setKeyboard(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EVENT_KEYBOARD);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_EVENT_KEYBOARD);
 
     if (tmp == NULL)
         return false;
@@ -211,7 +214,7 @@ bool DuEvent::setKeyboard(int value)
 
 int DuEvent::getNote() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EVENT_NOTE);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_EVENT_NOTE);
 
     if (tmp == NULL)
         return -1;
@@ -221,7 +224,7 @@ int DuEvent::getNote() const
 
 bool DuEvent::setNote(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EVENT_NOTE);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_EVENT_NOTE);
 
     if (tmp == NULL)
         return false;
@@ -232,7 +235,7 @@ bool DuEvent::setNote(int value)
 
 int DuEvent::getValue() const
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EVENT_VALUE);
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_EVENT_VALUE);
 
     if (tmp == NULL)
         return -1;
@@ -242,7 +245,7 @@ int DuEvent::getValue() const
 
 bool DuEvent::setValue(int value)
 {
-    QSharedPointer<DuNumeric> tmp = getChildAs<DuNumeric>(KEY_EVENT_VALUE);
+    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_EVENT_VALUE);
 
     if (tmp == NULL)
         return false;

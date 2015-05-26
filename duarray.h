@@ -3,8 +3,9 @@
 
 #include "duobject.h"
 #include <QList>
-#include <QSharedPointer>
 
+
+DU_OBJECT(DuArray)
 
 class DuArray : public DuObject
 {
@@ -22,19 +23,20 @@ public:
 
     int size() const;
 
-    void append(DuObject *element);
-    void insert(int index, DuObject *element);
+    void append(const DuObjectPtr& element);
+    void insert(int index, const DuObjectPtr& element);
 
     void removeAt(int index);
-    void replace(int index, DuObject *element);
+    void replace(int index, const DuObjectPtr& element);
 
     int count() const;
 
-    QSharedPointer<DuObject> at(int index);
-    QSharedPointer<DuObject> operator[](int index);
+    DuObjectPtr at(int index);
+    DuObjectConstPtr at(int index) const;
+    DuObjectPtr operator[](int index);
 
 private:
-    QList< QSharedPointer<DuObject> > array;
+    QList<DuObjectPtr> array;
     int maxSize;
 };
 

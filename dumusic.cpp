@@ -1,5 +1,11 @@
 #include "dumusic.h"
 
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QDebug>
+
+DU_OBJECT_IMPL(DuMusic)
+
 DuMusic::DuMusic() :
     DuContainer()
 {
@@ -15,41 +21,37 @@ DuMusic::~DuMusic()
 }
 
 
-DuMusic *DuMusic::fromDuMusicFile(const s_total_buffer &du_music)
+DuMusicPtr DuMusic::fromDuMusicFile(const s_total_buffer &du_music)
 {
-    DuMusic *music = new DuMusic;
+    DuMusicPtr music(new DuMusic);
 
-    DuHeader *header = DuHeader::fromDuMusicFile(du_music.local_song);
+    const DuHeaderPtr& header = DuHeader::fromDuMusicFile(du_music.local_song);
     if (header != NULL)
         music->setHeader(header);
     else
     {
-        delete music;
-        return NULL;
+        return DuMusicPtr();
     }
 
-    DuSongInfo *songInfo = DuSongInfo::fromDuMusicFile(du_music.local_song);
+    const DuSongInfoPtr& songInfo = DuSongInfo::fromDuMusicFile(du_music.local_song);
     if (songInfo != NULL)
         music->setSongInfo(songInfo);
     else
     {
-        delete music;
-        return NULL;
+        return DuMusicPtr();
     }
 
     for (int i = 0; i < MUSIC_MAXTRACK; i++)
     {
-        DuTrack *track = DuTrack::fromDuMusicFile(du_music.local_song.s_track[i],
+        const DuTrackPtr track = DuTrack::fromDuMusicFile(du_music.local_song.s_track[i],
                                                   du_music.local_buffer);
         if (track == NULL)
         {
-            delete music;
-            return NULL;
+            return DuMusicPtr();
         }
         if (!music->appendTrack(track))
         {
-            delete music;
-            return NULL;
+            return DuMusicPtr();
         }
     }
 
@@ -57,7 +59,7 @@ DuMusic *DuMusic::fromDuMusicFile(const s_total_buffer &du_music)
 }
 
 
-DuMusic *DuMusic::fromJson(const QJsonObject &jsonMusic)
+DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
 {
     QJsonValue jsonHeader   = jsonMusic[KEY_MUSIC_HEADER];
     QJsonValue jsonSongInfo = jsonMusic[KEY_MUSIC_SONGINFO];
@@ -66,42 +68,38 @@ DuMusic *DuMusic::fromJson(const QJsonObject &jsonMusic)
     if (        !jsonHeader.isObject()  ||  !jsonSongInfo.isObject()
             ||  !jsonTracks.isArray())
 
-        return NULL;
+        return DuMusicPtr();
 
 
-    DuMusic *music = new DuMusic;
+    DuMusicPtr music(new DuMusic);
 
-    DuHeader *header = DuHeader::fromJson(jsonHeader.toObject());
+    const DuHeaderPtr& header = DuHeader::fromJson(jsonHeader.toObject());
     if (header != NULL)
         music->setHeader(header);
     else
     {
-        delete music;
-        return NULL;
+        return DuMusicPtr();
     }
 
-    DuSongInfo *songInfo = DuSongInfo::fromJson(jsonSongInfo.toObject());
+    const DuSongInfoPtr& songInfo = DuSongInfo::fromJson(jsonSongInfo.toObject());
     if (songInfo != NULL)
         music->setSongInfo(songInfo);
     else
     {
-        delete music;
-        return NULL;
+        return DuMusicPtr();
     }
 
     const QJsonArray &jsonTrackArray = jsonTracks.toArray();
     for (int i = 0; i < jsonTrackArray.count(); i++)
     {
-        DuTrack *track = DuTrack::fromJson(jsonTrackArray[i].toObject());
+        const DuTrackPtr& track = DuTrack::fromJson(jsonTrackArray[i].toObject());
         if (track == NULL)
         {
-            delete music;
-            return NULL;
+            return DuMusicPtr();
         }
         if (!music->appendTrack(track))
         {
-            delete music;
-            return NULL;
+            return DuMusicPtr();
         }
     }
 
@@ -124,21 +122,21 @@ QByteArray DuMusic::toDuMusicFile() const
     std::memcpy((char *)&(du_music), tmpClear.data(), musicSize);
 
 
-    QSharedPointer<DuHeader> header = getHeader();
+    const DuHeaderConstPtr& header = getHeader();
     if (header == NULL)
         return QByteArray();
     const QByteArray &headerArray = header->toDuMusicFile();
     if (headerArray.isNull())
         return QByteArray();
 
-    QSharedPointer<DuSongInfo> songInfo = getSongInfo();
+    const DuSongInfoConstPtr& songInfo = getSongInfo();
     if (songInfo == NULL)
         return QByteArray();
     const QByteArray &songInfoArray = songInfo->toDuMusicFile();
     if (songInfoArray.isNull())
         return QByteArray();
 
-    QSharedPointer<DuArray> tracks = getTracks();
+    const DuArrayConstPtr& tracks = getTracks();
     if (tracks == NULL)
         return QByteArray();
     const QByteArray &tracksArray = tracks->toDuMusicFile();
@@ -159,18 +157,18 @@ QByteArray DuMusic::toDuMusicFile() const
     int trackCount = tracks->count();
     for (int i = 0; i < trackCount; i++)
     {
-        QSharedPointer<DuTrack> track = tracks->at(i).dynamicCast<DuTrack>();
+        const DuTrackConstPtr& track = tracks->at(i).dynamicCast<const DuTrack>();
         if (track == NULL)
             return QByteArray();
 
-        QSharedPointer<DuArray> loops = track->getLoops();
+        const DuArrayConstPtr& loops = track->getLoops();
         if (loops == NULL)
             return QByteArray();
 
         int loopCount = loops->count();
         for (int j = 0; j < loopCount; j++)
         {
-            QSharedPointer<DuLoop> loop = loops->at(j).dynamicCast<DuLoop>();
+            const DuLoopConstPtr& loop = loops->at(j).dynamicCast<const DuLoop>();
             if (loop == NULL)
                 return QByteArray();
 
@@ -186,7 +184,7 @@ QByteArray DuMusic::toDuMusicFile() const
             else
                 tmp_loop->l_adress = 0;
 
-            QSharedPointer<DuArray> events = loop->getEvents();
+            const DuArrayConstPtr& events = loop->getEvents();
             if (events == NULL)
                 return QByteArray();
             tmpLocalBuffer.append(events->toDuMusicFile());
@@ -210,14 +208,14 @@ int DuMusic::size() const
     int eventsSize = 0;
     int tmpSize = 0;
 
-    QSharedPointer<DuArray> tracks = getChildAs<DuArray>(KEY_MUSIC_TRACKS);
+    const DuArrayConstPtr& tracks = getChildAs<DuArray>(KEY_MUSIC_TRACKS);
     if (tracks == NULL)
         return -1;
 
     int count = tracks->count();
     for (int i = 0; i < count; i++)
     {
-        QSharedPointer<DuTrack> track = tracks->at(i).dynamicCast<DuTrack>();
+        const DuTrackConstPtr& track = tracks->at(i).dynamicCast<const DuTrack>();
         if (track == NULL)
             return -1;
 
@@ -232,40 +230,39 @@ int DuMusic::size() const
 }
 
 
-QSharedPointer<DuHeader> DuMusic::getHeader() const
+DuHeaderConstPtr DuMusic::getHeader() const
 {
     return getChildAs<DuHeader>(KEY_MUSIC_HEADER);
 }
 
-void DuMusic::setHeader(DuHeader *header)
+void DuMusic::setHeader(const DuHeaderPtr& header)
 {
     addChild(KEY_MUSIC_HEADER, header);
 }
 
-QSharedPointer<DuSongInfo> DuMusic::getSongInfo() const
+DuSongInfoConstPtr DuMusic::getSongInfo() const
 {
     return getChildAs<DuSongInfo>(KEY_MUSIC_SONGINFO);
 }
 
-void DuMusic::setSongInfo(DuSongInfo *songInfo)
+void DuMusic::setSongInfo(const DuSongInfoPtr& songInfo)
 {
     addChild(KEY_MUSIC_SONGINFO, songInfo);
 }
 
-QSharedPointer<DuArray> DuMusic::getTracks() const
+DuArrayConstPtr DuMusic::getTracks() const
 {
     return getChildAs<DuArray>(KEY_MUSIC_TRACKS);
 }
 
-void DuMusic::setTracks(DuArray *array)
+void DuMusic::setTracks(const DuArrayPtr &array)
 {
     addChild(KEY_MUSIC_TRACKS, array);
 }
 
-
-bool DuMusic::appendTrack(DuTrack *track)
+bool DuMusic::appendTrack(const DuTrackPtr &track)
 {
-    QSharedPointer<DuArray> tmp = getChildAs<DuArray>(KEY_MUSIC_TRACKS);
+    DuArrayPtr tmp = getChildAs<DuArray>(KEY_MUSIC_TRACKS);
 
     if (tmp == NULL)
         return false;
