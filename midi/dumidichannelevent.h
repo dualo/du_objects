@@ -8,7 +8,7 @@ class DuMidiChannelEvent : public DuAbstractMidiEvent
 {
 public:
     explicit DuMidiChannelEvent();
-    ~DuMidiChannelEvent();
+    virtual ~DuMidiChannelEvent();
 
     enum Type
     {
@@ -239,13 +239,13 @@ public:
 
     QByteArray toByteArray(bool runningStatusActive = false);
     void setDataBytes(QDataStream &stream);
-    void setDataBytes(QByteArray &array);
+    void setDataBytes(const QByteArray &array);
     quint32 size();
 
-    quint8 getType();
-    quint8 getChannel();
-    quint8 getKey();
-    quint8 getValue();
+    quint8 getType() const;
+    quint8 getChannel() const;
+    quint8 getKey() const;
+    quint8 getValue() const;
 
     void setType(quint8 value);
     void setChannel(quint8 value);
@@ -253,8 +253,8 @@ public:
     void setValue(quint8 value);
 
 private:
-    quint8 key;
-    quint8 value;
+    DuNumeric *key;
+    DuNumeric *value;
 };
 
 #endif // DUMIDICHANNELEVENT_H

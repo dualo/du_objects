@@ -12,7 +12,7 @@ public:
 
     QByteArray toByteArray(bool runningStatusActive = false);
     void setDataBytes(QDataStream &stream);
-    void setDataBytes(QByteArray &array);
+    void setDataBytes(const QByteArray &array);
     quint32 size();
 
     void setLength(quint32 value);

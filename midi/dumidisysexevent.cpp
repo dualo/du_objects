@@ -16,8 +16,8 @@ QByteArray DuMidiSysExEvent::toByteArray(bool runningStatusActive)
 {
     DuMidiVariableLength *conv = DuMidiVariableLength::getInstance();
 
-    QByteArray array = conv->formattedTimeArray(time);
-    array.append(status);
+    QByteArray array = conv->formattedTimeArray(getTime());
+    array.append(getStatus());
 
     array += conv->formattedLengthArray(data.size());
     array += data;
@@ -30,7 +30,7 @@ void DuMidiSysExEvent::setDataBytes(QDataStream &stream)
     stream.readRawData(data.data(), data.size());
 }
 
-void DuMidiSysExEvent::setDataBytes(QByteArray &array)
+void DuMidiSysExEvent::setDataBytes(const QByteArray &array)
 {
     data = array;
 }
@@ -40,7 +40,7 @@ quint32 DuMidiSysExEvent::size()
     DuMidiVariableLength *conv = DuMidiVariableLength::getInstance();
     quint32 length = data.size();
 
-    return (conv->formattedSize(time) + 1 + conv->formattedSize(length) + length);
+    return (conv->formattedSize(getTime()) + 1 + conv->formattedSize(length) + length);
 }
 
 

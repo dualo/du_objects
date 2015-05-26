@@ -24,6 +24,9 @@ public:
 
     QDebug debugPrint(QDebug dbg) const;
 
+protected:
+    QVariant &getValue();
+
 private:
     QVariant value;
 

@@ -1,14 +1,16 @@
 #ifndef DUMIDIMETAEVENT_H
 #define DUMIDIMETAEVENT_H
 
+
 #include "duabstractmidievent.h"
+#include "dumididata.h"
 
 
 class DuMidiMetaEvent : public DuAbstractMidiEvent
 {
 public:
     explicit DuMidiMetaEvent();
-    ~DuMidiMetaEvent();
+    virtual ~DuMidiMetaEvent();
 
     enum MetaTypes
     {
@@ -40,19 +42,21 @@ public:
 
     QByteArray toByteArray(bool runningStatusActive = false);
     void setDataBytes(QDataStream &stream);
-    void setDataBytes(QByteArray &array);
+    void setDataBytes(const QByteArray &array);
     quint32 size();
 
-    quint8 getType();
-    quint32 getLength();
-    QByteArray &getData();
-
+    quint8 getType() const;
     void setType(quint8 value);
+
+    quint32 getLength() const;
     void setLength(quint32 value);
 
+    const QByteArray getData() const;
+
+
 private:
-    quint8 type;
-    QByteArray data;
+    DuNumeric *type;
+    DuMidiData *data;
 };
 
 #endif // DUMIDIMETAEVENT_H

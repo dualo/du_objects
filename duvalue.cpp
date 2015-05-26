@@ -56,3 +56,9 @@ QDebug DuValue::debugPrint(QDebug dbg) const
 
     return dbg.space();
 }
+
+
+QVariant &DuValue::getValue()
+{
+    return value;
+}

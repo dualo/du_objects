@@ -40,7 +40,8 @@ HEADERS += \
     $$PWD/midi/dumidimetaevent.h \
     $$PWD/midi/dumidisysexevent.h \
     $$PWD/midi/dumiditrack.h \
-    $$PWD/midi/dumidifile.h
+    $$PWD/midi/dumidifile.h \
+    $$PWD/midi/dumididata.h
 
 SOURCES += \
     $$PWD/duarray.cpp \
@@ -82,4 +83,5 @@ SOURCES += \
     $$PWD/midi/dumidimetaevent.cpp \
     $$PWD/midi/dumidisysexevent.cpp \
     $$PWD/midi/dumiditrack.cpp \
-    $$PWD/midi/dumidifile.cpp
+    $$PWD/midi/dumidifile.cpp \
+    $$PWD/midi/dumididata.cpp

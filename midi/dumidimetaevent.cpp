@@ -1,16 +1,16 @@
 #include "dumidimetaevent.h"
 
 DuMidiMetaEvent::DuMidiMetaEvent() :
-    DuAbstractMidiEvent(),
-    type(0x00),
-    data(QByteArray())
+    DuAbstractMidiEvent(0, 0xFF)
 {
-    status = 0xFF;
-    data.clear();
+    type = new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00);
+    data = new DuMidiData();
 }
 
 DuMidiMetaEvent::~DuMidiMetaEvent()
 {
+    delete type;
+    delete data;
 }
 
 
@@ -18,58 +18,60 @@ QByteArray DuMidiMetaEvent::toByteArray(bool runningStatusActive)
 {
     DuMidiVariableLength *conv = DuMidiVariableLength::getInstance();
 
-    QByteArray array = conv->formattedTimeArray(time);
-    array.append(status);
+    QByteArray array = conv->formattedTimeArray(getTime());
+    array.append(getStatus());
 
-    array.append(type);
-    array += conv->formattedLengthArray(data.size());
-    array += data;
+    array.append(getType());
+    array += conv->formattedLengthArray(getData().size());
+    array += getData();
 
     return array;
 }
 
 void DuMidiMetaEvent::setDataBytes(QDataStream &stream)
 {
-    stream.readRawData(data.data(), data.size());
+    data->setData(stream);
 }
 
-void DuMidiMetaEvent::setDataBytes(QByteArray &array)
+void DuMidiMetaEvent::setDataBytes(const QByteArray &array)
 {
-   data = array;
+   data->setData(array);
 }
 
 
 quint32 DuMidiMetaEvent::size()
 {
     DuMidiVariableLength *conv = DuMidiVariableLength::getInstance();
-    quint32 length = data.size();
+    quint32 length = getData().size();
 
-    return (conv->formattedSize(time) + 2 + conv->formattedSize(data.size()) + length);
+    return (conv->formattedSize(getTime()) + 2
+            + conv->formattedSize(getData().size()) + length);
 }
 
 
-quint8 DuMidiMetaEvent::getType()
+quint8 DuMidiMetaEvent::getType() const
 {
-    return type;
+    return type->getNumeric();
 }
-
-quint32 DuMidiMetaEvent::getLength()
-{
-    return data.size();
-}
-
-QByteArray& DuMidiMetaEvent::getData()
-{
-    return data;
-}
-
 
 void DuMidiMetaEvent::setType(quint8 value)
 {
-    type = value;
+    type->setNumeric(value);
+}
+
+
+quint32 DuMidiMetaEvent::getLength() const
+{
+    return getData().size();
 }
 
 void DuMidiMetaEvent::setLength(quint32 value)
 {
-    data.resize(value);
+    data->setMaxSize(value);
+}
+
+
+const QByteArray DuMidiMetaEvent::getData() const
+{
+    return data->getConstData();
 }
