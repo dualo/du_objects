@@ -28,6 +28,8 @@ public:
 
     DuMusicList(const QString& name = "", Type type = None);
 
+    virtual DuObjectPtr clone() const;
+
     virtual bool equals(const DuMusicListConstPtr& other) const;
 
     QString getName() const;

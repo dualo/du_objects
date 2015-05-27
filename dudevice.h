@@ -22,6 +22,8 @@ class DuDevice : public DuContainer
 public:
     DuDevice();
 
+    virtual DuObjectPtr clone() const;
+
     virtual QHttpMultiPart* toHttpMultiPart(const QByteArray &boundary) const;
 
     QString getSerialNumber() const;

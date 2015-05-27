@@ -32,6 +32,11 @@ DuWah::~DuWah()
 {
 }
 
+DuObjectPtr DuWah::clone() const
+{
+    return DuWahPtr(new DuWah(*this));
+}
+
 
 DuWahPtr DuWah::fromDuMusicFile(const FX_wah &du_wah)
 {

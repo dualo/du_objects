@@ -46,6 +46,11 @@ DuDelay::~DuDelay()
 {
 }
 
+DuObjectPtr DuDelay::clone() const
+{
+    return DuDelayPtr(new DuDelay(*this));
+}
+
 
 DuDelayPtr DuDelay::fromDuMusicFile(const FX_delay &du_delay)
 {

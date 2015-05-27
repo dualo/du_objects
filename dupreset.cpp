@@ -53,6 +53,11 @@ DuPreset::~DuPreset()
 {
 }
 
+DuObjectPtr DuPreset::clone() const
+{
+    return DuPresetPtr(new DuPreset(*this));
+}
+
 
 DuPresetPtr DuPreset::fromDuMusicFile(const preset_instr &du_preset)
 {

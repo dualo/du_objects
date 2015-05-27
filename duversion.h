@@ -12,6 +12,8 @@ public:
     DuVersion(const QString& version);
     DuVersion(int major = 0, int minor = 0, int patch = 0);
 
+    virtual DuObjectPtr clone() const;
+
     QDebug debugPrint(QDebug dbg) const;
 
     int major() const;

@@ -32,6 +32,8 @@ public:
     DuSongInfo();
     ~DuSongInfo();
 
+    virtual DuObjectPtr clone() const;
+
     static DuSongInfoPtr fromDuMusicFile(const music_song &du_song);
     static DuSongInfoPtr fromJson(const QJsonObject &jsonSongInfo);
 

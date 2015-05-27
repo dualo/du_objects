@@ -26,6 +26,8 @@ public:
     explicit DuEqualizer();
     ~DuEqualizer();
 
+    virtual DuObjectPtr clone() const;
+
     static DuEqualizerPtr fromDuMusicFile(const FX_equalizer du_equalizer);
     static DuEqualizerPtr fromJson(const QJsonObject &jsonEqualizer);
 

@@ -29,6 +29,11 @@ DuHeader::~DuHeader()
 {
 }
 
+DuObjectPtr DuHeader::clone() const
+{
+    return DuHeaderPtr(new DuHeader(*this));
+}
+
 
 DuHeaderPtr DuHeader::fromDuMusicFile(const music_song &du_song)
 {

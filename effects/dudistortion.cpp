@@ -44,6 +44,11 @@ DuDistortion::~DuDistortion()
 {
 }
 
+DuObjectPtr DuDistortion::clone() const
+{
+    return DuDistortionPtr(new DuDistortion(*this));
+}
+
 
 DuDistortionPtr DuDistortion::fromDuMusicFile(const FX_distortion &du_distortion)
 {

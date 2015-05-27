@@ -9,6 +9,11 @@ DuUrl::DuUrl(const QUrl& url) :
 {
 }
 
+DuObjectPtr DuUrl::clone() const
+{
+    return DuUrlPtr(new DuUrl(*this));
+}
+
 QByteArray DuUrl::toDuMusicFile() const
 {
     Q_UNIMPLEMENTED();

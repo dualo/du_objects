@@ -13,6 +13,8 @@ public:
     explicit DuString(int maxSize = -1);
     virtual ~DuString();
 
+    virtual DuObjectPtr clone() const;
+
     QByteArray toDuMusicFile() const;
     QJsonValue toJson() const;
     QHttpPart toHttpPart(const QString &name) const;

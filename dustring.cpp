@@ -20,6 +20,11 @@ DuString::~DuString()
 {
 }
 
+DuObjectPtr DuString::clone() const
+{
+    return DuStringPtr(new DuString(*this));
+}
+
 
 QByteArray DuString::toDuMusicFile() const
 {

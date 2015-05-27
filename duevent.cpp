@@ -52,6 +52,11 @@ DuEvent::~DuEvent()
 {
 }
 
+DuObjectPtr DuEvent::clone() const
+{
+    return DuEventPtr(new DuEvent(*this));
+}
+
 
 DuEventPtr DuEvent::fromDuMusicFile(const music_sample &du_sample)
 {

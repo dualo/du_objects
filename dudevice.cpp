@@ -19,6 +19,11 @@ DuDevice::DuDevice() :
     addChild(KEY_DEVICE_UPDATE_DATE,    new DuDate());
 }
 
+DuObjectPtr DuDevice::clone() const
+{
+    return DuDevicePtr(new DuDevice(*this));
+}
+
 QHttpMultiPart *DuDevice::toHttpMultiPart(const QByteArray& boundary) const
 {
     QHttpMultiPart* multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);

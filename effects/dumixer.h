@@ -22,6 +22,8 @@ public:
     explicit DuMixer();
     ~DuMixer();
 
+    virtual DuObjectPtr clone() const;
+
     static DuMixerPtr fromDuMusicFile(const FX_mix &du_mixer);
     static DuMixerPtr fromJson(const QJsonObject &jsonMixer);
 

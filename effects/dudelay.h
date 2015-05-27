@@ -22,6 +22,8 @@ public:
     explicit DuDelay();
     ~DuDelay();
 
+    virtual DuObjectPtr clone() const;
+
     static DuDelayPtr fromDuMusicFile(const FX_delay &du_delay);
     static DuDelayPtr fromJson(const QJsonObject &jsonDelay);
 

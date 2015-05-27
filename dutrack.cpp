@@ -24,6 +24,11 @@ DuTrack::~DuTrack()
 {
 }
 
+DuObjectPtr DuTrack::clone() const
+{
+    return DuTrackPtr(new DuTrack(*this));
+}
+
 
 DuTrackPtr DuTrack::fromDuMusicFile(const music_track &du_track,
                                   const music_sample *du_sample)

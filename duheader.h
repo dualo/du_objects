@@ -34,6 +34,8 @@ public:
     explicit DuHeader();
     ~DuHeader();
 
+    virtual DuObjectPtr clone() const;
+
     static DuHeaderPtr fromDuMusicFile(const music_song &du_song);
     static DuHeaderPtr fromJson(const QJsonObject &jsonHeader);
 

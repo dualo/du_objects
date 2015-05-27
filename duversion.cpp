@@ -24,6 +24,11 @@ DuVersion::DuVersion(int major, int minor, int patch) :
     Q_ASSERT(res);
 }
 
+DuObjectPtr DuVersion::clone() const
+{
+    return DuVersionPtr(new DuVersion(*this));
+}
+
 QDebug DuVersion::debugPrint(QDebug dbg) const
 {
     dbg.nospace() << "DuVersion(" << getVersion() << ")";

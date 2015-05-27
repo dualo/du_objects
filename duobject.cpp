@@ -8,6 +8,11 @@ DuObject::DuObject()
 {
 }
 
+DuObject::DuObject(const DuObject &other)
+{
+    Q_UNUSED(other)
+}
+
 DuObject::~DuObject()
 {
 }

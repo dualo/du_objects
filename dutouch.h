@@ -14,6 +14,8 @@ class DuTouch : public DuDevice
 public:
     DuTouch();
 
+    virtual DuObjectPtr clone() const;
+
     QHttpMultiPart *toHttpMultiPart(const QByteArray &boundary) const;
 
     DuVersionConstPtr getSoundbankVersion() const;

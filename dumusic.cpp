@@ -20,6 +20,11 @@ DuMusic::~DuMusic()
 {
 }
 
+DuObjectPtr DuMusic::clone() const
+{
+    return DuMusicPtr(new DuMusic(*this));
+}
+
 
 DuMusicPtr DuMusic::fromDuMusicFile(const s_total_buffer &du_music)
 {

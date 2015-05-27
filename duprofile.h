@@ -35,6 +35,8 @@ public:
 
     DuProfile();
 
+    virtual DuObjectPtr clone() const;
+
     /**
      * @brief Parse a json object to extract the profile infos
      * @param jsonProfile  The json object we want to parse

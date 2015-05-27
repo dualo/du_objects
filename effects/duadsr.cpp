@@ -38,6 +38,11 @@ DuAdsr::~DuAdsr()
 {
 }
 
+DuObjectPtr DuAdsr::clone() const
+{
+    return DuAdsrPtr(new DuAdsr(*this));
+}
+
 
 DuAdsrPtr DuAdsr::fromDuMusicFile(const FX_adsr &du_adsr)
 {

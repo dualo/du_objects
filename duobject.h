@@ -40,6 +40,12 @@ public:
     explicit DuObject();
     virtual ~DuObject();
 
+protected:
+    explicit DuObject(const DuObject& other);
+
+public:
+    virtual DuObjectPtr clone() const = 0;
+
     virtual QByteArray toDuMusicFile() const = 0;
     virtual QJsonValue toJson() const = 0;
 

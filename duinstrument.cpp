@@ -26,6 +26,11 @@ DuInstrument::~DuInstrument()
 {
 }
 
+DuObjectPtr DuInstrument::clone() const
+{
+    return DuInstrumentPtr(new DuInstrument(*this));
+}
+
 
 DuInstrumentPtr DuInstrument::fromDuMusicFile(const music_instr &du_instr)
 {

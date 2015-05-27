@@ -19,6 +19,8 @@ public:
                        int minValue, int defaultValue);
     ~DuNumeric();
 
+    virtual DuObjectPtr clone() const;
+
     QByteArray toDuMusicFile() const;
     QJsonValue toJson() const;
     QHttpPart toHttpPart(const QString &name) const;

@@ -13,6 +13,12 @@ public:
     explicit DuArray(int maxSize = -1);
     ~DuArray();
 
+protected:
+    explicit DuArray(const DuArray& other);
+
+public:
+    virtual DuObjectPtr clone() const;
+
     QJsonValue toJson() const;
     QByteArray toDuMusicFile() const;
 

@@ -56,6 +56,11 @@ DuChorus::~DuChorus()
 {
 }
 
+DuObjectPtr DuChorus::clone() const
+{
+    return DuChorusPtr(new DuChorus(*this));
+}
+
 
 DuChorusPtr DuChorus::fromDuMusicFile(const FX_chorus &du_chorus)
 {

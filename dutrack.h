@@ -19,6 +19,8 @@ public:
     explicit DuTrack();
     ~DuTrack();
 
+    virtual DuObjectPtr clone() const;
+
     static DuTrackPtr fromDuMusicFile(const music_track &du_track,
                                     const music_sample *du_sample);
     static DuTrackPtr fromJson(const QJsonObject &jsonTrack);

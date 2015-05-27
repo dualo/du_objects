@@ -30,6 +30,11 @@ DuLoop::~DuLoop()
 {
 }
 
+DuObjectPtr DuLoop::clone() const
+{
+    return DuLoopPtr(new DuLoop(*this));
+}
+
 
 DuLoopPtr DuLoop::fromDuMusicFile(const music_loop &du_loop,
                                 const music_sample *du_sample)

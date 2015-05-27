@@ -9,6 +9,11 @@ DuDate::DuDate(const QDateTime &date) :
 {
 }
 
+DuObjectPtr DuDate::clone() const
+{
+    return DuDatePtr(new DuDate(*this));
+}
+
 QJsonValue DuDate::toJson() const
 {
     return QJsonValue(getDate().toString());

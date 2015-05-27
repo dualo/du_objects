@@ -22,6 +22,8 @@ public:
     explicit DuCompressor();
     ~DuCompressor();
 
+    virtual DuObjectPtr clone() const;
+
     static DuCompressorPtr fromDuMusicFile(const FX_compressor &du_compressor);
     static DuCompressorPtr fromJson(const QJsonObject &jsonCompressor);
 

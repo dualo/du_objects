@@ -30,6 +30,11 @@ DuVibrato::~DuVibrato()
 {
 }
 
+DuObjectPtr DuVibrato::clone() const
+{
+    return DuVibratoPtr(new DuVibrato(*this));
+}
+
 
 DuVibratoPtr DuVibrato::fromDuMusicFile(const FX_vibrato &du_vibrato)
 {

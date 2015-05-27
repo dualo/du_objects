@@ -60,6 +60,11 @@ DuSongInfo::~DuSongInfo()
 {
 }
 
+DuObjectPtr DuSongInfo::clone() const
+{
+    return DuSongInfoPtr(new DuSongInfo(*this));
+}
+
 
 DuSongInfoPtr DuSongInfo::fromDuMusicFile(const music_song &du_song)
 {

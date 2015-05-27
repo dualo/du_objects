@@ -29,6 +29,8 @@ public:
     explicit DuPreset();
     ~DuPreset();
 
+    virtual DuObjectPtr clone() const;
+
     static DuPresetPtr fromDuMusicFile(const preset_instr &du_preset);
     static DuPresetPtr fromJson(const QJsonObject &jsonPreset);
 

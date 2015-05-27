@@ -35,6 +35,8 @@ public:
     explicit DuInstrument();
     ~DuInstrument();
 
+    virtual DuObjectPtr clone() const;
+
     static DuInstrumentPtr fromDuMusicFile(const music_instr &du_instr);
     static DuInstrumentPtr fromJson(const QJsonObject &jsonInstrument);
 

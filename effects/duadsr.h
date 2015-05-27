@@ -20,6 +20,8 @@ public:
     explicit DuAdsr();
     ~DuAdsr();
 
+    virtual DuObjectPtr clone() const;
+
     static DuAdsrPtr fromDuMusicFile(const FX_adsr &du_adsr);
     static DuAdsrPtr fromJson(const QJsonObject &jsonAdsr);
 

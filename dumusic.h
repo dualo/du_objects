@@ -19,6 +19,8 @@ public:
     explicit DuMusic();
     ~DuMusic();
 
+    virtual DuObjectPtr clone() const;
+
     static DuMusicPtr fromDuMusicFile(const s_total_buffer &du_music);
     static DuMusicPtr fromJson(const QJsonObject &jsonMusic);
 

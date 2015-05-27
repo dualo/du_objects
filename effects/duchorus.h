@@ -25,6 +25,8 @@ public:
     explicit DuChorus();
     ~DuChorus();
 
+    virtual DuObjectPtr clone() const;
+
     static DuChorusPtr fromDuMusicFile(const FX_chorus &du_chorus);
     static DuChorusPtr fromJson(const QJsonObject &jsonChorus);
 

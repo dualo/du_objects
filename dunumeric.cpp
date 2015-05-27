@@ -36,6 +36,11 @@ DuNumeric::~DuNumeric()
 {
 }
 
+DuObjectPtr DuNumeric::clone() const
+{
+    return DuNumericPtr(new DuNumeric(*this));
+}
+
 
 QByteArray DuNumeric::toDuMusicFile() const
 {

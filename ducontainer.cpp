@@ -14,6 +14,22 @@ DuContainer::~DuContainer()
 {
 }
 
+DuContainer::DuContainer(const DuContainer &other) :
+    DuObject(other)
+{
+    QMapIterator<QString, DuObjectPtr> i(other.children);
+    while (i.hasNext())
+    {
+        i.next();
+        children.insert(i.key(), i.value()->clone());
+    }
+}
+
+DuObjectPtr DuContainer::clone() const
+{
+    return DuContainerPtr(new DuContainer(*this));
+}
+
 
 QJsonValue DuContainer::toJson() const
 {

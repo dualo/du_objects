@@ -13,6 +13,8 @@ class DuDate : public DuValue
 public:
     DuDate(const QDateTime& date = QDateTime());
 
+    virtual DuObjectPtr clone() const;
+
     QJsonValue toJson() const;
     QByteArray toDuMusicFile() const;
     QDebug debugPrint(QDebug dbg) const;

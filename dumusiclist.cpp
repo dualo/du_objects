@@ -14,6 +14,11 @@ DuMusicList::DuMusicList(const QString &name, DuMusicList::Type type) :
     addChild(KEY_MUSIC_LIST_TYPE,   new DuNumeric(type));
 }
 
+DuObjectPtr DuMusicList::clone() const
+{
+    return DuMusicListPtr(new DuMusicList(*this));
+}
+
 bool DuMusicList::equals(const DuMusicListConstPtr &other) const
 {
     return this->getName() == other->getName() && this->getType() == other->getType();

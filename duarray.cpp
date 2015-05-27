@@ -15,6 +15,21 @@ DuArray::~DuArray()
 {
 }
 
+DuArray::DuArray(const DuArray &other) :
+    DuObject(other),
+    maxSize(other.maxSize)
+{
+    QListIterator<DuObjectPtr> i(other.array);
+    while (i.hasNext()) {
+        array.append(i.next()->clone());
+    }
+}
+
+DuObjectPtr DuArray::clone() const
+{
+    return DuArrayPtr(new DuArray(*this));
+}
+
 
 QJsonValue DuArray::toJson() const
 {

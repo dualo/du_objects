@@ -14,6 +14,11 @@ DuDeviceMusicList::DuDeviceMusicList(const DuDeviceConstPtr& device) :
     addChild(KEY_DEVICE_MUSIC_LIST_SERIAL_NUMBER, new DuString(device->getSerialNumber()));
 }
 
+DuObjectPtr DuDeviceMusicList::clone() const
+{
+    return DuDeviceMusicListPtr(new DuDeviceMusicList(*this));
+}
+
 bool DuDeviceMusicList::equals(const DuMusicListConstPtr& other) const
 {
     if (other->getType() != Device)

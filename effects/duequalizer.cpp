@@ -60,6 +60,11 @@ DuEqualizer::~DuEqualizer()
 {
 }
 
+DuObjectPtr DuEqualizer::clone() const
+{
+    return DuEqualizerPtr(new DuEqualizer(*this));
+}
+
 
 DuEqualizerPtr DuEqualizer::fromDuMusicFile(const FX_equalizer du_equalizer)
 {

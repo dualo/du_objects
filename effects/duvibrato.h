@@ -18,6 +18,8 @@ public:
     explicit DuVibrato();
     ~DuVibrato();
 
+    virtual DuObjectPtr clone() const;
+
     static DuVibratoPtr fromDuMusicFile(const FX_vibrato &du_vibrato);
     static DuVibratoPtr fromJson(const QJsonObject &jsonVibrato);
 

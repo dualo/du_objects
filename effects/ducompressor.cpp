@@ -44,6 +44,11 @@ DuCompressor::~DuCompressor()
 {
 }
 
+DuObjectPtr DuCompressor::clone() const
+{
+    return DuCompressorPtr(new DuCompressor(*this));
+}
+
 
 DuCompressorPtr DuCompressor::fromDuMusicFile(const FX_compressor &du_compressor)
 {

@@ -45,6 +45,11 @@ DuMixer::~DuMixer()
 {
 }
 
+DuObjectPtr DuMixer::clone() const
+{
+    return DuMixerPtr(new DuMixer(*this));
+}
+
 
 DuMixerPtr DuMixer::fromDuMusicFile(const FX_mix &du_mixer)
 {

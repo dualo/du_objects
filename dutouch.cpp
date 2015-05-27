@@ -11,6 +11,11 @@ DuTouch::DuTouch() :
     addChild(KEY_TOUCH_SOUNDBANK_UPDATE_DATE,   new DuDate());
 }
 
+DuObjectPtr DuTouch::clone() const
+{
+    return DuTouchPtr(new DuTouch(*this));
+}
+
 QHttpMultiPart *DuTouch::toHttpMultiPart(const QByteArray& boundary) const
 {
     QHttpMultiPart* multiPart = DuDevice::toHttpMultiPart(boundary);

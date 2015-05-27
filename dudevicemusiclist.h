@@ -14,6 +14,8 @@ class DuDeviceMusicList : public DuMusicList
 public:
     DuDeviceMusicList(const DuDeviceConstPtr &device);
 
+    virtual DuObjectPtr clone() const;
+
     bool equals(const DuMusicListConstPtr& other) const;
 
     QString getSerialNumber() const;

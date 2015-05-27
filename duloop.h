@@ -21,6 +21,8 @@ public:
     explicit DuLoop();
     ~DuLoop();
 
+    virtual DuObjectPtr clone() const;
+
     static DuLoopPtr fromDuMusicFile(const music_loop &du_loop,
                                    const music_sample *du_sample);
     static DuLoopPtr fromJson(const QJsonObject &jsonLoop);

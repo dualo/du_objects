@@ -22,6 +22,8 @@ public:
     explicit DuDistortion();
     ~DuDistortion();
 
+    virtual DuObjectPtr clone() const;
+
     static DuDistortionPtr fromDuMusicFile(const FX_distortion &du_distortion);
     static DuDistortionPtr fromJson(const QJsonObject &jsonDistortion);
 

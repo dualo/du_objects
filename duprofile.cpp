@@ -29,6 +29,11 @@ DuProfile::DuProfile()
     addChild(KEY_PROFILE_FRIENDS,       new DuArray);
 }
 
+DuObjectPtr DuProfile::clone() const
+{
+    return DuProfilePtr(new DuProfile(*this));
+}
+
 DuProfilePtr DuProfile::fromJson(const QJsonObject &jsonProfile, int recursionLevel)
 {
     if (jsonProfile.isEmpty())

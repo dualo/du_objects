@@ -21,6 +21,8 @@ public:
     explicit DuEvent();
     ~DuEvent();
 
+    virtual DuObjectPtr clone() const;
+
     static DuEventPtr fromDuMusicFile(const music_sample &du_sample);
     static DuEventPtr fromJson(const QJsonObject &jsonEvent);
 

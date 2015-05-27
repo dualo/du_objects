@@ -17,6 +17,12 @@ public:
     explicit DuContainer();
     virtual ~DuContainer();
 
+protected:
+    explicit DuContainer(const DuContainer& other);
+
+public:
+    virtual DuObjectPtr clone() const;
+
     virtual QJsonValue toJson() const;
     virtual QByteArray toDuMusicFile() const;
 

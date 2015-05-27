@@ -19,6 +19,8 @@ public:
     explicit DuWah();
     ~DuWah();
 
+    virtual DuObjectPtr clone() const;
+
     static DuWahPtr fromDuMusicFile(const FX_wah &du_wah);
     static DuWahPtr fromJson(const QJsonObject &jsonWah);
 

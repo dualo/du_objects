@@ -13,6 +13,8 @@ public:
 
     // DuObject interface
 public:
+    virtual DuObjectPtr clone() const;
+
     QByteArray toDuMusicFile() const;
     QJsonValue toJson() const;
     QDebug debugPrint(QDebug dbg) const;
