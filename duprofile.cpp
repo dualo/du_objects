@@ -351,6 +351,11 @@ DuArrayConstPtr DuProfile::getDuTouchList() const
     return getChildAs<const DuArray>(KEY_PROFILE_DUTOUCH_LIST);
 }
 
+DuArrayPtr DuProfile::getDuTouchList()
+{
+    return getChildAs<DuArray>(KEY_PROFILE_DUTOUCH_LIST);
+}
+
 void DuProfile::setDuTouchList(const DuArrayPtr &value)
 {
     addChild(KEY_PROFILE_DUTOUCH_LIST, value);

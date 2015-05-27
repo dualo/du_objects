@@ -70,6 +70,7 @@ public:
     bool setGUID(int value);
 
     DuArrayConstPtr getDuTouchList() const;
+    DuArrayPtr getDuTouchList();
     void setDuTouchList(const DuArrayPtr& value);
 
     DuArrayConstPtr getFriends() const;
