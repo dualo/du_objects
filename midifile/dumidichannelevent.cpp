@@ -2,17 +2,17 @@
 
 #include <QDebug>
 
+
 DU_OBJECT_IMPL(DuMidiChannelEvent)
 
-
 DuMidiChannelEvent::DuMidiChannelEvent(quint32 time, quint8 status) :
-    DuAbstractMidiEvent(time, status)
+    DuMidiAbstractEvent(time, status)
 {
     addChild(KEY_MIDICHANNELEVENT_KEY,
-             new DuMidiNumeric(0, MIDINUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
+             new DuNumeric(0, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
 
     addChild(KEY_MIDICHANNELEVENT_VALUE,
-             new DuMidiNumeric(0, MIDINUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
+             new DuNumeric(0, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
 }
 
 DuMidiChannelEvent::~DuMidiChannelEvent()
@@ -128,7 +128,7 @@ DuObjectPtr DuMidiChannelEvent::clone() const
 }
 
 
-const QByteArray DuMidiChannelEvent::toMidiBinary() const
+QByteArray DuMidiChannelEvent::toMidiBinary() const
 {
     //TODO: subclasses for DuMidiChannelEvent to differenciate virtual method
 
@@ -144,8 +144,8 @@ const QByteArray DuMidiChannelEvent::toMidiBinary() const
     retArray += time->toMidiBinary();
 
 
-    const DuMidiNumericConstPtr &status =
-            getChildAs<DuMidiNumeric>(KEY_MIDIEVENT_STATUS);
+    const DuNumericConstPtr &status =
+            getChildAs<DuNumeric>(KEY_MIDIEVENT_STATUS);
 
     if (status == NULL)
         return QByteArray();
@@ -153,8 +153,8 @@ const QByteArray DuMidiChannelEvent::toMidiBinary() const
     retArray += status->toMidiBinary();
 
 
-    const DuMidiNumericConstPtr &key =
-            getChildAs<DuMidiNumeric>(KEY_MIDICHANNELEVENT_KEY);
+    const DuNumericConstPtr &key =
+            getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_KEY);
 
     if (key == NULL)
         return QByteArray();
@@ -162,8 +162,8 @@ const QByteArray DuMidiChannelEvent::toMidiBinary() const
     retArray += key->toMidiBinary();
 
 
-    const DuMidiNumericConstPtr &value =
-            getChildAs<DuMidiNumeric>(KEY_MIDICHANNELEVENT_VALUE);
+    const DuNumericConstPtr &value =
+            getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_VALUE);
 
     if (value == NULL)
         return QByteArray();
@@ -232,8 +232,8 @@ void DuMidiChannelEvent::setChannel(quint8 value)
 
 quint8 DuMidiChannelEvent::getKey() const
 {
-    const DuMidiNumericConstPtr &tmp =
-            getChildAs<DuMidiNumeric>(KEY_MIDICHANNELEVENT_KEY);
+    const DuNumericConstPtr &tmp =
+            getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_KEY);
 
     if (tmp == NULL)
         return -1;
@@ -243,8 +243,8 @@ quint8 DuMidiChannelEvent::getKey() const
 
 void DuMidiChannelEvent::setKey(quint8 value)
 {
-    DuMidiNumericPtr &tmp =
-            getChildAs<DuMidiNumeric>(KEY_MIDICHANNELEVENT_KEY);
+    DuNumericPtr &tmp =
+            getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_KEY);
 
     if (tmp == NULL)
         return;
@@ -255,8 +255,8 @@ void DuMidiChannelEvent::setKey(quint8 value)
 
 quint8 DuMidiChannelEvent::getValue() const
 {
-    const DuMidiNumericConstPtr &tmp =
-            getChildAs<DuMidiNumeric>(KEY_MIDICHANNELEVENT_VALUE);
+    const DuNumericConstPtr &tmp =
+            getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_VALUE);
 
     if (tmp == NULL)
         return -1;
@@ -266,8 +266,8 @@ quint8 DuMidiChannelEvent::getValue() const
 
 void DuMidiChannelEvent::setValue(quint8 value)
 {
-    DuMidiNumericPtr &tmp =
-            getChildAs<DuMidiNumeric>(KEY_MIDICHANNELEVENT_VALUE);
+    DuNumericPtr &tmp =
+            getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_VALUE);
 
     if (tmp == NULL)
         return;

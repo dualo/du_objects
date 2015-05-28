@@ -21,7 +21,10 @@ DuNumeric::DuNumeric(int defaultValue, int byteSize, int maxValue, int minValue)
     maxValue(maxValue),
     minValue(minValue)
 {
-    bool res = setNumeric(defaultValue);
+    bool res = setNumeric(defaultValue)
+            && minValue <= defaultValue
+            && maxValue >= defaultValue;
+
     Q_ASSERT(res);
 }
 
@@ -32,7 +35,10 @@ DuNumeric::DuNumeric(int value, int byteSize,
     maxValue(maxValue),
     minValue(minValue)
 {
-    bool res = setNumeric(value);
+    bool res = setNumeric(value)
+            && minValue <= defaultValue
+            && maxValue >= defaultValue;
+
     Q_ASSERT(res);
 }
 
@@ -49,18 +55,48 @@ DuObjectPtr DuNumeric::clone() const
 
 QByteArray DuNumeric::toDuMusicBinary() const
 {
-    QByteArray array;
-    array.clear();
+    int size = getMaxSize();
+
+    if (size == -1)
+        return QByteArray();
+
+    if (size == 0)
+        return QByteArray("");
+
+    QByteArray retArray;
+    retArray.clear();
 
     int num = getNumeric();
-    int byteSize = getMaxSize();
 
-    for (int i = 0; i < byteSize; i++)
+    for (int i = 0; i < size; i++)
     {
-        array.append((quint8)(num >> (i * 8)) & 0xFF);
+        retArray.append((quint8)((num >> (i * 8)) & 0xFF));
     }
 
-    return array;
+    return retArray;
+}
+
+QByteArray DuNumeric::toMidiBinary() const
+{
+    int size = getMaxSize();
+
+    if (size == -1)
+        return QByteArray();
+
+    if (size == 0)
+        return QByteArray("");
+
+    QByteArray retArray;
+    retArray.clear();
+
+    int num = getNumeric();
+
+    for (int i = 1; i < size + 1; i++)
+    {
+        retArray.append((quint8)((num >> ((size - i) * 8)) & 0xFF));
+    }
+
+    return retArray;
 }
 
 QJsonValue DuNumeric::toJson() const

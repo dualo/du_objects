@@ -1,7 +1,7 @@
 #include "dumiditrack.h"
 
 DuMidiTrack::DuMidiTrack() :
-    events(QList<DuAbstractMidiEvent*>())
+    events(QList<DuMidiAbstractEvent*>())
 {
     events.clear();
 }
@@ -12,7 +12,7 @@ DuMidiTrack::~DuMidiTrack()
 }
 
 
-void DuMidiTrack::appendEvent(DuAbstractMidiEvent *event)
+void DuMidiTrack::appendEvent(DuMidiAbstractEvent *event)
 {
     events.append(event);
 }
@@ -48,7 +48,7 @@ QByteArray DuMidiTrack::toByteArray()
 }
 
 
-QList<DuAbstractMidiEvent *> &DuMidiTrack::getEvents()
+QList<DuMidiAbstractEvent *> &DuMidiTrack::getEvents()
 {
     return events;
 }

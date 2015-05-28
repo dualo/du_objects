@@ -2,9 +2,10 @@
 
 #include <QDebug>
 
+
 DU_OBJECT_IMPL(DuUrl)
 
-DuUrl::DuUrl(const QUrl& url) :
+DuUrl::DuUrl(const QUrl &url) :
     DuValue(url)
 {
 }

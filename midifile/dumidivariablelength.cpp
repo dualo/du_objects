@@ -2,11 +2,11 @@
 
 #include <QDebug>
 
+
 DU_OBJECT_IMPL(DuMidiVariableLength)
 
-
 DuMidiVariableLength::DuMidiVariableLength(int offset) :
-    DuMidiValue(),
+    DuValue(),
     offset(offset)
 {
 }
@@ -22,7 +22,13 @@ DuObjectPtr DuMidiVariableLength::clone() const
 }
 
 
-const QByteArray DuMidiVariableLength::toMidiBinary() const
+QByteArray DuMidiVariableLength::toDuMusicBinary() const
+{
+    Q_UNIMPLEMENTED();
+    return QByteArray();
+}
+
+QByteArray DuMidiVariableLength::toMidiBinary() const
 {
     QByteArray array;
     array.clear();
@@ -44,6 +50,12 @@ const QByteArray DuMidiVariableLength::toMidiBinary() const
         array.prepend((quint8)(((value >> 21) & 0x7F) + 0x80));
 
     return array;
+}
+
+QJsonValue DuMidiVariableLength::toJson() const
+{
+    Q_UNIMPLEMENTED();
+    return QJsonValue();
 }
 
 

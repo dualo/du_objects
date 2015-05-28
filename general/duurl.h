@@ -9,7 +9,7 @@ DU_OBJECT(DuUrl)
 class DuUrl : public DuValue
 {
 public:
-    DuUrl(const QUrl& url = QUrl());
+    DuUrl(const QUrl &url = QUrl());
 
     virtual DuObjectPtr clone() const;
 
@@ -19,7 +19,7 @@ public:
     QDebug debugPrint(QDebug dbg) const;
 
     QUrl getUrl() const;
-    void setUrl(const QUrl& url);
+    void setUrl(const QUrl &url);
 };
 
 #endif // DUURL_H

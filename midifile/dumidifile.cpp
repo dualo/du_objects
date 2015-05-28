@@ -92,7 +92,7 @@ QList<DuMidiMetaEvent *> DuMidiFile::findMetaEvents(quint16 trackIndex, quint8 t
     metaEvents.clear();
 
     DuMidiTrack *track = tracks[trackIndex];
-    QList<DuAbstractMidiEvent *> &events = track->getEvents();
+    QList<DuMidiAbstractEvent *> &events = track->getEvents();
 
     for(int i = 0; i < events.count(); i++)
     {
@@ -179,7 +179,7 @@ DuMidiTrack* DuMidiFile::parseTrack(QDataStream &stream)
 
         while (!trackEnded)
         {
-            DuAbstractMidiEvent* event =
+            DuMidiAbstractEvent* event =
                     parseEvent(stream, &runningStatus, &trackEnded);
             if (event != NULL) track->appendEvent(event);
         }
@@ -193,11 +193,11 @@ DuMidiTrack* DuMidiFile::parseTrack(QDataStream &stream)
 }
 
 
-DuAbstractMidiEvent* DuMidiFile::parseEvent(QDataStream &stream,
+DuMidiAbstractEvent *DuMidiFile::parseEvent(QDataStream &stream,
                                             quint8 *runningStatus,
                                             bool *trackEnded)
 {
-    DuAbstractMidiEvent* event = NULL;
+    DuMidiAbstractEvent* event = NULL;
     quint32 tmpTime;
     quint8 tmp;
 

@@ -2,20 +2,22 @@
 
 #include <QDebug>
 
+
 DU_OBJECT_IMPL(DuMidiMetaEvent)
 
-
 DuMidiMetaEvent::DuMidiMetaEvent() :
-    DuAbstractMidiEvent(0, 0xFF)
+    DuMidiAbstractEvent(0, 0xFF)
 {
-    type = new DuMidiNumeric(0x00, MIDINUMERIC_DEFAULT_SIZE, 0x7F, 0x00);
-    data = new DuMidiData();
+    addChild(KEY_MIDIMETAEVENT_TYPE,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
+
+    addChild(KEY_MIDIMETAEVENT_LENGTH,  new DuMidiVariableLength(0));
+
+    addChild(KEY_MIDIMETAEVENT_DATA,    new DuBinaryData());
 }
 
 DuMidiMetaEvent::~DuMidiMetaEvent()
 {
-    delete type;
-    delete data;
 }
 
 
@@ -27,7 +29,7 @@ QByteArray DuMidiMetaEvent::toByteArray(bool runningStatusActive)
 
     array.append(getType());
 
-    array += length->toMidiBinary();
+    //array += length->toMidiBinary();
     array += getData();
 
     return array;
@@ -35,12 +37,12 @@ QByteArray DuMidiMetaEvent::toByteArray(bool runningStatusActive)
 
 void DuMidiMetaEvent::setDataBytes(QDataStream &stream)
 {
-    data->setData(stream);
+    setData(stream);
 }
 
 void DuMidiMetaEvent::setDataBytes(const QByteArray &array)
 {
-    data->setData(array);
+    setData(array);
 }
 
 
@@ -50,49 +52,93 @@ DuObjectPtr DuMidiMetaEvent::clone() const
 }
 
 
-const QByteArray DuMidiMetaEvent::toMidiBinary() const
+QByteArray DuMidiMetaEvent::toMidiBinary() const
 {
     //TODO: implement toMidiBinary()
     return QByteArray();
 }
 
 
-int DuMidiMetaEvent::size() const
-{
-    //TODO: refactoring
-    return (1 + 2 + length->size() + getLength());
-}
-
-
 quint8 DuMidiMetaEvent::getType() const
 {
-    return type->getNumeric();
+    const DuNumericConstPtr &tmp =
+            getChildAs<DuNumeric>(KEY_MIDIMETAEVENT_TYPE);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
 }
 
 void DuMidiMetaEvent::setType(quint8 value)
 {
-    type->setNumeric(value);
+    DuNumericPtr &tmp =
+            getChildAs<DuNumeric>(KEY_MIDIMETAEVENT_TYPE);
+
+     if (tmp == NULL)
+         return;
+
+     tmp->setNumeric(value);
 }
 
 
 quint32 DuMidiMetaEvent::getLength() const
 {
-    return length->getAbsolute();
+    const DuMidiVariableLengthConstPtr &tmp =
+            getChildAs<DuMidiVariableLength>(KEY_MIDIMETAEVENT_LENGTH);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getAbsolute();
 }
 
 void DuMidiMetaEvent::setLength(quint32 value)
 {
+    DuMidiVariableLengthPtr &length =
+            getChildAs<DuMidiVariableLength>(KEY_MIDIMETAEVENT_LENGTH);
+    if (length == NULL)
+        return;
+
+    DuBinaryDataPtr &data =
+            getChildAs<DuBinaryData>(KEY_MIDIMETAEVENT_DATA);
+    if (data == NULL)
+        return;
+
     length->setAbsolute(value);
-    data->resize(length->getAbsolute());
+    data->resize(value);
 }
 
 
 const QByteArray DuMidiMetaEvent::getData() const
 {
-    return data->getData();
+    const DuBinaryDataConstPtr &tmp =
+            getChildAs<DuBinaryData>(KEY_MIDIMETAEVENT_DATA);
+
+    if (tmp == NULL)
+        return QByteArray();
+
+    return tmp->getData();
 }
 
 void DuMidiMetaEvent::setData(const QByteArray &value)
 {
-    data->setData(value);
+    DuBinaryDataPtr &tmp =
+            getChildAs<DuBinaryData>(KEY_MIDIMETAEVENT_DATA);
+
+    if (tmp == NULL)
+        return;
+
+    tmp->setData(value);
+}
+
+void DuMidiMetaEvent::setData(QDataStream &stream)
+{
+    DuBinaryDataPtr &tmp =
+            getChildAs<DuBinaryData>(KEY_MIDIMETAEVENT_DATA);
+
+    if (tmp == NULL)
+        return;
+
+    tmp->setData(stream);
 }

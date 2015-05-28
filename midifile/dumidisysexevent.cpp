@@ -2,18 +2,19 @@
 
 #include <QDebug>
 
+
 DU_OBJECT_IMPL(DuMidiSysExEvent)
 
-
 DuMidiSysExEvent::DuMidiSysExEvent() :
-    DuAbstractMidiEvent()
+    DuMidiAbstractEvent()
 {
-    data = new DuMidiData();
+    addChild(KEY_MIDISYSEXEVENT_LENGTH, new DuMidiVariableLength(0));
+
+    addChild(KEY_MIDISYSEXEVENT_DATA,   new DuBinaryData());
 }
 
 DuMidiSysExEvent::~DuMidiSysExEvent()
 {
-    delete data;
 }
 
 
@@ -32,12 +33,12 @@ QByteArray DuMidiSysExEvent::toByteArray(bool runningStatusActive)
 
 void DuMidiSysExEvent::setDataBytes(QDataStream &stream)
 {
-    data->setData(stream);
+    setData(stream);
 }
 
 void DuMidiSysExEvent::setDataBytes(const QByteArray &array)
 {
-    data->setData(array);
+    setData(array);
 }
 
 
@@ -47,28 +48,36 @@ DuObjectPtr DuMidiSysExEvent::clone() const
 }
 
 
-const QByteArray DuMidiSysExEvent::toMidiBinary() const
+QByteArray DuMidiSysExEvent::toMidiBinary() const
 {
     //TODO: implement toMidiBinary()
     return QByteArray();
 }
 
 
-int DuMidiSysExEvent::size() const
-{
-    //TODO: refactoring
-    //return (time->size() + 1 + length->size() + length->getAbsolute());
-    return 0;
-}
-
-
 int DuMidiSysExEvent::getLength() const
 {
-    return length->getAbsolute();
+    const DuMidiVariableLengthConstPtr &tmp =
+            getChildAs<DuMidiVariableLength>(KEY_MIDISYSEXEVENT_LENGTH);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getAbsolute();
 }
 
 void DuMidiSysExEvent::setLength(quint32 value)
 {
+    DuMidiVariableLengthPtr &length =
+            getChildAs<DuMidiVariableLength>(KEY_MIDISYSEXEVENT_LENGTH);
+    if (length == NULL)
+        return;
+
+    DuBinaryDataPtr &data =
+            getChildAs<DuBinaryData>(KEY_MIDISYSEXEVENT_DATA);
+    if (data == NULL)
+        return;
+
     length->setAbsolute(value);
     data->resize(value);
 }
@@ -76,10 +85,33 @@ void DuMidiSysExEvent::setLength(quint32 value)
 
 const QByteArray DuMidiSysExEvent::getData() const
 {
-    return data->getData();
+    const DuBinaryDataConstPtr &tmp =
+            getChildAs<DuBinaryData>(KEY_MIDISYSEXEVENT_DATA);
+
+    if (tmp == NULL)
+        return QByteArray();
+
+    return tmp->getData();
 }
 
 void DuMidiSysExEvent::setData(const QByteArray &value)
 {
-    data->setData(value);
+    DuBinaryDataPtr &tmp =
+            getChildAs<DuBinaryData>(KEY_MIDISYSEXEVENT_DATA);
+
+    if (tmp == NULL)
+        return;
+
+    tmp->setData(value);
+}
+
+void DuMidiSysExEvent::setData(QDataStream &stream)
+{
+    DuBinaryDataPtr &tmp =
+            getChildAs<DuBinaryData>(KEY_MIDISYSEXEVENT_DATA);
+
+    if (tmp == NULL)
+        return;
+
+    tmp->setData(stream);
 }

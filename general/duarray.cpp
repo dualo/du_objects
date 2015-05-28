@@ -1,6 +1,7 @@
 #include "duarray.h"
 
 #include <QDebug>
+#include <QListIterator>
 #include <QJsonArray>
 
 
@@ -32,20 +33,6 @@ DuObjectPtr DuArray::clone() const
 }
 
 
-QJsonValue DuArray::toJson() const
-{
-    QJsonArray jsonArray;
-
-    int count = array.count();
-    for (int i = 0; i < count; i++)
-    {
-        jsonArray.append(array[i]->toJson());
-    }
-
-    return QJsonValue(jsonArray);
-}
-
-
 QByteArray DuArray::toDuMusicBinary() const
 {
     QByteArray retArray;
@@ -61,6 +48,38 @@ QByteArray DuArray::toDuMusicBinary() const
     }
 
     return retArray;
+}
+
+
+QJsonValue DuArray::toJson() const
+{
+    QJsonArray jsonArray;
+
+    int count = array.count();
+    for (int i = 0; i < count; i++)
+    {
+        jsonArray.append(array[i]->toJson());
+    }
+
+    return QJsonValue(jsonArray);
+}
+
+
+int DuArray::size() const
+{
+    int size = 0;
+    int count = array.count();
+
+    for (int i = 0; i < count; i++)
+    {
+        int tmpSize = array[i]->size();
+        if (tmpSize == -1)
+            return -1;
+
+        size += tmpSize;
+    }
+
+    return size;
 }
 
 
@@ -81,6 +100,7 @@ QDebug DuArray::debugPrint(QDebug dbg) const
     return dbg.space();
 }
 
+
 int DuArray::getMaxSize() const
 {
     return maxSize;
@@ -91,23 +111,6 @@ void DuArray::setMaxSize(int value)
     maxSize = value;
 }
 
-
-int DuArray::size() const
-{
-    int size = 0;
-    int count = array.count();
-
-    for (int i = 0; i < count; i++)
-    {
-        int tmpSize = array[i]->size();
-        if (tmpSize == -1)
-            return -1;
-
-        size += tmpSize;
-    }
-
-    return size;
-}
 
 void DuArray::append(const DuObjectPtr &element)
 {
@@ -151,6 +154,11 @@ int DuArray::count() const
     return array.count();
 }
 
+bool DuArray::isEmpty() const
+{
+    return array.isEmpty();
+}
+
 
 DuObjectPtr DuArray::at(int index)
 {
@@ -174,4 +182,10 @@ DuObjectPtr DuArray::operator[](int index)
         return DuObjectPtr();
 
     return array[index];
+}
+
+
+const QList<DuObjectPtr> &DuArray::getArray() const
+{
+    return array;
 }

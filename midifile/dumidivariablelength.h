@@ -1,7 +1,7 @@
 #ifndef DUMIDIVARIABLELENGTH_H
 #define DUMIDIVARIABLELENGTH_H
 
-#include "dumidivalue.h"
+#include "../general/duvalue.h"
 #include <QDataStream>
 #include <QByteArray>
 
@@ -14,7 +14,7 @@
 
 DU_OBJECT(DuMidiVariableLength)
 
-class DuMidiVariableLength : public DuMidiValue
+class DuMidiVariableLength : public DuValue
 {
 public:
     explicit DuMidiVariableLength(int offset = 0);
@@ -22,7 +22,9 @@ public:
 
     virtual DuObjectPtr clone() const;
 
-    const QByteArray toMidiBinary() const;
+    QByteArray toDuMusicBinary() const;
+    QByteArray toMidiBinary() const;
+    QJsonValue toJson() const;
 
     int size() const;
 

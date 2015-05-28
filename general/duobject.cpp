@@ -18,6 +18,13 @@ DuObject::~DuObject()
 {
 }
 
+
+QByteArray DuObject::toMidiBinary() const
+{
+    return QByteArray();
+}
+
+
 QHttpPart DuObject::toHttpPart(const QString &name) const
 {
     Q_UNUSED(name)

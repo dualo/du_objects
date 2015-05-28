@@ -1,29 +1,18 @@
 #include "dumidiarray.h"
 
-#include <QListIterator>
 #include <QDebug>
+#include <QListIterator>
+
 
 DU_OBJECT_IMPL(DuMidiArray)
 
-
 DuMidiArray::DuMidiArray(int maxSize) :
-    DuMidiObject(),
-    maxSize(maxSize)
+    DuArray(maxSize)
 {
 }
 
 DuMidiArray::~DuMidiArray()
 {
-}
-
-DuMidiArray::DuMidiArray(const DuMidiArray &other) :
-    DuMidiObject(other),
-    maxSize(other.maxSize)
-{
-    QListIterator<DuMidiObjectPtr> i(other.array);
-    while (i.hasNext()) {
-        array.append(i.next()->clone().dynamicCast<DuMidiObject>());
-    }
 }
 
 DuObjectPtr DuMidiArray::clone() const
@@ -32,32 +21,46 @@ DuObjectPtr DuMidiArray::clone() const
 }
 
 
-const QByteArray DuMidiArray::toMidiBinary() const
+QByteArray DuMidiArray::toDuMusicBinary() const
+{
+    Q_UNIMPLEMENTED();
+    return QByteArray();
+}
+
+
+QByteArray DuMidiArray::toMidiBinary() const
 {
     QByteArray retArray;
     retArray.clear();
 
-    if (array.isEmpty())
+    if (isEmpty())
         return QByteArray("");
 
-    int count = array.count();
-    for (int i = 0; i < count; i++)
+    QListIterator<DuObjectPtr> i(getArray());
+    while (i.hasNext())
     {
-        retArray.append(array[i]->toMidiBinary());
+        retArray.append(i.next()->toMidiBinary());
     }
 
     return retArray;
 }
 
 
+QJsonValue DuMidiArray::toJson() const
+{
+    Q_UNIMPLEMENTED();
+    return QJsonValue();
+}
+
+
 int DuMidiArray::size() const
 {
     int size = 0;
-    int count = array.count();
 
-    for (int i = 0; i < count; i++)
+    QListIterator<DuObjectPtr> i(getArray());
+    while (i.hasNext())
     {
-        int tmpSize = array[i]->size();
+        int tmpSize = i.next()->size();
         if (tmpSize == -1)
             return -1;
 
@@ -72,7 +75,7 @@ QDebug DuMidiArray::debugPrint(QDebug dbg) const
 {
     dbg.nospace() << "DuMidiArray(";
 
-    QListIterator<DuMidiObjectPtr> i(array);
+    QListIterator<DuObjectPtr> i(getArray());
     while (i.hasNext()) {
         dbg.nospace() << i.next();
 

@@ -19,17 +19,17 @@ public:
     explicit DuMidiTrack();
     ~DuMidiTrack();
 
-    void appendEvent(DuAbstractMidiEvent* event);
+    void appendEvent(DuMidiAbstractEvent* event);
 
     QByteArray toByteArray();
 
-    QList<DuAbstractMidiEvent *>& getEvents();
+    QList<DuMidiAbstractEvent *>& getEvents();
 /*
     void sortEvents(QMap<quint8, QList<DuMidiChannelEvent *>> *channelMap,
                     QMap<quint8, QList<DuMidiMetaEvent *>> *metaMap);
 */
 private:
-    QList<DuAbstractMidiEvent *> events;
+    QList<DuMidiAbstractEvent *> events;
 };
 
 #endif // DUMIDITRACK_H

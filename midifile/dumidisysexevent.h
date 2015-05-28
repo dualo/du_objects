@@ -1,17 +1,17 @@
 #ifndef DUMIDISYSEXEVENT_H
 #define DUMIDISYSEXEVENT_H
 
-#include "duabstractmidievent.h"
-#include "dumididata.h"
+#include "dumidiabstractevent.h"
+#include "../general/dubinarydata.h"
 
 
-#define KEY_MIDISYSEXEV_LENGTH      "Length"
-#define KEY_MIDISYSEXEV_DATA        "Data"
+#define KEY_MIDISYSEXEVENT_LENGTH      "Length"
+#define KEY_MIDISYSEXEVENT_DATA        "Data"
 
 
 DU_OBJECT(DuMidiSysExEvent)
 
-class DuMidiSysExEvent : public DuAbstractMidiEvent
+class DuMidiSysExEvent : public DuMidiAbstractEvent
 {
 public:
     explicit DuMidiSysExEvent();
@@ -23,19 +23,14 @@ public:
 
     virtual DuObjectPtr clone() const;
 
-    virtual const QByteArray toMidiBinary() const;
-
-    virtual int size() const;
+    virtual QByteArray toMidiBinary() const;
 
     int getLength() const;
     void setLength(quint32 value);
 
     const QByteArray getData() const;
     void setData(const QByteArray &value);
-
-private:
-    DuMidiVariableLength *length;
-    DuMidiData *data;
+    void setData(QDataStream &stream);
 };
 
 #endif // DUMIDISYSEXEVENT_H

@@ -1,7 +1,7 @@
 #ifndef DUMIDICHANNELEVENT_H
 #define DUMIDICHANNELEVENT_H
 
-#include "duabstractmidievent.h"
+#include "dumidiabstractevent.h"
 
 
 #define KEY_MIDICHANNELEVENT_KEY        "Key"
@@ -10,7 +10,7 @@
 
 DU_OBJECT(DuMidiChannelEvent)
 
-class DuMidiChannelEvent : public DuAbstractMidiEvent
+class DuMidiChannelEvent : public DuMidiAbstractEvent
 {
 public:
     explicit DuMidiChannelEvent(quint32 time = 0, quint8 status = 0x80);
@@ -249,7 +249,7 @@ public:
 
     virtual DuObjectPtr clone() const;
 
-    virtual const QByteArray toMidiBinary() const;
+    virtual QByteArray toMidiBinary() const;
 
     virtual int size() const;
 

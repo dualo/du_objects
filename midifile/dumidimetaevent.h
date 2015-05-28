@@ -1,18 +1,18 @@
 #ifndef DUMIDIMETAEVENT_H
 #define DUMIDIMETAEVENT_H
 
-#include "duabstractmidievent.h"
-#include "dumididata.h"
+#include "dumidiabstractevent.h"
+#include "../general/dubinarydata.h"
 
 
-#define KEY_MIDIMETAEV_TYPE     "Type"
-#define KEY_MIDIMETAEV_LENGTH   "Length"
-#define KEY_MIDIMETAEV_DATA     "Data"
+#define KEY_MIDIMETAEVENT_TYPE     "Type"
+#define KEY_MIDIMETAEVENT_LENGTH   "Length"
+#define KEY_MIDIMETAEVENT_DATA     "Data"
 
 
 DU_OBJECT(DuMidiMetaEvent)
 
-class DuMidiMetaEvent : public DuAbstractMidiEvent
+class DuMidiMetaEvent : public DuMidiAbstractEvent
 {
 public:
     explicit DuMidiMetaEvent();
@@ -52,9 +52,7 @@ public:
 
     virtual DuObjectPtr clone() const;
 
-    virtual const QByteArray toMidiBinary() const;
-
-    virtual int size() const;
+    virtual QByteArray toMidiBinary() const;
 
     quint8 getType() const;
     void setType(quint8 value);
@@ -64,12 +62,7 @@ public:
 
     const QByteArray getData() const;
     void setData(const QByteArray &value);
-
-
-private:
-    DuMidiNumeric *type;
-    DuMidiVariableLength *length;
-    DuMidiData *data;
+    void setData(QDataStream &stream);
 };
 
 #endif // DUMIDIMETAEVENT_H

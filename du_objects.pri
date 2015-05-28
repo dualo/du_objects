@@ -5,6 +5,7 @@ HEADERS += \
     $$PWD/general/ducontainer.h \
     $$PWD/general/duarray.h \
     $$PWD/general/duvalue.h \
+    $$PWD/general/dubinarydata.h \
     $$PWD/general/dunumeric.h \
     $$PWD/general/dustring.h \
     $$PWD/general/duversion.h \
@@ -29,18 +30,13 @@ HEADERS += \
     $$PWD/dumusicfile/instrument/effects/dumixer.h \
     $$PWD/dumusicfile/instrument/effects/duvibrato.h \
     $$PWD/dumusicfile/instrument/effects/duwah.h \
-    $$PWD/midifile/duabstractmidievent.h \
+    $$PWD/midifile/dumidiabstractevent.h \
     $$PWD/midifile/dumidichannelevent.h \
     $$PWD/midifile/dumidivariablelength.h \
     $$PWD/midifile/dumidimetaevent.h \
     $$PWD/midifile/dumidisysexevent.h \
     $$PWD/midifile/dumiditrack.h \
     $$PWD/midifile/dumidifile.h \
-    $$PWD/midifile/dumididata.h \
-    $$PWD/midifile/dumidicontainer.h \
-    $$PWD/midifile/dumidivalue.h \
-    $$PWD/midifile/dumidiobject.h \
-    $$PWD/midifile/dumidinumeric.h \
     $$PWD/midifile/dumidiarray.h \
     $$PWD/dudevice.h \
     $$PWD/dutouch.h \
@@ -53,6 +49,7 @@ SOURCES += \
     $$PWD/general/ducontainer.cpp \
     $$PWD/general/duarray.cpp \
     $$PWD/general/duvalue.cpp \
+    $$PWD/general/dubinarydata.cpp \
     $$PWD/general/dunumeric.cpp \
     $$PWD/general/dustring.cpp \
     $$PWD/general/duversion.cpp \
@@ -77,18 +74,13 @@ SOURCES += \
     $$PWD/dumusicfile/instrument/effects/dumixer.cpp \
     $$PWD/dumusicfile/instrument/effects/duvibrato.cpp \
     $$PWD/dumusicfile/instrument/effects/duwah.cpp \
-    $$PWD/midifile/duabstractmidievent.cpp \
+    $$PWD/midifile/dumidiabstractevent.cpp \
     $$PWD/midifile/dumidichannelevent.cpp \
     $$PWD/midifile/dumidivariablelength.cpp \
     $$PWD/midifile/dumidimetaevent.cpp \
     $$PWD/midifile/dumidisysexevent.cpp \
     $$PWD/midifile/dumiditrack.cpp \
     $$PWD/midifile/dumidifile.cpp \
-    $$PWD/midifile/dumididata.cpp \
-    $$PWD/midifile/dumidicontainer.cpp \
-    $$PWD/midifile/dumidivalue.cpp \
-    $$PWD/midifile/dumidiobject.cpp \
-    $$PWD/midifile/dumidinumeric.cpp \
     $$PWD/midifile/dumidiarray.cpp \
     $$PWD/dudevice.cpp \
     $$PWD/dutouch.cpp \
