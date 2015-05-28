@@ -38,7 +38,7 @@ DuObjectPtr DuWah::clone() const
 }
 
 
-DuWahPtr DuWah::fromDuMusicFile(const FX_wah &du_wah)
+DuWahPtr DuWah::fromDuMusicBinary(const FX_wah &du_wah)
 {
     DuWahPtr wah(new DuWah);
     bool verif = true;
@@ -94,7 +94,7 @@ DuWahPtr DuWah::fromJson(const QJsonObject &jsonWah)
 }
 
 
-QByteArray DuWah::toDuMusicFile() const
+QByteArray DuWah::toDuMusicBinary() const
 {
     FX_wah du_wah;
 

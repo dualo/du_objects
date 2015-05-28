@@ -35,7 +35,7 @@ DuObjectPtr DuHeader::clone() const
 }
 
 
-DuHeaderPtr DuHeader::fromDuMusicFile(const music_song &du_song)
+DuHeaderPtr DuHeader::fromDuMusicBinary(const music_song &du_song)
 {
     DuHeaderPtr header(new DuHeader);
     bool verif = true;
@@ -126,7 +126,7 @@ DuHeaderPtr DuHeader::fromJson(const QJsonObject &jsonHeader)
     return header;
 }
 
-QByteArray DuHeader::toDuMusicFile() const
+QByteArray DuHeader::toDuMusicBinary() const
 {
     //TODO: restructure music_song into music_header and music_info
     music_song du_header;

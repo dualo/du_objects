@@ -11,12 +11,11 @@ class DuUrl : public DuValue
 public:
     DuUrl(const QUrl& url = QUrl());
 
-    // DuObject interface
-public:
     virtual DuObjectPtr clone() const;
 
-    QByteArray toDuMusicFile() const;
+    QByteArray toDuMusicBinary() const;
     QJsonValue toJson() const;
+
     QDebug debugPrint(QDebug dbg) const;
 
     QUrl getUrl() const;

@@ -26,11 +26,12 @@ DuObjectPtr DuMusic::clone() const
 }
 
 
-DuMusicPtr DuMusic::fromDuMusicFile(const s_total_buffer &du_music)
+DuMusicPtr DuMusic::fromDuMusicBinary(const s_total_buffer &du_music)
 {
     DuMusicPtr music(new DuMusic);
 
-    const DuHeaderPtr& header = DuHeader::fromDuMusicFile(du_music.local_song);
+    const DuHeaderPtr& header =
+            DuHeader::fromDuMusicBinary(du_music.local_song);
     if (header != NULL)
         music->setHeader(header);
     else
@@ -38,7 +39,8 @@ DuMusicPtr DuMusic::fromDuMusicFile(const s_total_buffer &du_music)
         return DuMusicPtr();
     }
 
-    const DuSongInfoPtr& songInfo = DuSongInfo::fromDuMusicFile(du_music.local_song);
+    const DuSongInfoPtr& songInfo =
+            DuSongInfo::fromDuMusicBinary(du_music.local_song);
     if (songInfo != NULL)
         music->setSongInfo(songInfo);
     else
@@ -48,8 +50,9 @@ DuMusicPtr DuMusic::fromDuMusicFile(const s_total_buffer &du_music)
 
     for (int i = 0; i < MUSIC_MAXTRACK; i++)
     {
-        const DuTrackPtr track = DuTrack::fromDuMusicFile(du_music.local_song.s_track[i],
-                                                  du_music.local_buffer);
+        const DuTrackPtr track =
+                DuTrack::fromDuMusicBinary(du_music.local_song.s_track[i],
+                                           du_music.local_buffer);
         if (track == NULL)
         {
             return DuMusicPtr();
@@ -112,7 +115,7 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
 }
 
 
-QByteArray DuMusic::toDuMusicFile() const
+QByteArray DuMusic::toDuMusicBinary() const
 {
     s_total_buffer du_music;
 
@@ -130,21 +133,21 @@ QByteArray DuMusic::toDuMusicFile() const
     const DuHeaderConstPtr& header = getHeader();
     if (header == NULL)
         return QByteArray();
-    const QByteArray &headerArray = header->toDuMusicFile();
+    const QByteArray &headerArray = header->toDuMusicBinary();
     if (headerArray.isNull())
         return QByteArray();
 
     const DuSongInfoConstPtr& songInfo = getSongInfo();
     if (songInfo == NULL)
         return QByteArray();
-    const QByteArray &songInfoArray = songInfo->toDuMusicFile();
+    const QByteArray &songInfoArray = songInfo->toDuMusicBinary();
     if (songInfoArray.isNull())
         return QByteArray();
 
     const DuArrayConstPtr& tracks = getTracks();
     if (tracks == NULL)
         return QByteArray();
-    const QByteArray &tracksArray = tracks->toDuMusicFile();
+    const QByteArray &tracksArray = tracks->toDuMusicBinary();
     if (tracksArray.isNull())
         return QByteArray();
 
@@ -192,7 +195,7 @@ QByteArray DuMusic::toDuMusicFile() const
             const DuArrayConstPtr& events = loop->getEvents();
             if (events == NULL)
                 return QByteArray();
-            tmpLocalBuffer.append(events->toDuMusicFile());
+            tmpLocalBuffer.append(events->toDuMusicBinary());
 
             eventTotal += tmp;
         }

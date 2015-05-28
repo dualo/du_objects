@@ -21,10 +21,10 @@ public:
 
     virtual DuObjectPtr clone() const;
 
-    static DuMusicPtr fromDuMusicFile(const s_total_buffer &du_music);
+    static DuMusicPtr fromDuMusicBinary(const s_total_buffer &du_music);
     static DuMusicPtr fromJson(const QJsonObject &jsonMusic);
 
-    QByteArray toDuMusicFile() const;
+    QByteArray toDuMusicBinary() const;
 
     int size() const;
 

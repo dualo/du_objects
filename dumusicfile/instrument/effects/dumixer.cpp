@@ -51,7 +51,7 @@ DuObjectPtr DuMixer::clone() const
 }
 
 
-DuMixerPtr DuMixer::fromDuMusicFile(const FX_mix &du_mixer)
+DuMixerPtr DuMixer::fromDuMusicBinary(const FX_mix &du_mixer)
 {
     DuMixerPtr mixer(new DuMixer);
     bool verif = true;
@@ -117,7 +117,7 @@ DuMixerPtr DuMixer::fromJson(const QJsonObject &jsonMixer)
 }
 
 
-QByteArray DuMixer::toDuMusicFile() const
+QByteArray DuMixer::toDuMusicBinary() const
 {
     FX_mix du_mixer;
     int tmp = 0;

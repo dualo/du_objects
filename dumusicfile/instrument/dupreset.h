@@ -31,10 +31,10 @@ public:
 
     virtual DuObjectPtr clone() const;
 
-    static DuPresetPtr fromDuMusicFile(const preset_instr &du_preset);
+    static DuPresetPtr fromDuMusicBinary(const preset_instr &du_preset);
     static DuPresetPtr fromJson(const QJsonObject &jsonPreset);
 
-    QByteArray toDuMusicFile() const;
+    QByteArray toDuMusicBinary() const;
 
     int size() const;
 

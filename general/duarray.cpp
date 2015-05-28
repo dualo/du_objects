@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QJsonArray>
 
+
 DU_OBJECT_IMPL(DuArray)
 
 DuArray::DuArray(int maxSize) :
@@ -44,6 +45,25 @@ QJsonValue DuArray::toJson() const
     return QJsonValue(jsonArray);
 }
 
+
+QByteArray DuArray::toDuMusicBinary() const
+{
+    QByteArray retArray;
+    retArray.clear();
+
+    if (array.isEmpty())
+        return QByteArray("");
+
+    int count = array.count();
+    for (int i = 0; i < count; i++)
+    {
+        retArray.append(array[i]->toDuMusicBinary());
+    }
+
+    return retArray;
+}
+
+
 QDebug DuArray::debugPrint(QDebug dbg) const
 {
     dbg.nospace() << "DuArray(";
@@ -69,23 +89,6 @@ int DuArray::getMaxSize() const
 void DuArray::setMaxSize(int value)
 {
     maxSize = value;
-}
-
-QByteArray DuArray::toDuMusicFile() const
-{
-    QByteArray retArray;
-    retArray.clear();
-
-    if (array.isEmpty())
-        return QByteArray("");
-
-    int count = array.count();
-    for (int i = 0; i < count; i++)
-    {
-        retArray.append(array[i]->toDuMusicFile());
-    }
-
-    return retArray;
 }
 
 

@@ -52,7 +52,7 @@ DuObjectPtr DuDelay::clone() const
 }
 
 
-DuDelayPtr DuDelay::fromDuMusicFile(const FX_delay &du_delay)
+DuDelayPtr DuDelay::fromDuMusicBinary(const FX_delay &du_delay)
 {
     DuDelayPtr delay(new DuDelay);
     bool verif = true;
@@ -123,7 +123,7 @@ DuDelayPtr DuDelay::fromJson(const QJsonObject &jsonDelay)
 }
 
 
-QByteArray DuDelay::toDuMusicFile() const
+QByteArray DuDelay::toDuMusicBinary() const
 {
     FX_delay du_delay;
 

@@ -1,10 +1,11 @@
 #include "ducontainer.h"
 
 #include <QDebug>
+#include <QMapIterator>
 #include <QJsonObject>
 
-DU_OBJECT_IMPL(DuContainer)
 
+DU_OBJECT_IMPL(DuContainer)
 
 DuContainer::DuContainer() :
     DuObject()
@@ -32,6 +33,28 @@ DuObjectPtr DuContainer::clone() const
 }
 
 
+QByteArray DuContainer::toDuMusicBinary() const
+{
+    QByteArray retArray;
+
+    QMapIterator<QString, DuObjectPtr> i(children);
+    while (i.hasNext())
+    {
+        i.next();
+        if (i.value() == NULL)
+            return QByteArray();
+
+        const QByteArray &tmpArray = i.value()->toDuMusicBinary();
+        if (tmpArray.isNull())
+            return QByteArray();
+
+        retArray.append(tmpArray);
+    }
+
+    return retArray;
+}
+
+
 QJsonValue DuContainer::toJson() const
 {
     QJsonObject object;
@@ -51,28 +74,6 @@ QJsonValue DuContainer::toJson() const
     }
 
     return QJsonValue(object);
-}
-
-
-QByteArray DuContainer::toDuMusicFile() const
-{
-    QByteArray retArray;
-
-    QMapIterator<QString, DuObjectPtr> i(children);
-    while (i.hasNext())
-    {
-        i.next();
-        if (i.value() == NULL)
-            return QByteArray();
-
-        const QByteArray &tmpArray = i.value()->toDuMusicFile();
-        if (tmpArray.isNull())
-            return QByteArray();
-
-        retArray.append(tmpArray);
-    }
-
-    return retArray;
 }
 
 

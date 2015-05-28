@@ -26,7 +26,7 @@ DuObjectPtr DuString::clone() const
 }
 
 
-QByteArray DuString::toDuMusicFile() const
+QByteArray DuString::toDuMusicBinary() const
 {
     QByteArray array;
     array.clear();
@@ -48,6 +48,7 @@ QJsonValue DuString::toJson() const
     return QJsonValue(getString());
 }
 
+
 QHttpPart DuString::toHttpPart(const QString &name) const
 {
     QHttpPart part;
@@ -56,6 +57,7 @@ QHttpPart DuString::toHttpPart(const QString &name) const
 
     return part;
 }
+
 
 QDebug DuString::debugPrint(QDebug dbg) const
 {

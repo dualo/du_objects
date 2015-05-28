@@ -16,7 +16,7 @@ protected:
     explicit DuMidiObject(const DuMidiObject &other);
 
 public:
-    virtual QByteArray toDuMusicFile() const;
+    virtual QByteArray toDuMusicBinary() const;
     virtual QJsonValue toJson() const;
     virtual const QByteArray toMidiBinary() const = 0;
 

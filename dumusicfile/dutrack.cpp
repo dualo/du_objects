@@ -30,7 +30,7 @@ DuObjectPtr DuTrack::clone() const
 }
 
 
-DuTrackPtr DuTrack::fromDuMusicFile(const music_track &du_track,
+DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
                                   const music_sample *du_sample)
 {
     const DuTrackPtr track(new DuTrack);
@@ -50,7 +50,7 @@ DuTrackPtr DuTrack::fromDuMusicFile(const music_track &du_track,
         const music_sample *du_sample_address = (music_sample*)
                 ((long)du_sample + du_loop.l_adress);
 
-        const DuLoopPtr& loop = DuLoop::fromDuMusicFile(du_loop, du_sample_address);
+        const DuLoopPtr& loop = DuLoop::fromDuMusicBinary(du_loop, du_sample_address);
         if (loop == NULL)
         {
             return DuTrackPtr();
@@ -106,7 +106,7 @@ DuTrackPtr DuTrack::fromJson(const QJsonObject &jsonTrack)
 }
 
 
-QByteArray DuTrack::toDuMusicFile() const
+QByteArray DuTrack::toDuMusicBinary() const
 {
     music_track du_track;
 
@@ -119,7 +119,7 @@ QByteArray DuTrack::toDuMusicFile() const
     const DuArrayConstPtr& loops = getLoops();
     if (loops == NULL)
         return QByteArray();
-    const QByteArray &loopsArray = loops->toDuMusicFile();
+    const QByteArray &loopsArray = loops->toDuMusicBinary();
     if (loopsArray.isNull())
         return QByteArray();
 

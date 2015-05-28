@@ -20,7 +20,7 @@ public:
     virtual DuObjectPtr clone() const;
 
     QJsonValue toJson() const;
-    QByteArray toDuMusicFile() const;
+    QByteArray toDuMusicBinary() const;
 
     QDebug debugPrint(QDebug dbg) const;
 

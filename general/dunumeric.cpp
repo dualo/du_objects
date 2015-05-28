@@ -2,8 +2,8 @@
 
 #include <QDebug>
 
-DU_OBJECT_IMPL(DuNumeric)
 
+DU_OBJECT_IMPL(DuNumeric)
 
 DuNumeric::DuNumeric(int value) :
     DuValue(4),
@@ -11,7 +11,8 @@ DuNumeric::DuNumeric(int value) :
     maxValue(0x7FFFFFFF),
     minValue(0x00000000)
 {
-    setNumeric(value);
+    bool res = setNumeric(value);
+    Q_ASSERT(res);
 }
 
 DuNumeric::DuNumeric(int defaultValue, int byteSize, int maxValue, int minValue) :
@@ -20,7 +21,8 @@ DuNumeric::DuNumeric(int defaultValue, int byteSize, int maxValue, int minValue)
     maxValue(maxValue),
     minValue(minValue)
 {
-    setNumeric(defaultValue);
+    bool res = setNumeric(defaultValue);
+    Q_ASSERT(res);
 }
 
 DuNumeric::DuNumeric(int value, int byteSize,
@@ -30,12 +32,14 @@ DuNumeric::DuNumeric(int value, int byteSize,
     maxValue(maxValue),
     minValue(minValue)
 {
-    setNumeric(value);
+    bool res = setNumeric(value);
+    Q_ASSERT(res);
 }
 
 DuNumeric::~DuNumeric()
 {
 }
+
 
 DuObjectPtr DuNumeric::clone() const
 {
@@ -43,7 +47,7 @@ DuObjectPtr DuNumeric::clone() const
 }
 
 
-QByteArray DuNumeric::toDuMusicFile() const
+QByteArray DuNumeric::toDuMusicBinary() const
 {
     QByteArray array;
     array.clear();
@@ -64,6 +68,7 @@ QJsonValue DuNumeric::toJson() const
     return QJsonValue(getNumeric());
 }
 
+
 QHttpPart DuNumeric::toHttpPart(const QString &name) const
 {
     QHttpPart part;
@@ -73,6 +78,7 @@ QHttpPart DuNumeric::toHttpPart(const QString &name) const
 
     return part;
 }
+
 
 QDebug DuNumeric::debugPrint(QDebug dbg) const
 {

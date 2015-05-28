@@ -32,82 +32,92 @@ DuObjectPtr DuInstrument::clone() const
 }
 
 
-DuInstrumentPtr DuInstrument::fromDuMusicFile(const music_instr &du_instr)
+DuInstrumentPtr DuInstrument::fromDuMusicBinary(const music_instr &du_instr)
 {
     DuInstrumentPtr instrument(new DuInstrument);
 
     const DuInstrumentInfoPtr& instrInfo =
-            DuInstrumentInfo::fromDuMusicFile(du_instr.i_instrument);
+            DuInstrumentInfo::fromDuMusicBinary(du_instr.i_instrument);
     if (instrInfo == NULL)
     {
         return DuInstrumentPtr();
     }
     instrument->setInstrumentInfo(instrInfo);
 
-    const DuPresetPtr& preset = DuPreset::fromDuMusicFile(du_instr.i_preset);
+    const DuPresetPtr& preset =
+            DuPreset::fromDuMusicBinary(du_instr.i_preset);
     if (preset == NULL)
     {
         return DuInstrumentPtr();
     }
     instrument->setPreset(preset);
 
-    const DuMixerPtr& mixer = DuMixer::fromDuMusicFile(du_instr.i_mix);
+    const DuMixerPtr& mixer =
+            DuMixer::fromDuMusicBinary(du_instr.i_mix);
     if (mixer == NULL)
     {
         return DuInstrumentPtr();
     }
     instrument->setMixer(mixer);
 
-    const DuDistortionPtr& distortion = DuDistortion::fromDuMusicFile(du_instr.i_distortion);
+    const DuDistortionPtr& distortion =
+            DuDistortion::fromDuMusicBinary(du_instr.i_distortion);
     if (distortion == NULL)
     {
         return DuInstrumentPtr();
     }
     instrument->setDistortion(distortion);
 
-    const DuWahPtr& wah = DuWah::fromDuMusicFile(du_instr.i_wah);
+    const DuWahPtr& wah =
+            DuWah::fromDuMusicBinary(du_instr.i_wah);
     if (wah == NULL)
     {
         return DuInstrumentPtr();
     }
     instrument->setWah(wah);
 
-    const DuCompressorPtr& compressor = DuCompressor::fromDuMusicFile(du_instr.i_compressor);
+    const DuCompressorPtr& compressor =
+            DuCompressor::fromDuMusicBinary(du_instr.i_compressor);
     if (compressor == NULL)
     {
         return DuInstrumentPtr();
     }
     instrument->setCompressor(compressor);
 
-    const DuEqualizerPtr& equalizer = DuEqualizer::fromDuMusicFile(du_instr.i_equalizer);
+    const DuEqualizerPtr& equalizer =
+            DuEqualizer::fromDuMusicBinary(du_instr.i_equalizer);
     if (equalizer == NULL)
     {
         return DuInstrumentPtr();
     }
     instrument->setEqualizer(equalizer);
 
-    const DuDelayPtr& delay = DuDelay::fromDuMusicFile(du_instr.i_delay);
+    const DuDelayPtr& delay =
+            DuDelay::fromDuMusicBinary(du_instr.i_delay);
     if (delay == NULL)
     {
         return DuInstrumentPtr();
     }
     instrument->setDelay(delay);
 
-    const DuChorusPtr& chorus = DuChorus::fromDuMusicFile(du_instr.i_chorus);
+    const DuChorusPtr& chorus =
+            DuChorus::fromDuMusicBinary(du_instr.i_chorus);
     if (chorus == NULL)
     {
         return DuInstrumentPtr();
     }
     instrument->setChorus(chorus);
 
-    const DuVibratoPtr& vibrato = DuVibrato::fromDuMusicFile(du_instr.i_vibrato);
+    const DuVibratoPtr& vibrato =
+            DuVibrato::fromDuMusicBinary(du_instr.i_vibrato);
     if (vibrato == NULL)
     {
         return DuInstrumentPtr();
     }
     instrument->setVibrato(vibrato);
 
-    const DuAdsrPtr& adsr = DuAdsr::fromDuMusicFile(du_instr.i_adsr);
+    const DuAdsrPtr& adsr =
+            DuAdsr::fromDuMusicBinary(du_instr.i_adsr);
     if (adsr == NULL)
     {
         return DuInstrumentPtr();
@@ -153,7 +163,8 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
         return DuInstrumentPtr();
     }
 
-    const DuPresetPtr& preset = DuPreset::fromJson(jsonPreset.toObject());
+    const DuPresetPtr& preset =
+            DuPreset::fromJson(jsonPreset.toObject());
     if (preset != NULL)
         instrument->setPreset(preset);
     else
@@ -161,7 +172,8 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
         return DuInstrumentPtr();
     }
 
-    const DuMixerPtr& mixer = DuMixer::fromJson(jsonMixer.toObject());
+    const DuMixerPtr& mixer =
+            DuMixer::fromJson(jsonMixer.toObject());
     if (mixer != NULL)
         instrument->setMixer(mixer);
     else
@@ -169,7 +181,8 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
         return DuInstrumentPtr();
     }
 
-    const DuDistortionPtr& distortion = DuDistortion::fromJson(jsonDistortion.toObject());
+    const DuDistortionPtr& distortion =
+            DuDistortion::fromJson(jsonDistortion.toObject());
     if (distortion != NULL)
         instrument->setDistortion(distortion);
     else
@@ -177,7 +190,8 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
         return DuInstrumentPtr();
     }
 
-    const DuWahPtr& wah = DuWah::fromJson(jsonWah.toObject());
+    const DuWahPtr& wah =
+            DuWah::fromJson(jsonWah.toObject());
     if (wah != NULL)
         instrument->setWah(wah);
     else
@@ -185,7 +199,8 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
         return DuInstrumentPtr();
     }
 
-    const DuCompressorPtr& compressor = DuCompressor::fromJson(jsonCompressor.toObject());
+    const DuCompressorPtr& compressor =
+            DuCompressor::fromJson(jsonCompressor.toObject());
     if (compressor != NULL)
         instrument->setCompressor(compressor);
     else
@@ -193,7 +208,8 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
         return DuInstrumentPtr();
     }
 
-    const DuEqualizerPtr& equalizer = DuEqualizer::fromJson(jsonEqualizer.toObject());
+    const DuEqualizerPtr& equalizer =
+            DuEqualizer::fromJson(jsonEqualizer.toObject());
     if (equalizer != NULL)
         instrument->setEqualizer(equalizer);
     else
@@ -201,7 +217,8 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
         return DuInstrumentPtr();
     }
 
-    const DuDelayPtr& delay = DuDelay::fromJson(jsonDelay.toObject());
+    const DuDelayPtr& delay =
+            DuDelay::fromJson(jsonDelay.toObject());
     if (delay != NULL)
         instrument->setDelay(delay);
     else
@@ -209,7 +226,8 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
         return DuInstrumentPtr();
     }
 
-    const DuChorusPtr& chorus = DuChorus::fromJson(jsonChorus.toObject());
+    const DuChorusPtr& chorus =
+            DuChorus::fromJson(jsonChorus.toObject());
     if (chorus != NULL)
         instrument->setChorus(chorus);
     else
@@ -217,7 +235,8 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
         return DuInstrumentPtr();
     }
 
-    const DuVibratoPtr& vibrato = DuVibrato::fromJson(jsonVibrato.toObject());
+    const DuVibratoPtr& vibrato =
+            DuVibrato::fromJson(jsonVibrato.toObject());
     if (vibrato != NULL)
         instrument->setVibrato(vibrato);
     else
@@ -225,7 +244,8 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
         return DuInstrumentPtr();
     }
 
-    const DuAdsrPtr& adsr = DuAdsr::fromJson(jsonAdsr.toObject());
+    const DuAdsrPtr& adsr =
+            DuAdsr::fromJson(jsonAdsr.toObject());
     if (adsr != NULL)
         instrument->setAdsr(adsr);
     else
@@ -237,7 +257,7 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
     return instrument;
 }
 
-QByteArray DuInstrument::toDuMusicFile() const
+QByteArray DuInstrument::toDuMusicBinary() const
 {
     music_instr du_instrument;
 
@@ -247,77 +267,77 @@ QByteArray DuInstrument::toDuMusicFile() const
         return QByteArray();
 
     std::memcpy((char *)&(du_instrument.i_instrument),
-                instrInfo->toDuMusicFile().data(), instrInfo->size());
+                instrInfo->toDuMusicBinary().data(), instrInfo->size());
 
     const DuPresetConstPtr& preset = getPreset();
     if (preset == NULL)
         return QByteArray();
 
     std::memcpy((char *)&(du_instrument.i_preset),
-                preset->toDuMusicFile().data(), preset->size());
+                preset->toDuMusicBinary().data(), preset->size());
 
     const DuMixerConstPtr& mixer = getMixer();
     if (mixer == NULL)
         return QByteArray();
 
     std::memcpy((char *)&(du_instrument.i_mix),
-                mixer->toDuMusicFile().data(), mixer->size());
+                mixer->toDuMusicBinary().data(), mixer->size());
 
     const DuDistortionConstPtr& distortion = getDistortion();
     if (distortion == NULL)
         return QByteArray();
 
     std::memcpy((char *)&(du_instrument.i_distortion),
-                distortion->toDuMusicFile().data(), distortion->size());
+                distortion->toDuMusicBinary().data(), distortion->size());
 
     const DuWahConstPtr& wah = getWah();
     if (wah == NULL)
         return QByteArray();
 
     std::memcpy((char *)&(du_instrument.i_wah),
-                wah->toDuMusicFile().data(), wah->size());
+                wah->toDuMusicBinary().data(), wah->size());
 
     const DuCompressorConstPtr& compressor = getCompressor();
     if (compressor == NULL)
         return QByteArray();
 
     std::memcpy((char *)&(du_instrument.i_compressor),
-                compressor->toDuMusicFile().data(), compressor->size());
+                compressor->toDuMusicBinary().data(), compressor->size());
 
     const DuEqualizerConstPtr& equalizer = getEqualizer();
     if (equalizer == NULL)
         return QByteArray();
 
     std::memcpy((char *)&(du_instrument.i_equalizer),
-                equalizer->toDuMusicFile().data(), equalizer->size());
+                equalizer->toDuMusicBinary().data(), equalizer->size());
 
     const DuDelayConstPtr& delay = getDelay();
     if (delay == NULL)
         return QByteArray();
 
     std::memcpy((char *)&(du_instrument.i_delay),
-                delay->toDuMusicFile().data(), delay->size());
+                delay->toDuMusicBinary().data(), delay->size());
 
     const DuChorusConstPtr& chorus = getChorus();
     if (chorus == NULL)
         return QByteArray();
 
     std::memcpy((char *)&(du_instrument.i_chorus),
-                chorus->toDuMusicFile().data(), chorus->size());
+                chorus->toDuMusicBinary().data(), chorus->size());
 
     const DuVibratoConstPtr& vibrato = getVibrato();
     if (vibrato == NULL)
         return QByteArray();
 
     std::memcpy((char *)&(du_instrument.i_vibrato),
-                vibrato->toDuMusicFile().data(), vibrato->size());
+                vibrato->toDuMusicBinary().data(), vibrato->size());
 
     const DuAdsrConstPtr& adsr = getAdsr();
     if (adsr == NULL)
         return QByteArray();
 
     std::memcpy((char *)&(du_instrument.i_adsr),
-                adsr->toDuMusicFile().data(), adsr->size());
+                adsr->toDuMusicBinary().data(), adsr->size());
 
     return QByteArray((char *)&(du_instrument), size());
 }

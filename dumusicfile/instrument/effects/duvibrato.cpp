@@ -36,7 +36,7 @@ DuObjectPtr DuVibrato::clone() const
 }
 
 
-DuVibratoPtr DuVibrato::fromDuMusicFile(const FX_vibrato &du_vibrato)
+DuVibratoPtr DuVibrato::fromDuMusicBinary(const FX_vibrato &du_vibrato)
 {
     DuVibratoPtr vibrato(new DuVibrato);
     bool verif = true;
@@ -88,7 +88,7 @@ DuVibratoPtr DuVibrato::fromJson(const QJsonObject &jsonVibrato)
 }
 
 
-QByteArray DuVibrato::toDuMusicFile() const
+QByteArray DuVibrato::toDuMusicBinary() const
 {
     FX_vibrato du_vibrato;
 

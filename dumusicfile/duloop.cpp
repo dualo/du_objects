@@ -36,7 +36,7 @@ DuObjectPtr DuLoop::clone() const
 }
 
 
-DuLoopPtr DuLoop::fromDuMusicFile(const music_loop &du_loop,
+DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
                                 const music_sample *du_sample)
 {
     DuLoopPtr loop(new DuLoop);
@@ -51,7 +51,7 @@ DuLoopPtr DuLoop::fromDuMusicFile(const music_loop &du_loop,
         return DuLoopPtr();
     }
 
-    const DuInstrumentPtr& instrument = DuInstrument::fromDuMusicFile(du_loop.l_instr);
+    const DuInstrumentPtr& instrument = DuInstrument::fromDuMusicBinary(du_loop.l_instr);
     if (instrument == NULL)
     {
         return DuLoopPtr();
@@ -63,7 +63,7 @@ DuLoopPtr DuLoop::fromDuMusicFile(const music_loop &du_loop,
 
     for (int i = 0; i < du_loop.l_numsample; i++)
     {
-        const DuEventPtr& event = DuEvent::fromDuMusicFile(du_sample[i]);
+        const DuEventPtr& event = DuEvent::fromDuMusicBinary(du_sample[i]);
         if (event == NULL)
         {
             return DuLoopPtr();
@@ -131,7 +131,7 @@ DuLoopPtr DuLoop::fromJson(const QJsonObject &jsonLoop)
 }
 
 
-QByteArray DuLoop::toDuMusicFile() const
+QByteArray DuLoop::toDuMusicBinary() const
 {
     music_loop du_loop;
 
@@ -144,7 +144,7 @@ QByteArray DuLoop::toDuMusicFile() const
     const DuInstrumentConstPtr& instrument = getInstrument();
     if (instrument == NULL)
         return QByteArray();
-    const QByteArray &instrumentArray = instrument->toDuMusicFile();
+    const QByteArray &instrumentArray = instrument->toDuMusicBinary();
     if (instrumentArray.isNull())
         return QByteArray();
 

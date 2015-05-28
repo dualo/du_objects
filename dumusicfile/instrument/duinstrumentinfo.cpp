@@ -43,7 +43,7 @@ DuObjectPtr DuInstrumentInfo::clone() const
 }
 
 
-DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicFile(const s_instr &du_instrInfo)
+DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrInfo)
 {
     DuInstrumentInfoPtr instrInfo(new DuInstrumentInfo);
     bool verif = true;
@@ -112,7 +112,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
 }
 
 
-QByteArray DuInstrumentInfo::toDuMusicFile() const
+QByteArray DuInstrumentInfo::toDuMusicBinary() const
 {
     s_instr du_instrumentinfo;
 

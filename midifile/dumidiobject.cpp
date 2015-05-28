@@ -20,7 +20,7 @@ DuMidiObject::DuMidiObject(const DuMidiObject &other) :
 }
 
 
-QByteArray DuMidiObject::toDuMusicFile() const
+QByteArray DuMidiObject::toDuMusicBinary() const
 {
     return QByteArray();
 }

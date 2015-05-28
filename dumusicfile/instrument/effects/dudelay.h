@@ -24,10 +24,10 @@ public:
 
     virtual DuObjectPtr clone() const;
 
-    static DuDelayPtr fromDuMusicFile(const FX_delay &du_delay);
+    static DuDelayPtr fromDuMusicBinary(const FX_delay &du_delay);
     static DuDelayPtr fromJson(const QJsonObject &jsonDelay);
 
-    QByteArray toDuMusicFile() const;
+    QByteArray toDuMusicBinary() const;
 
     int size() const;
 

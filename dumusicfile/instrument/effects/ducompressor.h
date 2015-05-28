@@ -24,10 +24,10 @@ public:
 
     virtual DuObjectPtr clone() const;
 
-    static DuCompressorPtr fromDuMusicFile(const FX_compressor &du_compressor);
+    static DuCompressorPtr fromDuMusicBinary(const FX_compressor &du_compressor);
     static DuCompressorPtr fromJson(const QJsonObject &jsonCompressor);
 
-    QByteArray toDuMusicFile() const;
+    QByteArray toDuMusicBinary() const;
 
     int size() const;
 

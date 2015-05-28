@@ -9,12 +9,14 @@ DuUrl::DuUrl(const QUrl& url) :
 {
 }
 
+
 DuObjectPtr DuUrl::clone() const
 {
     return DuUrlPtr(new DuUrl(*this));
 }
 
-QByteArray DuUrl::toDuMusicFile() const
+
+QByteArray DuUrl::toDuMusicBinary() const
 {
     Q_UNIMPLEMENTED();
     return QByteArray();
@@ -24,6 +26,7 @@ QJsonValue DuUrl::toJson() const
 {
     return QJsonValue(getUrl().toString());
 }
+
 
 QDebug DuUrl::debugPrint(QDebug dbg) const
 {

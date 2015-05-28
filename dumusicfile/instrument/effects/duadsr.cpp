@@ -44,7 +44,7 @@ DuObjectPtr DuAdsr::clone() const
 }
 
 
-DuAdsrPtr DuAdsr::fromDuMusicFile(const FX_adsr &du_adsr)
+DuAdsrPtr DuAdsr::fromDuMusicBinary(const FX_adsr &du_adsr)
 {
     DuAdsrPtr adsr(new DuAdsr);
     bool verif = true;
@@ -105,7 +105,7 @@ DuAdsrPtr DuAdsr::fromJson(const QJsonObject &jsonAdsr)
 }
 
 
-QByteArray DuAdsr::toDuMusicFile() const
+QByteArray DuAdsr::toDuMusicBinary() const
 {
     FX_adsr du_adsr;
 

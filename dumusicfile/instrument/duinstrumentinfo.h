@@ -26,10 +26,10 @@ public:
 
     virtual DuObjectPtr clone() const;
 
-    static DuInstrumentInfoPtr fromDuMusicFile(const s_instr &du_instrInfo);
+    static DuInstrumentInfoPtr fromDuMusicBinary(const s_instr &du_instrInfo);
     static DuInstrumentInfoPtr fromJson(const QJsonObject &jsonInstrInfo);
 
-    QByteArray toDuMusicFile() const;
+    QByteArray toDuMusicBinary() const;
 
     int size() const;
 

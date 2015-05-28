@@ -62,7 +62,7 @@ DuObjectPtr DuChorus::clone() const
 }
 
 
-DuChorusPtr DuChorus::fromDuMusicFile(const FX_chorus &du_chorus)
+DuChorusPtr DuChorus::fromDuMusicBinary(const FX_chorus &du_chorus)
 {
     DuChorusPtr chorus(new DuChorus);
     bool verif = true;
@@ -143,7 +143,7 @@ DuChorusPtr DuChorus::fromJson(const QJsonObject &jsonChorus)
 }
 
 
-QByteArray DuChorus::toDuMusicFile() const
+QByteArray DuChorus::toDuMusicBinary() const
 {
     FX_chorus du_chorus;
 

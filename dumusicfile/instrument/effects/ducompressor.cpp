@@ -50,7 +50,7 @@ DuObjectPtr DuCompressor::clone() const
 }
 
 
-DuCompressorPtr DuCompressor::fromDuMusicFile(const FX_compressor &du_compressor)
+DuCompressorPtr DuCompressor::fromDuMusicBinary(const FX_compressor &du_compressor)
 {
     DuCompressorPtr compressor(new DuCompressor);
     bool verif = true;
@@ -119,7 +119,7 @@ DuCompressorPtr DuCompressor::fromJson(const QJsonObject &jsonCompressor)
     return compressor;
 }
 
-QByteArray DuCompressor::toDuMusicFile() const
+QByteArray DuCompressor::toDuMusicBinary() const
 {
     FX_compressor du_compressor;
 

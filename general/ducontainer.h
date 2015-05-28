@@ -3,8 +3,6 @@
 
 #include "duobject.h"
 #include <QMap>
-#include <QMapIterator>
-#include <QList>
 #include <QStringList>
 #include <QHttpMultiPart>
 
@@ -23,8 +21,8 @@ protected:
 public:
     virtual DuObjectPtr clone() const;
 
+    virtual QByteArray toDuMusicBinary() const;
     virtual QJsonValue toJson() const;
-    virtual QByteArray toDuMusicFile() const;
 
     virtual QHttpMultiPart* toHttpMultiPart(const QByteArray &boundary) const;
     QDebug debugPrint(QDebug dbg) const;

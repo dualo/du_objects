@@ -59,7 +59,7 @@ DuObjectPtr DuPreset::clone() const
 }
 
 
-DuPresetPtr DuPreset::fromDuMusicFile(const preset_instr &du_preset)
+DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
 {
     DuPresetPtr preset(new DuPreset);
     bool verif = true;
@@ -133,7 +133,7 @@ DuPresetPtr DuPreset::fromJson(const QJsonObject &jsonPreset)
 }
 
 
-QByteArray DuPreset::toDuMusicFile() const
+QByteArray DuPreset::toDuMusicBinary() const
 {
     preset_instr du_preset;
 

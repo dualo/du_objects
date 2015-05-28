@@ -2,6 +2,7 @@
 
 #include <QDebug>
 
+
 DU_OBJECT_IMPL(DuDate)
 
 DuDate::DuDate(const QDateTime &date) :
@@ -14,16 +15,18 @@ DuObjectPtr DuDate::clone() const
     return DuDatePtr(new DuDate(*this));
 }
 
+
+QByteArray DuDate::toDuMusicBinary() const
+{
+    Q_UNIMPLEMENTED();
+    return QByteArray();
+}
+
 QJsonValue DuDate::toJson() const
 {
     return QJsonValue(getDate().toString());
 }
 
-QByteArray DuDate::toDuMusicFile() const
-{
-    Q_UNIMPLEMENTED();
-    return QByteArray();
-}
 
 QDebug DuDate::debugPrint(QDebug dbg) const
 {

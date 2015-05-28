@@ -15,8 +15,8 @@ public:
 
     virtual DuObjectPtr clone() const;
 
+    QByteArray toDuMusicBinary() const;
     QJsonValue toJson() const;
-    QByteArray toDuMusicFile() const;
     QDebug debugPrint(QDebug dbg) const;
 
     QDateTime getDate() const;

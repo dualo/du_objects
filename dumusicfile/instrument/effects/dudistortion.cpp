@@ -50,7 +50,7 @@ DuObjectPtr DuDistortion::clone() const
 }
 
 
-DuDistortionPtr DuDistortion::fromDuMusicFile(const FX_distortion &du_distortion)
+DuDistortionPtr DuDistortion::fromDuMusicBinary(const FX_distortion &du_distortion)
 {
     DuDistortionPtr distortion(new DuDistortion);
     bool verif = true;
@@ -124,7 +124,7 @@ DuDistortionPtr DuDistortion::fromJson(const QJsonObject &jsonDistortion)
 }
 
 
-QByteArray DuDistortion::toDuMusicFile() const
+QByteArray DuDistortion::toDuMusicBinary() const
 {
     FX_distortion du_distortion;
 

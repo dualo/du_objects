@@ -28,10 +28,10 @@ public:
 
     virtual DuObjectPtr clone() const;
 
-    static DuEqualizerPtr fromDuMusicFile(const FX_equalizer du_equalizer);
+    static DuEqualizerPtr fromDuMusicBinary(const FX_equalizer du_equalizer);
     static DuEqualizerPtr fromJson(const QJsonObject &jsonEqualizer);
 
-    QByteArray toDuMusicFile() const;
+    QByteArray toDuMusicBinary() const;
 
     int size() const;
 

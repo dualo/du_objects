@@ -66,7 +66,7 @@ DuObjectPtr DuSongInfo::clone() const
 }
 
 
-DuSongInfoPtr DuSongInfo::fromDuMusicFile(const music_song &du_song)
+DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
 {
     DuSongInfoPtr songInfo(new DuSongInfo);
     bool verif = true;
@@ -151,7 +151,7 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
 }
 
 
-QByteArray DuSongInfo::toDuMusicFile() const
+QByteArray DuSongInfo::toDuMusicBinary() const
 {
     //TODO: restructure music_song into music_header and music_info
     music_song du_songinfo;

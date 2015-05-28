@@ -58,7 +58,7 @@ DuObjectPtr DuEvent::clone() const
 }
 
 
-DuEventPtr DuEvent::fromDuMusicFile(const music_sample &du_sample)
+DuEventPtr DuEvent::fromDuMusicBinary(const music_sample &du_sample)
 {
     DuEventPtr event(new DuEvent);
     bool verif = true;
@@ -111,7 +111,7 @@ DuEventPtr DuEvent::fromJson(const QJsonObject &jsonEvent)
 }
 
 
-QByteArray DuEvent::toDuMusicFile() const
+QByteArray DuEvent::toDuMusicBinary() const
 {
     music_sample du_sample;
 

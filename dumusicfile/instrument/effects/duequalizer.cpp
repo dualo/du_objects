@@ -66,7 +66,7 @@ DuObjectPtr DuEqualizer::clone() const
 }
 
 
-DuEqualizerPtr DuEqualizer::fromDuMusicFile(const FX_equalizer du_equalizer)
+DuEqualizerPtr DuEqualizer::fromDuMusicBinary(const FX_equalizer du_equalizer)
 {
     DuEqualizerPtr equalizer(new DuEqualizer);
     bool verif = true;
@@ -152,7 +152,7 @@ DuEqualizerPtr DuEqualizer::fromJson(const QJsonObject &jsonEqualizer)
 }
 
 
-QByteArray DuEqualizer::toDuMusicFile() const
+QByteArray DuEqualizer::toDuMusicBinary() const
 {
     FX_equalizer du_equalizer;
 
