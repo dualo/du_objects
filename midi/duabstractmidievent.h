@@ -1,12 +1,18 @@
 #ifndef DUABSTRACTMIDIEVENT_H
 #define DUABSTRACTMIDIEVENT_H
 
-
+#include "dumidicontainer.h"
 #include "dumidivariablelength.h"
-#include "../dunumeric.h"
+#include "dumidinumeric.h"
 
 
-class DuAbstractMidiEvent
+#define KEY_MIDIEVENT_TIME      "Time"
+#define KEY_MIDIEVENT_STATUS    "Status"
+
+
+DU_OBJECT(DuAbstractMidiEvent)
+
+class DuAbstractMidiEvent : public DuMidiContainer
 {
 public:
     explicit DuAbstractMidiEvent(quint32 time = 0, quint8 status = 0x80);
@@ -15,16 +21,12 @@ public:
     virtual QByteArray toByteArray(bool runningStatusActive = false) = 0;
     virtual void setDataBytes(QDataStream &stream) = 0;
     virtual void setDataBytes(const QByteArray &array) = 0;
-    virtual quint32 size() const = 0;
 
     quint32 getTime() const;
-    quint8 getStatus() const;
-    void setTime(quint32 offset, quint32 delta);
-    void setStatus(quint8 value);
+    void setTime(quint32 delta, quint32 offset);
 
-protected:
-    DuMidiVariableLength *time;
-    DuNumeric *status;              // Status bytes are > 0x7F, data bytes are < 0x80
+    quint8 getStatus() const;
+    void setStatus(quint8 value);   // Status bytes are > 0x7F, data bytes are < 0x80
 };
 
 #endif // DUABSTRACTMIDIEVENT_H

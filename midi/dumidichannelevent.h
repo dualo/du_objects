@@ -4,10 +4,16 @@
 #include "duabstractmidievent.h"
 
 
+#define KEY_MIDICHANNELEVENT_KEY        "Key"
+#define KEY_MIDICHANNELEVENT_VALUE      "Value"
+
+
+DU_OBJECT(DuMidiChannelEvent)
+
 class DuMidiChannelEvent : public DuAbstractMidiEvent
 {
 public:
-    explicit DuMidiChannelEvent();
+    explicit DuMidiChannelEvent(quint32 time = 0, quint8 status = 0x80);
     virtual ~DuMidiChannelEvent();
 
     enum Type
@@ -237,24 +243,27 @@ public:
         Applause = 0x7E,                Gunshot = 0x7F
     };
 
-    QByteArray toByteArray(bool runningStatusActive = false);
-    void setDataBytes(QDataStream &stream);
-    void setDataBytes(const QByteArray &array);
-    quint32 size() const;
+    virtual QByteArray toByteArray(bool runningStatusActive = false);
+    virtual void setDataBytes(QDataStream &stream);
+    virtual void setDataBytes(const QByteArray &array);
+
+    virtual DuObjectPtr clone() const;
+
+    virtual const QByteArray toMidiBinary() const;
+
+    virtual int size() const;
 
     quint8 getType() const;
-    quint8 getChannel() const;
-    quint8 getKey() const;
-    quint8 getValue() const;
-
     void setType(quint8 value);
-    void setChannel(quint8 value);
-    void setKey(quint8 value);
-    void setValue(quint8 value);
 
-private:
-    DuNumeric *key;
-    DuNumeric *value;
+    quint8 getChannel() const;
+    void setChannel(quint8 value);
+
+    quint8 getKey() const;
+    void setKey(quint8 value);
+
+    quint8 getValue() const;
+    void setValue(quint8 value);
 };
 
 #endif // DUMIDICHANNELEVENT_H

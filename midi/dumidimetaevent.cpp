@@ -1,9 +1,14 @@
 #include "dumidimetaevent.h"
 
+#include <QDebug>
+
+DU_OBJECT_IMPL(DuMidiMetaEvent)
+
+
 DuMidiMetaEvent::DuMidiMetaEvent() :
     DuAbstractMidiEvent(0, 0xFF)
 {
-    type = new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00);
+    type = new DuMidiNumeric(0x00, MIDINUMERIC_DEFAULT_SIZE, 0x7F, 0x00);
     data = new DuMidiData();
 }
 
@@ -16,12 +21,13 @@ DuMidiMetaEvent::~DuMidiMetaEvent()
 
 QByteArray DuMidiMetaEvent::toByteArray(bool runningStatusActive)
 {
-    QByteArray array = time->toMidiFile();
+    //TODO: refactoring
+    QByteArray array ;//= time->toMidiBinary();
     array.append(getStatus());
 
     array.append(getType());
-    //TODO: refactoring
-    //array += conv->formattedLengthArray(getData().size());
+
+    array += length->toMidiBinary();
     array += getData();
 
     return array;
@@ -34,18 +40,27 @@ void DuMidiMetaEvent::setDataBytes(QDataStream &stream)
 
 void DuMidiMetaEvent::setDataBytes(const QByteArray &array)
 {
-   data->setData(array);
+    data->setData(array);
 }
 
 
-quint32 DuMidiMetaEvent::size() const
+DuObjectPtr DuMidiMetaEvent::clone() const
 {
-    quint32 length = getData().size();
+    return DuMidiMetaEventPtr(new DuMidiMetaEvent(*this));
+}
 
+
+const QByteArray DuMidiMetaEvent::toMidiBinary() const
+{
+    //TODO: implement toMidiBinary()
+    return QByteArray();
+}
+
+
+int DuMidiMetaEvent::size() const
+{
     //TODO: refactoring
-    return (time->size() + 2 + length);
-            //+ conv->formattedSize(getData().size()) + length);
-
+    return (1 + 2 + length->size() + getLength());
 }
 
 
@@ -62,16 +77,22 @@ void DuMidiMetaEvent::setType(quint8 value)
 
 quint32 DuMidiMetaEvent::getLength() const
 {
-    return getData().size();
+    return length->getAbsolute();
 }
 
 void DuMidiMetaEvent::setLength(quint32 value)
 {
-    data->resize(value);
+    length->setAbsolute(value);
+    data->resize(length->getAbsolute());
 }
 
 
 const QByteArray DuMidiMetaEvent::getData() const
 {
     return data->getData();
+}
+
+void DuMidiMetaEvent::setData(const QByteArray &value)
+{
+    data->setData(value);
 }

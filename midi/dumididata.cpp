@@ -1,7 +1,12 @@
 #include "dumididata.h"
 
+#include <QDebug>
+
+DU_OBJECT_IMPL(DuMidiData)
+
+
 DuMidiData::DuMidiData(int maxSize) :
-    DuValue(maxSize)
+    DuMidiValue(maxSize)
 {
 }
 
@@ -10,14 +15,15 @@ DuMidiData::~DuMidiData()
 }
 
 
-QByteArray DuMidiData::toDuMusicFile() const
+DuObjectPtr DuMidiData::clone() const
 {
-    return QByteArray();
+    return DuMidiDataPtr(new DuMidiData(*this));
 }
 
-QJsonValue DuMidiData::toJson() const
+
+const QByteArray DuMidiData::toMidiBinary() const
 {
-    return QJsonValue();
+    return getData();
 }
 
 
@@ -57,13 +63,16 @@ void DuMidiData::setData(QDataStream &stream)
 
 void DuMidiData::resize(int size)
 {
-    data().resize(size);
+    QByteArray tmp = data();
+    tmp.resize(size);
+    setData(tmp);
 }
 
 
-QByteArray &DuMidiData::append(char c)
+void DuMidiData::append(char c)
 {
-    return data().append(c);
+    QByteArray tmp = data().append(c);
+    setData(tmp);
 }
 
 

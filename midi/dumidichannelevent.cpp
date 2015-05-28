@@ -1,22 +1,31 @@
 #include "dumidichannelevent.h"
 
-DuMidiChannelEvent::DuMidiChannelEvent() :
-    DuAbstractMidiEvent()
+#include <QDebug>
+
+DU_OBJECT_IMPL(DuMidiChannelEvent)
+
+
+DuMidiChannelEvent::DuMidiChannelEvent(quint32 time, quint8 status) :
+    DuAbstractMidiEvent(time, status)
 {
-    key = new DuNumeric(0, NUMERIC_DEFAULT_SIZE, 0x00, 0x7F);
-    value = new DuNumeric(0, NUMERIC_DEFAULT_SIZE, 0x00, 0x7F);
+    addChild(KEY_MIDICHANNELEVENT_KEY,
+             new DuMidiNumeric(0, MIDINUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
+
+    addChild(KEY_MIDICHANNELEVENT_VALUE,
+             new DuMidiNumeric(0, MIDINUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
 }
 
 DuMidiChannelEvent::~DuMidiChannelEvent()
 {
-    delete key;
-    delete value;
 }
 
 
 QByteArray DuMidiChannelEvent::toByteArray(bool runningStatusActive)
 {
-    QByteArray array = time->toMidiFile();
+    //TODO: subclasses for DuMidiChannelEvent to differenciate virtual method
+
+    //TODO: refactoring
+    QByteArray array;// = time->toMidiBinary();
     if (!runningStatusActive) array.append(getStatus());
 
     switch (getType())
@@ -48,6 +57,8 @@ QByteArray DuMidiChannelEvent::toByteArray(bool runningStatusActive)
 
 void DuMidiChannelEvent::setDataBytes(QDataStream &stream)
 {
+    //TODO: subclasses for DuMidiChannelEvent to differenciate virtual method
+
     switch (getType())
     {
     case NoteOff:
@@ -84,6 +95,8 @@ void DuMidiChannelEvent::setDataBytes(QDataStream &stream)
 
 void DuMidiChannelEvent::setDataBytes(const QByteArray &array)
 {
+    //TODO: subclasses for DuMidiChannelEvent to differenciate virtual method
+
     switch (getType())
     {
     case NoteOff:
@@ -109,8 +122,62 @@ void DuMidiChannelEvent::setDataBytes(const QByteArray &array)
 }
 
 
-quint32 DuMidiChannelEvent::size() const
+DuObjectPtr DuMidiChannelEvent::clone() const
 {
+    return DuMidiChannelEventPtr(new DuMidiChannelEvent(*this));
+}
+
+
+const QByteArray DuMidiChannelEvent::toMidiBinary() const
+{
+    //TODO: subclasses for DuMidiChannelEvent to differenciate virtual method
+
+    QByteArray retArray;
+    retArray.clear();
+
+    const DuMidiVariableLengthConstPtr &time =
+            getChildAs<DuMidiVariableLength>(KEY_MIDIEVENT_TIME);
+
+    if (time == NULL)
+        return QByteArray();
+
+    retArray += time->toMidiBinary();
+
+
+    const DuMidiNumericConstPtr &status =
+            getChildAs<DuMidiNumeric>(KEY_MIDIEVENT_STATUS);
+
+    if (status == NULL)
+        return QByteArray();
+
+    retArray += status->toMidiBinary();
+
+
+    const DuMidiNumericConstPtr &key =
+            getChildAs<DuMidiNumeric>(KEY_MIDICHANNELEVENT_KEY);
+
+    if (key == NULL)
+        return QByteArray();
+
+    retArray += key->toMidiBinary();
+
+
+    const DuMidiNumericConstPtr &value =
+            getChildAs<DuMidiNumeric>(KEY_MIDICHANNELEVENT_VALUE);
+
+    if (value == NULL)
+        return QByteArray();
+
+    retArray += value->toMidiBinary();
+
+    return retArray;
+}
+
+
+int DuMidiChannelEvent::size() const
+{
+    //TODO: subclasses for DuMidiChannelEvent to differenciate virtual method
+
     quint32 size;
 
     switch (getType())
@@ -121,13 +188,15 @@ quint32 DuMidiChannelEvent::size() const
     case ControlChange:
     case PitchWheelChange:
     {
-        size = time->size() + 3;
+        //TODO: refactoring
+        //size = time->size() + 3;
         break;
     }
     case ProgramChange:
     case ChannelPressure:
     {
-        size = time->size() + 2;
+        //TODO: refactoring
+        //size = time->size() + 2;
         break;
     }
     default:
@@ -144,25 +213,15 @@ quint8 DuMidiChannelEvent::getType() const
     return (getStatus() >> 4) & 0x0F;
 }
 
-quint8 DuMidiChannelEvent::getChannel() const
-{
-    return getStatus() & 0x0F;
-}
-
-quint8 DuMidiChannelEvent::getKey() const
-{
-    return key->getNumeric();
-}
-
-quint8 DuMidiChannelEvent::getValue() const
-{
-    return value->getNumeric();
-}
-
-
 void DuMidiChannelEvent::setType(quint8 value)
 {
     setStatus((getStatus() & 0x0F) | ((value << 4) & 0xF0));
+}
+
+
+quint8 DuMidiChannelEvent::getChannel() const
+{
+    return getStatus() & 0x0F;
 }
 
 void DuMidiChannelEvent::setChannel(quint8 value)
@@ -170,12 +229,48 @@ void DuMidiChannelEvent::setChannel(quint8 value)
     setStatus((getStatus() & 0xF0) | (value & 0x0F));
 }
 
+
+quint8 DuMidiChannelEvent::getKey() const
+{
+    const DuMidiNumericConstPtr &tmp =
+            getChildAs<DuMidiNumeric>(KEY_MIDICHANNELEVENT_KEY);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
 void DuMidiChannelEvent::setKey(quint8 value)
 {
-    key->setNumeric(value);
+    DuMidiNumericPtr &tmp =
+            getChildAs<DuMidiNumeric>(KEY_MIDICHANNELEVENT_KEY);
+
+    if (tmp == NULL)
+        return;
+
+    tmp->setNumeric(value);
+}
+
+
+quint8 DuMidiChannelEvent::getValue() const
+{
+    const DuMidiNumericConstPtr &tmp =
+            getChildAs<DuMidiNumeric>(KEY_MIDICHANNELEVENT_VALUE);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
 }
 
 void DuMidiChannelEvent::setValue(quint8 value)
 {
-    this->value->setValue(value);
+    DuMidiNumericPtr &tmp =
+            getChildAs<DuMidiNumeric>(KEY_MIDICHANNELEVENT_VALUE);
+
+    if (tmp == NULL)
+        return;
+
+    tmp->setNumeric(value);
 }

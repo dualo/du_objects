@@ -1,30 +1,33 @@
 #ifndef DUMIDIDATA_H
 #define DUMIDIDATA_H
 
-#include "../duvalue.h"
+#include "dumidivalue.h"
 #include <QDataStream>
 
 
 DU_OBJECT(DuMidiData)
 
-class DuMidiData : public DuValue
+class DuMidiData : public DuMidiValue
 {
 public:
     explicit DuMidiData(int maxSize = -1);
     virtual ~DuMidiData();
 
-    QByteArray toDuMusicFile() const;
-    QJsonValue toJson() const;
+    virtual DuObjectPtr clone() const;
+
+    virtual const QByteArray toMidiBinary() const;
 
     virtual int size() const;
 
-    QByteArray data();
     const QByteArray getData() const;
     bool setData(const QByteArray &value);
     void setData(QDataStream &stream);
 
     void resize(int size);
-    QByteArray &append(char c);
+    void append(char c);
+
+protected:
+    QByteArray data();
 };
 
 #endif // DUMIDIDATA_H

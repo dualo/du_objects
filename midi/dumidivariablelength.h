@@ -4,7 +4,7 @@
 #include <QDataStream>
 #include <QByteArray>
 
-#include "../duvalue.h"
+#include "dumidivalue.h"
 
 
 #define ONE_BYTE_MAX_UINT_VALUE 0x7F
@@ -15,14 +15,15 @@
 
 DU_OBJECT(DuMidiVariableLength)
 
-class DuMidiVariableLength : public DuValue
+class DuMidiVariableLength : public DuMidiValue
 {
 public:
     explicit DuMidiVariableLength(int offset = 0);
-    virtual ~DuMidiVariableLength();
+    ~DuMidiVariableLength();
 
-    QByteArray toDuMusicFile() const;
-    QJsonValue toJson() const;
+    virtual DuObjectPtr clone() const;
+
+    const QByteArray toMidiBinary() const;
 
     int size() const;
 
@@ -30,13 +31,14 @@ public:
     quint32 getLength(QDataStream &stream);
 
     quint32 getAbsolute() const;
+    void setAbsolute(quint32 delta, quint32 offset = 0);
+    void setAbsolute(QDataStream &stream, quint32 offset = 0);
+
     quint32 getRelative() const;
-    void setDelta(quint32 value);
+    void setRelative(quint32 value);
 
     quint32 getOffset() const;
     void setOffset(quint32 value);
-
-    const QByteArray toMidiFile() const;
 
 private:
     quint32 offset;

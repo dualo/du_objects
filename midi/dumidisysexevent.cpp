@@ -1,5 +1,10 @@
 #include "dumidisysexevent.h"
 
+#include <QDebug>
+
+DU_OBJECT_IMPL(DuMidiSysExEvent)
+
+
 DuMidiSysExEvent::DuMidiSysExEvent() :
     DuAbstractMidiEvent()
 {
@@ -14,7 +19,8 @@ DuMidiSysExEvent::~DuMidiSysExEvent()
 
 QByteArray DuMidiSysExEvent::toByteArray(bool runningStatusActive)
 {
-    QByteArray array = time->toMidiFile();
+    //TODO: refactoring
+    QByteArray array;// = time->toMidiBinary();
     array.append(getStatus());
 
     //TODO: refactoring
@@ -34,14 +40,37 @@ void DuMidiSysExEvent::setDataBytes(const QByteArray &array)
     data->setData(array);
 }
 
-quint32 DuMidiSysExEvent::size() const
+
+DuObjectPtr DuMidiSysExEvent::clone() const
 {
-    quint32 length = getData().size();
+    return DuMidiSysExEventPtr(new DuMidiSysExEvent(*this));
+}
 
+
+const QByteArray DuMidiSysExEvent::toMidiBinary() const
+{
+    //TODO: implement toMidiBinary()
+    return QByteArray();
+}
+
+
+int DuMidiSysExEvent::size() const
+{
     //TODO: refactoring
-    //return (time->size() + 1 + conv->formattedSize(length) + length);
+    //return (time->size() + 1 + length->size() + length->getAbsolute());
+    return 0;
+}
 
-    return (time->size() + 1 + length);
+
+int DuMidiSysExEvent::getLength() const
+{
+    return length->getAbsolute();
+}
+
+void DuMidiSysExEvent::setLength(quint32 value)
+{
+    length->setAbsolute(value);
+    data->resize(value);
 }
 
 
@@ -53,10 +82,4 @@ const QByteArray DuMidiSysExEvent::getData() const
 void DuMidiSysExEvent::setData(const QByteArray &value)
 {
     data->setData(value);
-}
-
-
-void DuMidiSysExEvent::setLength(quint32 value)
-{
-    data->resize(value);
 }

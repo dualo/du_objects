@@ -1,35 +1,65 @@
 #include "duabstractmidievent.h"
 
-DuAbstractMidiEvent::DuAbstractMidiEvent(quint32 time, quint8 status)
+#include <QDebug>
+
+DU_OBJECT_IMPL(DuAbstractMidiEvent)
+
+
+DuAbstractMidiEvent::DuAbstractMidiEvent(quint32 time, quint8 status) :
+    DuMidiContainer()
 {
-    this->time = new DuMidiVariableLength(time);
-    this->status = new DuNumeric(status, NUMERIC_DEFAULT_SIZE, 0xFF, 0x80);
+    addChild(KEY_MIDIEVENT_TIME, new DuMidiVariableLength(time));
+
+    addChild(KEY_MIDIEVENT_STATUS,
+             new DuMidiNumeric(status, MIDINUMERIC_DEFAULT_SIZE, 0xFF, 0x80));
 }
 
 DuAbstractMidiEvent::~DuAbstractMidiEvent()
 {
-    delete time;
-    delete status;
 }
 
 
 quint32 DuAbstractMidiEvent::getTime() const
 {
-    return time->getAbsolute();
+    const DuMidiVariableLengthConstPtr& tmp =
+            getChildAs<DuMidiVariableLength>(KEY_MIDIEVENT_TIME);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getAbsolute();
 }
+
+void DuAbstractMidiEvent::setTime(quint32 delta, quint32 offset)
+{
+    DuMidiVariableLengthPtr& tmp =
+            getChildAs<DuMidiVariableLength>(KEY_MIDIEVENT_TIME);
+
+    if (tmp == NULL)
+        return;
+
+    tmp->setAbsolute(delta, offset);
+}
+
 
 quint8 DuAbstractMidiEvent::getStatus() const
 {
-    return status->getNumeric();
-}
+    const DuMidiNumericConstPtr& tmp =
+            getChildAs<DuMidiNumeric>(KEY_MIDIEVENT_STATUS);
 
-void DuAbstractMidiEvent::setTime(quint32 offset, quint32 delta)
-{
-    time->setOffset(offset);
-    time->setDelta(delta);
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
 }
 
 void DuAbstractMidiEvent::setStatus(quint8 value)
 {
-    status->setNumeric(value);
+   DuMidiNumericPtr& tmp =
+           getChildAs<DuMidiNumeric>(KEY_MIDIEVENT_STATUS);
+
+    if (tmp == NULL)
+        return;
+
+    tmp->setNumeric(value);
 }
