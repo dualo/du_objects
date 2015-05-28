@@ -1,8 +1,8 @@
 #ifndef DUPROFILE_H
 #define DUPROFILE_H
 
-#include "duarray.h"
-#include "ducontainer.h"
+#include "general/duarray.h"
+#include "general/ducontainer.h"
 
 #define KEY_PROFILE_FIRSTNAME     "Firstname"
 #define KEY_PROFILE_LASTNAME      "Lastname"

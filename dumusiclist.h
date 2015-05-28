@@ -1,7 +1,7 @@
 #ifndef DUMUSICLIST_H
 #define DUMUSICLIST_H
 
-#include "ducontainer.h"
+#include "general/ducontainer.h"
 
 #define KEY_MUSIC_LIST_NAME "Name"
 #define KEY_MUSIC_LIST_TYPE "Type"

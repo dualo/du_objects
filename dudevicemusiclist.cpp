@@ -1,6 +1,6 @@
 #include "dudevicemusiclist.h"
 
-#include "dustring.h"
+#include "general/dustring.h"
 
 #include <QDebug>
 

@@ -1,10 +1,10 @@
 #include "duprofile.h"
 
-#include "dudate.h"
-#include "dunumeric.h"
-#include "dustring.h"
+#include "general/dudate.h"
+#include "general/dunumeric.h"
+#include "general/dustring.h"
 #include "dutouch.h"
-#include "duurl.h"
+#include "general/duurl.h"
 
 #include <QDebug>
 #include <QFile>

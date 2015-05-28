@@ -1,10 +1,10 @@
 #ifndef DUDEVICE_H
 #define DUDEVICE_H
 
-#include "ducontainer.h"
-#include "dudate.h"
-#include "dunumeric.h"
-#include "duversion.h"
+#include "general/ducontainer.h"
+#include "general/dudate.h"
+#include "general/dunumeric.h"
+#include "general/duversion.h"
 
 #define KEY_DEVICE_SERIAL_NUMBER    "SerialNumber"
 #define KEY_DEVICE_NAME             "Name"

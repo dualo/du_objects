@@ -1,7 +1,7 @@
 #include "dumusiclist.h"
 
-#include "dunumeric.h"
-#include "dustring.h"
+#include "general/dunumeric.h"
+#include "general/dustring.h"
 
 #include <QDebug>
 
