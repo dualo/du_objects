@@ -4,13 +4,14 @@
 
 DU_OBJECT_IMPL(DuValue)
 
+
 DuValue::DuValue(int maxSize) :
     DuObject(),
     maxSize(maxSize)
 {
 }
 
-DuValue::DuValue(const QVariant& value, int maxSize) :
+DuValue::DuValue(const QVariant &value, int maxSize) :
     DuObject(),
     value(value),
     maxSize(maxSize)
@@ -28,7 +29,7 @@ int DuValue::size() const
 }
 
 
-const QVariant& DuValue::getValue() const
+const QVariant &DuValue::getValue() const
 {
     return value;
 }

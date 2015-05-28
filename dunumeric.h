@@ -1,7 +1,6 @@
 #ifndef DUNUMERIC_H
 #define DUNUMERIC_H
 
-
 #include "duvalue.h"
 
 

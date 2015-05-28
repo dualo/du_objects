@@ -4,6 +4,7 @@
 
 DU_OBJECT_IMPL(DuNumeric)
 
+
 DuNumeric::DuNumeric(int value) :
     DuValue(4),
     defaultValue(0),
@@ -66,7 +67,8 @@ QJsonValue DuNumeric::toJson() const
 QHttpPart DuNumeric::toHttpPart(const QString &name) const
 {
     QHttpPart part;
-    part.setHeader(QNetworkRequest::ContentDispositionHeader, "form-data; name=\"" + name + "\"");
+    part.setHeader(QNetworkRequest::ContentDispositionHeader,
+                   "form-data; name=\"" + name + "\"");
     part.setBody(QByteArray::number(getNumeric()));
 
     return part;

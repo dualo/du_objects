@@ -18,7 +18,7 @@ public:
     virtual ~DuContainer();
 
 protected:
-    explicit DuContainer(const DuContainer& other);
+    explicit DuContainer(const DuContainer &other);
 
 public:
     virtual DuObjectPtr clone() const;

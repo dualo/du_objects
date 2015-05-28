@@ -41,7 +41,7 @@ public:
     virtual ~DuObject();
 
 protected:
-    explicit DuObject(const DuObject& other);
+    explicit DuObject(const DuObject &other);
 
 public:
     virtual DuObjectPtr clone() const = 0;
@@ -49,7 +49,7 @@ public:
     virtual QByteArray toDuMusicFile() const = 0;
     virtual QJsonValue toJson() const = 0;
 
-    virtual QHttpPart toHttpPart(const QString& name) const;
+    virtual QHttpPart toHttpPart(const QString &name) const;
     virtual QDebug debugPrint(QDebug dbg) const;
 
     virtual int size() const = 0;

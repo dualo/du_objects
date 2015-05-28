@@ -4,6 +4,7 @@
 
 DU_OBJECT_IMPL(DuObject)
 
+
 DuObject::DuObject()
 {
 }

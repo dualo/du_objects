@@ -5,6 +5,7 @@
 
 DU_OBJECT_IMPL(DuContainer)
 
+
 DuContainer::DuContainer() :
     DuObject()
 {
@@ -68,7 +69,7 @@ QByteArray DuContainer::toDuMusicFile() const
         if (tmpArray.isNull())
             return QByteArray();
 
-        retArray.append(i.value()->toDuMusicFile());
+        retArray.append(tmpArray);
     }
 
     return retArray;

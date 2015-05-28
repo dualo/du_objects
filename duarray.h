@@ -14,7 +14,7 @@ public:
     ~DuArray();
 
 protected:
-    explicit DuArray(const DuArray& other);
+    explicit DuArray(const DuArray &other);
 
 public:
     virtual DuObjectPtr clone() const;
