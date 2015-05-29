@@ -37,7 +37,7 @@ DU_OBJECT(DuObject)
 class DuObject
 {
 public:
-    explicit DuObject();
+    DuObject();
     virtual ~DuObject();
 
 protected:
