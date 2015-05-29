@@ -19,7 +19,8 @@ protected:
 public:
     virtual DuObjectPtr clone() const;
 
-    virtual QByteArray toDuMusicBinary() const;
+    QByteArray toDuMusicBinary() const;
+    QByteArray toMidiBinary() const;
     QJsonValue toJson() const;
 
     int size() const;

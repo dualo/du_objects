@@ -30,14 +30,14 @@ HEADERS += \
     $$PWD/dumusicfile/instrument/effects/dumixer.h \
     $$PWD/dumusicfile/instrument/effects/duvibrato.h \
     $$PWD/dumusicfile/instrument/effects/duwah.h \
-    $$PWD/midifile/dumidiabstractevent.h \
-    $$PWD/midifile/dumidichannelevent.h \
     $$PWD/midifile/dumidivariablelength.h \
+    $$PWD/midifile/dumidistatus.h \
+    $$PWD/midifile/dumidibasicevent.h \
+    $$PWD/midifile/dumidichannelevent.h \
     $$PWD/midifile/dumidimetaevent.h \
     $$PWD/midifile/dumidisysexevent.h \
     $$PWD/midifile/dumiditrack.h \
     $$PWD/midifile/dumidifile.h \
-    $$PWD/midifile/dumidiarray.h \
     $$PWD/dudevice.h \
     $$PWD/dutouch.h \
     $$PWD/dumusiclist.h \
@@ -74,14 +74,14 @@ SOURCES += \
     $$PWD/dumusicfile/instrument/effects/dumixer.cpp \
     $$PWD/dumusicfile/instrument/effects/duvibrato.cpp \
     $$PWD/dumusicfile/instrument/effects/duwah.cpp \
-    $$PWD/midifile/dumidiabstractevent.cpp \
-    $$PWD/midifile/dumidichannelevent.cpp \
     $$PWD/midifile/dumidivariablelength.cpp \
+    $$PWD/midifile/dumidistatus.cpp \
+    $$PWD/midifile/dumidibasicevent.cpp \
+    $$PWD/midifile/dumidichannelevent.cpp \
     $$PWD/midifile/dumidimetaevent.cpp \
     $$PWD/midifile/dumidisysexevent.cpp \
     $$PWD/midifile/dumiditrack.cpp \
     $$PWD/midifile/dumidifile.cpp \
-    $$PWD/midifile/dumidiarray.cpp \
     $$PWD/dudevice.cpp \
     $$PWD/dutouch.cpp \
     $$PWD/dumusiclist.cpp \

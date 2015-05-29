@@ -5,8 +5,8 @@
 
 DU_OBJECT_IMPL(DuMidiSysExEvent)
 
-DuMidiSysExEvent::DuMidiSysExEvent() :
-    DuMidiAbstractEvent()
+DuMidiSysExEvent::DuMidiSysExEvent(quint32 time, quint8 status) :
+    DuMidiBasicEvent(time, status)
 {
     addChild(KEY_MIDISYSEXEVENT_LENGTH, new DuMidiVariableLength(0));
 
@@ -18,30 +18,6 @@ DuMidiSysExEvent::~DuMidiSysExEvent()
 }
 
 
-QByteArray DuMidiSysExEvent::toByteArray(bool runningStatusActive)
-{
-    //TODO: refactoring
-    QByteArray array;// = time->toMidiBinary();
-    array.append(getStatus());
-
-    //TODO: refactoring
-    //array += conv->formattedLengthArray(getData().size());
-    array += getData();
-
-    return array;
-}
-
-void DuMidiSysExEvent::setDataBytes(QDataStream &stream)
-{
-    setData(stream);
-}
-
-void DuMidiSysExEvent::setDataBytes(const QByteArray &array)
-{
-    setData(array);
-}
-
-
 DuObjectPtr DuMidiSysExEvent::clone() const
 {
     return DuMidiSysExEventPtr(new DuMidiSysExEvent(*this));
@@ -50,8 +26,46 @@ DuObjectPtr DuMidiSysExEvent::clone() const
 
 QByteArray DuMidiSysExEvent::toMidiBinary() const
 {
-    //TODO: implement toMidiBinary()
-    return QByteArray();
+    QByteArray retArray;
+    retArray.clear();
+
+    const DuMidiVariableLengthConstPtr &time =
+            getChildAs<DuMidiVariableLength>(KEY_MIDIEVENT_TIME);
+
+    if (time == NULL)
+        return QByteArray();
+
+    retArray += time->toMidiBinary();
+
+
+    const DuMidiStatusConstPtr &status =
+            getChildAs<DuMidiStatus>(KEY_MIDIEVENT_STATUS);
+
+    if (status == NULL)
+        return QByteArray();
+
+    retArray += status->toMidiBinary();
+
+
+    const DuMidiVariableLengthConstPtr &length =
+            getChildAs<DuMidiVariableLength>(KEY_MIDISYSEXEVENT_LENGTH);
+
+    if (length == NULL)
+        return QByteArray();
+
+    retArray += length->toMidiBinary();
+
+
+    const DuBinaryDataConstPtr &data =
+            getChildAs<DuBinaryData>(KEY_MIDISYSEXEVENT_DATA);
+
+    if (data == NULL)
+        return QByteArray();
+
+    retArray += data->toMidiBinary();
+
+
+    return retArray;
 }
 
 
@@ -96,13 +110,18 @@ const QByteArray DuMidiSysExEvent::getData() const
 
 void DuMidiSysExEvent::setData(const QByteArray &value)
 {
-    DuBinaryDataPtr &tmp =
-            getChildAs<DuBinaryData>(KEY_MIDISYSEXEVENT_DATA);
-
-    if (tmp == NULL)
+    DuMidiVariableLengthPtr &length =
+            getChildAs<DuMidiVariableLength>(KEY_MIDISYSEXEVENT_LENGTH);
+    if (length == NULL)
         return;
 
-    tmp->setData(value);
+    DuBinaryDataPtr &data =
+            getChildAs<DuBinaryData>(KEY_MIDISYSEXEVENT_DATA);
+    if (data == NULL)
+        return;
+
+    length->setAbsolute(value.size());
+    data->setData(value);
 }
 
 void DuMidiSysExEvent::setData(QDataStream &stream)

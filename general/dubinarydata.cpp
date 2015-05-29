@@ -23,8 +23,7 @@ DuObjectPtr DuBinaryData::clone() const
 
 QByteArray DuBinaryData::toDuMusicBinary() const
 {
-    Q_UNIMPLEMENTED();
-    return QByteArray();
+    return getData();
 }
 
 QByteArray DuBinaryData::toMidiBinary() const
@@ -34,8 +33,7 @@ QByteArray DuBinaryData::toMidiBinary() const
 
 QJsonValue DuBinaryData::toJson() const
 {
-    Q_UNIMPLEMENTED();
-    return QJsonValue();
+    return QJsonValue(getData().data());
 }
 
 
@@ -53,9 +51,10 @@ const QByteArray DuBinaryData::getData() const
 
 bool DuBinaryData::setData(const QByteArray &value)
 {
-    if (getMaxSize() != -1 && value.size() > getMaxSize())
+    int size = getMaxSize();
+    if (size != -1 && value.size() > size)
     {
-        setValue(value.left(getMaxSize()));
+        setValue(value.left(size));
         return false;
     }
 

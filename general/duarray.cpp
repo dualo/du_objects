@@ -41,10 +41,28 @@ QByteArray DuArray::toDuMusicBinary() const
     if (array.isEmpty())
         return QByteArray("");
 
-    int count = array.count();
-    for (int i = 0; i < count; i++)
+    QListIterator<DuObjectPtr> i(array);
+    while (i.hasNext())
     {
-        retArray.append(array[i]->toDuMusicBinary());
+        retArray.append(i.next()->toDuMusicBinary());
+    }
+
+    return retArray;
+}
+
+
+QByteArray DuArray::toMidiBinary() const
+{
+    QByteArray retArray;
+    retArray.clear();
+
+    if (array.isEmpty())
+        return QByteArray("");
+
+    QListIterator<DuObjectPtr> i(array);
+    while (i.hasNext())
+    {
+        retArray.append(i.next()->toMidiBinary());
     }
 
     return retArray;
@@ -55,10 +73,13 @@ QJsonValue DuArray::toJson() const
 {
     QJsonArray jsonArray;
 
-    int count = array.count();
-    for (int i = 0; i < count; i++)
+    if (array.isEmpty())
+        return QJsonValue(QJsonArray());
+
+    QListIterator<DuObjectPtr> i(array);
+    while (i.hasNext())
     {
-        jsonArray.append(array[i]->toJson());
+        jsonArray.append(i.next()->toJson());
     }
 
     return QJsonValue(jsonArray);
@@ -68,11 +89,11 @@ QJsonValue DuArray::toJson() const
 int DuArray::size() const
 {
     int size = 0;
-    int count = array.count();
 
-    for (int i = 0; i < count; i++)
+    QListIterator<DuObjectPtr> i(array);
+    while (i.hasNext())
     {
-        int tmpSize = array[i]->size();
+        int tmpSize = i.next()->size();
         if (tmpSize == -1)
             return -1;
 

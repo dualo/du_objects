@@ -1,7 +1,7 @@
 #ifndef DUMIDISYSEXEVENT_H
 #define DUMIDISYSEXEVENT_H
 
-#include "dumidiabstractevent.h"
+#include "dumidibasicevent.h"
 #include "../general/dubinarydata.h"
 
 
@@ -11,15 +11,11 @@
 
 DU_OBJECT(DuMidiSysExEvent)
 
-class DuMidiSysExEvent : public DuMidiAbstractEvent
+class DuMidiSysExEvent : public DuMidiBasicEvent
 {
 public:
-    explicit DuMidiSysExEvent();
+    explicit DuMidiSysExEvent(quint32 time = 0, quint8 status = 0xF0);
     virtual ~DuMidiSysExEvent();
-
-    virtual QByteArray toByteArray(bool runningStatusActive = false);
-    virtual void setDataBytes(QDataStream &stream);
-    virtual void setDataBytes(const QByteArray &array);
 
     virtual DuObjectPtr clone() const;
 

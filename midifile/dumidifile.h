@@ -35,8 +35,8 @@ public:
 private:
     void parseFile(QIODevice *input);
     DuMidiTrack* parseTrack(QDataStream &stream);
-    DuMidiAbstractEvent* parseEvent(QDataStream &stream, quint8 *runningStatus,
-                               bool *trackEnded);
+    DuMidiBasicEvent* parseEvent(QDataStream &stream, quint8 *runningStatus,
+                                 bool *trackEnded);
     DuMidiChannelEvent* parseChannelEvent(QDataStream &stream, quint8 *runningStatus,
                                         quint8 *byte);
     DuMidiChannelEvent* parseChannelEvent(QDataStream &stream, quint8 *runningStatus);

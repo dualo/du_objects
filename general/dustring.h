@@ -16,6 +16,7 @@ public:
     virtual DuObjectPtr clone() const;
 
     QByteArray toDuMusicBinary() const;
+    QByteArray toMidiBinary() const;
     QJsonValue toJson() const;
 
     QHttpPart toHttpPart(const QString &name) const;

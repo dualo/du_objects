@@ -6,7 +6,7 @@
 DU_OBJECT_IMPL(DuMidiChannelEvent)
 
 DuMidiChannelEvent::DuMidiChannelEvent(quint32 time, quint8 status) :
-    DuMidiAbstractEvent(time, status)
+    DuMidiBasicEvent(time, status)
 {
     addChild(KEY_MIDICHANNELEVENT_KEY,
              new DuNumeric(0, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
@@ -20,108 +20,6 @@ DuMidiChannelEvent::~DuMidiChannelEvent()
 }
 
 
-QByteArray DuMidiChannelEvent::toByteArray(bool runningStatusActive)
-{
-    //TODO: subclasses for DuMidiChannelEvent to differenciate virtual method
-
-    //TODO: refactoring
-    QByteArray array;// = time->toMidiBinary();
-    if (!runningStatusActive) array.append(getStatus());
-
-    switch (getType())
-    {
-    case NoteOff:
-    case NoteOn:
-    case KeyAftertouch:
-    case ControlChange:
-    case PitchWheelChange:
-    {
-        array.append(getKey());
-        array.append(getValue());
-        break;
-    }
-    case ProgramChange:
-    case ChannelPressure:
-    {
-        array.append(getValue());
-        break;
-    }
-    default:
-    {
-    }
-    }
-
-    return array;
-}
-
-
-void DuMidiChannelEvent::setDataBytes(QDataStream &stream)
-{
-    //TODO: subclasses for DuMidiChannelEvent to differenciate virtual method
-
-    switch (getType())
-    {
-    case NoteOff:
-    case NoteOn:
-    case KeyAftertouch:
-    case ControlChange:
-    case PitchWheelChange:
-    {
-        quint8 tmp;
-
-        stream >> tmp;
-        setKey(tmp);
-
-        stream >> tmp;
-        setValue(tmp);
-
-        break;
-    }
-    case ProgramChange:
-    case ChannelPressure:
-    {
-        quint8 tmp;
-
-        stream >> tmp;
-        setValue(tmp);
-
-        break;
-    }
-    default:
-    {
-    }
-    }
-}
-
-void DuMidiChannelEvent::setDataBytes(const QByteArray &array)
-{
-    //TODO: subclasses for DuMidiChannelEvent to differenciate virtual method
-
-    switch (getType())
-    {
-    case NoteOff:
-    case NoteOn:
-    case KeyAftertouch:
-    case ControlChange:
-    case PitchWheelChange:
-    {
-        setKey(array[0]);
-        setValue(array[1]);
-        break;
-    }
-    case ProgramChange:
-    case ChannelPressure:
-    {
-        setValue(array[0]);
-        break;
-    }
-    default:
-    {
-    }
-    }
-}
-
-
 DuObjectPtr DuMidiChannelEvent::clone() const
 {
     return DuMidiChannelEventPtr(new DuMidiChannelEvent(*this));
@@ -130,8 +28,6 @@ DuObjectPtr DuMidiChannelEvent::clone() const
 
 QByteArray DuMidiChannelEvent::toMidiBinary() const
 {
-    //TODO: subclasses for DuMidiChannelEvent to differenciate virtual method
-
     QByteArray retArray;
     retArray.clear();
 
@@ -144,8 +40,8 @@ QByteArray DuMidiChannelEvent::toMidiBinary() const
     retArray += time->toMidiBinary();
 
 
-    const DuNumericConstPtr &status =
-            getChildAs<DuNumeric>(KEY_MIDIEVENT_STATUS);
+    const DuMidiStatusConstPtr &status =
+            getChildAs<DuMidiStatus>(KEY_MIDIEVENT_STATUS);
 
     if (status == NULL)
         return QByteArray();
@@ -170,15 +66,22 @@ QByteArray DuMidiChannelEvent::toMidiBinary() const
 
     retArray += value->toMidiBinary();
 
+
     return retArray;
 }
 
 
 int DuMidiChannelEvent::size() const
 {
-    //TODO: subclasses for DuMidiChannelEvent to differenciate virtual method
+    int size = 0;
 
-    quint32 size;
+    const DuMidiVariableLengthConstPtr &time =
+            getChildAs<DuMidiVariableLength>(KEY_MIDIEVENT_TIME);
+
+    if (time == NULL)
+        return -1;
+
+    size += time->getAbsolute() + 1;
 
     switch (getType())
     {
@@ -188,19 +91,18 @@ int DuMidiChannelEvent::size() const
     case ControlChange:
     case PitchWheelChange:
     {
-        //TODO: refactoring
-        //size = time->size() + 3;
+        size += 2;
         break;
     }
     case ProgramChange:
     case ChannelPressure:
     {
-        //TODO: refactoring
-        //size = time->size() + 2;
+        size += 1;
         break;
     }
     default:
     {
+        return -1;
     }
     }
 

@@ -1,7 +1,7 @@
 #ifndef DUMIDICHANNELEVENT_H
 #define DUMIDICHANNELEVENT_H
 
-#include "dumidiabstractevent.h"
+#include "dumidibasicevent.h"
 
 
 #define KEY_MIDICHANNELEVENT_KEY        "Key"
@@ -10,7 +10,7 @@
 
 DU_OBJECT(DuMidiChannelEvent)
 
-class DuMidiChannelEvent : public DuMidiAbstractEvent
+class DuMidiChannelEvent : public DuMidiBasicEvent
 {
 public:
     explicit DuMidiChannelEvent(quint32 time = 0, quint8 status = 0x80);
@@ -242,10 +242,6 @@ public:
         TelephoneRing = 0x7C,           Helicopter = 0x7D,
         Applause = 0x7E,                Gunshot = 0x7F
     };
-
-    virtual QByteArray toByteArray(bool runningStatusActive = false);
-    virtual void setDataBytes(QDataStream &stream);
-    virtual void setDataBytes(const QByteArray &array);
 
     virtual DuObjectPtr clone() const;
 

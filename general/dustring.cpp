@@ -43,6 +43,17 @@ QByteArray DuString::toDuMusicBinary() const
 }
 
 
+QByteArray DuString::toMidiBinary() const
+{
+    QByteArray array;
+    array.clear();
+
+    array.append(getString());
+
+    return array;
+}
+
+
 QJsonValue DuString::toJson() const
 {
     return QJsonValue(getString());

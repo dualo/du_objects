@@ -1,7 +1,7 @@
 #ifndef DUMIDIMETAEVENT_H
 #define DUMIDIMETAEVENT_H
 
-#include "dumidiabstractevent.h"
+#include "dumidibasicevent.h"
 #include "../general/dubinarydata.h"
 
 
@@ -12,10 +12,10 @@
 
 DU_OBJECT(DuMidiMetaEvent)
 
-class DuMidiMetaEvent : public DuMidiAbstractEvent
+class DuMidiMetaEvent : public DuMidiBasicEvent
 {
 public:
-    explicit DuMidiMetaEvent();
+    explicit DuMidiMetaEvent(quint32 time = 0);
     virtual ~DuMidiMetaEvent();
 
     enum MetaTypes
@@ -45,10 +45,6 @@ public:
         KeySignature = 0x59,        // FF 59 02 sf mi
         SequencerSpecific = 0x7F    // FF 7F length data
     };
-
-    QByteArray toByteArray(bool runningStatusActive = false);
-    void setDataBytes(QDataStream &stream);
-    void setDataBytes(const QByteArray &array);
 
     virtual DuObjectPtr clone() const;
 

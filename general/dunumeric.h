@@ -16,16 +16,16 @@ public:
     explicit DuNumeric(int defaultValue, int byteSize, int maxValue, int minValue);
     explicit DuNumeric(int value, int byteSize, int maxValue,
                        int minValue, int defaultValue);
-    ~DuNumeric();
+    virtual ~DuNumeric();
 
     virtual DuObjectPtr clone() const;
 
     QByteArray toDuMusicBinary() const;
-    QByteArray toMidiBinary() const;
+    virtual QByteArray toMidiBinary() const;
     QJsonValue toJson() const;
 
     QHttpPart toHttpPart(const QString &name) const;
-    QDebug debugPrint(QDebug dbg) const;
+    virtual QDebug debugPrint(QDebug dbg) const;
 
     int getNumeric() const;
     bool setNumeric(int value);

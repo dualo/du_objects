@@ -92,7 +92,7 @@ QList<DuMidiMetaEvent *> DuMidiFile::findMetaEvents(quint16 trackIndex, quint8 t
     metaEvents.clear();
 
     DuMidiTrack *track = tracks[trackIndex];
-    QList<DuMidiAbstractEvent *> &events = track->getEvents();
+    QList<DuMidiBasicEvent *> &events = track->getEvents();
 
     for(int i = 0; i < events.count(); i++)
     {
@@ -179,7 +179,7 @@ DuMidiTrack* DuMidiFile::parseTrack(QDataStream &stream)
 
         while (!trackEnded)
         {
-            DuMidiAbstractEvent* event =
+            DuMidiBasicEvent* event =
                     parseEvent(stream, &runningStatus, &trackEnded);
             if (event != NULL) track->appendEvent(event);
         }
@@ -193,11 +193,11 @@ DuMidiTrack* DuMidiFile::parseTrack(QDataStream &stream)
 }
 
 
-DuMidiAbstractEvent *DuMidiFile::parseEvent(QDataStream &stream,
+DuMidiBasicEvent *DuMidiFile::parseEvent(QDataStream &stream,
                                             quint8 *runningStatus,
                                             bool *trackEnded)
 {
-    DuMidiAbstractEvent* event = NULL;
+    DuMidiBasicEvent* event = NULL;
     quint32 tmpTime;
     quint8 tmp;
 
@@ -294,15 +294,13 @@ DuMidiMetaEvent* DuMidiFile::parseMetaEvent(QDataStream &stream, bool *trackEnde
     DuMidiMetaEvent* metaEvent = new DuMidiMetaEvent();
 
     quint8 tmpType;
-    quint32 tmpLength;
 
     stream >> tmpType;
-    //TODO: refactoring
-    //tmpLength = DuMidiVariableLength::getInstance()->getLength(stream);
 
     metaEvent->setType(tmpType);
-    metaEvent->setLength(tmpLength);
-    metaEvent->setDataBytes(stream);
+    //TODO: refactoring
+    //metaEvent->setLength(DuMidiVariableLength::getInstance()->getLength(stream));
+    metaEvent->setData(stream);
 
     (*trackEnded) = (tmpType == 0x2F);
 
@@ -317,7 +315,7 @@ DuMidiSysExEvent* DuMidiFile::parseSysExEvent(QDataStream &stream, quint8 status
     sysExEvent->setStatus(status);
     //TODO: refactoring
     //sysExEvent->setLength(DuMidiVariableLength::getInstance()->getLength(stream));
-    sysExEvent->setDataBytes(stream);
+    sysExEvent->setData(stream);
 
     return sysExEvent;
 }

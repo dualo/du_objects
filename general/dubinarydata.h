@@ -19,10 +19,15 @@ public:
     QByteArray toMidiBinary() const;
     QJsonValue toJson() const;
 
-    virtual int size() const;
+    int size() const;
 
     const QByteArray getData() const;
     bool setData(const QByteArray &value);
+
+    /**
+     * @brief Should only be used after a call to resize() to ensure the correct
+     *          number of bytes will be read from the stream.
+     */
     void setData(QDataStream &stream);
 
     void resize(int size);

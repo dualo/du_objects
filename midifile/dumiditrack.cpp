@@ -1,7 +1,7 @@
 #include "dumiditrack.h"
 
 DuMidiTrack::DuMidiTrack() :
-    events(QList<DuMidiAbstractEvent*>())
+    events(QList<DuMidiBasicEvent*>())
 {
     events.clear();
 }
@@ -12,7 +12,7 @@ DuMidiTrack::~DuMidiTrack()
 }
 
 
-void DuMidiTrack::appendEvent(DuMidiAbstractEvent *event)
+void DuMidiTrack::appendEvent(DuMidiBasicEvent *event)
 {
     events.append(event);
 }
@@ -23,6 +23,7 @@ QByteArray DuMidiTrack::toByteArray()
     QByteArray array;
     array.clear();
 
+    //TODO: refactoring
     bool runningStatusActive = false;
     quint8 tmpStatus = 0x00;
 
@@ -30,8 +31,7 @@ QByteArray DuMidiTrack::toByteArray()
     {
         runningStatusActive = ((tmpStatus == events[i]->getStatus())
                                && (tmpStatus < 0xF0));
-        //TODO: refactoring
-        array += events[i]->toByteArray(runningStatusActive);
+        array += events[i]->toMidiBinary();
 
         tmpStatus = events[i]->getStatus();
     }
@@ -48,7 +48,7 @@ QByteArray DuMidiTrack::toByteArray()
 }
 
 
-QList<DuMidiAbstractEvent *> &DuMidiTrack::getEvents()
+QList<DuMidiBasicEvent *> &DuMidiTrack::getEvents()
 {
     return events;
 }
