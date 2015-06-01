@@ -64,7 +64,7 @@ bool DuVersion::setVersion(const QString &version)
     if (nbs.size() != 3)
         return false;
 
-    bool ok;
+    bool ok = false;
 
     int major = nbs[0].toInt(&ok);
     if (!ok)
