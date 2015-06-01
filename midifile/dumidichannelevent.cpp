@@ -145,7 +145,7 @@ quint8 DuMidiChannelEvent::getKey() const
 
 void DuMidiChannelEvent::setKey(quint8 value)
 {
-    DuNumericPtr &tmp =
+    const DuNumericPtr &tmp =
             getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_KEY);
 
     if (tmp == NULL)
@@ -168,7 +168,7 @@ quint8 DuMidiChannelEvent::getValue() const
 
 void DuMidiChannelEvent::setValue(quint8 value)
 {
-    DuNumericPtr &tmp =
+    const DuNumericPtr &tmp =
             getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_VALUE);
 
     if (tmp == NULL)

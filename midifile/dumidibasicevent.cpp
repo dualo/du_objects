@@ -56,7 +56,7 @@ quint32 DuMidiBasicEvent::getTime() const
 
 void DuMidiBasicEvent::setTime(quint32 delta, quint32 offset)
 {
-    DuMidiVariableLengthPtr &tmp =
+    const DuMidiVariableLengthPtr &tmp =
             getChildAs<DuMidiVariableLength>(KEY_MIDIEVENT_TIME);
 
     if (tmp == NULL)
@@ -79,7 +79,7 @@ quint8 DuMidiBasicEvent::getStatus() const
 
 void DuMidiBasicEvent::setStatus(quint8 value)
 {
-   DuMidiStatusPtr &tmp =
+   const DuMidiStatusPtr &tmp =
            getChildAs<DuMidiStatus>(KEY_MIDIEVENT_STATUS);
 
     if (tmp == NULL)
@@ -102,7 +102,7 @@ bool DuMidiBasicEvent::runningStatus() const
 
 void DuMidiBasicEvent::setRunningStatus(bool value)
 {
-    DuMidiStatusPtr &tmp =
+    const DuMidiStatusPtr &tmp =
             getChildAs<DuMidiStatus>(KEY_MIDIEVENT_STATUS);
 
      if (tmp == NULL)

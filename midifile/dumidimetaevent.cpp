@@ -94,7 +94,7 @@ quint8 DuMidiMetaEvent::getType() const
 
 void DuMidiMetaEvent::setType(quint8 value)
 {
-    DuNumericPtr &tmp =
+    const DuNumericPtr &tmp =
             getChildAs<DuNumeric>(KEY_MIDIMETAEVENT_TYPE);
 
      if (tmp == NULL)
@@ -117,12 +117,12 @@ quint32 DuMidiMetaEvent::getLength() const
 
 void DuMidiMetaEvent::setLength(quint32 value)
 {
-    DuMidiVariableLengthPtr &length =
+    const DuMidiVariableLengthPtr &length =
             getChildAs<DuMidiVariableLength>(KEY_MIDIMETAEVENT_LENGTH);
     if (length == NULL)
         return;
 
-    DuBinaryDataPtr &data =
+    const DuBinaryDataPtr &data =
             getChildAs<DuBinaryData>(KEY_MIDIMETAEVENT_DATA);
     if (data == NULL)
         return;
@@ -145,12 +145,12 @@ const QByteArray DuMidiMetaEvent::getData() const
 
 void DuMidiMetaEvent::setData(const QByteArray &value)
 {
-    DuMidiVariableLengthPtr &length =
+    const DuMidiVariableLengthPtr &length =
             getChildAs<DuMidiVariableLength>(KEY_MIDIMETAEVENT_LENGTH);
     if (length == NULL)
         return;
 
-    DuBinaryDataPtr &data =
+    const DuBinaryDataPtr &data =
             getChildAs<DuBinaryData>(KEY_MIDIMETAEVENT_DATA);
     if (data == NULL)
         return;
@@ -161,7 +161,7 @@ void DuMidiMetaEvent::setData(const QByteArray &value)
 
 void DuMidiMetaEvent::setData(QDataStream &stream)
 {
-    DuBinaryDataPtr &tmp =
+    const DuBinaryDataPtr &tmp =
             getChildAs<DuBinaryData>(KEY_MIDIMETAEVENT_DATA);
 
     if (tmp == NULL)
