@@ -2,14 +2,16 @@
 
 #include <QDebug>
 
+#include <climits>
+
 
 DU_OBJECT_IMPL(DuNumeric)
 
 DuNumeric::DuNumeric(int value) :
     DuValue(4),
     defaultValue(0),
-    maxValue(0x7FFFFFFF),
-    minValue(0x00000000)
+    maxValue(INT_MAX),
+    minValue(INT_MIN)
 {
     bool res = setNumeric(value);
     Q_ASSERT(res);
