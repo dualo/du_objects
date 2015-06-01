@@ -23,10 +23,24 @@ public:
 
     static DuMusicPtr fromDuMusicBinary(const s_total_buffer &du_music);
     static DuMusicPtr fromJson(const QJsonObject &jsonMusic);
+    static DuMusicPtr fromBinary(const QByteArray& data);
 
     QByteArray toDuMusicBinary() const;
 
     int size() const;
+    bool isEmpty() const;
+
+    int getDatabaseId() const;
+    void setDatabaseId(int databaseId);
+
+    QStringList getLists() const;
+    void setLists(const QStringList &lists);
+
+    QString getSongName() const;
+    bool setSongName(const QString& value);
+
+    int getFileVersion() const;
+    bool setFileVersion(int value);
 
     DuHeaderConstPtr getHeader() const;
     void setHeader(const DuHeaderPtr &header);
@@ -38,6 +52,13 @@ public:
     void setTracks(const DuArrayPtr& array);
 
     bool appendTrack(const DuTrackPtr& track);
+
+private:
+    int m_databaseId;
+    QStringList m_lists;
 };
+
+Q_DECLARE_METATYPE(DuMusicPtr)
+Q_DECLARE_METATYPE(DuMusicConstPtr)
 
 #endif // DUMUSIC_H

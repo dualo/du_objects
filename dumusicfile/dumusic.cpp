@@ -7,7 +7,8 @@
 DU_OBJECT_IMPL(DuMusic)
 
 DuMusic::DuMusic() :
-    DuContainer()
+    DuContainer(),
+    m_databaseId(-1)
 {
     addChild(KEY_MUSIC_HEADER, new DuHeader());
 
@@ -114,10 +115,18 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
     return music;
 }
 
+DuMusicPtr DuMusic::fromBinary(const QByteArray &data)
+{
+    QScopedPointer<s_total_buffer> temp_total_buffer(new s_total_buffer);
+
+    std::memcpy((char *)(temp_total_buffer.data()), data.data(), data.size());
+
+    return DuMusic::fromDuMusicBinary(*temp_total_buffer);
+}
 
 QByteArray DuMusic::toDuMusicBinary() const
 {
-    s_total_buffer du_music;
+    QScopedPointer<s_total_buffer> du_music(new s_total_buffer);
 
     QByteArray tmpLocalSong;
     tmpLocalSong.clear();
@@ -127,7 +136,7 @@ QByteArray DuMusic::toDuMusicBinary() const
         return QByteArray();
 
     QByteArray tmpClear(musicSize, (char)0x00);
-    std::memcpy((char *)&(du_music), tmpClear.data(), musicSize);
+    std::memcpy((char *)(du_music.data()), tmpClear.data(), musicSize);
 
 
     const DuHeaderConstPtr& header = getHeader();
@@ -155,7 +164,7 @@ QByteArray DuMusic::toDuMusicBinary() const
             + songInfoArray.mid(header->size(), songInfo->size())
             + tracksArray;
 
-    std::memcpy(&(du_music.local_song), tmpLocalSong.data(), MUSIC_SONG_SIZE);
+    std::memcpy(&(du_music->local_song), tmpLocalSong.data(), MUSIC_SONG_SIZE);
 
 
     QByteArray tmpLocalBuffer;
@@ -184,7 +193,7 @@ QByteArray DuMusic::toDuMusicBinary() const
             if (tmp == -1)
                 return QByteArray();
 
-            music_loop *tmp_loop = &(du_music.local_song.s_track[i].t_loop[j]);
+            music_loop *tmp_loop = &(du_music->local_song.s_track[i].t_loop[j]);
             tmp_loop->l_numsample = tmp;
 
             if (tmp > 0)
@@ -201,13 +210,13 @@ QByteArray DuMusic::toDuMusicBinary() const
         }
     }
 
-    du_music.local_song.s_totalsample = eventTotal;
+    du_music->local_song.s_totalsample = eventTotal;
 
-    std::memcpy(du_music.local_buffer, tmpLocalBuffer.data(),
+    std::memcpy(du_music->local_buffer, tmpLocalBuffer.data(),
                 eventTotal * MUSIC_SAMPLE_SIZE);
 
 
-    return QByteArray((char *)&(du_music), musicSize);
+    return QByteArray((char *)(du_music.data()), musicSize);
 }
 
 
@@ -218,18 +227,27 @@ int DuMusic::size() const
 
     const DuArrayConstPtr& tracks = getChildAs<DuArray>(KEY_MUSIC_TRACKS);
     if (tracks == NULL)
+    {
+        qDebug() << "tracks null";
         return -1;
+    }
 
     int count = tracks->count();
     for (int i = 0; i < count; i++)
     {
         const DuTrackConstPtr& track = tracks->at(i).dynamicCast<const DuTrack>();
         if (track == NULL)
+        {
+            qDebug() << "track" << i << "null";
             return -1;
+        }
 
         tmpSize = track->eventsSize();
         if (tmpSize == -1)
+        {
+            qDebug() << "track" << i << "size null";
             return -1;
+        }
 
         eventsSize += tmpSize;
     }
@@ -237,6 +255,79 @@ int DuMusic::size() const
     return eventsSize + MUSIC_SONG_SIZE;
 }
 
+bool DuMusic::isEmpty() const
+{
+    return size() <= MUSIC_SONG_SIZE;
+}
+
+
+int DuMusic::getDatabaseId() const
+{
+    return m_databaseId;
+}
+
+void DuMusic::setDatabaseId(int databaseId)
+{
+    m_databaseId = databaseId;
+}
+
+QStringList DuMusic::getLists() const
+{
+    return m_lists;
+}
+
+void DuMusic::setLists(const QStringList &lists)
+{
+    m_lists = lists;
+}
+
+QString DuMusic::getSongName() const
+{
+    const DuHeaderConstPtr& header = getChildAs<DuHeader>(KEY_MUSIC_HEADER);
+
+    if (header == NULL)
+    {
+        return QString();
+    }
+
+    return header->getSongName();
+}
+
+bool DuMusic::setSongName(const QString &value)
+{
+    const DuHeaderPtr& header = getChildAs<DuHeader>(KEY_MUSIC_HEADER);
+
+    if (header == NULL)
+    {
+        return false;
+    }
+
+    return header->setSongName(value);
+}
+
+int DuMusic::getFileVersion() const
+{
+    const DuHeaderConstPtr& header = getChildAs<DuHeader>(KEY_MUSIC_HEADER);
+
+    if (header == NULL)
+    {
+        return -1;
+    }
+
+    return header->getFileVersion();
+}
+
+bool DuMusic::setFileVersion(int value)
+{
+    const DuHeaderPtr& header = getChildAs<DuHeader>(KEY_MUSIC_HEADER);
+
+    if (header == NULL)
+    {
+        return false;
+    }
+
+    return header->setFileVersion(value);
+}
 
 DuHeaderConstPtr DuMusic::getHeader() const
 {
