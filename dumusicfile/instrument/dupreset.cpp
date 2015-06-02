@@ -79,6 +79,10 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
 
     if (!verif)
     {
+        qCritical() << "DuPreset::fromDuMusicBinary():\n"
+                    << "failed to generate DuPreset\n"
+                    << "a child was not set properly";
+
         return DuPresetPtr();
     }
 
@@ -104,8 +108,13 @@ DuPresetPtr DuPreset::fromJson(const QJsonObject &jsonPreset)
             ||  !jsonToReverb.isDouble()    ||  !jsonPortaOnOff.isDouble()
             ||  !jsonPortaCtrl.isDouble()   ||  !jsonPortaTime.isDouble()
             ||  !jsonPitchBend.isDouble()   ||  !jsonDisposition.isDouble())
+    {
+        qCritical() << "DuPreset::fromJson():\n"
+                    << "failed to generate DuPreset\n"
+                    << "a json key did not contain the proper type";
 
         return DuPresetPtr();
+    }
 
 
     DuPresetPtr preset(new DuPreset);
@@ -126,6 +135,10 @@ DuPresetPtr DuPreset::fromJson(const QJsonObject &jsonPreset)
 
     if (!verif)
     {
+        qCritical() << "DuPreset::fromJson():\n"
+                    << "failed to generate DuPreset\n"
+                    << "a child was not set properly";
+
         return DuPresetPtr();
     }
 

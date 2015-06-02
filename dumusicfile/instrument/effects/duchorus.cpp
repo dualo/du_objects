@@ -86,6 +86,10 @@ DuChorusPtr DuChorus::fromDuMusicBinary(const FX_chorus &du_chorus)
 
     if (!verif)
     {
+        qCritical() << "DuChorus::fromDuMusicBinary():\n"
+                    << "failed to generate DuChorus\n"
+                    << "a child was not set properly";
+
         return DuChorusPtr();
     }
 
@@ -113,8 +117,14 @@ DuChorusPtr DuChorus::fromJson(const QJsonObject &jsonChorus)
             ||  !jsonModDepth.isDouble()    ||  !jsonModRate.isDouble()
             ||  !jsonTremShape.isDouble()   ||  !jsonRotSpeed.isDouble()
             ||  !jsonEffectName.isString())
+    {
+
+        qCritical() << "DuChorus::fromJson():\n"
+                    << "failed to generate DuChorus\n"
+                    << "a json key did not contain the proper type";
 
         return DuChorusPtr();
+    }
 
 
     DuChorusPtr chorus(new DuChorus);
@@ -136,6 +146,10 @@ DuChorusPtr DuChorus::fromJson(const QJsonObject &jsonChorus)
 
     if (!verif)
     {
+        qCritical() << "DuChorus::fromJson():\n"
+                    << "failed to generate DuChorus\n"
+                    << "a child was not set properly";
+
         return DuChorusPtr();
     }
 

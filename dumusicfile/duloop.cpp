@@ -48,12 +48,21 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
 
     if (!verif)
     {
+        qCritical() << "DuLoop::fromDuMusicBinary():\n"
+                    << "failed to generate DuLoop\n"
+                    << "a child was not set properly";
+
         return DuLoopPtr();
     }
 
-    const DuInstrumentPtr& instrument = DuInstrument::fromDuMusicBinary(du_loop.l_instr);
+    const DuInstrumentPtr &instrument =
+            DuInstrument::fromDuMusicBinary(du_loop.l_instr);
     if (instrument == NULL)
     {
+        qCritical() << "DuLoop::fromDuMusicBinary():\n"
+                    << "failed to generate DuLoop\n"
+                    << "the DuInstrument was not generated properly";
+
         return DuLoopPtr();
     }
     loop->setInstrument(instrument);
@@ -63,13 +72,21 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
 
     for (int i = 0; i < du_loop.l_numsample; i++)
     {
-        const DuEventPtr& event = DuEvent::fromDuMusicBinary(du_sample[i]);
+        const DuEventPtr &event = DuEvent::fromDuMusicBinary(du_sample[i]);
         if (event == NULL)
         {
+            qCritical() << "DuLoop::fromDuMusicBinary():\n"
+                        << "failed to generate DuLoop\n"
+                        << "a DuEvent was not generated properly";
+
             return DuLoopPtr();
         }
         if (!loop->appendEvent(event))
         {
+            qCritical() << "DuLoop::fromDuMusicBinary():\n"
+                        << "failed to generate DuLoop\n"
+                        << "a DuEvent was not appended properly";
+
             return DuLoopPtr();
         }
     }
@@ -89,8 +106,13 @@ DuLoopPtr DuLoop::fromJson(const QJsonObject &jsonLoop)
     if (        !jsonState.isDouble()       ||  !jsonDurationMod.isDouble()
             ||  !jsonOutChannel.isDouble()  ||  !jsonInstrument.isObject()
             ||  !jsonEvents.isArray())
+    {
+        qCritical() << "DuLoop::fromJson():\n"
+                    << "failed to generate DuLoop\n"
+                    << "a json key did not contain the proper type";
 
         return DuLoopPtr();
+    }
 
 
     DuLoopPtr loop(new DuLoop);
@@ -102,27 +124,45 @@ DuLoopPtr DuLoop::fromJson(const QJsonObject &jsonLoop)
 
     if (!verif)
     {
+        qCritical() << "DuLoop::fromJson():\n"
+                    << "failed to generate DuLoop\n"
+                    << "a child was not set properly";
+
         return DuLoopPtr();
     }
 
-    const DuInstrumentPtr& instrument = DuInstrument::fromJson(jsonInstrument.toObject());
+    const DuInstrumentPtr &instrument =
+            DuInstrument::fromJson(jsonInstrument.toObject());
     if (instrument != NULL)
         loop->setInstrument(instrument);
     else
     {
+        qCritical() << "DuLoop::fromJson():\n"
+                    << "failed to generate DuLoop\n"
+                    << "the DuInstrument was not generated properly";
+
         return DuLoopPtr();
     }
 
     const QJsonArray &jsonEventArray = jsonEvents.toArray();
     for (int i = 0; i < jsonEventArray.count(); i++)
     {
-        const DuEventPtr& event = DuEvent::fromJson(jsonEventArray[i].toObject());
+        const DuEventPtr &event =
+                DuEvent::fromJson(jsonEventArray[i].toObject());
         if (event == NULL)
         {
+            qCritical() << "DuLoop::fromJson():\n"
+                        << "failed to generate DuLoop\n"
+                        << "a DuEvent was not generated properly";
+
             return DuLoopPtr();
         }
         if (!loop->appendEvent(event))
         {
+            qCritical() << "DuLoop::fromJson():\n"
+                        << "failed to generate DuLoop\n"
+                        << "a DuEvent was not appended properly";
+
             return DuLoopPtr();
         }
     }
@@ -184,7 +224,7 @@ int DuLoop::size() const
 
 int DuLoop::getState() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_LOOP_STATE);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_LOOP_STATE);
 
     if (tmp == NULL)
         return -1;
@@ -204,7 +244,7 @@ bool DuLoop::setState(int value)
 
 int DuLoop::getDurationModifier() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_LOOP_DURATIONMODIFIER);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_LOOP_DURATIONMODIFIER);
 
     if (tmp == NULL)
         return -1;
@@ -224,7 +264,7 @@ bool DuLoop::setDurationModifier(int value)
 
 int DuLoop::getMidiOutChannel() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_LOOP_MIDIOUTCHANNEL);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_LOOP_MIDIOUTCHANNEL);
 
     if (tmp == NULL)
         return -1;
@@ -248,7 +288,7 @@ DuInstrumentConstPtr DuLoop::getInstrument() const
     return getChildAs<DuInstrument>(KEY_LOOP_INSTRUMENT);
 }
 
-void DuLoop::setInstrument(const DuInstrumentPtr& instrument)
+void DuLoop::setInstrument(const DuInstrumentPtr &instrument)
 {
     addChild(KEY_LOOP_INSTRUMENT, instrument);
 }
@@ -276,7 +316,7 @@ int DuLoop::eventsSize() const
 
 int DuLoop::countEvents() const
 {
-    const DuArrayConstPtr& tmp = getChildAs<DuArray>(KEY_LOOP_EVENTS);
+    const DuArrayConstPtr &tmp = getChildAs<DuArray>(KEY_LOOP_EVENTS);
 
     if (tmp == NULL)
         return -1;
@@ -284,7 +324,7 @@ int DuLoop::countEvents() const
     return tmp->count();
 }
 
-bool DuLoop::appendEvent(const DuEventPtr& event)
+bool DuLoop::appendEvent(const DuEventPtr &event)
 {
     DuArrayPtr tmp = getChildAs<DuArray>(KEY_LOOP_EVENTS);
 

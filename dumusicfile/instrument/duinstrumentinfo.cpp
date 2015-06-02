@@ -64,6 +64,10 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrI
 
     if (!verif)
     {
+        qCritical() << "DuInstrumentInfo::fromDuMusicBinary():\n"
+                    << "failed to generate DuInstrumentInfo\n"
+                    << "a child was not set properly";
+
         return DuInstrumentInfoPtr();
     }
 
@@ -86,8 +90,13 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
             ||  !jsonId.isDouble()          ||  !jsonUserId.isString()
             ||  !jsonProgChange.isDouble()  ||  !jsonCtrlChange.isDouble()
             ||  !jsonNoteOff.isDouble()     ||  !jsonRelVolume.isDouble())
+    {
+        qCritical() << "DuInstrumentInfo::fromJson():\n"
+                    << "failed to generate DuInstrumentInfo\n"
+                    << "a json key did not contain the proper type";
 
         return DuInstrumentInfoPtr();
+    }
 
 
     DuInstrumentInfoPtr instrInfo(new DuInstrumentInfo);
@@ -105,6 +114,10 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
 
     if (!verif)
     {
+        qCritical() << "DuInstrumentInfo::fromJson():\n"
+                    << "failed to generate DuInstrumentInfo\n"
+                    << "a child was not set properly";
+
         return DuInstrumentInfoPtr();
     }
 

@@ -50,6 +50,10 @@ DuVibratoPtr DuVibrato::fromDuMusicBinary(const FX_vibrato &du_vibrato)
 
     if (!verif)
     {
+        qCritical() << "DuVibrato::fromDuMusicBinary():\n"
+                    << "failed to generate DuVibrato\n"
+                    << "a child was not set properly";
+
         return DuVibratoPtr();
     }
 
@@ -66,8 +70,13 @@ DuVibratoPtr DuVibrato::fromJson(const QJsonObject &jsonVibrato)
 
     if (        !jsonDepth.isDouble()   ||  !jsonDelay.isDouble()
             ||  !jsonRate.isDouble()    ||  !jsonEffectName.isString())
+    {
+        qCritical() << "DuVibrato::fromJson():\n"
+                    << "failed to generate DuVibrato\n"
+                    << "a json key did not contain the proper type";
 
         return DuVibratoPtr();
+    }
 
 
     DuVibratoPtr vibrato(new DuVibrato);
@@ -81,6 +90,10 @@ DuVibratoPtr DuVibrato::fromJson(const QJsonObject &jsonVibrato)
 
     if (!verif)
     {
+        qCritical() << "DuVibrato::fromJson():\n"
+                    << "failed to generate DuVibrato\n"
+                    << "a child was not set properly";
+
         return DuVibratoPtr();
     }
 

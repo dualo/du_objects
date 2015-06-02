@@ -69,6 +69,10 @@ DuMixerPtr DuMixer::fromDuMusicBinary(const FX_mix &du_mixer)
 
     if (!verif)
     {
+        qCritical() << "DuMixer::fromDuMusicBinary():\n"
+                    << "failed to generate DuMixer\n"
+                    << "a child was not set properly";
+
         return DuMixerPtr();
     }
 
@@ -90,8 +94,13 @@ DuMixerPtr DuMixer::fromJson(const QJsonObject &jsonMixer)
             ||  !jsonHiCutFreq.isDouble()   ||  !jsonOutputLvl.isDouble()
             ||  !jsonPanning.isDouble()     ||  !jsonFrontRear.isDouble()
             ||  !jsonToReverb.isDouble()    ||  !jsonToChorus.isDouble())
+    {
+        qCritical() << "DuMixer::fromJson():\n"
+                    << "failed to generate DuMixer\n"
+                    << "a json key did not contain the proper type";
 
         return DuMixerPtr();
+    }
 
 
     DuMixerPtr mixer(new DuMixer);
@@ -110,6 +119,10 @@ DuMixerPtr DuMixer::fromJson(const QJsonObject &jsonMixer)
 
     if (!verif)
     {
+        qCritical() << "DuMixer::fromJson():\n"
+                    << "failed to generate DuMixer\n"
+                    << "a child was not set properly";
+
         return DuMixerPtr();
     }
 

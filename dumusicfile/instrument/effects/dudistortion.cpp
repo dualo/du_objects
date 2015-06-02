@@ -73,6 +73,10 @@ DuDistortionPtr DuDistortion::fromDuMusicBinary(const FX_distortion &du_distorti
 
     if (!verif)
     {
+        qCritical() << "DuDistortion::fromDuMusicBinary():\n"
+                    << "failed to generate DuDistortion\n"
+                    << "a child was not set properly";
+
         return DuDistortionPtr();
     }
 
@@ -95,8 +99,13 @@ DuDistortionPtr DuDistortion::fromJson(const QJsonObject &jsonDistortion)
             ||  !jsonEffectType.isDouble()  ||  !jsonLoPassFreq.isDouble()
             ||  !jsonLoPassRes.isDouble()   ||  !jsonPostGain.isDouble()
             ||  !jsonDrive.isDouble()       ||  !jsonEffectName.isString())
+    {
+        qCritical() << "DuDistortion::fromJson():\n"
+                    << "failed to generate DuDistortion\n"
+                    << "a json key did not contain the proper type";
 
         return DuDistortionPtr();
+    }
 
 
     DuDistortionPtr distortion(new DuDistortion);
@@ -117,6 +126,10 @@ DuDistortionPtr DuDistortion::fromJson(const QJsonObject &jsonDistortion)
 
     if (!verif)
     {
+        qCritical() << "DuDistortion::fromJson():\n"
+                    << "failed to generate DuDistortion\n"
+                    << "a child was not set properly";
+
         return DuDistortionPtr();
     }
 

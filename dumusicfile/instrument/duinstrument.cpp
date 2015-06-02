@@ -36,90 +36,134 @@ DuInstrumentPtr DuInstrument::fromDuMusicBinary(const music_instr &du_instr)
 {
     DuInstrumentPtr instrument(new DuInstrument);
 
-    const DuInstrumentInfoPtr& instrInfo =
+    const DuInstrumentInfoPtr &instrInfo =
             DuInstrumentInfo::fromDuMusicBinary(du_instr.i_instrument);
     if (instrInfo == NULL)
     {
+        qCritical() << "DuInstrument::fromDuMusicBinary():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuInstrumentInfo was not generated properly";
+
         return DuInstrumentPtr();
     }
     instrument->setInstrumentInfo(instrInfo);
 
-    const DuPresetPtr& preset =
+    const DuPresetPtr &preset =
             DuPreset::fromDuMusicBinary(du_instr.i_preset);
     if (preset == NULL)
     {
+        qCritical() << "DuInstrument::fromDuMusicBinary():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuPreset was not generated properly";
+
         return DuInstrumentPtr();
     }
     instrument->setPreset(preset);
 
-    const DuMixerPtr& mixer =
+    const DuMixerPtr &mixer =
             DuMixer::fromDuMusicBinary(du_instr.i_mix);
     if (mixer == NULL)
     {
+        qCritical() << "DuInstrument::fromDuMusicBinary():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuMixer was not generated properly";
+
         return DuInstrumentPtr();
     }
     instrument->setMixer(mixer);
 
-    const DuDistortionPtr& distortion =
+    const DuDistortionPtr &distortion =
             DuDistortion::fromDuMusicBinary(du_instr.i_distortion);
     if (distortion == NULL)
     {
+        qCritical() << "DuInstrument::fromDuMusicBinary():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuDistortion was not generated properly";
+
         return DuInstrumentPtr();
     }
     instrument->setDistortion(distortion);
 
-    const DuWahPtr& wah =
+    const DuWahPtr &wah =
             DuWah::fromDuMusicBinary(du_instr.i_wah);
     if (wah == NULL)
     {
+        qCritical() << "DuInstrument::fromDuMusicBinary():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuWah was not generated properly";
+
         return DuInstrumentPtr();
     }
     instrument->setWah(wah);
 
-    const DuCompressorPtr& compressor =
+    const DuCompressorPtr &compressor =
             DuCompressor::fromDuMusicBinary(du_instr.i_compressor);
     if (compressor == NULL)
     {
+        qCritical() << "DuInstrument::fromDuMusicBinary():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuCompressor was not generated properly";
+
         return DuInstrumentPtr();
     }
     instrument->setCompressor(compressor);
 
-    const DuEqualizerPtr& equalizer =
+    const DuEqualizerPtr &equalizer =
             DuEqualizer::fromDuMusicBinary(du_instr.i_equalizer);
     if (equalizer == NULL)
     {
+        qCritical() << "DuInstrument::fromDuMusicBinary():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuEqualizer was not generated properly";
+
         return DuInstrumentPtr();
     }
     instrument->setEqualizer(equalizer);
 
-    const DuDelayPtr& delay =
+    const DuDelayPtr &delay =
             DuDelay::fromDuMusicBinary(du_instr.i_delay);
     if (delay == NULL)
     {
+        qCritical() << "DuInstrument::fromDuMusicBinary():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuDelay was not generated properly";
+
         return DuInstrumentPtr();
     }
     instrument->setDelay(delay);
 
-    const DuChorusPtr& chorus =
+    const DuChorusPtr &chorus =
             DuChorus::fromDuMusicBinary(du_instr.i_chorus);
     if (chorus == NULL)
     {
+        qCritical() << "DuInstrument::fromDuMusicBinary():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuChorus was not generated properly";
+
         return DuInstrumentPtr();
     }
     instrument->setChorus(chorus);
 
-    const DuVibratoPtr& vibrato =
+    const DuVibratoPtr &vibrato =
             DuVibrato::fromDuMusicBinary(du_instr.i_vibrato);
     if (vibrato == NULL)
     {
+        qCritical() << "DuInstrument::fromDuMusicBinary():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuVibrato was not generated properly";
+
         return DuInstrumentPtr();
     }
     instrument->setVibrato(vibrato);
 
-    const DuAdsrPtr& adsr =
+    const DuAdsrPtr &adsr =
             DuAdsr::fromDuMusicBinary(du_instr.i_adsr);
     if (adsr == NULL)
     {
+        qCritical() << "DuInstrument::fromDuMusicBinary():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuAdsr was not generated properly";
+
         return DuInstrumentPtr();
     }
     instrument->setAdsr(adsr);
@@ -148,108 +192,157 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
             ||  !jsonEqualizer.isObject()   ||  !jsonDelay.isObject()
             ||  !jsonChorus.isObject()      ||  !jsonVibrato.isObject()
             ||  !jsonAdsr.isObject())
+    {
+        qCritical() << "DuInstrument::fromJson():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "a json key did not contain the proper type";
 
         return DuInstrumentPtr();
+    }
 
 
     DuInstrumentPtr instrument(new DuInstrument);
 
-    const DuInstrumentInfoPtr& instrInfo =
+    const DuInstrumentInfoPtr &instrInfo =
             DuInstrumentInfo::fromJson(jsonInstrInfo.toObject());
     if (instrInfo != NULL)
         instrument->setInstrumentInfo(instrInfo);
     else
     {
+        qCritical() << "DuInstrument::fromJson():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuInstrumentInfo was not generated properly";
+
         return DuInstrumentPtr();
     }
 
-    const DuPresetPtr& preset =
+    const DuPresetPtr &preset =
             DuPreset::fromJson(jsonPreset.toObject());
     if (preset != NULL)
         instrument->setPreset(preset);
     else
     {
+        qCritical() << "DuInstrument::fromJson():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuPreset was not generated properly";
+
         return DuInstrumentPtr();
     }
 
-    const DuMixerPtr& mixer =
+    const DuMixerPtr &mixer =
             DuMixer::fromJson(jsonMixer.toObject());
     if (mixer != NULL)
         instrument->setMixer(mixer);
     else
     {
+        qCritical() << "DuInstrument::fromJson():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuMixer was not generated properly";
+
         return DuInstrumentPtr();
     }
 
-    const DuDistortionPtr& distortion =
+    const DuDistortionPtr &distortion =
             DuDistortion::fromJson(jsonDistortion.toObject());
     if (distortion != NULL)
         instrument->setDistortion(distortion);
     else
     {
+        qCritical() << "DuInstrument::fromJson():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuDistortion was not generated properly";
+
         return DuInstrumentPtr();
     }
 
-    const DuWahPtr& wah =
+    const DuWahPtr &wah =
             DuWah::fromJson(jsonWah.toObject());
     if (wah != NULL)
         instrument->setWah(wah);
     else
     {
+        qCritical() << "DuInstrument::fromJson():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuWah was not generated properly";
+
         return DuInstrumentPtr();
     }
 
-    const DuCompressorPtr& compressor =
+    const DuCompressorPtr &compressor =
             DuCompressor::fromJson(jsonCompressor.toObject());
     if (compressor != NULL)
         instrument->setCompressor(compressor);
     else
     {
+        qCritical() << "DuInstrument::fromJson():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuCompressor was not generated properly";
+
         return DuInstrumentPtr();
     }
 
-    const DuEqualizerPtr& equalizer =
+    const DuEqualizerPtr &equalizer =
             DuEqualizer::fromJson(jsonEqualizer.toObject());
     if (equalizer != NULL)
         instrument->setEqualizer(equalizer);
     else
     {
+        qCritical() << "DuInstrument::fromJson():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuEqualizer was not generated properly";
+
         return DuInstrumentPtr();
     }
 
-    const DuDelayPtr& delay =
+    const DuDelayPtr &delay =
             DuDelay::fromJson(jsonDelay.toObject());
     if (delay != NULL)
         instrument->setDelay(delay);
     else
     {
+        qCritical() << "DuInstrument::fromJson():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuDelay was not generated properly";
+
         return DuInstrumentPtr();
     }
 
-    const DuChorusPtr& chorus =
+    const DuChorusPtr &chorus =
             DuChorus::fromJson(jsonChorus.toObject());
     if (chorus != NULL)
         instrument->setChorus(chorus);
     else
     {
+        qCritical() << "DuInstrument::fromJson():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuChorus was not generated properly";
+
         return DuInstrumentPtr();
     }
 
-    const DuVibratoPtr& vibrato =
+    const DuVibratoPtr &vibrato =
             DuVibrato::fromJson(jsonVibrato.toObject());
     if (vibrato != NULL)
         instrument->setVibrato(vibrato);
     else
     {
+        qCritical() << "DuInstrument::fromJson():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuVibrato was not generated properly";
+
         return DuInstrumentPtr();
     }
 
-    const DuAdsrPtr& adsr =
+    const DuAdsrPtr &adsr =
             DuAdsr::fromJson(jsonAdsr.toObject());
     if (adsr != NULL)
         instrument->setAdsr(adsr);
     else
     {
+        qCritical() << "DuInstrument::fromJson():\n"
+                    << "failed to generate DuInstrument\n"
+                    << "the DuAdsr was not generated properly";
+
         return DuInstrumentPtr();
     }
 

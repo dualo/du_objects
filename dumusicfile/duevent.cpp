@@ -71,6 +71,10 @@ DuEventPtr DuEvent::fromDuMusicBinary(const music_sample &du_sample)
 
     if (!verif)
     {
+        qCritical() << "DuEvent::fromDuMusicBinary():\n"
+                    << "failed to generate DuEvent\n"
+                    << "a child was not set properly";
+
         return DuEventPtr();
     }
 
@@ -89,8 +93,13 @@ DuEventPtr DuEvent::fromJson(const QJsonObject &jsonEvent)
     if (        !jsonTime.isDouble()    ||  !jsonCtrl.isDouble()
             ||  !jsonKbrd.isDouble()    ||  !jsonNote.isDouble()
             ||  !jsonVal.isDouble())
+    {
+        qCritical() << "DuEvent::fromJson():\n"
+                    << "failed to generate DuEvent\n"
+                    << "a json key did not contain the proper type";
 
         return DuEventPtr();
+    }
 
 
     DuEventPtr event(new DuEvent);
@@ -104,6 +113,10 @@ DuEventPtr DuEvent::fromJson(const QJsonObject &jsonEvent)
 
     if (!verif)
     {
+        qCritical() << "DuEvent::fromJson():\n"
+                    << "failed to generate DuEvent\n"
+                    << "a child was not set properly";
+
         return DuEventPtr();
     }
 
@@ -156,7 +169,7 @@ int DuEvent::size() const
 
 int DuEvent::getTime() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_EVENT_TIME);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_TIME);
 
     if (tmp == NULL)
         return -1;
@@ -177,7 +190,7 @@ bool DuEvent::setTime(int value)
 
 int DuEvent::getControl() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_EVENT_CONTROL);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_CONTROL);
 
     if (tmp == NULL)
         return -1;
@@ -198,7 +211,7 @@ bool DuEvent::setControl(int value)
 
 int DuEvent::getKeyboard() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_EVENT_KEYBOARD);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_KEYBOARD);
 
     if (tmp == NULL)
         return -1;
@@ -219,7 +232,7 @@ bool DuEvent::setKeyboard(int value)
 
 int DuEvent::getNote() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_EVENT_NOTE);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_NOTE);
 
     if (tmp == NULL)
         return -1;
@@ -240,7 +253,7 @@ bool DuEvent::setNote(int value)
 
 int DuEvent::getValue() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_EVENT_VALUE);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_VALUE);
 
     if (tmp == NULL)
         return -1;

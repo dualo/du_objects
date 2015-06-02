@@ -70,6 +70,10 @@ DuCompressorPtr DuCompressor::fromDuMusicBinary(const FX_compressor &du_compress
 
     if (!verif)
     {
+        qCritical() << "DuCompressor::fromDuMusicBinary():\n"
+                    << "failed to generate DuCompressor\n"
+                    << "a child was not set properly";
+
         return DuCompressorPtr();
     }
 
@@ -92,8 +96,13 @@ DuCompressorPtr DuCompressor::fromJson(const QJsonObject &jsonCompressor)
             ||  !jsonRelTime.isDouble()     ||  !jsonThreshold.isDouble()
             ||  !jsonRatio.isDouble()       ||  !jsonBoost.isDouble()
             ||  !jsonKneeType.isDouble()    ||  !jsonEffectName.isString())
+    {
+        qCritical() << "DuCompressor::fromJson():\n"
+                    << "failed to generate DuCompressor\n"
+                    << "a json key did not contain the proper type";
 
         return DuCompressorPtr();
+    }
 
 
     DuCompressorPtr compressor(new DuCompressor);
@@ -113,6 +122,10 @@ DuCompressorPtr DuCompressor::fromJson(const QJsonObject &jsonCompressor)
 
     if (!verif)
     {
+        qCritical() << "DuCompressor::fromJson():\n"
+                    << "failed to generate DuCompressor\n"
+                    << "a child was not set properly";
+
         return DuCompressorPtr();
     }
 

@@ -62,6 +62,10 @@ DuAdsrPtr DuAdsr::fromDuMusicBinary(const FX_adsr &du_adsr)
 
     if (!verif)
     {
+        qCritical() << "DuAdsr::fromDuMusicBinary():\n"
+                    << "failed to generate DuAdsr\n"
+                    << "a child was not set properly";
+
         return DuAdsrPtr();
     }
 
@@ -81,8 +85,13 @@ DuAdsrPtr DuAdsr::fromJson(const QJsonObject &jsonAdsr)
     if (        !jsonEnvAttTime.isDouble()  ||  !jsonEnvDecTime.isDouble()
             ||  !jsonTvfCutRes.isDouble()   ||  !jsonTvfCutFreq.isDouble()
             ||  !jsonEnvRelTime.isDouble()  ||  !jsonEffectName.isString())
+    {
+        qCritical() << "DuAdsr::fromJson():\n"
+                    << "failed to generate DuAdsr\n"
+                    << "a json key did not contain the proper type";
 
         return DuAdsrPtr();
+    }
 
 
     DuAdsrPtr adsr(new DuAdsr);
@@ -98,6 +107,10 @@ DuAdsrPtr DuAdsr::fromJson(const QJsonObject &jsonAdsr)
 
     if (!verif)
     {
+        qCritical() << "DuAdsr::fromJson():\n"
+                    << "failed to generate DuAdsr\n"
+                    << "a child was not set properly";
+
         return DuAdsrPtr();
     }
 

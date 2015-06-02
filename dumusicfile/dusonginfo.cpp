@@ -91,6 +91,10 @@ DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
 
     if (!verif)
     {
+        qCritical() << "DuSongInfo::fromDuMusicBinary():\n"
+                    << "failed to generate DuSongInfo\n"
+                    << "a child was not set properly";
+
         return DuSongInfoPtr();
     }
 
@@ -119,8 +123,13 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
             ||  !jsonGain.isDouble()        ||  !jsonLoCutFreq.isDouble()
             ||  !jsonHiCutFreq.isDouble()   ||  !jsonScale.isDouble()
             ||  !jsonTonality.isDouble()    ||  !jsonTimeSignature.isDouble())
+    {
+        qCritical() << "DuSongInfo::fromJson():\n"
+                    << "failed to generate DuSongInfo\n"
+                    << "a json key did not contain the proper type";
 
         return DuSongInfoPtr();
+    }
 
 
     DuSongInfoPtr songInfo(new DuSongInfo);
@@ -144,6 +153,10 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
 
     if (!verif)
     {
+        qCritical() << "DuSongInfo::fromJson():\n"
+                    << "failed to generate DuSongInfo\n"
+                    << "a child was not set properly";
+
         return DuSongInfoPtr();
     }
 
@@ -253,7 +266,7 @@ int DuSongInfo::size() const
 
 int DuSongInfo::getReferenceTrack() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_SONG_REFERENCETRACK);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_REFERENCETRACK);
 
     if (tmp == NULL)
         return -1;
@@ -273,7 +286,8 @@ bool DuSongInfo::setReferenceTrack(int value)
 
 int DuSongInfo::getReferenceLoopDuration() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_SONG_REFERENCELOOPDURATION);
+    const DuNumericConstPtr &tmp =
+            getChildAs<DuNumeric>(KEY_SONG_REFERENCELOOPDURATION);
 
     if (tmp == NULL)
         return -1;
@@ -294,7 +308,7 @@ bool DuSongInfo::setReferenceLoopDuration(int value)
 
 int DuSongInfo::getVolume() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_SONG_VOLUME);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_VOLUME);
 
     if (tmp == NULL)
         return -1;
@@ -314,7 +328,7 @@ bool DuSongInfo::setVolume(int value)
 
 int DuSongInfo::getTempo() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_SONG_TEMPO);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_TEMPO);
 
     if (tmp == NULL)
         return -1;
@@ -334,7 +348,7 @@ bool DuSongInfo::setTempo(int value)
 
 int DuSongInfo::getClickVolume() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_SONG_CLICKVOLUME);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_CLICKVOLUME);
 
     if (tmp == NULL)
         return -1;
@@ -354,7 +368,7 @@ bool DuSongInfo::setClickVolume(int value)
 
 int DuSongInfo::getOffset() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_SONG_OFFSET);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_OFFSET);
 
     if (tmp == NULL)
         return -1;
@@ -375,7 +389,7 @@ bool DuSongInfo::setOffset(int value)
 
 int DuSongInfo::getGain() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_SONG_GAIN);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_GAIN);
 
     if (tmp == NULL)
         return -1;
@@ -395,7 +409,7 @@ bool DuSongInfo::setGain(int value)
 
 int DuSongInfo::getLowCutFilterFrequency() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_SONG_LOWCUTFILTERFREQ);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_LOWCUTFILTERFREQ);
 
     if (tmp == NULL)
         return -1;
@@ -415,7 +429,7 @@ bool DuSongInfo::setLowCutFilterFrequency(int value)
 
 int DuSongInfo::getHighCutFilterFrequency() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_SONG_HIGHCUTFILTERFREQ);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_HIGHCUTFILTERFREQ);
 
     if (tmp == NULL)
         return -1;
@@ -436,7 +450,7 @@ bool DuSongInfo::setHighCutFilterFrequency(int value)
 
 int DuSongInfo::getScale() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_SONG_SCALE);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_SCALE);
 
     if (tmp == NULL)
         return -1;
@@ -456,7 +470,7 @@ bool DuSongInfo::setScale(int value)
 
 int DuSongInfo::getTonality() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_SONG_TONALITY);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_TONALITY);
 
     if (tmp == NULL)
         return -1;
@@ -476,7 +490,7 @@ bool DuSongInfo::setTonality(int value)
 
 int DuSongInfo::getTimeSignature() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_SONG_TIMESIGNATURE);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_TIMESIGNATURE);
 
     if (tmp == NULL)
         return -1;

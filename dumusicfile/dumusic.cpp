@@ -31,21 +31,29 @@ DuMusicPtr DuMusic::fromDuMusicBinary(const s_total_buffer &du_music)
 {
     DuMusicPtr music(new DuMusic);
 
-    const DuHeaderPtr& header =
+    const DuHeaderPtr &header =
             DuHeader::fromDuMusicBinary(du_music.local_song);
     if (header != NULL)
         music->setHeader(header);
     else
     {
+        qCritical() << "DuMusic::fromDuMusicBinary():\n"
+                    << "failed to generate DuMusic\n"
+                    << "the DuHeader was not generated properly";
+
         return DuMusicPtr();
     }
 
-    const DuSongInfoPtr& songInfo =
+    const DuSongInfoPtr &songInfo =
             DuSongInfo::fromDuMusicBinary(du_music.local_song);
     if (songInfo != NULL)
         music->setSongInfo(songInfo);
     else
     {
+        qCritical() << "DuMusic::fromDuMusicBinary():\n"
+                    << "failed to generate DuMusic\n"
+                    << "the DuSongInfo was not generated properly";
+
         return DuMusicPtr();
     }
 
@@ -56,10 +64,18 @@ DuMusicPtr DuMusic::fromDuMusicBinary(const s_total_buffer &du_music)
                                            du_music.local_buffer);
         if (track == NULL)
         {
+            qCritical() << "DuMusic::fromDuMusicBinary():\n"
+                        << "failed to generate DuMusic\n"
+                        << "a DuTrack was not generated properly";
+
             return DuMusicPtr();
         }
         if (!music->appendTrack(track))
         {
+            qCritical() << "DuMusic::fromDuMusicBinary():\n"
+                        << "failed to generate DuMusic\n"
+                        << "a DuTrack was not appended properly";
+
             return DuMusicPtr();
         }
     }
@@ -76,38 +92,59 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
 
     if (        !jsonHeader.isObject()  ||  !jsonSongInfo.isObject()
             ||  !jsonTracks.isArray())
+    {
+        qCritical() << "DuMusic::fromJson():\n"
+                    << "failed to generate DuMusic\n"
+                    << "a json key did not contain the proper type";
 
         return DuMusicPtr();
+    }
 
 
     DuMusicPtr music(new DuMusic);
 
-    const DuHeaderPtr& header = DuHeader::fromJson(jsonHeader.toObject());
+    const DuHeaderPtr &header = DuHeader::fromJson(jsonHeader.toObject());
     if (header != NULL)
         music->setHeader(header);
     else
     {
+        qCritical() << "DuMusic::fromJson():\n"
+                    << "failed to generate DuMusic\n"
+                    << "the DuHeader was not generated properly";
+
         return DuMusicPtr();
     }
 
-    const DuSongInfoPtr& songInfo = DuSongInfo::fromJson(jsonSongInfo.toObject());
+    const DuSongInfoPtr &songInfo = DuSongInfo::fromJson(jsonSongInfo.toObject());
     if (songInfo != NULL)
         music->setSongInfo(songInfo);
     else
     {
+        qCritical() << "DuMusic::fromJson():\n"
+                    << "failed to generate DuMusic\n"
+                    << "the DuSongInfo was not generated properly";
+
         return DuMusicPtr();
     }
 
     const QJsonArray &jsonTrackArray = jsonTracks.toArray();
     for (int i = 0; i < jsonTrackArray.count(); i++)
     {
-        const DuTrackPtr& track = DuTrack::fromJson(jsonTrackArray[i].toObject());
+        const DuTrackPtr &track = DuTrack::fromJson(jsonTrackArray[i].toObject());
         if (track == NULL)
         {
+            qCritical() << "DuMusic::fromJson():\n"
+                        << "failed to generate DuMusic\n"
+                        << "a DuTrack was not generated properly";
+
             return DuMusicPtr();
         }
         if (!music->appendTrack(track))
         {
+            qCritical() << "DuMusic::fromJson():\n"
+                        << "failed to generate DuMusic\n"
+                        << "a DuTrack was not appended properly";
+
             return DuMusicPtr();
         }
     }
@@ -139,21 +176,21 @@ QByteArray DuMusic::toDuMusicBinary() const
     std::memcpy((char *)(du_music.data()), tmpClear.data(), musicSize);
 
 
-    const DuHeaderConstPtr& header = getHeader();
+    const DuHeaderConstPtr &header = getHeader();
     if (header == NULL)
         return QByteArray();
     const QByteArray &headerArray = header->toDuMusicBinary();
     if (headerArray.isNull())
         return QByteArray();
 
-    const DuSongInfoConstPtr& songInfo = getSongInfo();
+    const DuSongInfoConstPtr &songInfo = getSongInfo();
     if (songInfo == NULL)
         return QByteArray();
     const QByteArray &songInfoArray = songInfo->toDuMusicBinary();
     if (songInfoArray.isNull())
         return QByteArray();
 
-    const DuArrayConstPtr& tracks = getTracks();
+    const DuArrayConstPtr &tracks = getTracks();
     if (tracks == NULL)
         return QByteArray();
     const QByteArray &tracksArray = tracks->toDuMusicBinary();
@@ -174,18 +211,18 @@ QByteArray DuMusic::toDuMusicBinary() const
     int trackCount = tracks->count();
     for (int i = 0; i < trackCount; i++)
     {
-        const DuTrackConstPtr& track = tracks->at(i).dynamicCast<const DuTrack>();
+        const DuTrackConstPtr &track = tracks->at(i).dynamicCast<const DuTrack>();
         if (track == NULL)
             return QByteArray();
 
-        const DuArrayConstPtr& loops = track->getLoops();
+        const DuArrayConstPtr &loops = track->getLoops();
         if (loops == NULL)
             return QByteArray();
 
         int loopCount = loops->count();
         for (int j = 0; j < loopCount; j++)
         {
-            const DuLoopConstPtr& loop = loops->at(j).dynamicCast<const DuLoop>();
+            const DuLoopConstPtr &loop = loops->at(j).dynamicCast<const DuLoop>();
             if (loop == NULL)
                 return QByteArray();
 
@@ -201,7 +238,7 @@ QByteArray DuMusic::toDuMusicBinary() const
             else
                 tmp_loop->l_adress = 0;
 
-            const DuArrayConstPtr& events = loop->getEvents();
+            const DuArrayConstPtr &events = loop->getEvents();
             if (events == NULL)
                 return QByteArray();
             tmpLocalBuffer.append(events->toDuMusicBinary());
@@ -225,7 +262,7 @@ int DuMusic::size() const
     int eventsSize = 0;
     int tmpSize = 0;
 
-    const DuArrayConstPtr& tracks = getChildAs<DuArray>(KEY_MUSIC_TRACKS);
+    const DuArrayConstPtr &tracks = getChildAs<DuArray>(KEY_MUSIC_TRACKS);
     if (tracks == NULL)
     {
         qDebug() << "tracks null";
@@ -235,7 +272,7 @@ int DuMusic::size() const
     int count = tracks->count();
     for (int i = 0; i < count; i++)
     {
-        const DuTrackConstPtr& track = tracks->at(i).dynamicCast<const DuTrack>();
+        const DuTrackConstPtr &track = tracks->at(i).dynamicCast<const DuTrack>();
         if (track == NULL)
         {
             qDebug() << "track" << i << "null";
@@ -283,7 +320,7 @@ void DuMusic::setLists(const QStringList &lists)
 
 QString DuMusic::getSongName() const
 {
-    const DuHeaderConstPtr& header = getChildAs<DuHeader>(KEY_MUSIC_HEADER);
+    const DuHeaderConstPtr &header = getChildAs<DuHeader>(KEY_MUSIC_HEADER);
 
     if (header == NULL)
     {
@@ -295,7 +332,7 @@ QString DuMusic::getSongName() const
 
 bool DuMusic::setSongName(const QString &value)
 {
-    const DuHeaderPtr& header = getChildAs<DuHeader>(KEY_MUSIC_HEADER);
+    const DuHeaderPtr &header = getChildAs<DuHeader>(KEY_MUSIC_HEADER);
 
     if (header == NULL)
     {
@@ -307,7 +344,7 @@ bool DuMusic::setSongName(const QString &value)
 
 int DuMusic::getFileVersion() const
 {
-    const DuHeaderConstPtr& header = getChildAs<DuHeader>(KEY_MUSIC_HEADER);
+    const DuHeaderConstPtr &header = getChildAs<DuHeader>(KEY_MUSIC_HEADER);
 
     if (header == NULL)
     {
@@ -319,7 +356,7 @@ int DuMusic::getFileVersion() const
 
 bool DuMusic::setFileVersion(int value)
 {
-    const DuHeaderPtr& header = getChildAs<DuHeader>(KEY_MUSIC_HEADER);
+    const DuHeaderPtr &header = getChildAs<DuHeader>(KEY_MUSIC_HEADER);
 
     if (header == NULL)
     {
@@ -364,8 +401,11 @@ bool DuMusic::appendTrack(const DuTrackPtr &track)
     DuArrayPtr tmp = getChildAs<DuArray>(KEY_MUSIC_TRACKS);
 
     if (tmp == NULL)
+    {
         return false;
+    }
 
     tmp->append(track);
+
     return true;
 }

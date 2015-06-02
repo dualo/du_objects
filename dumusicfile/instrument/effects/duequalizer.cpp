@@ -91,6 +91,10 @@ DuEqualizerPtr DuEqualizer::fromDuMusicBinary(const FX_equalizer du_equalizer)
 
     if (!verif)
     {
+        qCritical() << "DuEqualizer::fromDuMusicBinary():\n"
+                    << "failed to generate DuEqualizer\n"
+                    << "a child was not set properly";
+
         return DuEqualizerPtr();
     }
 
@@ -119,8 +123,13 @@ DuEqualizerPtr DuEqualizer::fromJson(const QJsonObject &jsonEqualizer)
             ||  !jsonLoMidFreq.isDouble()   ||  !jsonHiMidFreq.isDouble()
             ||  !jsonHighFreq.isDouble()    ||  !jsonLoMidQual.isDouble()
             ||  !jsonHiMidQual.isDouble()   ||  !jsonEffectName.isString())
+    {
+        qCritical() << "DuEqualizer::fromJson():\n"
+                    << "failed to generate DuEqualizer\n"
+                    << "a json key did not contain the proper type";
 
         return DuEqualizerPtr();
+    }
 
 
     DuEqualizerPtr equalizer(new DuEqualizer);
@@ -145,6 +154,10 @@ DuEqualizerPtr DuEqualizer::fromJson(const QJsonObject &jsonEqualizer)
 
     if (!verif)
     {
+        qCritical() << "DuEqualizer::fromJson():\n"
+                    << "failed to generate DuEqualizer\n"
+                    << "a child was not set properly";
+
         return DuEqualizerPtr();
     }
 

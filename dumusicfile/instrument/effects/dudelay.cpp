@@ -72,6 +72,10 @@ DuDelayPtr DuDelay::fromDuMusicBinary(const FX_delay &du_delay)
 
     if (!verif)
     {
+        qCritical() << "DuDelay::fromDuMusicBinary():\n"
+                    << "failed to generate DuDelay\n"
+                    << "a child was not set properly";
+
         return DuDelayPtr();
     }
 
@@ -94,8 +98,13 @@ DuDelayPtr DuDelay::fromJson(const QJsonObject &jsonDelay)
             ||  !jsonLoPassFilt.isDouble()  ||  !jsonEffectLvl.isDouble()
             ||  !jsonEffectTime.isDouble()  ||  !jsonFeedback.isDouble()
             ||  !jsonHDAmp.isDouble()       ||  !jsonEffectName.isString())
+    {
+        qCritical() << "DuDelay::fromJson():\n"
+                    << "failed to generate DuDelay\n"
+                    << "a json key did not contain the proper type";
 
         return DuDelayPtr();
+    }
 
 
     DuDelayPtr delay(new DuDelay);
@@ -116,6 +125,10 @@ DuDelayPtr DuDelay::fromJson(const QJsonObject &jsonDelay)
 
     if (!verif)
     {
+        qCritical() << "DuDelay::fromJson():\n"
+                    << "failed to generate DuDelay\n"
+                    << "a child was not set properly";
+
         return DuDelayPtr();
     }
 

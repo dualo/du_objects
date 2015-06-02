@@ -53,6 +53,10 @@ DuWahPtr DuWah::fromDuMusicBinary(const FX_wah &du_wah)
 
     if (!verif)
     {
+        qCritical() << "DuWah::fromDuMusicBinary():\n"
+                    << "failed to generate DuWah\n"
+                    << "a child was not set properly";
+
         return DuWahPtr();
     }
 
@@ -71,8 +75,13 @@ DuWahPtr DuWah::fromJson(const QJsonObject &jsonWah)
     if (        !jsonFilterType.isDouble()  ||  !jsonFilterFreq.isDouble()
             ||  !jsonFilterRes.isDouble()   ||  !jsonSensitivity.isDouble()
             ||  !jsonEffectName.isString())
+    {
+        qCritical() << "DuWah::fromJson():\n"
+                    << "failed to generate DuWah\n"
+                    << "a json key did not contain the proper type";
 
         return DuWahPtr();
+    }
 
 
     DuWahPtr wah(new DuWah);
@@ -87,6 +96,10 @@ DuWahPtr DuWah::fromJson(const QJsonObject &jsonWah)
 
     if (!verif)
     {
+        qCritical() << "DuWah::fromJson():\n"
+                    << "failed to generate DuWah\n"
+                    << "a child was not set properly";
+
         return DuWahPtr();
     }
 
