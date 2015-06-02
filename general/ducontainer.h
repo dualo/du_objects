@@ -31,7 +31,7 @@ public:
 
     QStringList keys() const;
 
-    DuObjectPtr operator[](const QString &label);
+    DuObjectPtr operator[](const QString &key);
 
 protected:
     void addChild(const QString &key, const DuObjectPtr &child);

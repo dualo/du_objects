@@ -54,6 +54,11 @@ bool DuBinaryData::setData(const QByteArray &value)
     int size = getMaxSize();
     if (size != -1 && value.size() > size)
     {
+        qWarning() << "DuBinaryData::setData():\n"
+                   << "the byte array was longer than the"
+                   << "maximum size" << size
+                   << "and was truncated before being set";
+
         setValue(value.left(size));
         return false;
     }

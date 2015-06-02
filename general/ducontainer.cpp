@@ -42,11 +42,21 @@ QByteArray DuContainer::toDuMusicBinary() const
     {
         i.next();
         if (i.value() == NULL)
+        {
+            qWarning() << "DuContainer::toDuMusicBinary():\n"
+                       << "element was null";
+
             return QByteArray();
+        }
 
         const QByteArray &tmpArray = i.value()->toDuMusicBinary();
         if (tmpArray.isNull())
+        {
+            qWarning() << "DuContainer::toDuMusicBinary():\n"
+                       << "element binary data was null";
+
             return QByteArray();
+        }
 
         retArray.append(tmpArray);
     }
@@ -64,11 +74,21 @@ QJsonValue DuContainer::toJson() const
     {
         i.next();
         if (i.value() == NULL)
-            return QJsonValue();
+        {
+            qWarning() << "DuContainer::toJson():\n"
+                       << "element was null";
+
+            return QJsonValue(QJsonValue::Undefined);
+        }
 
         const QJsonValue &jsonValue = i.value()->toJson();
-        if (jsonValue.isNull())
-            return QJsonValue();
+        if (jsonValue.isUndefined())
+        {
+            qWarning() << "DuContainer::toJson():\n"
+                       << "element json value was undefined";
+
+            return QJsonValue(QJsonValue::Undefined);
+        }
 
         object[i.key()] = jsonValue;
     }
@@ -149,15 +169,21 @@ QStringList DuContainer::keys() const
 }
 
 
-DuObjectPtr DuContainer::operator[](const QString &label)
+DuObjectPtr DuContainer::operator[](const QString &key)
 {
-    if (!children.contains(label))
-        return DuObjectPtr();
+    if (!children.contains(key))
+    {
+        qWarning() << "DuContainer::operator[]:\n"
+                   << key << "was not contained\n"
+                   << "default constructed value returned";
 
-    return children[label];
+        return DuObjectPtr();
+    }
+
+    return children[key];
 }
 
-void DuContainer::addChild(const QString &key, const DuObjectPtr& child)
+void DuContainer::addChild(const QString &key, const DuObjectPtr &child)
 {
     children.insert(key, child);
 }

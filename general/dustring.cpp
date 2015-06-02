@@ -95,9 +95,15 @@ QString DuString::getString() const
 
 bool DuString::setString(const QString &value)
 {
-    if (getMaxSize() != -1 && value.size() > getMaxSize())
+    int size = getMaxSize();
+    if (getMaxSize() != -1 && value.size() > size)
     {
-        setValue(value.left(getMaxSize()));
+        qWarning() << "DuString::setString()\n"
+                   << "the byte array was longer than the"
+                   << "maximum size" << size
+                   << "and was truncated before being set";
+
+        setValue(value.left(size));
         return false;
     }
 

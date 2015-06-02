@@ -62,21 +62,41 @@ bool DuVersion::setVersion(const QString &version)
     QStringList nbs = version.split(".");
 
     if (nbs.size() != 3)
+    {
+        qWarning() << "DuVersion::setVersion():\n"
+                   << "failed";
+
         return false;
+    }
 
     bool ok = false;
 
     int major = nbs[0].toInt(&ok);
     if (!ok)
+    {
+        qWarning() << "DuVersion::setVersion():\n"
+                   << "failed";
+
         return false;
+    }
 
     int minor = nbs[1].toInt(&ok);
     if (!ok)
+    {
+        qWarning() << "DuVersion::setVersion():\n"
+                   << "failed";
+
         return false;
+    }
 
     int patch = nbs[2].toInt(&ok);
     if (!ok)
+    {
+        qWarning() << "DuVersion::setVersion():\n"
+                   << "failed";
+
         return false;
+    }
 
     m_major = major;
     m_minor = minor;
@@ -89,7 +109,12 @@ bool DuVersion::setVersion(const QString &version)
 bool DuVersion::setVersion(int major, int minor, int patch)
 {
     if (major < 0 || minor < 0 || patch < 0)
+    {
+        qWarning() << "DuVersion::setVersion():\n"
+                   << "failed";
+
         return false;
+    }
 
     QString value = QString::number(major) + "." + QString::number(minor) + "." + QString::number(patch);
 
