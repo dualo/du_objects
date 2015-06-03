@@ -73,11 +73,8 @@ DuDistortionPtr DuDistortion::fromDuMusicBinary(const FX_distortion &du_distorti
 
     if (!verif)
     {
-        qCritical() << "DuDistortion::fromDuMusicBinary():\n"
-                    << "failed to generate DuDistortion\n"
-                    << "a child was not set properly";
-
-        return DuDistortionPtr();
+        qWarning() << "DuDistortion::fromDuMusicBinary():\n"
+                   << "an attribute was not properly set";
     }
 
     return distortion;
@@ -126,11 +123,8 @@ DuDistortionPtr DuDistortion::fromJson(const QJsonObject &jsonDistortion)
 
     if (!verif)
     {
-        qCritical() << "DuDistortion::fromJson():\n"
-                    << "failed to generate DuDistortion\n"
-                    << "a child was not set properly";
-
-        return DuDistortionPtr();
+        qWarning() << "DuDistortion::fromJson():\n"
+                   << "an attribute was not properly set";
     }
 
     return distortion;
@@ -202,7 +196,7 @@ int DuDistortion::size() const
 
 int DuDistortion::getOnOff() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_DIST_ONOFF);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_DIST_ONOFF);
 
     if (tmp == NULL)
         return -1;
@@ -223,7 +217,7 @@ bool DuDistortion::setOnOff(int value)
 
 int DuDistortion::getPreGain() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_DIST_PREGAIN);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_DIST_PREGAIN);
 
     if (tmp == NULL)
         return -1;
@@ -243,7 +237,7 @@ bool DuDistortion::setPreGain(int value)
 
 int DuDistortion::getEffectType() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_DIST_TYPE);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_DIST_TYPE);
 
     if (tmp == NULL)
         return -1;
@@ -264,7 +258,7 @@ bool DuDistortion::setEffectType(int value)
 
 int DuDistortion::getLowPassFilterFrequency() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_DIST_LOWPASSFILTERFREQUENCY);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_DIST_LOWPASSFILTERFREQUENCY);
 
     if (tmp == NULL)
         return -1;
@@ -284,7 +278,7 @@ bool DuDistortion::setLowPassFilterFrequency(int value)
 
 int DuDistortion::getLowPassFilterResonance() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_DIST_LOWPASSFILTERRESONANCE);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_DIST_LOWPASSFILTERRESONANCE);
 
     if (tmp == NULL)
         return -1;
@@ -305,7 +299,7 @@ bool DuDistortion::setLowPassFilterResonance(int value)
 
 int DuDistortion::getPostGain() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_DIST_POSTGAIN);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_DIST_POSTGAIN);
 
     if (tmp == NULL)
         return -1;
@@ -325,7 +319,7 @@ bool DuDistortion::setPostGain(int value)
 
 int DuDistortion::getDrive() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_DIST_DRIVE);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_DIST_DRIVE);
 
     if (tmp == NULL)
         return -1;
@@ -346,7 +340,7 @@ bool DuDistortion::setDrive(int value)
 
 QString DuDistortion::getEffectName() const
 {
-    const DuStringConstPtr& tmp = getChildAs<DuString>(KEY_DIST_EFFECTNAME);
+    const DuStringConstPtr &tmp = getChildAs<DuString>(KEY_DIST_EFFECTNAME);
 
     if (tmp == NULL)
         return QString();

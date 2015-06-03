@@ -71,11 +71,8 @@ DuEventPtr DuEvent::fromDuMusicBinary(const music_sample &du_sample)
 
     if (!verif)
     {
-        qCritical() << "DuEvent::fromDuMusicBinary():\n"
-                    << "failed to generate DuEvent\n"
-                    << "a child was not set properly";
-
-        return DuEventPtr();
+        qWarning() << "DuEvent::fromDuMusicBinary():\n"
+                   << "an attribute was not properly set";
     }
 
     return event;
@@ -113,11 +110,8 @@ DuEventPtr DuEvent::fromJson(const QJsonObject &jsonEvent)
 
     if (!verif)
     {
-        qCritical() << "DuEvent::fromJson():\n"
-                    << "failed to generate DuEvent\n"
-                    << "a child was not set properly";
-
-        return DuEventPtr();
+        qWarning() << "DuEvent::fromJson():\n"
+                   << "an attribute was not properly set";
     }
 
     return event;

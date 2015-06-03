@@ -45,7 +45,7 @@ DuSongInfo::DuSongInfo() :
 
     addChild(KEY_SONG_SCALE,
              new DuNumeric(1, NUMERIC_DEFAULT_SIZE,
-                           5, 0));
+                           8, 0));
 
     addChild(KEY_SONG_TONALITY,
              new DuNumeric(1, NUMERIC_DEFAULT_SIZE,
@@ -91,11 +91,8 @@ DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
 
     if (!verif)
     {
-        qCritical() << "DuSongInfo::fromDuMusicBinary():\n"
-                    << "failed to generate DuSongInfo\n"
-                    << "a child was not set properly";
-
-        return DuSongInfoPtr();
+        qWarning() << "DuSongInfo::fromDuMusicBinary():\n"
+                   << "an attribute was not properly set";
     }
 
     return songInfo;
@@ -153,11 +150,8 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
 
     if (!verif)
     {
-        qCritical() << "DuSongInfo::fromJson():\n"
-                    << "failed to generate DuSongInfo\n"
-                    << "a child was not set properly";
-
-        return DuSongInfoPtr();
+        qWarning() << "DuSongInfo::fromJson():\n"
+                   << "an attribute was not properly set";
     }
 
     return songInfo;

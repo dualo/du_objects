@@ -86,11 +86,8 @@ DuChorusPtr DuChorus::fromDuMusicBinary(const FX_chorus &du_chorus)
 
     if (!verif)
     {
-        qCritical() << "DuChorus::fromDuMusicBinary():\n"
-                    << "failed to generate DuChorus\n"
-                    << "a child was not set properly";
-
-        return DuChorusPtr();
+        qWarning() << "DuChorus::fromDuMusicBinary():\n"
+                   << "an attribute was not properly set";
     }
 
     return chorus;
@@ -146,11 +143,8 @@ DuChorusPtr DuChorus::fromJson(const QJsonObject &jsonChorus)
 
     if (!verif)
     {
-        qCritical() << "DuChorus::fromJson():\n"
-                    << "failed to generate DuChorus\n"
-                    << "a child was not set properly";
-
-        return DuChorusPtr();
+        qWarning() << "DuChorus::fromJson():\n"
+                   << "an attribute was not properly set";
     }
 
     return chorus;
@@ -237,7 +231,7 @@ int DuChorus::size() const
 
 int DuChorus::getMode() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODE);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODE);
 
     if (tmp == NULL)
         return -1;
@@ -257,7 +251,7 @@ bool DuChorus::setMode(int value)
 
 int DuChorus::getEffectLevel() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_CHORUS_EFFECTLEVEL);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CHORUS_EFFECTLEVEL);
 
     if (tmp == NULL)
         return -1;
@@ -277,7 +271,7 @@ bool DuChorus::setEffectLevel(int value)
 
 int DuChorus::getDelayTime() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_CHORUS_DELAYTIME);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CHORUS_DELAYTIME);
 
     if (tmp == NULL)
         return -1;
@@ -297,7 +291,7 @@ bool DuChorus::setDelayTime(int value)
 
 int DuChorus::getFeedback() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_CHORUS_FEEDBACK);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CHORUS_FEEDBACK);
 
     if (tmp == NULL)
         return -1;
@@ -317,7 +311,8 @@ bool DuChorus::setFeedback(int value)
 
 int DuChorus::getInputHighPassFilterFrequency() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_CHORUS_INPUTHIGHPASSFILTER);
+    const DuNumericConstPtr &tmp =
+            getChildAs<DuNumeric>(KEY_CHORUS_INPUTHIGHPASSFILTER);
 
     if (tmp == NULL)
         return -1;
@@ -337,7 +332,7 @@ bool DuChorus::setInputHighPassFilterFrequency(int value)
 
 int DuChorus::getHDAmp() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_CHORUS_HDAMP);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CHORUS_HDAMP);
 
     if (tmp == NULL)
         return -1;
@@ -358,7 +353,7 @@ bool DuChorus::setHDAmp(int value)
 
 int DuChorus::getModulationDepth() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODULATIONDEPTH);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODULATIONDEPTH);
 
     if (tmp == NULL)
         return -1;
@@ -378,7 +373,7 @@ bool DuChorus::setModulationDepth(int value)
 
 int DuChorus::getModulationRate() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODULATIONRATE);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODULATIONRATE);
 
     if (tmp == NULL)
         return -1;
@@ -398,7 +393,7 @@ bool DuChorus::setModulationRate(int value)
 
 int DuChorus::getTremoloShape() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_CHORUS_TREMOLOSHAPE);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CHORUS_TREMOLOSHAPE);
 
     if (tmp == NULL)
         return -1;
@@ -418,7 +413,7 @@ bool DuChorus::setTremoloShape(int value)
 
 int DuChorus::getRotarySpeed() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_CHORUS_ROTARYSPEED);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CHORUS_ROTARYSPEED);
 
     if (tmp == NULL)
         return -1;
@@ -439,7 +434,7 @@ bool DuChorus::setRotarySpeed(int value)
 
 QString DuChorus::getEffectName() const
 {
-    const DuStringConstPtr& tmp = getChildAs<DuString>(KEY_CHORUS_EFFECTNAME);
+    const DuStringConstPtr &tmp = getChildAs<DuString>(KEY_CHORUS_EFFECTNAME);
 
     if (tmp == NULL)
         return QString();

@@ -67,11 +67,8 @@ DuHeaderPtr DuHeader::fromDuMusicBinary(const music_song &du_song)
 
     if (!verif)
     {
-        qCritical() << "DuHeader::fromDuMusicBinary():\n"
-                    << "failed to generate DuHeader\n"
-                    << "a child was not set properly";
-
-        return DuHeaderPtr();
+        qWarning() << "DuHeader::fromDuMusicBinary():\n"
+                   << "an attribute was not properly set";
     }
 
     return header;
@@ -102,7 +99,7 @@ DuHeaderPtr DuHeader::fromJson(const QJsonObject &jsonHeader)
     {
         qCritical() << "DuHeader::fromJson():\n"
                     << "failed to generate DuHeader\n"
-                    << "a json key did not contain the right type";
+                    << "a json key did not contain the proper type";
 
         return DuHeaderPtr();
     }
@@ -129,11 +126,8 @@ DuHeaderPtr DuHeader::fromJson(const QJsonObject &jsonHeader)
 
     if (!verif)
     {
-        qCritical() << "DuHeader::fromJson():\n"
-                    << "failed to generate DuHeader\n"
-                    << "a child was not set properly";
-
-        return DuHeaderPtr();
+        qWarning() << "DuHeader::fromJson():\n"
+                   << "an attribute was not properly set";
     }
 
     return header;

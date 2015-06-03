@@ -143,20 +143,31 @@ int DuNumeric::getNumeric() const
 
 bool DuNumeric::setNumeric(int value)
 {
-    if (value > maxValue || value < minValue)
+    if (value < minValue)
     {
         qWarning() << "DuNumeric::setNumeric():\n"
-                   << value << "not comprised between"
-                   << minValue << "and" << maxValue
-                   << "and could not be set" << "\n"
-                   << defaultValue << "was set instead";
+                   << value << "below" << minValue
+                   << "and could not be set\n"
+                   << minValue << "was set instead";
 
-        setValue(defaultValue);
+        setValue(minValue);
         return false;
     }
+    else if (value > maxValue)
+    {
+        qWarning() << "DuNumeric::setNumeric():\n"
+                   << value << "above" << maxValue
+                   << "and could not be set\n"
+                   << maxValue << "was set instead";
 
-    setValue(value);
-    return true;
+        setValue(maxValue);
+        return false;
+    }
+    else
+    {
+        setValue(value);
+        return true;
+    }
 }
 
 

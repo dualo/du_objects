@@ -41,11 +41,8 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
 
     if (!verif)
     {
-        qCritical() << "DuTrack::fromDuMusicBinary():\n"
-                    << "failed to generate DuTrack\n"
-                    << "a child was not set properly";
-
-        return DuTrackPtr();
+        qWarning() << "DuTrack::fromDuMusicBinary():\n"
+                   << "an attribute was not properly set";
     }
 
     for (int i = 0; i < MUSIC_MAXLAYER; i++)
@@ -60,7 +57,7 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
         {
             qCritical() << "DuTrack::fromDuMusicBinary():\n"
                         << "failed to generate DuTrack\n"
-                        << "a DuLoop was not generated properly";
+                        << "a DuLoop was not properly generated";
 
             return DuTrackPtr();
         }
@@ -68,7 +65,7 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
         {
             qCritical() << "DuTrack::fromDuMusicBinary():\n"
                         << "failed to generate DuTrack\n"
-                        << "a DuLoop was not appended properly";
+                        << "a DuLoop was not properly appended";
 
             return DuTrackPtr();
         }
@@ -103,11 +100,8 @@ DuTrackPtr DuTrack::fromJson(const QJsonObject &jsonTrack)
 
     if (!verif)
     {
-        qCritical() << "DuTrack::fromJson():\n"
-                    << "failed to generate DuTrack\n"
-                    << "a child was not set properly";
-
-        return DuTrackPtr();
+        qWarning() << "DuTrack::fromJson():\n"
+                   << "an attribute was not properly set";
     }
 
     const QJsonArray &jsonLoopArray = jsonLoops.toArray();
@@ -118,7 +112,7 @@ DuTrackPtr DuTrack::fromJson(const QJsonObject &jsonTrack)
         {
             qCritical() << "DuTrack::fromJson():\n"
                         << "failed to generate DuLoop\n"
-                        << "a DuLoop was not generated properly";
+                        << "a DuLoop was not properly generated";
 
             return DuTrackPtr();
         }
@@ -126,7 +120,7 @@ DuTrackPtr DuTrack::fromJson(const QJsonObject &jsonTrack)
         {
             qCritical() << "DuTrack::fromJson():\n"
                         << "failed to generate DuLoop\n"
-                        << "a DuLoop was not appended properly";
+                        << "a DuLoop was not properly appended";
 
             return DuTrackPtr();
         }

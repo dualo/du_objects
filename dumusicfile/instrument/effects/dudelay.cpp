@@ -8,11 +8,9 @@ DU_OBJECT_IMPL(DuDelay)
 DuDelay::DuDelay() :
     DuEffectSettings()
 {
-    //TODO: define correct maxima
-
     addChild(KEY_DELAY_ONOFF,
              new DuNumeric(FX_DELAY_ONOFF_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
-                           0x7F, FX_DELAY_ONOFF_MINVALUE));
+                           FX_DELAY_ONOFF_MAXVALUE, FX_DELAY_ONOFF_MINVALUE));
 
     addChild(KEY_DELAY_MODE,
              new DuNumeric(FX_DELAY_MODE_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
@@ -32,7 +30,7 @@ DuDelay::DuDelay() :
 
     addChild(KEY_DELAY_FEEDBACK,
              new DuNumeric(FX_DELAY_FEEDBACK_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
-                           0x7F, FX_DELAY_FEEDBACK_MINVALUE));
+                           FX_DELAY_FEEDBACK_MAXVALUE, FX_DELAY_FEEDBACK_MINVALUE));
 
     addChild(KEY_DELAY_HDAMP,
              new DuNumeric(FX_DELAY_HDAMP_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
@@ -72,11 +70,8 @@ DuDelayPtr DuDelay::fromDuMusicBinary(const FX_delay &du_delay)
 
     if (!verif)
     {
-        qCritical() << "DuDelay::fromDuMusicBinary():\n"
-                    << "failed to generate DuDelay\n"
-                    << "a child was not set properly";
-
-        return DuDelayPtr();
+        qWarning() << "DuDelay::fromDuMusicBinary():\n"
+                   << "an attribute was not properly set";
     }
 
     return delay;
@@ -125,11 +120,8 @@ DuDelayPtr DuDelay::fromJson(const QJsonObject &jsonDelay)
 
     if (!verif)
     {
-        qCritical() << "DuDelay::fromJson():\n"
-                    << "failed to generate DuDelay\n"
-                    << "a child was not set properly";
-
-        return DuDelayPtr();
+        qWarning() << "DuDelay::fromJson():\n"
+                   << "an attribute was not properly set";
     }
 
     return delay;
@@ -201,7 +193,7 @@ int DuDelay::size() const
 
 int DuDelay::getOnOff() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_DELAY_ONOFF);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_DELAY_ONOFF);
 
     if (tmp == NULL)
         return -1;
@@ -222,7 +214,7 @@ bool DuDelay::setOnOff(int value)
 
 int DuDelay::getMode() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_DELAY_MODE);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_DELAY_MODE);
 
     if (tmp == NULL)
         return -1;
@@ -242,7 +234,7 @@ bool DuDelay::setMode(int value)
 
 int DuDelay::getPreLowPassFilter() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_DELAY_PRELOWPASSFILTER);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_DELAY_PRELOWPASSFILTER);
 
     if (tmp == NULL)
         return -1;
@@ -262,7 +254,7 @@ bool DuDelay::setPreLowPassFilter(int value)
 
 int DuDelay::getEffectLevel() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_DELAY_EFFECTLEVEL);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_DELAY_EFFECTLEVEL);
 
     if (tmp == NULL)
         return -1;
@@ -282,7 +274,7 @@ bool DuDelay::setEffectLevel(int value)
 
 int DuDelay::getEffectTime() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_DELAY_EFFECTTIME);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_DELAY_EFFECTTIME);
 
     if (tmp == NULL)
         return -1;
@@ -302,7 +294,7 @@ bool DuDelay::setEffectTime(int value)
 
 int DuDelay::getFeedback() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_DELAY_FEEDBACK);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_DELAY_FEEDBACK);
 
     if (tmp == NULL)
         return -1;
@@ -322,7 +314,7 @@ bool DuDelay::setFeedback(int value)
 
 int DuDelay::getHDAmp() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_DELAY_HDAMP);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_DELAY_HDAMP);
 
     if (tmp == NULL)
         return -1;
@@ -343,7 +335,7 @@ bool DuDelay::setHDAmp(int value)
 
 QString DuDelay::getEffectName() const
 {
-    const DuStringConstPtr& tmp = getChildAs<DuString>(KEY_DELAY_EFFECTNAME);
+    const DuStringConstPtr &tmp = getChildAs<DuString>(KEY_DELAY_EFFECTNAME);
 
     if (tmp == NULL)
         return QString();

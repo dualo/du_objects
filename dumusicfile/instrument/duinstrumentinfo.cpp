@@ -30,7 +30,7 @@ DuInstrumentInfo::DuInstrumentInfo() :
 
     addChild(KEY_INSTRINFO_RELVOLUME,
              new DuNumeric(0x40, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
+                           0xFF, 0x00));
 }
 
 DuInstrumentInfo::~DuInstrumentInfo()
@@ -64,11 +64,8 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrI
 
     if (!verif)
     {
-        qCritical() << "DuInstrumentInfo::fromDuMusicBinary():\n"
-                    << "failed to generate DuInstrumentInfo\n"
-                    << "a child was not set properly";
-
-        return DuInstrumentInfoPtr();
+        qWarning() << "DuInstrumentInfo::fromDuMusicBinary():\n"
+                   << "an attribute was not properly set";
     }
 
     return instrInfo;
@@ -114,11 +111,8 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
 
     if (!verif)
     {
-        qCritical() << "DuInstrumentInfo::fromJson():\n"
-                    << "failed to generate DuInstrumentInfo\n"
-                    << "a child was not set properly";
-
-        return DuInstrumentInfoPtr();
+        qWarning() << "DuInstrumentInfo::fromJson():\n"
+                   << "an attribute was not properly set";
     }
 
     return instrInfo;

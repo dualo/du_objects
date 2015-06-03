@@ -79,11 +79,8 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
 
     if (!verif)
     {
-        qCritical() << "DuPreset::fromDuMusicBinary():\n"
-                    << "failed to generate DuPreset\n"
-                    << "a child was not set properly";
-
-        return DuPresetPtr();
+        qWarning() << "DuPreset::fromDuMusicBinary():\n"
+                   << "an attribute was not properly set";
     }
 
     return preset;
@@ -135,11 +132,8 @@ DuPresetPtr DuPreset::fromJson(const QJsonObject &jsonPreset)
 
     if (!verif)
     {
-        qCritical() << "DuPreset::fromJson():\n"
-                    << "failed to generate DuPreset\n"
-                    << "a child was not set properly";
-
-        return DuPresetPtr();
+        qWarning() << "DuPreset::fromJson():\n"
+                   << "an attribute was not properly set";
     }
 
     return preset;

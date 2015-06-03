@@ -53,11 +53,8 @@ DuWahPtr DuWah::fromDuMusicBinary(const FX_wah &du_wah)
 
     if (!verif)
     {
-        qCritical() << "DuWah::fromDuMusicBinary():\n"
-                    << "failed to generate DuWah\n"
-                    << "a child was not set properly";
-
-        return DuWahPtr();
+        qWarning() << "DuWah::fromDuMusicBinary():\n"
+                   << "an attribute was not properly set";
     }
 
     return wah;
@@ -96,11 +93,8 @@ DuWahPtr DuWah::fromJson(const QJsonObject &jsonWah)
 
     if (!verif)
     {
-        qCritical() << "DuWah::fromJson():\n"
-                    << "failed to generate DuWah\n"
-                    << "a child was not set properly";
-
-        return DuWahPtr();
+        qWarning() << "DuWah::fromJson():\n"
+                   << "an attribute was not properly set";
     }
 
     return wah;
@@ -157,7 +151,7 @@ int DuWah::size() const
 
 int DuWah::getFilterType() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERTYPE);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERTYPE);
 
     if (tmp == NULL)
         return -1;
@@ -177,7 +171,7 @@ bool DuWah::setFilterType(int value)
 
 int DuWah::getFilterFrequency() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERFREQUENCY);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERFREQUENCY);
 
     if (tmp == NULL)
         return -1;
@@ -197,7 +191,7 @@ bool DuWah::setFilterFrequency(int value)
 
 int DuWah::getFilterResonance() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERRESONANCE);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERRESONANCE);
 
     if (tmp == NULL)
         return -1;
@@ -218,7 +212,7 @@ bool DuWah::setFilterResonance(int value)
 
 int DuWah::getAutoWahSensitivity() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_WAH_AUTOWAHSENSITIVITY);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_WAH_AUTOWAHSENSITIVITY);
 
     if (tmp == NULL)
         return -1;
@@ -239,7 +233,7 @@ bool DuWah::setAutoWahSensitivity(int value)
 
 QString DuWah::getEffectName() const
 {
-    const DuStringConstPtr& tmp = getChildAs<DuString>(KEY_WAH_EFFECTNAME);
+    const DuStringConstPtr &tmp = getChildAs<DuString>(KEY_WAH_EFFECTNAME);
 
     if (tmp == NULL)
         return QString();

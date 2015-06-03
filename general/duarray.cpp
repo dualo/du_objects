@@ -40,9 +40,6 @@ QByteArray DuArray::toDuMusicBinary() const
 
     if (array.isEmpty())
     {
-        qWarning() << "DuArray::toDuMusicBinary():\n"
-                   << "array is empty";
-
         return QByteArray("");
     }
 
@@ -53,8 +50,8 @@ QByteArray DuArray::toDuMusicBinary() const
 
         if (tmpArray.isNull())
         {
-            qWarning() << "DuArray::toDuMusicBinary():\n"
-                       << "element byte array was null";
+            qCritical() << "DuArray::toDuMusicBinary():\n"
+                        << "element byte array was null";
 
             return QByteArray();
         }
@@ -73,9 +70,6 @@ QByteArray DuArray::toMidiBinary() const
 
     if (array.isEmpty())
     {
-        qWarning() << "DuArray::toMidiBinary():\n"
-                   << "array is empty";
-
         return QByteArray("");
     }
 
@@ -86,8 +80,8 @@ QByteArray DuArray::toMidiBinary() const
 
         if (tmpArray.isNull())
         {
-            qWarning() << "DuArray::toMidiBinary():\n"
-                       << "element byte array was null";
+            qCritical() << "DuArray::toMidiBinary():\n"
+                        << "element byte array was null";
 
             return QByteArray();
         }
@@ -105,9 +99,6 @@ QJsonValue DuArray::toJson() const
 
     if (array.isEmpty())
     {
-        qWarning() << "DuArray::toJson():\n"
-                   << "array is empty";
-
         return QJsonValue(QJsonArray());
     }
 
@@ -118,8 +109,8 @@ QJsonValue DuArray::toJson() const
 
         if (tmpValue.isUndefined())
         {
-            qWarning() << "DuArray::toJson():\n"
-                       << "element json value was undefined";
+            qCritical() << "DuArray::toJson():\n"
+                        << "element json value was undefined";
 
             return QJsonValue(QJsonValue::Undefined);
         }
@@ -142,8 +133,8 @@ int DuArray::size() const
 
         if (tmpSize == -1)
         {
-            qWarning() << "DuArray::size():\n"
-                       << "element size was -1";
+            qCritical() << "DuArray::size():\n"
+                        << "element size was -1";
             return -1;
         }
 

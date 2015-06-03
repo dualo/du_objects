@@ -39,6 +39,11 @@ DuObjectPtr DuLoop::clone() const
 DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
                                 const music_sample *du_sample)
 {
+    if (du_loop.l_state == 0)
+    {
+        return DuLoopPtr(new DuLoop);
+    }
+
     DuLoopPtr loop(new DuLoop);
     bool verif = true;
 
@@ -49,8 +54,7 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
     if (!verif)
     {
         qCritical() << "DuLoop::fromDuMusicBinary():\n"
-                    << "failed to generate DuLoop\n"
-                    << "a child was not set properly";
+                    << "an attribute was not properly set";
 
         return DuLoopPtr();
     }
@@ -61,7 +65,7 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
     {
         qCritical() << "DuLoop::fromDuMusicBinary():\n"
                     << "failed to generate DuLoop\n"
-                    << "the DuInstrument was not generated properly";
+                    << "the DuInstrument was not properly generated";
 
         return DuLoopPtr();
     }
@@ -77,7 +81,7 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
         {
             qCritical() << "DuLoop::fromDuMusicBinary():\n"
                         << "failed to generate DuLoop\n"
-                        << "a DuEvent was not generated properly";
+                        << "a DuEvent was not properly generated";
 
             return DuLoopPtr();
         }
@@ -85,7 +89,7 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
         {
             qCritical() << "DuLoop::fromDuMusicBinary():\n"
                         << "failed to generate DuLoop\n"
-                        << "a DuEvent was not appended properly";
+                        << "a DuEvent was not properly appended";
 
             return DuLoopPtr();
         }
@@ -124,9 +128,8 @@ DuLoopPtr DuLoop::fromJson(const QJsonObject &jsonLoop)
 
     if (!verif)
     {
-        qCritical() << "DuLoop::fromJson():\n"
-                    << "failed to generate DuLoop\n"
-                    << "a child was not set properly";
+        qWarning() << "DuLoop::fromJson():\n"
+                   << "an attribute was not properly set";
 
         return DuLoopPtr();
     }
@@ -139,7 +142,7 @@ DuLoopPtr DuLoop::fromJson(const QJsonObject &jsonLoop)
     {
         qCritical() << "DuLoop::fromJson():\n"
                     << "failed to generate DuLoop\n"
-                    << "the DuInstrument was not generated properly";
+                    << "the DuInstrument was not properly generated";
 
         return DuLoopPtr();
     }
@@ -153,7 +156,7 @@ DuLoopPtr DuLoop::fromJson(const QJsonObject &jsonLoop)
         {
             qCritical() << "DuLoop::fromJson():\n"
                         << "failed to generate DuLoop\n"
-                        << "a DuEvent was not generated properly";
+                        << "a DuEvent was not properly generated";
 
             return DuLoopPtr();
         }
@@ -161,7 +164,7 @@ DuLoopPtr DuLoop::fromJson(const QJsonObject &jsonLoop)
         {
             qCritical() << "DuLoop::fromJson():\n"
                         << "failed to generate DuLoop\n"
-                        << "a DuEvent was not appended properly";
+                        << "a DuEvent was not properly appended";
 
             return DuLoopPtr();
         }
