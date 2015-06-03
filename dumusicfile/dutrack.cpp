@@ -173,7 +173,7 @@ int DuTrack::size() const
 
 int DuTrack::getChannel() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_TRACK_CHANNEL);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_TRACK_CHANNEL);
 
     if (tmp == NULL)
         return -1;
@@ -193,7 +193,7 @@ bool DuTrack::setChannel(int value)
 
 int DuTrack::getCurrentLoop() const
 {
-    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_TRACK_CURRENTLOOP);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_TRACK_CURRENTLOOP);
 
     if (tmp == NULL)
         return -1;

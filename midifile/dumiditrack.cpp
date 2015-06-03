@@ -1,82 +1,85 @@
 #include "dumiditrack.h"
 
+#include <QDebug>
+
+
+DU_OBJECT_IMPL(DuMidiTrack)
+
 DuMidiTrack::DuMidiTrack() :
-    events(QList<DuMidiBasicEvent*>())
+    DuContainer()
 {
-    events.clear();
+    addChild(KEY_MIDITRACK_EVENTS, new DuArray());
 }
 
 DuMidiTrack::~DuMidiTrack()
 {
-    qDeleteAll(events);
 }
 
 
-void DuMidiTrack::appendEvent(DuMidiBasicEvent *event)
+DuObjectPtr DuMidiTrack::clone() const
 {
-    events.append(event);
+    return DuMidiTrackPtr(new DuMidiTrack(*this));
 }
 
 
-QByteArray DuMidiTrack::toByteArray()
+QByteArray DuMidiTrack::toDuMusicBinary() const
 {
-    QByteArray array;
-    array.clear();
+    Q_UNIMPLEMENTED();
+    return QByteArray();
+}
 
-    //TODO: refactoring
-    bool runningStatusActive = false;
-    quint8 tmpStatus = 0x00;
+QByteArray DuMidiTrack::toMidiBinary() const
+{
+    QByteArray retArray = getEvents()->toMidiBinary();
 
-    for (int i = 0; i < events.count(); i++)
+    quint32 size = retArray.size();
+
+    retArray.prepend((char)(size & 0xFF));
+    retArray.prepend((char)((size >> 8) & 0xFF));
+    retArray.prepend((char)((size >> 16) & 0xFF));
+    retArray.prepend((char)((size >> 24) & 0xFF));
+    retArray.prepend(MIDI_TRACK_ID_VALUE);
+
+    return retArray;
+}
+
+QJsonValue DuMidiTrack::toJson() const
+{
+    Q_UNIMPLEMENTED();
+    return QJsonValue();
+}
+
+
+int DuMidiTrack::size() const
+{
+    const DuArrayConstPtr &events = getChildAs<DuArray>(KEY_MIDITRACK_EVENTS);
+    if (events == NULL)
     {
-        runningStatusActive = ((tmpStatus == events[i]->getStatus())
-                               && (tmpStatus < 0xF0));
-        array += events[i]->toMidiBinary();
-
-        tmpStatus = events[i]->getStatus();
+        return -1;
     }
 
-    quint32 size = array.size();
-
-    array.prepend((char)(size & 0xFF));
-    array.prepend((char)((size >> 8) & 0xFF));
-    array.prepend((char)((size >> 16) & 0xFF));
-    array.prepend((char)((size >> 24) & 0xFF));
-    array.prepend(MIDI_TRACK_ID_VALUE);
-
-    return array;
+    return MIDI_TRACK_ID_SIZE + MIDI_TRACK_SIZE_SIZE + events->size();
 }
 
 
-QList<DuMidiBasicEvent *> &DuMidiTrack::getEvents()
+DuArrayConstPtr DuMidiTrack::getEvents() const
 {
-    return events;
+    return getChildAs<DuArray>(KEY_MIDITRACK_EVENTS);
 }
 
-/*
-void DuMidiTrack::sortEvents(QMap<quint8, QList<DuMidiChannelEvent *>> *channelMap,
-                           QMap<quint8, QList<DuMidiMetaEvent *>> *metaMap)
+void DuMidiTrack::setEvents(const DuArrayPtr &array)
 {
-    for(int i = 0; i < events.count(); i++)
+    addChild(KEY_MIDITRACK_EVENTS, array);
+}
+
+bool DuMidiTrack::appendEvent(const DuMidiBasicEventPtr &event)
+{
+    DuArrayPtr tmp = getChildAs<DuArray>(KEY_MIDITRACK_EVENTS);
+    if (tmp == NULL)
     {
-        DuMidiChannelEvent *channelEvent = dynamic_cast<DuMidiChannelEvent *>(events[i]);
-
-        if (channelEvent != NULL)
-        {
-            QList<DuMidiChannelEvent *> tmpList =
-                    channelMap->value(channelEvent->getChannel());
-            tmpList.append(channelEvent);
-        }
-        else
-        {
-            DuMidiMetaEvent *metaEvent = dynamic_cast<DuMidiMetaEvent *>(events[i]);
-
-            if (metaEvent != NULL)
-            {
-                QList<DuMidiMetaEvent *> tmpList = metaMap->value(metaEvent->getType());
-                tmpList.append(metaEvent);
-            }
-        }
+        return false;
     }
+
+    tmp->append(event);
+    return true;
 }
-*/

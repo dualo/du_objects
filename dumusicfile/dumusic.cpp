@@ -399,13 +399,11 @@ void DuMusic::setTracks(const DuArrayPtr &array)
 bool DuMusic::appendTrack(const DuTrackPtr &track)
 {
     DuArrayPtr tmp = getChildAs<DuArray>(KEY_MUSIC_TRACKS);
-
     if (tmp == NULL)
     {
         return false;
     }
 
     tmp->append(track);
-
     return true;
 }

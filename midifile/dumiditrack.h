@@ -1,35 +1,39 @@
 #ifndef DUMIDITRACK_H
 #define DUMIDITRACK_H
 
+#include "../general/duarray.h"
 #include "dumidichannelevent.h"
 #include "dumidimetaevent.h"
 #include "dumidisysexevent.h"
-#include <QList>
-#include <QMap>
 
 
 #define MIDI_TRACK_ID_VALUE             "MTrk"
 #define MIDI_TRACK_ID_SIZE              4
 #define MIDI_TRACK_SIZE_SIZE            4
 
+#define KEY_MIDITRACK_EVENTS            "Events"
 
-class DuMidiTrack
+
+DU_OBJECT(DuMidiTrack)
+
+class DuMidiTrack : public DuContainer
 {
 public:
     explicit DuMidiTrack();
     ~DuMidiTrack();
 
-    void appendEvent(DuMidiBasicEvent* event);
+    DuObjectPtr clone() const;
 
-    QByteArray toByteArray();
+    QByteArray toDuMusicBinary() const;
+    QByteArray toMidiBinary() const;
+    QJsonValue toJson() const;
 
-    QList<DuMidiBasicEvent *>& getEvents();
-/*
-    void sortEvents(QMap<quint8, QList<DuMidiChannelEvent *>> *channelMap,
-                    QMap<quint8, QList<DuMidiMetaEvent *>> *metaMap);
-*/
-private:
-    QList<DuMidiBasicEvent *> events;
+    int size() const;
+
+    DuArrayConstPtr getEvents() const;
+    void setEvents(const DuArrayPtr &array);
+
+    bool appendEvent(const DuMidiBasicEventPtr &event);
 };
 
 #endif // DUMIDITRACK_H

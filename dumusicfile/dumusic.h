@@ -23,7 +23,7 @@ public:
 
     static DuMusicPtr fromDuMusicBinary(const s_total_buffer &du_music);
     static DuMusicPtr fromJson(const QJsonObject &jsonMusic);
-    static DuMusicPtr fromBinary(const QByteArray& data);
+    static DuMusicPtr fromBinary(const QByteArray &data);
 
     QByteArray toDuMusicBinary() const;
 
@@ -37,7 +37,7 @@ public:
     void setLists(const QStringList &lists);
 
     QString getSongName() const;
-    bool setSongName(const QString& value);
+    bool setSongName(const QString &value);
 
     int getFileVersion() const;
     bool setFileVersion(int value);
@@ -49,9 +49,9 @@ public:
     void setSongInfo(const DuSongInfoPtr &songInfo);
 
     DuArrayConstPtr getTracks() const;
-    void setTracks(const DuArrayPtr& array);
+    void setTracks(const DuArrayPtr &array);
 
-    bool appendTrack(const DuTrackPtr& track);
+    bool appendTrack(const DuTrackPtr &track);
 
 private:
     int m_databaseId;

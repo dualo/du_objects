@@ -9,31 +9,43 @@
 #define MIDI_HEADER_ID_SIZE             4
 #define MIDI_HEADER_CHUNK_SIZE          0x00000006
 
+#define DUMUSIC_DIVISION                0x0040
+#define MICROSECS_PER_MIN               60000000
 
-class DuMidiFile
+#define KEY_MIDIFILE_FORMAT             "Format"
+#define KEY_MIDIFILE_DIVISION           "Division"
+#define KEY_MIDIFILE_TRACKS             "Tracks"
+
+
+DU_OBJECT(DuMidiFile)
+
+class DuMidiFile : public DuContainer
 {
 public:
     explicit DuMidiFile();
-    explicit DuMidiFile(QIODevice *input);
     ~DuMidiFile();
 
-    quint16 getFormat();
-    quint16 getDivision();
-    QList<DuMidiTrack *>& getTracks();
+    DuObjectPtr clone() const;
 
-    void setFormat(quint16 value);
-    void setDivision(quint16 value);
-    void appendTrack(DuMidiTrack *track);
+    static DuMidiFilePtr fromMidiBinary(QIODevice *input);
 
-    QByteArray toByteArray();
+    QByteArray toDuMusicBinary() const;
+    QByteArray toMidiBinary() const;
+    QJsonValue toJson() const;
 
-    QList<DuMidiMetaEvent *> findMetaEvents(quint16 trackIndex, quint8 type);
-/*
-    void sortEvents(QMap<quint16, QMap<quint8, QList<DuMidiChannelEvent *>>> *channelMap,
-                    QMap<quint16, QMap<quint8, QList<DuMidiMetaEvent *>>> *metaMap);
-*/
+    int size() const;
+
+    int getFormat() const;
+    bool setFormat(quint16 value);
+
+    int getDivision() const;
+    bool setDivision(quint16 value);
+
+    DuArrayConstPtr getTracks() const;
+    void setTracks(const DuArrayPtr &array);
+    bool appendTrack(const DuMidiTrackPtr &track);
+
 private:
-    void parseFile(QIODevice *input);
     DuMidiTrack* parseTrack(QDataStream &stream);
     DuMidiBasicEvent* parseEvent(QDataStream &stream, quint8 *runningStatus,
                                  bool *trackEnded);
@@ -42,11 +54,6 @@ private:
     DuMidiChannelEvent* parseChannelEvent(QDataStream &stream, quint8 *runningStatus);
     DuMidiMetaEvent* parseMetaEvent(QDataStream &stream, bool *trackEnded);
     DuMidiSysExEvent* parseSysExEvent(QDataStream &stream, quint8 status);
-
-    quint16 format;
-    quint16 count;
-    quint16 division;
-    QList<DuMidiTrack*> tracks;
 };
 
 #endif // DUMIDIFILE_H

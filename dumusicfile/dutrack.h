@@ -38,7 +38,7 @@ public:
     DuArrayConstPtr getLoops() const;
     void setLoops(const DuArrayPtr &array);
 
-    bool appendLoop(const DuLoopPtr& loop);
+    bool appendLoop(const DuLoopPtr &loop);
 
     int eventsSize() const;
 };
