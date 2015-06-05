@@ -46,6 +46,40 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
         return DuLoopPtr(new DuLoop);
     }
 
+    DuLoopPtr loop = fromDuMusicBinary(du_loop);
+
+
+    for (int i = 0; i < du_loop.l_numsample; i++)
+    {
+        const DuEventPtr &event = DuEvent::fromDuMusicBinary(du_sample[i]);
+        if (event == NULL)
+        {
+            qCritical() << "DuLoop::fromDuMusicBinary():\n"
+                        << "failed to generate DuLoop\n"
+                        << "a DuEvent was not properly generated";
+
+            return DuLoopPtr();
+        }
+        if (!loop->appendEvent(event))
+        {
+            qCritical() << "DuLoop::fromDuMusicBinary():\n"
+                        << "failed to generate DuLoop\n"
+                        << "a DuEvent was not properly appended";
+
+            return DuLoopPtr();
+        }
+    }
+
+    return loop;
+}
+
+DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop)
+{
+    if (du_loop.l_state == 0)
+    {
+        return DuLoopPtr(new DuLoop);
+    }
+
     DuLoopPtr loop(new DuLoop);
     bool verif = true;
 
@@ -72,30 +106,6 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
         return DuLoopPtr();
     }
     loop->setInstrument(instrument);
-
-    if (du_loop.l_state == 0)
-        return loop;
-
-    for (int i = 0; i < du_loop.l_numsample; i++)
-    {
-        const DuEventPtr &event = DuEvent::fromDuMusicBinary(du_sample[i]);
-        if (event == NULL)
-        {
-            qCritical() << "DuLoop::fromDuMusicBinary():\n"
-                        << "failed to generate DuLoop\n"
-                        << "a DuEvent was not properly generated";
-
-            return DuLoopPtr();
-        }
-        if (!loop->appendEvent(event))
-        {
-            qCritical() << "DuLoop::fromDuMusicBinary():\n"
-                        << "failed to generate DuLoop\n"
-                        << "a DuEvent was not properly appended";
-
-            return DuLoopPtr();
-        }
-    }
 
     return loop;
 }

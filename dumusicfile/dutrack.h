@@ -23,6 +23,7 @@ public:
 
     static DuTrackPtr fromDuMusicBinary(const music_track &du_track,
                                         const music_sample *du_sample);
+    static DuTrackPtr fromDuMusicBinary(const music_track &du_track);
     static DuTrackPtr fromJson(const QJsonObject &jsonTrack);
 
     QByteArray toDuMusicBinary() const;

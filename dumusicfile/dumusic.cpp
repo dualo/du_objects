@@ -61,9 +61,64 @@ DuMusicPtr DuMusic::fromDuMusicBinary(const s_total_buffer &du_music)
 
     for (int i = 0; i < MUSIC_MAXTRACK; i++)
     {
-        const DuTrackPtr track =
+        const DuTrackPtr &track =
                 DuTrack::fromDuMusicBinary(du_music.local_song.s_track[i],
                                            du_music.local_buffer);
+        if (track == NULL)
+        {
+            qCritical() << "DuMusic::fromDuMusicBinary():\n"
+                        << "failed to generate DuMusic\n"
+                        << "a DuTrack was not properly generated";
+
+            return DuMusicPtr();
+        }
+        if (!music->appendTrack(track))
+        {
+            qCritical() << "DuMusic::fromDuMusicBinary():\n"
+                        << "failed to generate DuMusic\n"
+                        << "a DuTrack was not properly appended";
+
+            return DuMusicPtr();
+        }
+    }
+
+    return music;
+}
+
+DuMusicPtr DuMusic::fromDuMusicBinary(const music_song &du_song)
+{
+    DuMusicPtr music(new DuMusic);
+
+    const DuHeaderPtr &header =
+            DuHeader::fromDuMusicBinary(du_song);
+    if (header != NULL)
+        music->setHeader(header);
+    else
+    {
+        qCritical() << "DuMusic::fromDuMusicBinary():\n"
+                    << "failed to generate DuMusic\n"
+                    << "the DuHeader was not properly generated";
+
+        return DuMusicPtr();
+    }
+
+    const DuSongInfoPtr &songInfo =
+            DuSongInfo::fromDuMusicBinary(du_song);
+    if (songInfo != NULL)
+        music->setSongInfo(songInfo);
+    else
+    {
+        qCritical() << "DuMusic::fromDuMusicBinary():\n"
+                    << "failed to generate DuMusic\n"
+                    << "the DuSongInfo was not properly generated";
+
+        return DuMusicPtr();
+    }
+
+    for (int i = 0; i < MUSIC_MAXTRACK; i++)
+    {
+        const DuTrackPtr &track =
+                DuTrack::fromDuMusicBinary(du_song.s_track[i]);
         if (track == NULL)
         {
             qCritical() << "DuMusic::fromDuMusicBinary():\n"

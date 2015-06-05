@@ -76,6 +76,45 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
     return track;
 }
 
+DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track)
+{
+    const DuTrackPtr track(new DuTrack);
+    bool verif = true;
+
+    verif = verif && track->setChannel(du_track.t_midichannel);
+    verif = verif && track->setCurrentLoop(du_track.t_currentloop);
+
+    if (!verif)
+    {
+        qWarning() << "DuTrack::fromDuMusicBinary():\n"
+                   << "an attribute was not properly set";
+    }
+
+    for (int i = 0; i < MUSIC_MAXLAYER; i++)
+    {
+        const DuLoopPtr &loop =
+                DuLoop::fromDuMusicBinary(du_track.t_loop[i]);
+        if (loop == NULL)
+        {
+            qCritical() << "DuTrack::fromDuMusicBinary():\n"
+                        << "failed to generate DuTrack\n"
+                        << "a DuLoop was not properly generated";
+
+            return DuTrackPtr();
+        }
+        if (!track->appendLoop(loop))
+        {
+            qCritical() << "DuTrack::fromDuMusicBinary():\n"
+                        << "failed to generate DuTrack\n"
+                        << "a DuLoop was not properly appended";
+
+            return DuTrackPtr();
+        }
+    }
+
+    return track;
+}
+
 
 DuTrackPtr DuTrack::fromJson(const QJsonObject &jsonTrack)
 {
