@@ -1,5 +1,7 @@
 #include "duinstrumentinfo.h"
 
+#include <cstring>
+
 #include <QJsonObject>
 #include <QDebug>
 

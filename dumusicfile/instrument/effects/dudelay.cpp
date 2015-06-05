@@ -1,5 +1,7 @@
 #include "dudelay.h"
 
+#include <cstring>
+
 #include <QJsonObject>
 #include <QDebug>
 

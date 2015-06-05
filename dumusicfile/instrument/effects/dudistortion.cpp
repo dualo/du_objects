@@ -1,5 +1,7 @@
 #include "dudistortion.h"
 
+#include <cstring>
+
 #include <QJsonObject>
 #include <QDebug>
 

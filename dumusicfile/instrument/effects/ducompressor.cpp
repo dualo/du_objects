@@ -1,5 +1,7 @@
 #include "ducompressor.h"
 
+#include <cstring>
+
 #include <QJsonObject>
 #include <QDebug>
 

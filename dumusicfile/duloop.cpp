@@ -1,5 +1,7 @@
 #include "duloop.h"
 
+#include <cstring>
+
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QDebug>

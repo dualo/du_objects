@@ -1,5 +1,7 @@
 #include "duadsr.h"
 
+#include <cstring>
+
 #include <QJsonObject>
 #include <QDebug>
 
