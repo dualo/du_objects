@@ -19,10 +19,13 @@ public:
 
     virtual DuObjectPtr clone() const;
 
+    static DuMidiSysExEventPtr fromMidiBinary(QDataStream &stream, quint8 status);
+
     virtual QByteArray toMidiBinary() const;
 
     int getLength() const;
     void setLength(quint32 value);
+    void setLength(QDataStream &stream);
 
     const QByteArray getData() const;
     void setData(const QByteArray &value);

@@ -65,6 +65,17 @@ void DuMidiBasicEvent::setTime(quint32 delta, quint32 offset)
     tmp->setAbsolute(delta, offset);
 }
 
+void DuMidiBasicEvent::setTime(QDataStream &stream, quint32 offset)
+{
+    const DuMidiVariableLengthPtr &tmp =
+            getChildAs<DuMidiVariableLength>(KEY_MIDIEVENT_TIME);
+
+    if (tmp == NULL)
+        return;
+
+    tmp->setAbsolute(stream, offset);
+}
+
 
 quint8 DuMidiBasicEvent::getStatus() const
 {

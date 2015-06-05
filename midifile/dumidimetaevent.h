@@ -48,6 +48,8 @@ public:
 
     virtual DuObjectPtr clone() const;
 
+    static DuMidiMetaEventPtr fromMidiBinary(QDataStream &stream, bool *trackEnded);
+
     virtual QByteArray toMidiBinary() const;
 
     quint8 getType() const;
@@ -55,6 +57,7 @@ public:
 
     quint32 getLength() const;
     void setLength(quint32 value);
+    void setLength(QDataStream &stream);
 
     const QByteArray getData() const;
     void setData(const QByteArray &value);

@@ -245,6 +245,10 @@ public:
 
     virtual DuObjectPtr clone() const;
 
+    static DuMidiChannelEventPtr fromMidiBinary(QDataStream &stream, quint8 prevStatus,
+                                                quint8 byte);
+    static DuMidiChannelEventPtr fromMidiBinary(QDataStream &stream, quint8 prevStatus);
+
     virtual QByteArray toMidiBinary() const;
 
     virtual int size() const;

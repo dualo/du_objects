@@ -26,6 +26,7 @@ public:
 
     quint32 getTime() const;
     void setTime(quint32 delta, quint32 offset);
+    void setTime(QDataStream &stream, quint32 offset);
 
     quint8 getStatus() const;
     void setStatus(quint8 value);   // Status bytes are > 0x7F, data bytes are < 0x80

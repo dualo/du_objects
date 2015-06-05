@@ -26,6 +26,64 @@ DuObjectPtr DuMidiChannelEvent::clone() const
 }
 
 
+DuMidiChannelEventPtr DuMidiChannelEvent::fromMidiBinary(QDataStream &stream,
+                                                         quint8 prevStatus,
+                                                         quint8 byte)
+{
+    DuMidiChannelEventPtr channelEvent(new DuMidiChannelEvent);
+
+    quint8 type = prevStatus / 16;
+    //quint8 channel = prevStatus % 16;
+
+    switch(type)
+    {
+    case DuMidiChannelEvent::NoteOff:
+    case DuMidiChannelEvent::NoteOn:
+    case DuMidiChannelEvent::KeyAftertouch:
+    case DuMidiChannelEvent::ControlChange:
+    case DuMidiChannelEvent::PitchWheelChange:
+    {
+        channelEvent->setKey(byte);
+
+        quint8 tmp;
+        stream >> tmp;
+        channelEvent->setValue(tmp);
+
+        break;
+    }
+    case DuMidiChannelEvent::ProgramChange:
+    case DuMidiChannelEvent::ChannelPressure:
+    {
+        channelEvent->setValue(byte);
+        break;
+    }
+    default:
+    {
+        qCritical() << "Invalid channel status";
+
+        return DuMidiChannelEventPtr();
+    }
+    }
+
+    channelEvent->setStatus(prevStatus);
+    channelEvent->setRunningStatus(true);
+
+    return channelEvent;
+}
+
+DuMidiChannelEventPtr DuMidiChannelEvent::fromMidiBinary(QDataStream &stream,
+                                                         quint8 prevStatus)
+{
+    quint8 tmp;
+    stream >> tmp;
+
+    DuMidiChannelEventPtr channelEvent = fromMidiBinary(stream, prevStatus, tmp);
+    channelEvent->setRunningStatus(false);
+
+    return channelEvent;
+}
+
+
 QByteArray DuMidiChannelEvent::toMidiBinary() const
 {
     QByteArray retArray;
@@ -49,23 +107,52 @@ QByteArray DuMidiChannelEvent::toMidiBinary() const
     retArray += status->toMidiBinary();
 
 
-    const DuNumericConstPtr &key =
-            getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_KEY);
+    quint8 type = getType();
+    switch(type)
+    {
+    case DuMidiChannelEvent::NoteOff:
+    case DuMidiChannelEvent::NoteOn:
+    case DuMidiChannelEvent::KeyAftertouch:
+    case DuMidiChannelEvent::ControlChange:
+    case DuMidiChannelEvent::PitchWheelChange:
+    {
+        const DuNumericConstPtr &key =
+                getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_KEY);
 
-    if (key == NULL)
+        if (key == NULL)
+            return QByteArray();
+
+        retArray += key->toMidiBinary();
+
+        const DuNumericConstPtr &value =
+                getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_VALUE);
+
+        if (value == NULL)
+            return QByteArray();
+
+        retArray += value->toMidiBinary();
+
+        break;
+    }
+    case DuMidiChannelEvent::ProgramChange:
+    case DuMidiChannelEvent::ChannelPressure:
+    {
+        const DuNumericConstPtr &value =
+                getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_VALUE);
+
+        if (value == NULL)
+            return QByteArray();
+
+        retArray += value->toMidiBinary();
+        break;
+    }
+    default:
+    {
+        qCritical() << "Invalid channel status";
+
         return QByteArray();
-
-    retArray += key->toMidiBinary();
-
-
-    const DuNumericConstPtr &value =
-            getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_VALUE);
-
-    if (value == NULL)
-        return QByteArray();
-
-    retArray += value->toMidiBinary();
-
+    }
+    }
 
     return retArray;
 }
@@ -83,7 +170,9 @@ int DuMidiChannelEvent::size() const
 
     size += time->getAbsolute() + 1;
 
-    switch (getType())
+
+    quint8 type = getType();
+    switch (type)
     {
     case NoteOff:
     case NoteOn:

@@ -26,6 +26,24 @@ DuObjectPtr DuMidiMetaEvent::clone() const
     return DuMidiMetaEventPtr(new DuMidiMetaEvent(*this));
 }
 
+DuMidiMetaEventPtr DuMidiMetaEvent::fromMidiBinary(QDataStream &stream,
+                                                   bool *trackEnded)
+{
+    DuMidiMetaEventPtr metaEvent(new DuMidiMetaEvent);
+
+    quint8 type;
+
+    stream >> type;
+
+    metaEvent->setType(type);
+    metaEvent->setLength(stream);
+    metaEvent->setData(stream);
+
+    *trackEnded = (type == EndOfTrack);
+
+    return metaEvent;
+}
+
 
 QByteArray DuMidiMetaEvent::toMidiBinary() const
 {
@@ -129,6 +147,22 @@ void DuMidiMetaEvent::setLength(quint32 value)
 
     length->setAbsolute(value);
     data->resize(value);
+}
+
+void DuMidiMetaEvent::setLength(QDataStream &stream)
+{
+    const DuMidiVariableLengthPtr &length =
+            getChildAs<DuMidiVariableLength>(KEY_MIDIMETAEVENT_LENGTH);
+    if (length == NULL)
+        return;
+
+    const DuBinaryDataPtr &data =
+            getChildAs<DuBinaryData>(KEY_MIDIMETAEVENT_DATA);
+    if (data == NULL)
+        return;
+
+    length->setAbsolute(stream);
+    data->resize(length->getAbsolute());
 }
 
 

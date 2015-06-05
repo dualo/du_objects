@@ -76,7 +76,7 @@ QByteArray DuArray::toMidiBinary() const
     QListIterator<DuObjectPtr> i(array);
     while (i.hasNext())
     {
-        QByteArray tmpArray = i.next()->toDuMusicBinary();
+        QByteArray tmpArray = i.next()->toMidiBinary();
 
         if (tmpArray.isNull())
         {

@@ -6,7 +6,7 @@
 DU_OBJECT_IMPL(DuMidiStatus)
 
 DuMidiStatus::DuMidiStatus(int value, bool runningStatus) :
-    DuNumeric(value, NUMERIC_DEFAULT_SIZE, 0x80, 0xFF),
+    DuNumeric(value, NUMERIC_DEFAULT_SIZE, 0xFF, 0x80),
     runningStatus(runningStatus)
 {
 }

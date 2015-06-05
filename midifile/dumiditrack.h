@@ -24,6 +24,8 @@ public:
 
     DuObjectPtr clone() const;
 
+    static DuMidiTrackPtr fromMidiBinary(QDataStream &stream);
+
     QByteArray toDuMusicBinary() const;
     QByteArray toMidiBinary() const;
     QJsonValue toJson() const;
@@ -34,6 +36,9 @@ public:
     void setEvents(const DuArrayPtr &array);
 
     bool appendEvent(const DuMidiBasicEventPtr &event);
+
+private:
+    quint32 m_duration;
 };
 
 #endif // DUMIDITRACK_H

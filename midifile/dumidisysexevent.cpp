@@ -24,6 +24,18 @@ DuObjectPtr DuMidiSysExEvent::clone() const
 }
 
 
+DuMidiSysExEventPtr DuMidiSysExEvent::fromMidiBinary(QDataStream &stream, quint8 status)
+{
+    DuMidiSysExEventPtr sysExEvent(new DuMidiSysExEvent);
+
+    sysExEvent->setStatus(status);
+    sysExEvent->setLength(stream);
+    sysExEvent->setData(stream);
+
+    return sysExEvent;
+}
+
+
 QByteArray DuMidiSysExEvent::toMidiBinary() const
 {
     QByteArray retArray;
@@ -94,6 +106,22 @@ void DuMidiSysExEvent::setLength(quint32 value)
 
     length->setAbsolute(value);
     data->resize(value);
+}
+
+void DuMidiSysExEvent::setLength(QDataStream &stream)
+{
+    const DuMidiVariableLengthPtr &length =
+            getChildAs<DuMidiVariableLength>(KEY_MIDISYSEXEVENT_LENGTH);
+    if (length == NULL)
+        return;
+
+    const DuBinaryDataPtr &data =
+            getChildAs<DuBinaryData>(KEY_MIDISYSEXEVENT_DATA);
+    if (data == NULL)
+        return;
+
+    length->setAbsolute(stream);
+    data->resize(length->getAbsolute());
 }
 
 
