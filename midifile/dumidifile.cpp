@@ -81,7 +81,7 @@ DuMidiFilePtr DuMidiFile::fromMidiBinary(QDataStream &stream)
 
     for (int i = 0; i < count; i++)
     {
-        DuMidiTrackPtr &track = DuMidiTrack::fromMidiBinary(stream);
+        const DuMidiTrackPtr &track = DuMidiTrack::fromMidiBinary(stream);
         midiFile->appendTrack(track);
     }
 
