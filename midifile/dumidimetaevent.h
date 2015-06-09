@@ -5,9 +5,11 @@
 #include "../general/dubinarydata.h"
 
 
-#define KEY_MIDIMETAEVENT_TYPE     "Type"
-#define KEY_MIDIMETAEVENT_LENGTH   "Length"
-#define KEY_MIDIMETAEVENT_DATA     "Data"
+#define KEY_MIDIMETAEVENT_TYPE      "Type"
+#define KEY_MIDIMETAEVENT_LENGTH    "Length"
+#define KEY_MIDIMETAEVENT_DATA      "Data"
+
+#define MICROSECS_PER_MIN           60000000
 
 
 DU_OBJECT(DuMidiMetaEvent)
@@ -62,6 +64,17 @@ public:
     const QByteArray getData() const;
     void setData(const QByteArray &value);
     void setData(QDataStream &stream);
+
+    //These methods should be used to set the content of the meta event
+    //depending on the type of meta event wanted
+
+    void setTitle(const QString &title);
+    void setInstrumentName(const QString &instrument);
+    void setTempo(quint8 bpm);
+    void setTimeSignature(quint8 nn, quint8 dd = 0x02,
+                          quint8 cc = 0x18, quint8 bb = 0x08);
+    void setKeySignature(quint8 key, bool isMinor);
+    void setEndOfTrack();
 };
 
 #endif // DUMIDIMETAEVENT_H

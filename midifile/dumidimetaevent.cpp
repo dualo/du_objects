@@ -203,3 +203,103 @@ void DuMidiMetaEvent::setData(QDataStream &stream)
 
     tmp->setData(stream);
 }
+
+
+void DuMidiMetaEvent::setTitle(const QString &title)
+{
+    if (title.isEmpty())
+    {
+        qWarning() << "DuMidiMetaEvent::setTitle():\n"
+                   << "the title given is empty";
+    }
+
+    setType(DuMidiMetaEvent::Title);
+
+    setData(title.toUtf8());
+}
+
+void DuMidiMetaEvent::setInstrumentName(const QString &instrument)
+{
+    if (instrument.isEmpty())
+    {
+        qWarning() << "DuMidiMetaEvent::setInstrumentName():\n"
+                   << "the instrument name given is empty";
+    }
+
+    setType(DuMidiMetaEvent::Instrument);
+
+    setData(instrument.toUtf8());
+}
+
+void DuMidiMetaEvent::setTempo(quint8 bpm)
+{
+    if (bpm < 4)
+    {
+        qCritical() << "DuMidiMetaEvent::setTempo():\n"
+                    << "bpm value is too small and will result"
+                    << "in an incorrect midi tempo value";
+    }
+
+    setType(DuMidiMetaEvent::Tempo);
+
+    QByteArray tempoArray;
+    tempoArray.clear();
+
+    quint32 tempoValue = MICROSECS_PER_MIN / bpm;
+    tempoArray.append((quint8)((tempoValue >> 16) & 0xFF));
+    tempoArray.append((quint8)((tempoValue >> 8) & 0xFF));
+    tempoArray.append((quint8)(tempoValue & 0xFF));
+
+    setData(tempoArray);
+}
+
+void DuMidiMetaEvent::setTimeSignature(quint8 nn, quint8 dd, quint8 cc, quint8 bb)
+{
+    if (nn == 0 ||  dd == 0 || cc == 0  ||bb == 0)
+    {
+        qCritical() << "DuMidiMetaEvent::setTimeSignature():\n"
+                    << "a parameter is 0, this will result in an"
+                    << "incorrect midi time signature value";
+    }
+
+    setType(DuMidiMetaEvent::TimeSignature);
+
+    QByteArray timeSigArray;
+    timeSigArray.clear();
+
+    timeSigArray.append(nn);
+    timeSigArray.append(dd);
+    timeSigArray.append(cc);
+    timeSigArray.append(bb);
+
+    setData(timeSigArray);
+}
+
+void DuMidiMetaEvent::setKeySignature(quint8 key, bool isMinor)
+{
+    quint8 scale = 0;
+    if (isMinor) scale++;
+
+    qint8 tmpTonal = ((qint8)key + 3 * scale) % 12;
+
+    qint8 signature = (tmpTonal - 6 * (tmpTonal / 2)) % 12;
+    if (signature > 7)
+        signature -= 12;
+    else if (signature < -7)
+        signature += 12;
+
+    setType(DuMidiMetaEvent::KeySignature);
+
+    QByteArray keySigArray;
+    keySigArray.clear();
+
+    keySigArray.append(signature);
+    keySigArray.append(scale);
+
+    setData(keySigArray);
+}
+
+void DuMidiMetaEvent::setEndOfTrack()
+{
+    setType(DuMidiMetaEvent::EndOfTrack);
+}

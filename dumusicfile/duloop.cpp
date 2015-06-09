@@ -242,7 +242,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
         return DuMidiTrackPtr();
     }
 
-    quint8 channel = getMidiOutChannel();
+    int channel = getMidiOutChannel();
     if (channel == -1)
     {
         qCritical()  << "DuLoop::toDuMidiTrack():\n"
@@ -251,7 +251,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
         return DuMidiTrackPtr();
     }
 
-    quint8 durationMod = getDurationModifier();
+    int durationMod = getDurationModifier();
     if (durationMod == -1)
     {
         qCritical()  << "DuLoop::toDuMidiTrack():\n"
@@ -292,9 +292,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
     {
         DuMidiMetaEventPtr nameEvent(new DuMidiMetaEvent(prevTime));
 
-        nameEvent->setType(DuMidiMetaEvent::Instrument);
-        nameEvent->setData(instrName.toUtf8());
-
+        nameEvent->setInstrumentName(instrName);
         midiEvents->append(nameEvent);
     }
 
@@ -304,7 +302,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
 
         pcEvent->setRunningStatus(false);
         pcEvent->setType(DuMidiChannelEvent::ProgramChange);
-        pcEvent->setChannel(channel);
+        pcEvent->setChannel((quint8)channel);
         pcEvent->setValue(instrPC);
 
         midiEvents->append(pcEvent);
@@ -317,7 +315,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
 
         c0Event->setRunningStatus(false);
         c0Event->setType(DuMidiChannelEvent::ControlChange);
-        c0Event->setChannel(channel);
+        c0Event->setChannel((quint8)channel);
         c0Event->setKey(0x00);
         c0Event->setValue(instrC0);
 
@@ -363,8 +361,9 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
                 return DuMidiTrackPtr();
             }
 
-            channelEvent->setTime((quint32)durationRef * durationMod
+            channelEvent->setTime((quint32)durationRef * (quint8)durationMod
                                   + tmpTime - prevTime, prevTime);
+            channelEvent->setChannel((quint8)channel);
         }
 
         else
@@ -378,6 +377,8 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
 
                 return DuMidiTrackPtr();
             }
+
+            channelEvent->setChannel((quint8)channel);
         }
 
         midiEvents->append(channelEvent);
@@ -389,7 +390,8 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
 
     //Adding EndOfTrack midi event
     DuMidiMetaEventPtr eotEvent(new DuMidiMetaEvent(prevTime));
-    eotEvent->setType(DuMidiMetaEvent::EndOfTrack);
+
+    eotEvent->setEndOfTrack();
     midiEvents->append(eotEvent);
 
 

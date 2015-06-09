@@ -338,17 +338,11 @@ QByteArray DuMusic::toMidiBinary() const
     }
 
 
-    //TODO: generate tempo track with data from DuHeader and DuSongInfo
-
     const QString &songName = header->getSongName();
     int tempo = songInfo->getTempo();
     int timeSig = songInfo->getTimeSignature();
     int tonality = songInfo->getTonality();
     int scale = songInfo->getScale();
-
-    DuMidiTrackPtr tempoTrack(new DuMidiTrack);
-
-
 
     int durationRef = songInfo->getReferenceLoopDuration();
     if (durationRef == -1)
@@ -359,8 +353,54 @@ QByteArray DuMusic::toMidiBinary() const
         return QByteArray();
     }
 
+
+    if (songName.isEmpty() || tempo == -1  ||  timeSig == -1
+            ||  tonality == -1  || scale == -1)
+    {
+        qCritical() << "DuMusic::toMidiBinary():\n"
+                    << "incorrect song data";
+
+        return QByteArray();
+    }
+
+
+    DuMidiTrackPtr tempoTrack(new DuMidiTrack);
+
+    DuMidiMetaEventPtr titleEvent(new DuMidiMetaEvent());
+
+    titleEvent->setTitle(songName);
+    tempoTrack->appendEvent(titleEvent);
+
+    DuMidiMetaEventPtr tempoEvent(new DuMidiMetaEvent());
+
+    tempoEvent->setTempo((quint8)tempo);
+    tempoTrack->appendEvent(tempoEvent);
+
+    if (timeSig > 0 && timeSig < 5)
+    {
+        DuMidiMetaEventPtr timeSigEvent(new DuMidiMetaEvent());
+
+        timeSigEvent->setTimeSignature((quint8)timeSig + 1);
+        tempoTrack->appendEvent(timeSigEvent);
+    }
+
+    if (scale > 0 && scale < 3)
+    {
+        DuMidiMetaEventPtr keySigEvent(new DuMidiMetaEvent());
+
+        keySigEvent->setKeySignature(((quint8)tonality + 11) % 12, (scale == 2));
+        tempoTrack->appendEvent(keySigEvent);
+    }
+
+    DuMidiMetaEventPtr eotEvent(new DuMidiMetaEvent());
+
+    eotEvent->setEndOfTrack();
+    tempoTrack->appendEvent(eotEvent);
+
+
     DuMidiFilePtr midiFile(new DuMidiFile());
-    //midiFile->appendTrack(tempoTrack);
+    midiFile->appendTrack(tempoTrack);
+
 
     for (int i = 0; i < MUSIC_MAXTRACK; i++)
     {
