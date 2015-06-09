@@ -5,6 +5,8 @@
 #include "instrument/duinstrument.h"
 #include "duevent.h"
 
+#include "../midifile/dumiditrack.h"
+
 
 #define KEY_LOOP_STATE              "State"
 #define KEY_LOOP_DURATIONMODIFIER   "DurationModifier"
@@ -29,6 +31,7 @@ public:
     static DuLoopPtr fromJson(const QJsonObject &jsonLoop);
 
     QByteArray toDuMusicBinary() const;
+    DuMidiTrackPtr toDuMidiTrack(int durationRef) const;
 
     int size() const;
 

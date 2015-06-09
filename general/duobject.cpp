@@ -21,6 +21,7 @@ DuObject::~DuObject()
 
 QByteArray DuObject::toMidiBinary() const
 {
+    Q_UNIMPLEMENTED();
     return QByteArray();
 }
 

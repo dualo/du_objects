@@ -154,6 +154,49 @@ QByteArray DuEvent::toDuMusicBinary() const
     return QByteArray((char *)&(du_sample), MUSIC_SAMPLE_SIZE);
 }
 
+DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
+                                                    quint8 prevType) const
+{
+    DuMidiChannelEventPtr channelEvent(new DuMidiChannelEvent);
+    int tmp = 0;
+
+
+    tmp = getTime();
+
+    if (tmp == -1)
+        return DuMidiChannelEventPtr();
+
+    channelEvent->setTime((quint32)tmp - prevTime, prevTime);
+
+
+    tmp = getControl();
+
+    if (tmp == -1)
+        return DuMidiChannelEventPtr();
+
+    channelEvent->setRunningStatus(((quint8)tmp + 0x08) == prevType);
+    channelEvent->setType((quint8)tmp + 0x08);
+
+
+    tmp = getNote();
+
+    if (tmp == -1)
+        return DuMidiChannelEventPtr();
+
+    channelEvent->setKey((quint8)tmp);
+
+
+    tmp = getValue();
+
+    if (tmp == -1)
+        return DuMidiChannelEventPtr();
+
+    channelEvent->setValue((quint8)tmp);
+
+
+    return channelEvent;
+}
+
 
 int DuEvent::size() const
 {

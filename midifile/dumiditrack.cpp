@@ -31,7 +31,8 @@ DuMidiTrackPtr DuMidiTrack::fromMidiBinary(QDataStream &stream)
 
     if (trackId != MIDI_TRACK_ID_VALUE)
     {
-        qCritical() << "The processed chunk is not a track";
+        qCritical() << "DuMidiTrack::fromMidiBinary():\n"
+                    << "the processed chunk is not a track";
 
         return DuMidiTrackPtr();
     }
@@ -85,7 +86,8 @@ DuMidiTrackPtr DuMidiTrack::fromMidiBinary(QDataStream &stream)
 
         if (event == NULL)
         {
-            qCritical() << "Problem encountered during event generation";
+            qCritical() << "DuMidiTrack::fromMidiBinary():\n"
+                        << "problem encountered during event generation";
 
             return DuMidiTrackPtr();
         }
@@ -134,10 +136,9 @@ QJsonValue DuMidiTrack::toJson() const
 int DuMidiTrack::size() const
 {
     const DuArrayConstPtr &events = getChildAs<DuArray>(KEY_MIDITRACK_EVENTS);
+
     if (events == NULL)
-    {
         return -1;
-    }
 
     return MIDI_TRACK_ID_SIZE + MIDI_TRACK_SIZE_SIZE + events->size();
 }
@@ -156,11 +157,9 @@ void DuMidiTrack::setEvents(const DuArrayPtr &array)
 bool DuMidiTrack::appendEvent(const DuMidiBasicEventPtr &event)
 {
     DuArrayPtr tmp = getChildAs<DuArray>(KEY_MIDITRACK_EVENTS);
-    if (tmp == NULL)
-    {
-        return false;
-    }
 
-    tmp->append(event);
-    return true;
+    if (tmp == NULL)
+        return false;
+
+    return tmp->append(event);
 }

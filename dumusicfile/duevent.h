@@ -4,6 +4,8 @@
 #include "../general/ducontainer.h"
 #include "../general/dunumeric.h"
 
+#include "../midifile/dumidichannelevent.h"
+
 
 #define KEY_EVENT_TIME          "Time"
 #define KEY_EVENT_CONTROL       "Control"
@@ -27,6 +29,7 @@ public:
     static DuEventPtr fromJson(const QJsonObject &jsonEvent);
 
     QByteArray toDuMusicBinary() const;
+    DuMidiChannelEventPtr toDuMidiChannelEvent(quint32 prevTime, quint8 prevType) const;
 
     int size() const;
 

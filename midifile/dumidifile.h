@@ -10,7 +10,6 @@
 #define MIDI_HEADER_CHUNK_SIZE          0x06
 
 #define DUMUSIC_DIVISION                0x0040
-#define MICROSECS_PER_MIN               60000000
 
 #define KEY_MIDIFILE_FORMAT             "Format"
 #define KEY_MIDIFILE_DIVISION           "Division"
@@ -45,6 +44,7 @@ public:
     DuArrayConstPtr getTracks() const;
     void setTracks(const DuArrayPtr &array);
     bool appendTrack(const DuMidiTrackPtr &track);
+    bool appendTracks(const QList<DuMidiTrackPtr> &tracks);
 };
 
 #endif // DUMIDIFILE_H

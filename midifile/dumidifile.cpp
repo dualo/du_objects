@@ -195,6 +195,23 @@ bool DuMidiFile::appendTrack(const DuMidiTrackPtr &track)
     if (tmp == NULL)
         return false;
 
-    tmp->append(track);
-    return true;
+    return tmp->append(track);
+}
+
+bool DuMidiFile::appendTracks(const QList<DuMidiTrackPtr> &tracks)
+{
+    DuArrayPtr tmp = getChildAs<DuArray>(KEY_MIDIFILE_TRACKS);
+
+    if (tmp == NULL)
+        return false;
+
+    bool ret = true;
+
+    //Qt doesn't convert DuMidiTrackPtr to DuObjectPtr in a QList
+    foreach (const DuMidiTrackPtr &track, tracks)
+    {
+        ret = ret && tmp->append(track);
+    }
+
+    return ret;
 }

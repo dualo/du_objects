@@ -6,6 +6,9 @@
 #include <QJsonObject>
 #include <QDebug>
 
+#include "../midifile/dumidifile.h"
+
+
 DU_OBJECT_IMPL(DuMusic)
 
 DuMusic::DuMusic() :
@@ -314,6 +317,65 @@ QByteArray DuMusic::toDuMusicBinary() const
 }
 
 
+QByteArray DuMusic::toMidiBinary() const
+{
+    const DuHeaderConstPtr &header = getHeader();
+    if (header == NULL)
+        return QByteArray();
+
+    const DuSongInfoConstPtr &songInfo = getSongInfo();
+    if (songInfo == NULL)
+        return QByteArray();
+
+    const DuArrayConstPtr &tracks = getTracks();
+
+    if (tracks == NULL)
+    {
+        qCritical() << "DuMusic::toMidiBinary():\n"
+                    << "could not retrieve track array";
+
+        return QByteArray();
+    }
+
+
+    //TODO: generate tempo track with data from DuHeader and DuSongInfo
+
+    const QString &songName = header->getSongName();
+    int tempo = songInfo->getTempo();
+    int timeSig = songInfo->getTimeSignature();
+    int tonality = songInfo->getTonality();
+    int scale = songInfo->getScale();
+
+    DuMidiTrackPtr tempoTrack(new DuMidiTrack);
+
+
+
+    int durationRef = songInfo->getReferenceLoopDuration();
+    if (durationRef == -1)
+    {
+        qCritical() << "DuMusic::toMidiBinary():\n"
+                    << "this du-music doesn't have a reference loop duration";
+
+        return QByteArray();
+    }
+
+    DuMidiFilePtr midiFile(new DuMidiFile());
+    //midiFile->appendTrack(tempoTrack);
+
+    for (int i = 0; i < MUSIC_MAXTRACK; i++)
+    {
+        const DuTrackConstPtr &track = tracks->at(i).dynamicCast<const DuTrack>();
+        if (track == NULL)
+            return QByteArray();
+
+        if (!midiFile->appendTracks(track->toDuMidiTrackArray(durationRef)))
+            return QByteArray();
+    }
+
+    return midiFile->toMidiBinary();
+}
+
+
 int DuMusic::size() const
 {
     int eventsSize = 0;
@@ -456,11 +518,9 @@ void DuMusic::setTracks(const DuArrayPtr &array)
 bool DuMusic::appendTrack(const DuTrackPtr &track)
 {
     DuArrayPtr tmp = getChildAs<DuArray>(KEY_MUSIC_TRACKS);
-    if (tmp == NULL)
-    {
-        return false;
-    }
 
-    tmp->append(track);
-    return true;
+    if (tmp == NULL)
+        return false;
+
+    return tmp->append(track);
 }

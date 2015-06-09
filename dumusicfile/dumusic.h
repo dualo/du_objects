@@ -10,6 +10,8 @@
 #define KEY_MUSIC_SONGINFO      "SongInfo"
 #define KEY_MUSIC_TRACKS        "Tracks"
 
+#define MICROSECS_PER_MIN       60000000
+
 
 DU_OBJECT(DuMusic)
 
@@ -27,6 +29,7 @@ public:
     static DuMusicPtr fromBinary(const QByteArray &data);
 
     QByteArray toDuMusicBinary() const;
+    QByteArray toMidiBinary() const;
 
     int size() const;
     bool isEmpty() const;

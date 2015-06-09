@@ -6,14 +6,15 @@
 #include <QJsonObject>
 #include <QDebug>
 
+
 DU_OBJECT_IMPL(DuLoop)
 
 DuLoop::DuLoop() :
     DuContainer()
 {
     addChild(KEY_LOOP_STATE,
-             new DuNumeric(0, NUMERIC_DEFAULT_SIZE,
-                           3, 0));
+             new DuNumeric(REC_EMPTY, NUMERIC_DEFAULT_SIZE,
+                           REC_PAUSE, REC_EMPTY));
 
     addChild(KEY_LOOP_DURATIONMODIFIER,
              new DuNumeric(MUSIC_LOOPMOD_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
@@ -41,7 +42,7 @@ DuObjectPtr DuLoop::clone() const
 DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
                                 const music_sample *du_sample)
 {
-    if (du_loop.l_state == 0)
+    if (du_loop.l_state == REC_EMPTY)
     {
         return DuLoopPtr(new DuLoop);
     }
@@ -196,9 +197,10 @@ QByteArray DuLoop::toDuMusicBinary() const
     std::memcpy((char *)&(du_loop), tmpClear.data(), size());
 
 
-    const DuInstrumentConstPtr& instrument = getInstrument();
+    const DuInstrumentConstPtr &instrument = getInstrument();
     if (instrument == NULL)
         return QByteArray();
+
     const QByteArray &instrumentArray = instrument->toDuMusicBinary();
     if (instrumentArray.isNull())
         return QByteArray();
@@ -230,6 +232,171 @@ QByteArray DuLoop::toDuMusicBinary() const
     return QByteArray((char *)&(du_loop), size());
 }
 
+DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
+{
+    if (getState() == REC_EMPTY)
+    {
+        qWarning() << "DuLoop::toDuMidiTrack():\n"
+                   << "this loop is empty";
+
+        return DuMidiTrackPtr();
+    }
+
+    quint8 channel = getMidiOutChannel();
+    if (channel == -1)
+    {
+        qCritical()  << "DuLoop::toDuMidiTrack():\n"
+                     << "this loop doesn't have a midi out channel";
+
+        return DuMidiTrackPtr();
+    }
+
+    quint8 durationMod = getDurationModifier();
+    if (durationMod == -1)
+    {
+        qCritical()  << "DuLoop::toDuMidiTrack():\n"
+                     << "this loop doesn't have a duration modifier";
+
+        return DuMidiTrackPtr();
+    }
+
+    const DuInstrumentConstPtr instrument = getInstrument();
+    if (instrument == NULL)
+    {
+        qCritical() << "DuLoop::toDuMidiTrack():\n"
+                    << "this loop doesn't have an instrument";
+
+        return DuMidiTrackPtr();
+    }
+
+    const DuInstrumentInfoConstPtr instrInfo = instrument->getInstrumentInfo();
+    if (instrInfo == NULL)
+    {
+        qCritical() << "DuLoop::toDuMidiTrack():\n"
+                    << "this loop's instrument doesn't have info";
+
+        return DuMidiTrackPtr();
+    }
+
+    DuMidiTrackPtr midiTrack(new DuMidiTrack);
+    DuArrayPtr midiEvents(new DuArray);
+
+    QString instrName = instrInfo->getName();
+    quint8 instrPC = instrInfo->getMidiProgramChange();
+    quint8 instrC0 = instrInfo->getMidiControlChange0();
+
+    quint32 prevTime = 0;
+    quint8 prevType = 0;
+
+    if (!instrName.isEmpty())
+    {
+        DuMidiMetaEventPtr nameEvent(new DuMidiMetaEvent(prevTime));
+
+        nameEvent->setType(DuMidiMetaEvent::Instrument);
+        nameEvent->setData(instrName.toUtf8());
+
+        midiEvents->append(nameEvent);
+    }
+
+    if (instrPC != -1)
+    {
+        DuMidiChannelEventPtr pcEvent(new DuMidiChannelEvent(prevTime));
+
+        pcEvent->setRunningStatus(false);
+        pcEvent->setType(DuMidiChannelEvent::ProgramChange);
+        pcEvent->setChannel(channel);
+        pcEvent->setValue(instrPC);
+
+        midiEvents->append(pcEvent);
+        prevType = DuMidiChannelEvent::ProgramChange;
+    }
+
+    if (instrC0 != -1)
+    {
+        DuMidiChannelEventPtr c0Event(new DuMidiChannelEvent(prevTime));
+
+        c0Event->setRunningStatus(false);
+        c0Event->setType(DuMidiChannelEvent::ControlChange);
+        c0Event->setChannel(channel);
+        c0Event->setKey(0x00);
+        c0Event->setValue(instrC0);
+
+        midiEvents->append(c0Event);
+        prevType = DuMidiChannelEvent::ControlChange;
+    }
+
+
+    const DuArrayConstPtr &events = getEvents();
+    if (events == NULL)
+    {
+        qCritical() << "DuLoop::toDuMidiTrack():\n"
+                    << "this loop's event list was NULL";
+
+        return DuMidiTrackPtr();
+    }
+
+    int count = events->count();
+
+    for (int i = 0; i < count; i++)
+    {
+        const DuEventConstPtr &event = events->at(i).dynamicCast<const DuEvent>();
+        if (event == NULL)
+        {
+            qCritical() << "DuLoop::toDuMidiTrack():\n"
+                        << "an event in this loop was NULL";
+
+            return DuMidiTrackPtr();
+        }
+
+        quint32 tmpTime = (quint32)event->getTime();
+        DuMidiChannelEventPtr channelEvent;
+
+        if (tmpTime < prevTime)
+        {
+            channelEvent = event->toDuMidiChannelEvent(0, prevType);
+            if (channelEvent == NULL)
+            {
+                qCritical() << "DuLoop::toDuMidiTrack():\n"
+                            << "an event in this loop was not"
+                            << "properly converted to midi";
+
+                return DuMidiTrackPtr();
+            }
+
+            channelEvent->setTime((quint32)durationRef * durationMod
+                                  + tmpTime - prevTime, prevTime);
+        }
+
+        else
+        {
+            channelEvent = event->toDuMidiChannelEvent(prevTime, prevType);
+            if (channelEvent == NULL)
+            {
+                qCritical() << "DuLoop::toDuMidiTrack():\n"
+                            << "an event in this loop was not"
+                            << "properly converted to midi";
+
+                return DuMidiTrackPtr();
+            }
+        }
+
+        midiEvents->append(channelEvent);
+
+        prevTime = channelEvent->getTime();
+        prevType = channelEvent->getType();
+    }
+
+
+    //Adding EndOfTrack midi event
+    DuMidiMetaEventPtr eotEvent(new DuMidiMetaEvent(prevTime));
+    eotEvent->setType(DuMidiMetaEvent::EndOfTrack);
+    midiEvents->append(eotEvent);
+
+
+    midiTrack->setEvents(midiEvents);
+    return midiTrack;
+}
+
 
 int DuLoop::size() const
 {
@@ -249,7 +416,7 @@ int DuLoop::getState() const
 
 bool DuLoop::setState(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_LOOP_STATE);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_LOOP_STATE);
 
     if (tmp == NULL)
         return false;
@@ -269,7 +436,7 @@ int DuLoop::getDurationModifier() const
 
 bool DuLoop::setDurationModifier(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_LOOP_DURATIONMODIFIER);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_LOOP_DURATIONMODIFIER);
 
     if (tmp == NULL)
         return false;
@@ -289,7 +456,7 @@ int DuLoop::getMidiOutChannel() const
 
 bool DuLoop::setMidiOutChannel(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_LOOP_MIDIOUTCHANNEL);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_LOOP_MIDIOUTCHANNEL);
 
     if (tmp == NULL)
         return false;
@@ -341,7 +508,7 @@ int DuLoop::countEvents() const
 
 bool DuLoop::appendEvent(const DuEventPtr &event)
 {
-    DuArrayPtr tmp = getChildAs<DuArray>(KEY_LOOP_EVENTS);
+    const DuArrayPtr &tmp = getChildAs<DuArray>(KEY_LOOP_EVENTS);
 
     if (tmp == NULL)
         return false;

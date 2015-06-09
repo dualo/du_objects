@@ -183,7 +183,7 @@ void DuArray::setMaxSize(int value)
 }
 
 
-void DuArray::append(const DuObjectPtr &element)
+bool DuArray::append(const DuObjectPtr &element)
 {
     if (maxSize != -1 && array.count() == maxSize)
     {
@@ -192,15 +192,16 @@ void DuArray::append(const DuObjectPtr &element)
                    << "the array already reached its"
                    << "maximum size" << maxSize;
 
-        return;
+        return false;
     }
 
     array.append(element);
+    return true;
 }
 
 void DuArray::insert(int index, const DuObjectPtr &element)
 {
-    if (index >= array.count())
+    if (index > array.count())
     {
         qWarning() << "DuArray::insert():\n"
                    << index << "is above element count\n"
@@ -259,9 +260,9 @@ DuObjectPtr DuArray::at(int index)
     {
         qWarning() << "DuArray::at():\n"
                    << index << "is above element count\n"
-                   << "default constructed value returned";
+                   << "last element returned";
 
-        return DuObjectPtr();
+        return array.last();
     }
 
     return array.at(index);
@@ -273,9 +274,9 @@ DuObjectConstPtr DuArray::at(int index) const
     {
         qWarning() << "DuArray::at():\n"
                    << index << "is above element count\n"
-                   << "default constructed value returned";
+                   << "last element returned";
 
-        return DuObjectConstPtr();
+        return array.last();
     }
 
     return array.at(index);

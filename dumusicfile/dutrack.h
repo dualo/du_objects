@@ -27,6 +27,7 @@ public:
     static DuTrackPtr fromJson(const QJsonObject &jsonTrack);
 
     QByteArray toDuMusicBinary() const;
+    QList<DuMidiTrackPtr> toDuMidiTrackArray(int durationRef) const;
 
     int size() const;
 

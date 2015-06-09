@@ -8,6 +8,7 @@ DU_OBJECT_IMPL(DuBinaryData)
 DuBinaryData::DuBinaryData(int maxSize) :
     DuValue(maxSize)
 {
+    resize(0);
 }
 
 DuBinaryData::~DuBinaryData()

@@ -181,7 +181,7 @@ QByteArray DuTrack::toDuMusicBinary() const
     std::memcpy((char *)&(du_track), tmpClear.data(), size());
 
 
-    const DuArrayConstPtr& loops = getLoops();
+    const DuArrayConstPtr &loops = getLoops();
     if (loops == NULL)
         return QByteArray();
     const QByteArray &loopsArray = loops->toDuMusicBinary();
@@ -206,6 +206,40 @@ QByteArray DuTrack::toDuMusicBinary() const
 }
 
 
+QList<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef) const
+{
+    const DuArrayConstPtr &loops = getLoops();
+    if (loops == NULL)
+    {
+        qCritical() << "DuTrack::toDuMidiTrackArray():\n"
+                    << "could not retrieve loop array";
+
+        return QList<DuMidiTrackPtr>();
+    }
+
+    QList<DuMidiTrackPtr> retList;
+
+    for (int i = 0; i < MUSIC_MAXLAYER; i++)
+    {
+        const DuLoopConstPtr &loop = loops->at(i).dynamicCast<const DuLoop>();
+        if (loop == NULL)
+        {
+            qCritical() << "DuTrack::toDuMidiTrackArray():\n"
+                        << "a loop was NULL";
+
+            return QList<DuMidiTrackPtr>();
+        }
+
+        const DuMidiTrackPtr &midiTrack = loop->toDuMidiTrack(durationRef);
+
+        if (midiTrack != NULL)
+            retList.append(midiTrack);
+    }
+
+    return retList;
+}
+
+
 int DuTrack::size() const
 {
     return MUSIC_TRACK_SIZE;
@@ -224,7 +258,7 @@ int DuTrack::getChannel() const
 
 bool DuTrack::setChannel(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_TRACK_CHANNEL);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_TRACK_CHANNEL);
 
     if (tmp == NULL)
         return false;
@@ -244,7 +278,7 @@ int DuTrack::getCurrentLoop() const
 
 bool DuTrack::setCurrentLoop(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_TRACK_CURRENTLOOP);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_TRACK_CURRENTLOOP);
 
     if (tmp == NULL)
         return false;
@@ -264,13 +298,12 @@ void DuTrack::setLoops(const DuArrayPtr& array)
 
 bool DuTrack::appendLoop(const DuLoopPtr &loop)
 {
-    DuArrayPtr tmp = getChildAs<DuArray>(KEY_TRACK_LOOPS);
+    const DuArrayPtr &tmp = getChildAs<DuArray>(KEY_TRACK_LOOPS);
 
     if (tmp == NULL)
         return false;
 
-    tmp->append(loop);
-    return true;
+    return tmp->append(loop);
 }
 
 
@@ -279,14 +312,14 @@ int DuTrack::eventsSize() const
     int eventsSize = 0;
     int tmpSize = 0;
 
-    const DuArrayConstPtr& loops = getChildAs<DuArray>(KEY_TRACK_LOOPS);
+    const DuArrayConstPtr &loops = getChildAs<DuArray>(KEY_TRACK_LOOPS);
     if (loops == NULL)
         return -1;
 
     int count = loops->count();
     for (int i = 0; i < count; i++)
     {
-        const DuLoopConstPtr& loop = loops->at(i).dynamicCast<const DuLoop>();
+        const DuLoopConstPtr &loop = loops->at(i).dynamicCast<const DuLoop>();
         if (loop == NULL)
             return -1;
 
