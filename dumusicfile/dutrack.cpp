@@ -50,6 +50,19 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
     for (int i = 0; i < MUSIC_MAXLAYER; i++)
     {
         const music_loop &du_loop = du_track.t_loop[i];
+
+        if (RECORD_SAMPLEBUFFERSIZE * sizeof(music_sample) < du_loop.l_adress + sizeof(music_sample))
+        {
+            qCritical() << "DuTrack::fromDuMusicBinary():\n"
+                        << "failed to generate DuTrack\n"
+                        << "invalid number of events\n"
+                        << "(du_sample size =" << (RECORD_SAMPLEBUFFERSIZE * sizeof(music_sample))
+                        << ", du_loop.l_adress =" << du_loop.l_adress
+                        << ", sizeof(music_sample) =" << sizeof(music_sample) << ")";
+
+            return DuTrackPtr();
+        }
+
         const music_sample *du_sample_address = (music_sample*)
                 ((long)du_sample + du_loop.l_adress);
 

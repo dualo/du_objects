@@ -27,7 +27,8 @@ DuEvent::DuEvent(int time, int control, int keyboard, int note, int value) :
                            0x7F, 0x00, 0x40));
 }
 
-DuEvent::DuEvent()
+DuEvent::DuEvent() :
+    DuContainer()
 {
     addChild(KEY_EVENT_TIME, new DuNumeric(0));
 
