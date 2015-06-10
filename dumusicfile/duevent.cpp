@@ -128,27 +128,27 @@ QByteArray DuEvent::toDuMusicBinary() const
     tmpNum = getTime();
     if (tmpNum == -1)
         return QByteArray();
-    du_sample.time = tmpNum;
+    du_sample.time = (quint32)tmpNum;
 
     tmpNum = getControl();
     if (tmpNum == -1)
         return QByteArray();
-    du_sample.control = tmpNum;
+    du_sample.control = (quint8)tmpNum;
 
     tmpNum = getKeyboard();
     if (tmpNum == -1)
         return QByteArray();
-    du_sample.canal = tmpNum;
+    du_sample.canal = (quint8)tmpNum;
 
     tmpNum = getNote();
     if (tmpNum == -1)
         return QByteArray();
-    du_sample.note = ((du_sample.canal << 4) & 0x80) | tmpNum;
+    du_sample.note = ((du_sample.canal << 4) & 0x80) | (quint8)tmpNum;
 
     tmpNum = getValue();
     if (tmpNum == -1)
         return QByteArray();
-    du_sample.value = tmpNum;
+    du_sample.value = (quint8)tmpNum;
 
 
     return QByteArray((char *)&(du_sample), MUSIC_SAMPLE_SIZE);
@@ -216,7 +216,7 @@ int DuEvent::getTime() const
 
 bool DuEvent::setTime(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_EVENT_TIME);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_TIME);
 
     if (tmp == NULL)
         return false;
@@ -237,7 +237,7 @@ int DuEvent::getControl() const
 
 bool DuEvent::setControl(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_EVENT_CONTROL);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_CONTROL);
 
     if (tmp == NULL)
         return false;
@@ -258,7 +258,7 @@ int DuEvent::getKeyboard() const
 
 bool DuEvent::setKeyboard(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_EVENT_KEYBOARD);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_KEYBOARD);
 
     if (tmp == NULL)
         return false;
@@ -279,7 +279,7 @@ int DuEvent::getNote() const
 
 bool DuEvent::setNote(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_EVENT_NOTE);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_NOTE);
 
     if (tmp == NULL)
         return false;
@@ -300,7 +300,7 @@ int DuEvent::getValue() const
 
 bool DuEvent::setValue(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_EVENT_VALUE);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_VALUE);
 
     if (tmp == NULL)
         return false;

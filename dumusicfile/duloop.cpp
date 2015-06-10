@@ -48,6 +48,10 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
     }
 
     DuLoopPtr loop = fromDuMusicBinary(du_loop);
+    if (loop == NULL)
+    {
+        return DuLoopPtr();
+    }
 
 
     for (int i = 0; i < du_loop.l_numsample; i++)
@@ -90,10 +94,8 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop)
 
     if (!verif)
     {
-        qCritical() << "DuLoop::fromDuMusicBinary():\n"
-                    << "an attribute was not properly set";
-
-        return DuLoopPtr();
+        qWarning() << "DuLoop::fromDuMusicBinary():\n"
+                   << "an attribute was not properly set";
     }
 
     const DuInstrumentPtr &instrument =
