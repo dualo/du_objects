@@ -1,4 +1,4 @@
-#include "dudevicemusiclist.h"
+#include "dudevicelist.h"
 
 #include "general/dustring.h"
 
