@@ -1,15 +1,15 @@
-#ifndef DUMUSICLIST_H
-#define DUMUSICLIST_H
+#ifndef DULIST_H
+#define DULIST_H
 
 #include "general/ducontainer.h"
 
-#define KEY_MUSIC_LIST_NAME "Name"
-#define KEY_MUSIC_LIST_TYPE "Type"
+#define KEY_LIST_NAME "Name"
+#define KEY_LIST_TYPE "Type"
 
 
-DU_OBJECT(DuMusicList)
+DU_OBJECT(DuList)
 
-class DuMusicList : public DuContainer
+class DuList : public DuContainer
 {
 public:
     enum Type
@@ -26,11 +26,11 @@ public:
         // Keep in sync with DuMusicListObject::Type
     };
 
-    DuMusicList(const QString& name = "", Type type = None);
+    DuList(const QString& name = "", Type type = None);
 
     virtual DuObjectPtr clone() const;
 
-    virtual bool equals(const DuMusicListConstPtr& other) const;
+    virtual bool equals(const DuListConstPtr& other) const;
 
     QString getName() const;
     bool setName(const QString& value);
@@ -39,7 +39,7 @@ public:
     virtual bool setType(Type value);
 };
 
-Q_DECLARE_METATYPE(DuMusicListPtr)
-Q_DECLARE_METATYPE(DuMusicListConstPtr)
+Q_DECLARE_METATYPE(DuListPtr)
+Q_DECLARE_METATYPE(DuListConstPtr)
 
-#endif // DUMUSICLIST_H
+#endif // DULIST_H
