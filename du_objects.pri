@@ -40,9 +40,9 @@ HEADERS += \
     $$PWD/midifile/dumidifile.h \
     $$PWD/dudevice.h \
     $$PWD/dutouch.h \
+    $$PWD/dumusiclist.h \
     $$PWD/dudevicemusiclist.h \
-    $$PWD/duprofile.h \
-    $$PWD/dulist.h
+    $$PWD/duprofile.h
 
 SOURCES += \
     $$PWD/general/duobject.cpp \
@@ -84,6 +84,6 @@ SOURCES += \
     $$PWD/midifile/dumidifile.cpp \
     $$PWD/dudevice.cpp \
     $$PWD/dutouch.cpp \
+    $$PWD/dumusiclist.cpp \
     $$PWD/dudevicemusiclist.cpp \
-    $$PWD/duprofile.cpp \
-    $$PWD/dulist.cpp
+    $$PWD/duprofile.cpp

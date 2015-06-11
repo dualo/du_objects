@@ -1,22 +1,22 @@
-#ifndef DUDEVICELIST_H
-#define DUDEVICELIST_H
+#ifndef DUDEVICEMUSICLIST_H
+#define DUDEVICEMUSICLIST_H
 
 #include "dudevice.h"
-#include "dulist.h"
+#include "dumusiclist.h"
 
-#define KEY_DEVICE_LIST_SERIAL_NUMBER "SerialNumber"
+#define KEY_DEVICE_MUSIC_LIST_SERIAL_NUMBER "SerialNumber"
 
 
-DU_OBJECT(DuDeviceList)
+DU_OBJECT(DuDeviceMusicList)
 
-class DuDeviceList : public DuList
+class DuDeviceMusicList : public DuMusicList
 {
 public:
-    DuDeviceList(const DuDeviceConstPtr &device);
+    DuDeviceMusicList(const DuDeviceConstPtr &device);
 
     virtual DuObjectPtr clone() const;
 
-    bool equals(const DuListConstPtr& other) const;
+    bool equals(const DuMusicListConstPtr& other) const;
 
     QString getSerialNumber() const;
     bool setSerialNumber(const QString& value);
@@ -34,4 +34,4 @@ private:
     bool busy;
 };
 
-#endif // DUDEVICELIST_H
+#endif // DUDEVICEMUSICLIST_H

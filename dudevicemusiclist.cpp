@@ -4,29 +4,29 @@
 
 #include <QDebug>
 
-DU_OBJECT_IMPL(DuDeviceList)
+DU_OBJECT_IMPL(DuDeviceMusicList)
 
-DuDeviceList::DuDeviceList(const DuDeviceConstPtr& device) :
-    DuList(device->getDisplayName(), Device),
+DuDeviceMusicList::DuDeviceMusicList(const DuDeviceConstPtr& device) :
+    DuMusicList(device->getDisplayName(), Device),
     connected(device->getConnected()),
     busy(device->getBusy())
 {
-    addChild(KEY_DEVICE_LIST_SERIAL_NUMBER, new DuString(device->getSerialNumber()));
+    addChild(KEY_DEVICE_MUSIC_LIST_SERIAL_NUMBER, new DuString(device->getSerialNumber()));
 }
 
-DuObjectPtr DuDeviceList::clone() const
+DuObjectPtr DuDeviceMusicList::clone() const
 {
-    return DuDeviceListPtr(new DuDeviceList(*this));
+    return DuDeviceMusicListPtr(new DuDeviceMusicList(*this));
 }
 
-bool DuDeviceList::equals(const DuListConstPtr& other) const
+bool DuDeviceMusicList::equals(const DuMusicListConstPtr& other) const
 {
     if (other->getType() != Device)
     {
         return false;
     }
 
-    const DuDeviceListConstPtr& casted = other.dynamicCast<const DuDeviceList>();
+    const DuDeviceMusicListConstPtr& casted = other.dynamicCast<const DuDeviceMusicList>();
     if (casted == NULL)
     {
         return false;
@@ -35,22 +35,22 @@ bool DuDeviceList::equals(const DuListConstPtr& other) const
     return this->getSerialNumber() == casted->getSerialNumber();
 }
 
-QString DuDeviceList::getSerialNumber() const
+QString DuDeviceMusicList::getSerialNumber() const
 {
-    const DuStringConstPtr serialNumber = getChildAs<DuString>(KEY_DEVICE_LIST_SERIAL_NUMBER);
+    const DuStringConstPtr serialNumber = getChildAs<DuString>(KEY_DEVICE_MUSIC_LIST_SERIAL_NUMBER);
 
     if (serialNumber == NULL)
     {
-        qCritical() << "Unable to cast" << KEY_DEVICE_LIST_SERIAL_NUMBER << "to DuString*";
+        qCritical() << "Unable to cast" << KEY_DEVICE_MUSIC_LIST_SERIAL_NUMBER << "to DuString*";
         return QString();
     }
 
     return serialNumber->getString();
 }
 
-bool DuDeviceList::setSerialNumber(const QString &value)
+bool DuDeviceMusicList::setSerialNumber(const QString &value)
 {
-    DuStringPtr tmp = getChildAs<DuString>(KEY_DEVICE_LIST_SERIAL_NUMBER);
+    DuStringPtr tmp = getChildAs<DuString>(KEY_DEVICE_MUSIC_LIST_SERIAL_NUMBER);
 
     if (tmp == NULL)
         return false;
@@ -58,27 +58,27 @@ bool DuDeviceList::setSerialNumber(const QString &value)
     return tmp->setString(value);
 }
 
-bool DuDeviceList::getConnected() const
+bool DuDeviceMusicList::getConnected() const
 {
     return connected;
 }
 
-void DuDeviceList::setConnected(bool value)
+void DuDeviceMusicList::setConnected(bool value)
 {
     connected = value;
 }
 
-bool DuDeviceList::getBusy() const
+bool DuDeviceMusicList::getBusy() const
 {
     return busy;
 }
 
-void DuDeviceList::setBusy(bool value)
+void DuDeviceMusicList::setBusy(bool value)
 {
     busy = value;
 }
 
-bool DuDeviceList::setType(Type value)
+bool DuDeviceMusicList::setType(Type value)
 {
     Q_UNREACHABLE();
     Q_UNUSED(value)
