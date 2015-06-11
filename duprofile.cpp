@@ -15,7 +15,8 @@
 
 DU_OBJECT_IMPL(DuProfile)
 
-DuProfile::DuProfile()
+DuProfile::DuProfile() :
+    DuContainer()
 {
     addChild(KEY_PROFILE_FIRSTNAME,     new DuString(""));
     addChild(KEY_PROFILE_LASTNAME,      new DuString(""));
