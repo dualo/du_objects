@@ -33,7 +33,7 @@ DuObjectPtr DuTrack::clone() const
 
 
 DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
-                                  const music_sample *du_sample)
+                                  const music_sample *du_sample_start)
 {
     const DuTrackPtr track(new DuTrack);
     bool verif = true;
@@ -51,20 +51,21 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
     {
         const music_loop &du_loop = du_track.t_loop[i];
 
-        if (RECORD_SAMPLEBUFFERSIZE * sizeof(music_sample) < du_loop.l_adress + sizeof(music_sample))
+        int sampleSize = sizeof(music_sample);
+        if (RECORD_SAMPLEBUFFERSIZE * sampleSize < du_loop.l_adress + sampleSize)
         {
             qCritical() << "DuTrack::fromDuMusicBinary():\n"
                         << "failed to generate DuTrack\n"
                         << "invalid number of events\n"
-                        << "(du_sample size =" << (RECORD_SAMPLEBUFFERSIZE * sizeof(music_sample))
+                        << "(du_sample size =" << (RECORD_SAMPLEBUFFERSIZE * sampleSize)
                         << ", du_loop.l_adress =" << du_loop.l_adress
-                        << ", sizeof(music_sample) =" << sizeof(music_sample) << ")";
+                        << ", sizeof(music_sample) =" << sampleSize << ")";
 
             return DuTrackPtr();
         }
 
         const music_sample *du_sample_address = (music_sample*)
-                ((long)du_sample + du_loop.l_adress);
+                ((long)du_sample_start + du_loop.l_adress);
 
         const DuLoopPtr &loop =
                 DuLoop::fromDuMusicBinary(du_loop, du_sample_address);
@@ -159,13 +160,22 @@ DuTrackPtr DuTrack::fromJson(const QJsonObject &jsonTrack)
     }
 
     const QJsonArray &jsonLoopArray = jsonLoops.toArray();
+    if (jsonLoopArray.count() != MUSIC_MAXLAYER)
+    {
+        qCritical() << "DuTrack::fromJson():\n"
+                    << "failed to generate DuTrack\n"
+                    << "json file does not contain the proper amount of tracks";
+
+        return DuTrackPtr();
+    }
+
     for (int i = 0; i < jsonLoopArray.count(); i++)
     {
         const DuLoopPtr &loop = DuLoop::fromJson(jsonLoopArray[i].toObject());
         if (loop == NULL)
         {
             qCritical() << "DuTrack::fromJson():\n"
-                        << "failed to generate DuLoop\n"
+                        << "failed to generate DuTrack\n"
                         << "a DuLoop was not properly generated";
 
             return DuTrackPtr();
@@ -173,7 +183,7 @@ DuTrackPtr DuTrack::fromJson(const QJsonObject &jsonTrack)
         if (!track->appendLoop(loop))
         {
             qCritical() << "DuTrack::fromJson():\n"
-                        << "failed to generate DuLoop\n"
+                        << "failed to generate DuTrack\n"
                         << "a DuLoop was not properly appended";
 
             return DuTrackPtr();

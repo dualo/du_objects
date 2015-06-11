@@ -34,20 +34,20 @@ DuSongInfo::DuSongInfo() :
                            MUSIC_TEMPOVOL_MAXVALUE, MUSIC_TEMPOVOL_MINVALUE));
 
     addChild(KEY_SONG_GAIN,
-             new DuNumeric(0x7F, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
+             new DuNumeric(FX_MIX_INGAIN_MAXVALUE, NUMERIC_DEFAULT_SIZE,
+                           FX_MIX_INGAIN_MAXVALUE, FX_MIX_INGAIN_MINVALUE));
 
     addChild(KEY_SONG_LOWCUTFILTERFREQ,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
+             new DuNumeric(FX_MIX_LCFREQ_MINVALUE, NUMERIC_DEFAULT_SIZE,
+                           FX_MIX_LCFREQ_MAXVALUE, FX_MIX_LCFREQ_MINVALUE));
 
     addChild(KEY_SONG_HIGHCUTFILTERFREQ,
-             new DuNumeric(0x7F, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
+             new DuNumeric(FX_MIX_HCFREQ_MAXVALUE, NUMERIC_DEFAULT_SIZE,
+                           FX_MIX_HCFREQ_MAXVALUE, FX_MIX_HCFREQ_MINVALUE));
 
     addChild(KEY_SONG_SCALE,
-             new DuNumeric(1, NUMERIC_DEFAULT_SIZE,
-                           8, 0));
+             new DuNumeric(MAJOR_LED_MODE, NUMERIC_DEFAULT_SIZE,
+                           NUM_LED_MODE, NONE_LED_MODE));
 
     addChild(KEY_SONG_TONALITY,
              new DuNumeric(1, NUMERIC_DEFAULT_SIZE,

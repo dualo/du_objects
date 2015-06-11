@@ -32,8 +32,18 @@ DuObjectPtr DuMusic::clone() const
 }
 
 
-DuMusicPtr DuMusic::fromDuMusicBinary(const s_total_buffer &du_music)
+DuMusicPtr DuMusic::fromDuMusicBinary(const s_total_buffer &du_music, int fileSize)
 {
+    if (fileSize - MUSIC_SONG_SIZE !=
+            du_music.local_song.s_totalsample * MUSIC_SAMPLE_SIZE)
+    {
+        qCritical() << "DuMusic::fromDuMusicBinary():\n"
+                    << "failed to generate DuMusic\n"
+                    << "invalid total event size";
+
+        return DuMusicPtr();
+    }
+
     DuMusicPtr music(new DuMusic);
 
     const DuHeaderPtr &header =
@@ -188,6 +198,15 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
     }
 
     const QJsonArray &jsonTrackArray = jsonTracks.toArray();
+    if (jsonTrackArray.count() != MUSIC_MAXTRACK)
+    {
+        qCritical() << "DuMusic::fromJson():\n"
+                    << "failed to generate DuMusic\n"
+                    << "json file does not contain the proper amount of tracks";
+
+        return DuMusicPtr();
+    }
+
     for (int i = 0; i < jsonTrackArray.count(); i++)
     {
         const DuTrackPtr &track = DuTrack::fromJson(jsonTrackArray[i].toObject());
@@ -212,14 +231,42 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
     return music;
 }
 
+
 DuMusicPtr DuMusic::fromBinary(const QByteArray &data)
 {
+    int sizeTest = data.size() - MUSIC_SONG_SIZE;
+    if (sizeTest < 0 || sizeTest > RECORD_SAMPLEBUFFERSIZE)
+    {
+        qCritical() << "DuMusic::fromBinary():\n"
+                    << "failed to generate DuMusic\n"
+                    << "this file is not a dumusic file";
+
+        return DuMusicPtr();
+    }
+
     QScopedPointer<s_total_buffer> temp_total_buffer(new s_total_buffer);
 
     std::memcpy((char *)(temp_total_buffer.data()), data.data(), data.size());
 
-    return DuMusic::fromDuMusicBinary(*temp_total_buffer);
+    return DuMusic::fromDuMusicBinary(*temp_total_buffer, data.size());
 }
+
+DuMusicPtr DuMusic::fromBinary(QIODevice *input)
+{
+    QByteArray array = input->readAll();
+
+    if (array.isEmpty())
+    {
+        qCritical() << "DuMusic::fromBinary():\n"
+                    << "failed to generate DuMusic\n"
+                    << "selected file could not be read";
+
+        return DuMusicPtr();
+    }
+
+    return DuMusic::fromBinary(array);
+}
+
 
 QByteArray DuMusic::toDuMusicBinary() const
 {

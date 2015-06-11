@@ -22,7 +22,7 @@ public:
     virtual DuObjectPtr clone() const;
 
     static DuTrackPtr fromDuMusicBinary(const music_track &du_track,
-                                        const music_sample *du_sample);
+                                        const music_sample *du_sample_start);
     static DuTrackPtr fromDuMusicBinary(const music_track &du_track);
     static DuTrackPtr fromJson(const QJsonObject &jsonTrack);
 

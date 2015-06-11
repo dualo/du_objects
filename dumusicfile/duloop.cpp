@@ -50,6 +50,7 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
     DuLoopPtr loop = fromDuMusicBinary(du_loop);
     if (loop == NULL)
     {
+        //A Critical Message was already issued.
         return DuLoopPtr();
     }
 
@@ -88,6 +89,19 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop)
     DuLoopPtr loop(new DuLoop);
     bool verif = true;
 
+    const DuInstrumentPtr &instrument =
+            DuInstrument::fromDuMusicBinary(du_loop.l_instr);
+    if (instrument != NULL)
+        loop->setInstrument(instrument);
+    else
+    {
+        qCritical() << "DuLoop::fromDuMusicBinary():\n"
+                    << "failed to generate DuLoop\n"
+                    << "the DuInstrument was not properly generated";
+
+        return DuLoopPtr();
+    }
+
     verif = verif && loop->setState(du_loop.l_state);
     verif = verif && loop->setDurationModifier(du_loop.l_loopmod);
     verif = verif && loop->setMidiOutChannel(du_loop.l_midioutchannel);
@@ -97,18 +111,6 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop)
         qWarning() << "DuLoop::fromDuMusicBinary():\n"
                    << "an attribute was not properly set";
     }
-
-    const DuInstrumentPtr &instrument =
-            DuInstrument::fromDuMusicBinary(du_loop.l_instr);
-    if (instrument == NULL)
-    {
-        qCritical() << "DuLoop::fromDuMusicBinary():\n"
-                    << "failed to generate DuLoop\n"
-                    << "the DuInstrument was not properly generated";
-
-        return DuLoopPtr();
-    }
-    loop->setInstrument(instrument);
 
     return loop;
 }
@@ -163,6 +165,7 @@ DuLoopPtr DuLoop::fromJson(const QJsonObject &jsonLoop)
     }
 
     const QJsonArray &jsonEventArray = jsonEvents.toArray();
+
     for (int i = 0; i < jsonEventArray.count(); i++)
     {
         const DuEventPtr &event =

@@ -68,7 +68,7 @@ DuEventPtr DuEvent::fromDuMusicBinary(const music_sample &du_sample)
     verif = verif && event->setControl(du_sample.control);
     verif = verif && event->setKeyboard(du_sample.canal);
     verif = verif && event->setNote(du_sample.note & 0x7F);
-    verif = verif && event->setValue(du_sample.value);
+    verif = verif && event->setValue(du_sample.value & 0x7F);
 
     if (!verif)
     {
