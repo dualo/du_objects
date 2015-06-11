@@ -23,7 +23,7 @@ public:
         Lessons,
         Shop
 
-        // Keep in sync with DuMusicListObject::Type
+        // Keep in sync with DuListObject::Type
     };
 
     DuList(const QString& name = "", Type type = None);
