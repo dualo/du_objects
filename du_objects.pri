@@ -1,6 +1,7 @@
 HEADERS += \
     $$PWD/du-touch/parameters/music_parameters_mng.h \
     $$PWD/du-touch/parameters/sound_parameters_mng.h \
+    $$PWD/du-touch/parameters/g_parameters_mng.h \
     $$PWD/general/duobject.h \
     $$PWD/general/ducontainer.h \
     $$PWD/general/duarray.h \
@@ -42,7 +43,8 @@ HEADERS += \
     $$PWD/dutouch.h \
     $$PWD/dulist.h \
     $$PWD/dudevicelist.h \
-    $$PWD/duprofile.h
+    $$PWD/duprofile.h \
+    $$PWD/dusoundfile/dusound.h
 
 SOURCES += \
     $$PWD/general/duobject.cpp \
@@ -86,4 +88,5 @@ SOURCES += \
     $$PWD/dutouch.cpp \
     $$PWD/dulist.cpp \
     $$PWD/dudevicelist.cpp \
-    $$PWD/duprofile.cpp
+    $$PWD/duprofile.cpp \
+    $$PWD/dusoundfile/dusound.cpp
