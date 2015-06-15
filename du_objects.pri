@@ -39,6 +39,7 @@ HEADERS += \
     $$PWD/midifile/dumidisysexevent.h \
     $$PWD/midifile/dumiditrack.h \
     $$PWD/midifile/dumidifile.h \
+    $$PWD/miditodumusic/dumidikeymapper.h \
     $$PWD/dudevice.h \
     $$PWD/dutouch.h \
     $$PWD/dulist.h \
@@ -84,9 +85,13 @@ SOURCES += \
     $$PWD/midifile/dumidisysexevent.cpp \
     $$PWD/midifile/dumiditrack.cpp \
     $$PWD/midifile/dumidifile.cpp \
+    $$PWD/miditodumusic/dumidikeymapper.cpp \
     $$PWD/dudevice.cpp \
     $$PWD/dutouch.cpp \
     $$PWD/dulist.cpp \
     $$PWD/dudevicelist.cpp \
     $$PWD/duprofile.cpp \
     $$PWD/dusoundfile/dusound.cpp
+    
+DISTFILES += \
+    $$PWD/miditodumusic/defaultmapper.json

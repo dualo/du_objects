@@ -3,6 +3,7 @@
 #include <QJsonObject>
 #include <QDebug>
 
+
 DU_OBJECT_IMPL(DuEvent)
 
 DuEvent::DuEvent(int time, int control, int keyboard, int note, int value) :
