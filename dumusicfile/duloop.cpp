@@ -287,8 +287,8 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
     DuArrayPtr midiEvents(new DuArray);
 
     QString instrName = instrInfo->getName();
-    quint8 instrPC = instrInfo->getMidiProgramChange();
-    quint8 instrC0 = instrInfo->getMidiControlChange0();
+    int instrPC = instrInfo->getMidiProgramChange();
+    int instrC0 = instrInfo->getMidiControlChange0();
 
     quint32 prevTime = 0;
     quint8 prevType = 0;
@@ -308,7 +308,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
         pcEvent->setRunningStatus(false);
         pcEvent->setType(DuMidiChannelEvent::ProgramChange);
         pcEvent->setChannel((quint8)channel);
-        pcEvent->setValue(instrPC);
+        pcEvent->setValue((quint8)instrPC);
 
         midiEvents->append(pcEvent);
         prevType = DuMidiChannelEvent::ProgramChange;
@@ -322,7 +322,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
         c0Event->setType(DuMidiChannelEvent::ControlChange);
         c0Event->setChannel((quint8)channel);
         c0Event->setKey(0x00);
-        c0Event->setValue(instrC0);
+        c0Event->setValue((quint8)instrC0);
 
         midiEvents->append(c0Event);
         prevType = DuMidiChannelEvent::ControlChange;
