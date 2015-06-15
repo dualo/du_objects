@@ -11,6 +11,18 @@ public:
     DuSound();
 
     virtual DuObjectPtr clone() const;
+
+    static DuSoundPtr fromBinary(const QByteArray &data);
+
+    int databaseId() const;
+    void setDatabaseId(int databaseId);
+
+    QStringList lists() const;
+    void setLists(const QStringList &lists);
+
+private:
+    int m_databaseId;
+    QStringList m_lists;
 };
 
 Q_DECLARE_METATYPE(DuSoundPtr)
