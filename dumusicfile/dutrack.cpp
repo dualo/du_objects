@@ -52,7 +52,7 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
         const music_loop &du_loop = du_track.t_loop[i];
 
         int sampleSize = sizeof(music_sample);
-        if (RECORD_SAMPLEBUFFERSIZE * sampleSize < du_loop.l_adress + sampleSize)
+        if (RECORD_SAMPLEBUFFERSIZE * sampleSize < (int)du_loop.l_adress + sampleSize)
         {
             qCritical() << "DuTrack::fromDuMusicBinary():\n"
                         << "failed to generate DuTrack\n"
