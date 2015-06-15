@@ -34,10 +34,10 @@ public:
     int size() const;
     bool isEmpty() const;
 
-    int getDatabaseId() const;
+    int databaseId() const;
     void setDatabaseId(int databaseId);
 
-    QStringList getLists() const;
+    QStringList lists() const;
     void setLists(const QStringList &lists);
 
     QString getSongName() const;

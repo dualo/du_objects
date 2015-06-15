@@ -504,7 +504,7 @@ bool DuMusic::isEmpty() const
 }
 
 
-int DuMusic::getDatabaseId() const
+int DuMusic::databaseId() const
 {
     return m_databaseId;
 }
@@ -514,7 +514,7 @@ void DuMusic::setDatabaseId(int databaseId)
     m_databaseId = databaseId;
 }
 
-QStringList DuMusic::getLists() const
+QStringList DuMusic::lists() const
 {
     return m_lists;
 }
