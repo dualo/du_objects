@@ -5,7 +5,8 @@
 DU_OBJECT_IMPL(DuSound)
 
 DuSound::DuSound() :
-    DuBinaryData()
+    DuBinaryData(),
+    m_databaseId(-1)
 {
 
 }
@@ -21,6 +22,22 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
     sound->setData(data);
 
     return sound;
+}
+
+DuSoundPtr DuSound::fromBinary(QIODevice *input)
+{
+    QByteArray array = input->readAll();
+
+    if (array.isEmpty())
+    {
+        qCritical() << "DuSound::fromBinary():\n"
+                    << "failed to generate DuSound\n"
+                    << "selected file could not be read";
+
+        return DuSoundPtr();
+    }
+
+    return DuSound::fromBinary(array);
 }
 
 int DuSound::databaseId() const

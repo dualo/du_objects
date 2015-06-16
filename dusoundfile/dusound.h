@@ -13,6 +13,7 @@ public:
     virtual DuObjectPtr clone() const;
 
     static DuSoundPtr fromBinary(const QByteArray &data);
+    static DuSoundPtr fromBinary(QIODevice *input);
 
     int databaseId() const;
     void setDatabaseId(int databaseId);
