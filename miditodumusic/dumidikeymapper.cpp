@@ -1,15 +1,15 @@
 #include "dumidikeymapper.h"
 
 #include <QDebug>
+#include <QJsonArray>
 
 
 DU_OBJECT_IMPL(DuMidiKeyMapper)
 
 DuMidiKeyMapper::DuMidiKeyMapper() :
-    octave(0),
-    scale(MAJOR_LED_MODE - 1),
-    tonality(0),
-    maps(QJsonArray()),
+    m_scale(SCALE_NONE),
+    m_tonality(0),
+    m_maps(QJsonObject()),
     DuObject()
 {
 }
@@ -33,7 +33,7 @@ QByteArray DuMidiKeyMapper::toDuMusicBinary() const
 
 QJsonValue DuMidiKeyMapper::toJson() const
 {
-    return QJsonValue(maps);
+    return QJsonValue(m_maps);
 }
 
 
@@ -41,9 +41,8 @@ QDebug DuMidiKeyMapper::debugPrint(QDebug dbg) const
 {
     dbg.nospace() << "DuMidiKeyMapper(";
 
-    dbg.nospace() << "octave=" << octave;
-    dbg.nospace() << "scale=" << scale;
-    dbg.nospace() << "tonality=" << tonality;
+    dbg.nospace() << "scale=" << m_scale;
+    dbg.nospace() << "tonality=" << m_tonality;
 
     dbg.nospace() << ")";
 
@@ -58,19 +57,61 @@ int DuMidiKeyMapper::size() const
 }
 
 
-void DuMidiKeyMapper::setMaps(QJsonArray value)
+void DuMidiKeyMapper::setMaps(QJsonObject value)
 {
-    maps = value;
+    m_maps = value;
 }
 
-void DuMidiKeyMapper::chooseMap(quint8 octave, quint8 scale, quint8 tonality)
+void DuMidiKeyMapper::chooseMap(QString scale, quint8 tonality)
 {
-    //TODO: implementation
+    m_scale = scale;
+    m_tonality = tonality % 12;
 }
 
 
-quint8 DuMidiKeyMapper::fetchKeyboard(quint8 key)
+int DuMidiKeyMapper::fetchKeyboard(quint8 octave, quint8 key)
 {
-    //TODO: implementation
-    return 0;
+    if (!m_maps.contains(m_scale))
+    {
+        qCritical() << "DuMidiKeyMapper::fetchKeyboard():\n"
+                    << "operation aborted\n"
+                    << "the scale could not be found";
+        return -1;
+    }
+
+    QJsonValue chosenScaleValue = m_maps.value(m_scale);
+    if (!chosenScaleValue.isArray())
+    {
+        //TODO: message
+        return -1;
+    }
+
+    QJsonArray chosenScale = chosenScaleValue.toArray();
+    QJsonValue chosenMapValue = chosenScale.at(m_tonality);
+    if (!chosenMapValue.isArray())
+    {
+        //TODO: message
+        return -1;
+    }
+
+    QJsonArray chosenMap = chosenMapValue.toArray();
+    if (chosenMap.count() != 12)
+    {
+        //TODO: message
+        return -1;
+    }
+
+    QJsonValue chosenKeyboardValue = chosenMap.at(key % 12);
+    if (!chosenKeyboardValue.isDouble())
+    {
+        //TODO: message
+        return -1;
+    }
+
+    int chosenKeyboard = chosenKeyboardValue.toInt();
+
+    if (octave % 2 != 0)
+        chosenKeyboard ^= 0x08;
+
+    return chosenKeyboard;
 }

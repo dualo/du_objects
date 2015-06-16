@@ -94,4 +94,4 @@ SOURCES += \
     $$PWD/dusoundfile/dusound.cpp
     
 DISTFILES += \
-    $$PWD/miditodumusic/defaultmapper.json
+    $$PWD/miditodumusic/defaultmaps.json
