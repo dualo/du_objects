@@ -6,10 +6,9 @@
 DU_OBJECT_IMPL(DuMidiKeyMapper)
 
 DuMidiKeyMapper::DuMidiKeyMapper() :
+    DuObject(),
     m_scale(SCALE_NONE),
-    m_tonality(0),
-    m_maps(QJsonObject()),
-    DuObject()
+    m_tonality(0)
 {
 }
 
