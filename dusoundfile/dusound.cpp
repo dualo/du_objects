@@ -8,7 +8,6 @@ DuSound::DuSound() :
     DuBinaryData(),
     m_databaseId(-1)
 {
-
 }
 
 DuObjectPtr DuSound::clone() const
@@ -20,6 +19,12 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
 {
     DuSoundPtr sound(new DuSound);
     sound->setData(data);
+
+    QScopedPointer<s_instr_m3> soundM3Infos(new s_instr_m3);
+
+    std::memcpy((char*)soundM3Infos.data(), &data.data()[0x20], INSTR_INFO_INSTR_SIZE);
+
+    sound->setName(QByteArray((char *)soundM3Infos->instr_name, NAME_CARACT));
 
     return sound;
 }
@@ -58,4 +63,14 @@ QStringList DuSound::lists() const
 void DuSound::setLists(const QStringList &lists)
 {
     m_lists = lists;
+}
+
+QString DuSound::name() const
+{
+    return m_name;
+}
+
+void DuSound::setName(const QString &name)
+{
+    m_name = name;
 }
