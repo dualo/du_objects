@@ -1,6 +1,5 @@
 #include "dubinarydata.h"
 
-#include <QDebug>
 
 
 DU_OBJECT_IMPL(DuBinaryData)
@@ -55,7 +54,7 @@ bool DuBinaryData::setData(const QByteArray &value)
     int size = getMaxSize();
     if (size != -1 && value.size() > size)
     {
-        qWarning() << "DuBinaryData::setData():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuBinaryData::setData():\n"
                    << "the byte array was longer than the"
                    << "maximum size" << size
                    << "and was truncated before being set";

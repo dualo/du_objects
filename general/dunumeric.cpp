@@ -1,7 +1,5 @@
 #include "dunumeric.h"
 
-#include <QDebug>
-
 #include <climits>
 
 
@@ -61,7 +59,7 @@ QByteArray DuNumeric::toDuMusicBinary() const
 
     if (size == -1)
     {
-        qWarning() << "DuNumeric::toDuMusicBinary():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuNumeric::toDuMusicBinary():\n"
                    << "invalid numeric size";
 
         return QByteArray();
@@ -89,7 +87,7 @@ QByteArray DuNumeric::toMidiBinary() const
 
     if (size == -1)
     {
-        qWarning() << "DuNumeric::toMidiBinary():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuNumeric::toMidiBinary():\n"
                    << "invalid numeric size";
 
         return QByteArray();
@@ -145,7 +143,7 @@ bool DuNumeric::setNumeric(int value)
 {
     if (value < minValue)
     {
-        qWarning() << "DuNumeric::setNumeric():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuNumeric::setNumeric():\n"
                    << value << "below" << minValue
                    << "and could not be set\n"
                    << minValue << "was set instead";
@@ -155,7 +153,7 @@ bool DuNumeric::setNumeric(int value)
     }
     else if (value > maxValue)
     {
-        qWarning() << "DuNumeric::setNumeric():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuNumeric::setNumeric():\n"
                    << value << "above" << maxValue
                    << "and could not be set\n"
                    << maxValue << "was set instead";
@@ -180,7 +178,7 @@ bool DuNumeric::setDefault(int value)
 {
     if (value > maxValue || value < minValue)
     {
-        qWarning() << "DuNumeric::setDefault():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuNumeric::setDefault():\n"
                    << value << "not comprised between"
                    << minValue << "and" << maxValue;
 
@@ -201,7 +199,7 @@ bool DuNumeric::setMax(int value)
 {
     if (value < getNumeric() || value < defaultValue)
     {
-        qWarning() << "DuNumeric::setMax():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuNumeric::setMax():\n"
                    << value << "is below" << getNumeric()
                    << "or" << defaultValue
                    << "and was not set";
@@ -222,7 +220,7 @@ bool DuNumeric::setMin(int value)
 {
     if (value > getNumeric() || value > defaultValue)
     {
-        qWarning() << "DuNumeric::setMin():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuNumeric::setMin():\n"
                    << value << "is above" << getNumeric()
                    << "or" << defaultValue
                    << "and was not set";

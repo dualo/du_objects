@@ -1,6 +1,5 @@
 #include "ducontainer.h"
 
-#include <QDebug>
 #include <QMapIterator>
 #include <QJsonObject>
 
@@ -43,7 +42,7 @@ QByteArray DuContainer::toDuMusicBinary() const
         i.next();
         if (i.value() == NULL)
         {
-            qWarning() << "DuContainer::toDuMusicBinary():\n"
+            qCWarning(LOG_CAT_DU_OBJECT) << "DuContainer::toDuMusicBinary():\n"
                        << "element was null";
 
             return QByteArray();
@@ -52,7 +51,7 @@ QByteArray DuContainer::toDuMusicBinary() const
         const QByteArray &tmpArray = i.value()->toDuMusicBinary();
         if (tmpArray.isNull())
         {
-            qWarning() << "DuContainer::toDuMusicBinary():\n"
+            qCWarning(LOG_CAT_DU_OBJECT) << "DuContainer::toDuMusicBinary():\n"
                        << "element binary data was null";
 
             return QByteArray();
@@ -75,7 +74,7 @@ QJsonValue DuContainer::toJson() const
         i.next();
         if (i.value() == NULL)
         {
-            qWarning() << "DuContainer::toJson():\n"
+            qCWarning(LOG_CAT_DU_OBJECT) << "DuContainer::toJson():\n"
                        << "element was null";
 
             return QJsonValue(QJsonValue::Undefined);
@@ -84,7 +83,7 @@ QJsonValue DuContainer::toJson() const
         const QJsonValue &jsonValue = i.value()->toJson();
         if (jsonValue.isUndefined())
         {
-            qWarning() << "DuContainer::toJson():\n"
+            qCWarning(LOG_CAT_DU_OBJECT) << "DuContainer::toJson():\n"
                        << "element json value was undefined";
 
             return QJsonValue(QJsonValue::Undefined);
@@ -173,7 +172,7 @@ DuObjectPtr DuContainer::operator[](const QString &key)
 {
     if (!children.contains(key))
     {
-        qWarning() << "DuContainer::operator[]:\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuContainer::operator[]:\n"
                    << key << "was not contained\n"
                    << "default constructed value returned";
 

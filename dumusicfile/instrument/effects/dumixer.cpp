@@ -1,7 +1,6 @@
 #include "dumixer.h"
 
 #include <QJsonObject>
-#include <QDebug>
 
 DU_OBJECT_IMPL(DuMixer)
 
@@ -69,7 +68,7 @@ DuMixerPtr DuMixer::fromDuMusicBinary(const FX_mix &du_mixer)
 
     if (!verif)
     {
-        qWarning() << "DuMixer::fromDuMusicBinary():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuMixer::fromDuMusicBinary():\n"
                    << "an attribute was not properly set";
     }
 
@@ -92,7 +91,7 @@ DuMixerPtr DuMixer::fromJson(const QJsonObject &jsonMixer)
             ||  !jsonPanning.isDouble()     ||  !jsonFrontRear.isDouble()
             ||  !jsonToReverb.isDouble()    ||  !jsonToChorus.isDouble())
     {
-        qCritical() << "DuMixer::fromJson():\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMixer::fromJson():\n"
                     << "failed to generate DuMixer\n"
                     << "a json key did not contain the proper type";
 
@@ -116,7 +115,7 @@ DuMixerPtr DuMixer::fromJson(const QJsonObject &jsonMixer)
 
     if (!verif)
     {
-        qWarning() << "DuMixer::fromJson():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuMixer::fromJson():\n"
                    << "an attribute was not properly set";
     }
 

@@ -3,7 +3,6 @@
 #include <cstring>
 
 #include <QJsonObject>
-#include <QDebug>
 
 DU_OBJECT_IMPL(DuVibrato)
 
@@ -50,7 +49,7 @@ DuVibratoPtr DuVibrato::fromDuMusicBinary(const FX_vibrato &du_vibrato)
 
     if (!verif)
     {
-        qWarning() << "DuVibrato::fromDuMusicBinary():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuVibrato::fromDuMusicBinary():\n"
                    << "an attribute was not properly set";
     }
 
@@ -68,7 +67,7 @@ DuVibratoPtr DuVibrato::fromJson(const QJsonObject &jsonVibrato)
     if (        !jsonDepth.isDouble()   ||  !jsonDelay.isDouble()
             ||  !jsonRate.isDouble()    ||  !jsonEffectName.isString())
     {
-        qCritical() << "DuVibrato::fromJson():\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuVibrato::fromJson():\n"
                     << "failed to generate DuVibrato\n"
                     << "a json key did not contain the proper type";
 
@@ -87,7 +86,7 @@ DuVibratoPtr DuVibrato::fromJson(const QJsonObject &jsonVibrato)
 
     if (!verif)
     {
-        qWarning() << "DuVibrato::fromJson():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuVibrato::fromJson():\n"
                    << "an attribute was not properly set";
     }
 

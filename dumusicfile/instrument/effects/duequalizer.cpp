@@ -3,7 +3,6 @@
 #include <cstring>
 
 #include <QJsonObject>
-#include <QDebug>
 
 DU_OBJECT_IMPL(DuEqualizer)
 
@@ -93,7 +92,7 @@ DuEqualizerPtr DuEqualizer::fromDuMusicBinary(const FX_equalizer du_equalizer)
 
     if (!verif)
     {
-        qWarning() << "DuEqualizer::fromDuMusicBinary():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuEqualizer::fromDuMusicBinary():\n"
                    << "an attribute was not properly set";
     }
 
@@ -123,7 +122,7 @@ DuEqualizerPtr DuEqualizer::fromJson(const QJsonObject &jsonEqualizer)
             ||  !jsonHighFreq.isDouble()    ||  !jsonLoMidQual.isDouble()
             ||  !jsonHiMidQual.isDouble()   ||  !jsonEffectName.isString())
     {
-        qCritical() << "DuEqualizer::fromJson():\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuEqualizer::fromJson():\n"
                     << "failed to generate DuEqualizer\n"
                     << "a json key did not contain the proper type";
 
@@ -153,7 +152,7 @@ DuEqualizerPtr DuEqualizer::fromJson(const QJsonObject &jsonEqualizer)
 
     if (!verif)
     {
-        qWarning() << "DuEqualizer::fromJson():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuEqualizer::fromJson():\n"
                    << "an attribute was not properly set";
     }
 

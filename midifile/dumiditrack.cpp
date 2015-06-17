@@ -1,6 +1,5 @@
 #include "dumiditrack.h"
 
-#include <QDebug>
 
 
 DU_OBJECT_IMPL(DuMidiTrack)
@@ -31,7 +30,7 @@ DuMidiTrackPtr DuMidiTrack::fromMidiBinary(QDataStream &stream)
 
     if (trackId != MIDI_TRACK_ID_VALUE)
     {
-        qCritical() << "DuMidiTrack::fromMidiBinary():\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMidiTrack::fromMidiBinary():\n"
                     << "the processed chunk is not a track";
 
         return DuMidiTrackPtr();
@@ -86,7 +85,7 @@ DuMidiTrackPtr DuMidiTrack::fromMidiBinary(QDataStream &stream)
 
         if (event == NULL)
         {
-            qCritical() << "DuMidiTrack::fromMidiBinary():\n"
+            qCCritical(LOG_CAT_DU_OBJECT) << "DuMidiTrack::fromMidiBinary():\n"
                         << "problem encountered during event generation";
 
             return DuMidiTrackPtr();

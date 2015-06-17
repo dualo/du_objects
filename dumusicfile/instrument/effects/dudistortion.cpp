@@ -3,7 +3,6 @@
 #include <cstring>
 
 #include <QJsonObject>
-#include <QDebug>
 
 DU_OBJECT_IMPL(DuDistortion)
 
@@ -75,7 +74,7 @@ DuDistortionPtr DuDistortion::fromDuMusicBinary(const FX_distortion &du_distorti
 
     if (!verif)
     {
-        qWarning() << "DuDistortion::fromDuMusicBinary():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuDistortion::fromDuMusicBinary():\n"
                    << "an attribute was not properly set";
     }
 
@@ -99,7 +98,7 @@ DuDistortionPtr DuDistortion::fromJson(const QJsonObject &jsonDistortion)
             ||  !jsonLoPassRes.isDouble()   ||  !jsonPostGain.isDouble()
             ||  !jsonDrive.isDouble()       ||  !jsonEffectName.isString())
     {
-        qCritical() << "DuDistortion::fromJson():\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuDistortion::fromJson():\n"
                     << "failed to generate DuDistortion\n"
                     << "a json key did not contain the proper type";
 
@@ -125,7 +124,7 @@ DuDistortionPtr DuDistortion::fromJson(const QJsonObject &jsonDistortion)
 
     if (!verif)
     {
-        qWarning() << "DuDistortion::fromJson():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuDistortion::fromJson():\n"
                    << "an attribute was not properly set";
     }
 

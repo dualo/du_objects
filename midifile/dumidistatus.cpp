@@ -1,6 +1,5 @@
 #include "dumidistatus.h"
 
-#include <QDebug>
 
 
 DU_OBJECT_IMPL(DuMidiStatus)

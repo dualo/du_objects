@@ -1,6 +1,5 @@
 #include "dumidimetaevent.h"
 
-#include <QDebug>
 
 
 DU_OBJECT_IMPL(DuMidiMetaEvent)
@@ -209,7 +208,7 @@ void DuMidiMetaEvent::setTitle(const QString &title)
 {
     if (title.isEmpty())
     {
-        qWarning() << "DuMidiMetaEvent::setTitle():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuMidiMetaEvent::setTitle():\n"
                    << "the title given is empty";
     }
 
@@ -222,7 +221,7 @@ void DuMidiMetaEvent::setInstrumentName(const QString &instrument)
 {
     if (instrument.isEmpty())
     {
-        qWarning() << "DuMidiMetaEvent::setInstrumentName():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuMidiMetaEvent::setInstrumentName():\n"
                    << "the instrument name given is empty";
     }
 
@@ -235,7 +234,7 @@ void DuMidiMetaEvent::setTempo(quint8 bpm)
 {
     if (bpm < 4)
     {
-        qCritical() << "DuMidiMetaEvent::setTempo():\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMidiMetaEvent::setTempo():\n"
                     << "bpm value is too small and will result"
                     << "in an incorrect midi tempo value";
     }
@@ -257,7 +256,7 @@ void DuMidiMetaEvent::setTimeSignature(quint8 nn, quint8 dd, quint8 cc, quint8 b
 {
     if (nn == 0 ||  dd == 0 || cc == 0  ||bb == 0)
     {
-        qCritical() << "DuMidiMetaEvent::setTimeSignature():\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMidiMetaEvent::setTimeSignature():\n"
                     << "a parameter is 0, this will result in an"
                     << "incorrect midi time signature value";
     }

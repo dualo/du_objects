@@ -1,6 +1,5 @@
 #include "dumidibasicevent.h"
 
-#include <QDebug>
 
 
 DU_OBJECT_IMPL(DuMidiBasicEvent)

@@ -6,7 +6,6 @@
 #include "dutouch.h"
 #include "general/duurl.h"
 
-#include <QDebug>
 #include <QFile>
 #include <QFileInfo>
 #include <QJsonArray>
@@ -64,7 +63,7 @@ DuProfilePtr DuProfile::fromJson(const QJsonObject &jsonProfile, int recursionLe
         outProfile->setRole(Dev);
     else
     {
-        qCritical() << "Unknown role :" << role;
+        qCCritical(LOG_CAT_DU_OBJECT) << "Unknown role :" << role;
         outProfile->setRole(Default);
     }
 
@@ -110,7 +109,7 @@ DuProfilePtr DuProfile::fromJson(const QJsonObject &jsonProfile, int recursionLe
         {
             if (!(*it).isObject())
             {
-                qCritical() << "user not an object :" << *it;
+                qCCritical(LOG_CAT_DU_OBJECT) << "user not an object :" << *it;
                 continue;
             }
 
@@ -158,7 +157,7 @@ QHttpMultiPart *DuProfile::toHttpMultiPart(const QByteArray &boundary) const
         }
         else
         {
-            qCritical() << "Can't open file" << avatarUrl.toString();
+            qCCritical(LOG_CAT_DU_OBJECT) << "Can't open file" << avatarUrl.toString();
             delete avatar;
         }
     }
@@ -172,7 +171,7 @@ QString DuProfile::getFirstname() const
 
     if (firstname == NULL)
     {
-        qCritical() << "Unable to cast" << KEY_PROFILE_FIRSTNAME << "to DuString*";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_PROFILE_FIRSTNAME << "to DuString*";
         return QString();
     }
 
@@ -195,7 +194,7 @@ QString DuProfile::getLastname() const
 
     if (lastname == NULL)
     {
-        qCritical() << "Unable to cast" << KEY_PROFILE_LASTNAME << "to DuString*";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_PROFILE_LASTNAME << "to DuString*";
         return QString();
     }
 
@@ -218,7 +217,7 @@ QString DuProfile::getPseudo() const
 
     if (pseudo == NULL)
     {
-        qCritical() << "Unable to cast" << KEY_PROFILE_PSEUDO << "to DuString*";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_PROFILE_PSEUDO << "to DuString*";
         return QString();
     }
 
@@ -241,7 +240,7 @@ QString DuProfile::getMail() const
 
     if (mail == NULL)
     {
-        qCritical() << "Unable to cast" << KEY_PROFILE_MAIL << "to DuString*";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_PROFILE_MAIL << "to DuString*";
         return QString();
     }
 
@@ -264,7 +263,7 @@ QUrl DuProfile::getAvatarUrl() const
 
     if (avatarUrl == NULL)
     {
-        qCritical() << "Unable to cast" << KEY_PROFILE_AVATAR_URL << "to DuUrl*";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_PROFILE_AVATAR_URL << "to DuUrl*";
         return QUrl();
     }
 
@@ -288,7 +287,7 @@ QDateTime DuProfile::getCreationDate() const
 
     if (creationDate == NULL)
     {
-        qCritical() << "Unable to cast" << KEY_PROFILE_CREATION_DATE << "to DuDate*";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_PROFILE_CREATION_DATE << "to DuDate*";
         return QDateTime();
     }
 
@@ -312,7 +311,7 @@ DuProfile::Role DuProfile::getRole() const
 
     if (role == NULL)
     {
-        qCritical() << "Unable to cast" << KEY_PROFILE_ROLE << "to DuNumeric*";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_PROFILE_ROLE << "to DuNumeric*";
         return None;
     }
 
@@ -335,7 +334,7 @@ int DuProfile::getGUID() const
 
     if (guid == NULL)
     {
-        qCritical() << "Unable to cast" << KEY_PROFILE_GUID << "to DuNumeric*";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_PROFILE_GUID << "to DuNumeric*";
         return -1;
     }
 

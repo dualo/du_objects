@@ -3,7 +3,6 @@
 #include <cstring>
 
 #include <QJsonObject>
-#include <QDebug>
 
 DU_OBJECT_IMPL(DuDelay)
 
@@ -72,7 +71,7 @@ DuDelayPtr DuDelay::fromDuMusicBinary(const FX_delay &du_delay)
 
     if (!verif)
     {
-        qWarning() << "DuDelay::fromDuMusicBinary():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuDelay::fromDuMusicBinary():\n"
                    << "an attribute was not properly set";
     }
 
@@ -96,7 +95,7 @@ DuDelayPtr DuDelay::fromJson(const QJsonObject &jsonDelay)
             ||  !jsonEffectTime.isDouble()  ||  !jsonFeedback.isDouble()
             ||  !jsonHDAmp.isDouble()       ||  !jsonEffectName.isString())
     {
-        qCritical() << "DuDelay::fromJson():\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuDelay::fromJson():\n"
                     << "failed to generate DuDelay\n"
                     << "a json key did not contain the proper type";
 
@@ -122,7 +121,7 @@ DuDelayPtr DuDelay::fromJson(const QJsonObject &jsonDelay)
 
     if (!verif)
     {
-        qWarning() << "DuDelay::fromJson():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuDelay::fromJson():\n"
                    << "an attribute was not properly set";
     }
 

@@ -1,6 +1,5 @@
 #include "dutouch.h"
 
-#include <QDebug>
 
 DU_OBJECT_IMPL(DuTouch)
 
@@ -31,7 +30,7 @@ DuVersionConstPtr DuTouch::getSoundbankVersion() const
 
     if (version == NULL)
     {
-        qCritical() << "Unable to cast" << KEY_TOUCH_SOUNDBANK_VERSION << "to DuVersion*";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_TOUCH_SOUNDBANK_VERSION << "to DuVersion*";
         return DuVersionConstPtr();
     }
 
@@ -64,7 +63,7 @@ QDateTime DuTouch::getSoundbankUpdateDate() const
 
     if (updateDate == NULL)
     {
-        qCritical() << "Unable to cast" << KEY_TOUCH_SOUNDBANK_UPDATE_DATE << "to DuDate*";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_TOUCH_SOUNDBANK_UPDATE_DATE << "to DuDate*";
         return QDateTime();
     }
 

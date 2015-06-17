@@ -3,7 +3,6 @@
 #include <cstring>
 
 #include <QJsonObject>
-#include <QDebug>
 
 DU_OBJECT_IMPL(DuCompressor)
 
@@ -72,7 +71,7 @@ DuCompressorPtr DuCompressor::fromDuMusicBinary(const FX_compressor &du_compress
 
     if (!verif)
     {
-        qWarning() << "DuCompressor::fromDuMusicBinary():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuCompressor::fromDuMusicBinary():\n"
                    << "an attribute was not properly set";
     }
 
@@ -96,7 +95,7 @@ DuCompressorPtr DuCompressor::fromJson(const QJsonObject &jsonCompressor)
             ||  !jsonRatio.isDouble()       ||  !jsonBoost.isDouble()
             ||  !jsonKneeType.isDouble()    ||  !jsonEffectName.isString())
     {
-        qCritical() << "DuCompressor::fromJson():\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuCompressor::fromJson():\n"
                     << "failed to generate DuCompressor\n"
                     << "a json key did not contain the proper type";
 
@@ -121,7 +120,7 @@ DuCompressorPtr DuCompressor::fromJson(const QJsonObject &jsonCompressor)
 
     if (!verif)
     {
-        qWarning() << "DuCompressor::fromJson():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuCompressor::fromJson():\n"
                    << "an attribute was not properly set";
     }
 

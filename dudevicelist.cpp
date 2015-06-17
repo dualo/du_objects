@@ -2,7 +2,6 @@
 
 #include "general/dustring.h"
 
-#include <QDebug>
 
 DU_OBJECT_IMPL(DuDeviceList)
 
@@ -41,7 +40,7 @@ QString DuDeviceList::getSerialNumber() const
 
     if (serialNumber == NULL)
     {
-        qCritical() << "Unable to cast" << KEY_DEVICE_LIST_SERIAL_NUMBER << "to DuString*";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_DEVICE_LIST_SERIAL_NUMBER << "to DuString*";
         return QString();
     }
 

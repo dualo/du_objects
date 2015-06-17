@@ -1,6 +1,6 @@
 #include "duobject.h"
 
-#include <QDebug>
+Q_LOGGING_CATEGORY(LOG_CAT_DU_OBJECT, "du-object")
 
 DU_OBJECT_IMPL(DuObject)
 

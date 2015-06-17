@@ -1,6 +1,5 @@
 #include "duarray.h"
 
-#include <QDebug>
 #include <QListIterator>
 #include <QJsonArray>
 
@@ -50,7 +49,7 @@ QByteArray DuArray::toDuMusicBinary() const
 
         if (tmpArray.isNull())
         {
-            qCritical() << "DuArray::toDuMusicBinary():\n"
+            qCCritical(LOG_CAT_DU_OBJECT) << "DuArray::toDuMusicBinary():\n"
                         << "element byte array was null";
 
             return QByteArray();
@@ -80,7 +79,7 @@ QByteArray DuArray::toMidiBinary() const
 
         if (tmpArray.isNull())
         {
-            qCritical() << "DuArray::toMidiBinary():\n"
+            qCCritical(LOG_CAT_DU_OBJECT) << "DuArray::toMidiBinary():\n"
                         << "element byte array was null";
 
             return QByteArray();
@@ -109,7 +108,7 @@ QJsonValue DuArray::toJson() const
 
         if (tmpValue.isUndefined())
         {
-            qCritical() << "DuArray::toJson():\n"
+            qCCritical(LOG_CAT_DU_OBJECT) << "DuArray::toJson():\n"
                         << "element json value was undefined";
 
             return QJsonValue(QJsonValue::Undefined);
@@ -133,7 +132,7 @@ int DuArray::size() const
 
         if (tmpSize == -1)
         {
-            qCritical() << "DuArray::size():\n"
+            qCCritical(LOG_CAT_DU_OBJECT) << "DuArray::size():\n"
                         << "element size was -1";
             return -1;
         }
@@ -172,7 +171,7 @@ void DuArray::setMaxSize(int value)
 {
     if (value != -1 && value < array.count())
     {
-        qWarning() << "DuArray::setMaxSize():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuArray::setMaxSize():\n"
                    << value << "is above current"
                    << "element count and was not set";
 
@@ -187,7 +186,7 @@ bool DuArray::append(const DuObjectPtr &element)
 {
     if (maxSize != -1 && array.count() == maxSize)
     {
-        qWarning() << "DuArray::append():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuArray::append():\n"
                    << "the element was not appended\n"
                    << "the array already reached its"
                    << "maximum size" << maxSize;
@@ -203,7 +202,7 @@ void DuArray::insert(int index, const DuObjectPtr &element)
 {
     if (index > array.count())
     {
-        qWarning() << "DuArray::insert():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuArray::insert():\n"
                    << index << "is above element count\n"
                    << "the element was appended to the array";
 
@@ -219,7 +218,7 @@ void DuArray::removeAt(int index)
 {
     if (index >= array.count())
     {
-        qWarning() << "DuArray::removeAt():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuArray::removeAt():\n"
                    << "index" << index << "is invalid";
         return;
     }
@@ -231,7 +230,7 @@ void DuArray::replace(int index, const DuObjectPtr &element)
 {
     if (index >= array.count())
     {
-        qWarning() << "DuArray::replace():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuArray::replace():\n"
                    << index << "is above element count\n"
                    << "the element was appended to the array";
 
@@ -258,7 +257,7 @@ DuObjectPtr DuArray::at(int index)
 {
     if (index >= array.count())
     {
-        qWarning() << "DuArray::at():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuArray::at():\n"
                    << index << "is above element count\n"
                    << "last element returned";
 
@@ -272,7 +271,7 @@ DuObjectConstPtr DuArray::at(int index) const
 {
     if (index >= array.count())
     {
-        qWarning() << "DuArray::at():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuArray::at():\n"
                    << index << "is above element count\n"
                    << "last element returned";
 
@@ -286,7 +285,7 @@ DuObjectPtr DuArray::operator[](int index)
 {
     if (index >= array.count())
     {
-        qWarning() << "DuArray::operator[]:\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuArray::operator[]:\n"
                    << index << "is above element count\n"
                    << "default constructed value returned";
 

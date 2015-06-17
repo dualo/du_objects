@@ -3,7 +3,6 @@
 #include <cstring>
 
 #include <QJsonObject>
-#include <QDebug>
 
 DU_OBJECT_IMPL(DuAdsr)
 
@@ -62,7 +61,7 @@ DuAdsrPtr DuAdsr::fromDuMusicBinary(const FX_adsr &du_adsr)
 
     if (!verif)
     {
-        qWarning() << "DuAdsr::fromDuMusicBinary():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuAdsr::fromDuMusicBinary():\n"
                    << "an attribute was not properly set";
     }
 
@@ -83,7 +82,7 @@ DuAdsrPtr DuAdsr::fromJson(const QJsonObject &jsonAdsr)
             ||  !jsonTvfCutRes.isDouble()   ||  !jsonTvfCutFreq.isDouble()
             ||  !jsonEnvRelTime.isDouble()  ||  !jsonEffectName.isString())
     {
-        qCritical() << "DuAdsr::fromJson():\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuAdsr::fromJson():\n"
                     << "failed to generate DuAdsr\n"
                     << "a json key did not contain the proper type";
 
@@ -104,7 +103,7 @@ DuAdsrPtr DuAdsr::fromJson(const QJsonObject &jsonAdsr)
 
     if (!verif)
     {
-        qWarning() << "DuAdsr::fromJson():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuAdsr::fromJson():\n"
                    << "an attribute was not properly set";
     }
 

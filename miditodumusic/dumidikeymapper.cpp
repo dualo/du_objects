@@ -1,6 +1,5 @@
 #include "dumidikeymapper.h"
 
-#include <QDebug>
 #include <QJsonArray>
 
 
@@ -73,7 +72,7 @@ int DuMidiKeyMapper::fetchKeyboard(quint8 octave, quint8 key)
 {
     if (!m_maps.contains(m_scale))
     {
-        qCritical() << "DuMidiKeyMapper::fetchKeyboard():\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMidiKeyMapper::fetchKeyboard():\n"
                     << "operation aborted\n"
                     << "the scale could not be found";
         return -1;

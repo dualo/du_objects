@@ -1,6 +1,5 @@
 #include "dustring.h"
 
-#include <QDebug>
 
 DU_OBJECT_IMPL(DuString)
 
@@ -98,7 +97,7 @@ bool DuString::setString(const QString &value)
     int size = getMaxSize();
     if (getMaxSize() != -1 && value.size() > size)
     {
-        qWarning() << "DuString::setString()\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuString::setString()\n"
                    << "the byte array was longer than the"
                    << "maximum size" << size
                    << "and was truncated before being set";

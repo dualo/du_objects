@@ -4,7 +4,6 @@
 
 #include <QJsonArray>
 #include <QJsonObject>
-#include <QDebug>
 
 DU_OBJECT_IMPL(DuTrack)
 
@@ -43,7 +42,7 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
 
     if (!verif)
     {
-        qWarning() << "DuTrack::fromDuMusicBinary():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
                    << "an attribute was not properly set";
     }
 
@@ -54,7 +53,7 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
         int sampleSize = sizeof(music_sample);
         if (RECORD_SAMPLEBUFFERSIZE * sampleSize < (int)du_loop.l_adress + sampleSize)
         {
-            qCritical() << "DuTrack::fromDuMusicBinary():\n"
+            qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
                         << "failed to generate DuTrack\n"
                         << "invalid number of events\n"
                         << "(du_sample size =" << (RECORD_SAMPLEBUFFERSIZE * sampleSize)
@@ -71,7 +70,7 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
                 DuLoop::fromDuMusicBinary(du_loop, du_sample_address);
         if (loop == NULL)
         {
-            qCritical() << "DuTrack::fromDuMusicBinary():\n"
+            qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
                         << "failed to generate DuTrack\n"
                         << "a DuLoop was not properly generated";
 
@@ -79,7 +78,7 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
         }
         if (!track->appendLoop(loop))
         {
-            qCritical() << "DuTrack::fromDuMusicBinary():\n"
+            qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
                         << "failed to generate DuTrack\n"
                         << "a DuLoop was not properly appended";
 
@@ -100,7 +99,7 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track)
 
     if (!verif)
     {
-        qWarning() << "DuTrack::fromDuMusicBinary():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
                    << "an attribute was not properly set";
     }
 
@@ -110,7 +109,7 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track)
                 DuLoop::fromDuMusicBinary(du_track.t_loop[i]);
         if (loop == NULL)
         {
-            qCritical() << "DuTrack::fromDuMusicBinary():\n"
+            qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
                         << "failed to generate DuTrack\n"
                         << "a DuLoop was not properly generated";
 
@@ -118,7 +117,7 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track)
         }
         if (!track->appendLoop(loop))
         {
-            qCritical() << "DuTrack::fromDuMusicBinary():\n"
+            qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
                         << "failed to generate DuTrack\n"
                         << "a DuLoop was not properly appended";
 
@@ -139,7 +138,7 @@ DuTrackPtr DuTrack::fromJson(const QJsonObject &jsonTrack)
     if (        !jsonChannel.isDouble() ||  !jsonCurrentLoop.isDouble()
             ||  !jsonLoops.isArray())
     {
-        qCritical() << "DuTrack::fromJson():\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromJson():\n"
                     << "failed to generate DuTrack\n"
                     << "a json key did not contain the proper type";
 
@@ -155,14 +154,14 @@ DuTrackPtr DuTrack::fromJson(const QJsonObject &jsonTrack)
 
     if (!verif)
     {
-        qWarning() << "DuTrack::fromJson():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuTrack::fromJson():\n"
                    << "an attribute was not properly set";
     }
 
     const QJsonArray &jsonLoopArray = jsonLoops.toArray();
     if (jsonLoopArray.count() != MUSIC_MAXLAYER)
     {
-        qCritical() << "DuTrack::fromJson():\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromJson():\n"
                     << "failed to generate DuTrack\n"
                     << "json file does not contain the proper amount of tracks";
 
@@ -174,7 +173,7 @@ DuTrackPtr DuTrack::fromJson(const QJsonObject &jsonTrack)
         const DuLoopPtr &loop = DuLoop::fromJson(jsonLoopArray[i].toObject());
         if (loop == NULL)
         {
-            qCritical() << "DuTrack::fromJson():\n"
+            qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromJson():\n"
                         << "failed to generate DuTrack\n"
                         << "a DuLoop was not properly generated";
 
@@ -182,7 +181,7 @@ DuTrackPtr DuTrack::fromJson(const QJsonObject &jsonTrack)
         }
         if (!track->appendLoop(loop))
         {
-            qCritical() << "DuTrack::fromJson():\n"
+            qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromJson():\n"
                         << "failed to generate DuTrack\n"
                         << "a DuLoop was not properly appended";
 
@@ -234,7 +233,7 @@ QList<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef) const
     const DuArrayConstPtr &loops = getLoops();
     if (loops == NULL)
     {
-        qCritical() << "DuTrack::toDuMidiTrackArray():\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::toDuMidiTrackArray():\n"
                     << "could not retrieve loop array";
 
         return QList<DuMidiTrackPtr>();
@@ -247,7 +246,7 @@ QList<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef) const
         const DuLoopConstPtr &loop = loops->at(i).dynamicCast<const DuLoop>();
         if (loop == NULL)
         {
-            qCritical() << "DuTrack::toDuMidiTrackArray():\n"
+            qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::toDuMidiTrackArray():\n"
                         << "a loop was NULL";
 
             return QList<DuMidiTrackPtr>();

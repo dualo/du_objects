@@ -1,6 +1,5 @@
 #include "dumidichannelevent.h"
 
-#include <QDebug>
 
 
 DU_OBJECT_IMPL(DuMidiChannelEvent)
@@ -59,7 +58,7 @@ DuMidiChannelEventPtr DuMidiChannelEvent::fromMidiBinary(QDataStream &stream,
     }
     default:
     {
-        qCritical() << "Invalid channel status";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Invalid channel status";
 
         return DuMidiChannelEventPtr();
     }
@@ -148,7 +147,7 @@ QByteArray DuMidiChannelEvent::toMidiBinary() const
     }
     default:
     {
-        qCritical() << "Invalid channel status";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Invalid channel status";
 
         return QByteArray();
     }

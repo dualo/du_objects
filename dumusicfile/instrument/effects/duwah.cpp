@@ -3,7 +3,6 @@
 #include <cstring>
 
 #include <QJsonObject>
-#include <QDebug>
 
 DU_OBJECT_IMPL(DuWah)
 
@@ -55,7 +54,7 @@ DuWahPtr DuWah::fromDuMusicBinary(const FX_wah &du_wah)
 
     if (!verif)
     {
-        qWarning() << "DuWah::fromDuMusicBinary():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuWah::fromDuMusicBinary():\n"
                    << "an attribute was not properly set";
     }
 
@@ -75,7 +74,7 @@ DuWahPtr DuWah::fromJson(const QJsonObject &jsonWah)
             ||  !jsonFilterRes.isDouble()   ||  !jsonSensitivity.isDouble()
             ||  !jsonEffectName.isString())
     {
-        qCritical() << "DuWah::fromJson():\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuWah::fromJson():\n"
                     << "failed to generate DuWah\n"
                     << "a json key did not contain the proper type";
 
@@ -95,7 +94,7 @@ DuWahPtr DuWah::fromJson(const QJsonObject &jsonWah)
 
     if (!verif)
     {
-        qWarning() << "DuWah::fromJson():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuWah::fromJson():\n"
                    << "an attribute was not properly set";
     }
 

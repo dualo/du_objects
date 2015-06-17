@@ -3,7 +3,6 @@
 #include "general/dunumeric.h"
 #include "general/dustring.h"
 
-#include <QDebug>
 
 DU_OBJECT_IMPL(DuList)
 
@@ -30,7 +29,7 @@ QString DuList::getName() const
 
     if (name == NULL)
     {
-        qCritical() << "Unable to cast" << KEY_LIST_NAME << "to DuString*";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_LIST_NAME << "to DuString*";
         return QString();
     }
 
@@ -53,7 +52,7 @@ DuList::Type DuList::getType() const
 
     if (type == NULL)
     {
-        qCritical() << "Unable to cast" << KEY_LIST_TYPE << "to DuNumeric*";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_LIST_TYPE << "to DuNumeric*";
         return None;
     }
 

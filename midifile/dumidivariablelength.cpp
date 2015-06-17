@@ -1,6 +1,5 @@
 #include "dumidivariablelength.h"
 
-#include <QDebug>
 
 
 DU_OBJECT_IMPL(DuMidiVariableLength)

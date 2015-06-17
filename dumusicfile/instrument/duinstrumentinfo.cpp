@@ -3,7 +3,6 @@
 #include <cstring>
 
 #include <QJsonObject>
-#include <QDebug>
 
 DU_OBJECT_IMPL(DuInstrumentInfo)
 
@@ -66,7 +65,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrI
 
     if (!verif)
     {
-        qWarning() << "DuInstrumentInfo::fromDuMusicBinary():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuInstrumentInfo::fromDuMusicBinary():\n"
                    << "an attribute was not properly set";
     }
 
@@ -90,7 +89,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
             ||  !jsonProgChange.isDouble()  ||  !jsonCtrlChange.isDouble()
             ||  !jsonNoteOff.isDouble()     ||  !jsonRelVolume.isDouble())
     {
-        qCritical() << "DuInstrumentInfo::fromJson():\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrumentInfo::fromJson():\n"
                     << "failed to generate DuInstrumentInfo\n"
                     << "a json key did not contain the proper type";
 
@@ -113,7 +112,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
 
     if (!verif)
     {
-        qWarning() << "DuInstrumentInfo::fromJson():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuInstrumentInfo::fromJson():\n"
                    << "an attribute was not properly set";
     }
 

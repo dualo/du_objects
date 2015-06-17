@@ -1,6 +1,5 @@
 #include "dudevice.h"
 
-#include <QDebug>
 
 DU_OBJECT_IMPL(DuDevice)
 
@@ -43,7 +42,7 @@ QString DuDevice::getSerialNumber() const
 
     if (serialNumber == NULL)
     {
-        qCritical() << "Unable to cast" << KEY_DEVICE_SERIAL_NUMBER << "to DuString*";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_DEVICE_SERIAL_NUMBER << "to DuString*";
         return QString();
     }
 
@@ -66,7 +65,7 @@ QString DuDevice::getName() const
 
     if (name == NULL)
     {
-        qCritical() << "Unable to cast" << KEY_DEVICE_NAME << "to DuString*";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_DEVICE_NAME << "to DuString*";
         return QString();
     }
 
@@ -95,7 +94,7 @@ QString DuDevice::getOwner() const
 
     if (owner == NULL)
     {
-        qCritical() << "Unable to cast" << KEY_DEVICE_OWNER << "to DuString*";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_DEVICE_OWNER << "to DuString*";
         return QString();
     }
 
@@ -118,7 +117,7 @@ int DuDevice::getOwnerId() const
 
     if (ownerId == NULL)
     {
-        qCritical() << "Unable to cast" << KEY_DEVICE_OWNER_ID << "to DuNumeric*";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_DEVICE_OWNER_ID << "to DuNumeric*";
         return -1;
     }
 
@@ -141,7 +140,7 @@ DuVersionConstPtr DuDevice::getVersion() const
 
     if (version == NULL)
     {
-        qCritical() << "Unable to cast" << KEY_DEVICE_VERSION << "to DuVersion*";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_DEVICE_VERSION << "to DuVersion*";
         return DuVersionConstPtr();
     }
 
@@ -174,7 +173,7 @@ QDateTime DuDevice::getUpdateDate() const
 
     if (updateDate == NULL)
     {
-        qCritical() << "Unable to cast" << KEY_DEVICE_UPDATE_DATE << "to DuDate*";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_DEVICE_UPDATE_DATE << "to DuDate*";
         return QDateTime();
     }
 

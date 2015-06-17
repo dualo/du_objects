@@ -1,6 +1,5 @@
 #include "dumidifile.h"
 
-#include <QDebug>
 
 
 DU_OBJECT_IMPL(DuMidiFile)
@@ -44,7 +43,7 @@ DuMidiFilePtr DuMidiFile::fromMidiBinary(QDataStream &stream)
 
     if (headerId != MIDI_HEADER_ID_VALUE || headerSize != MIDI_HEADER_CHUNK_SIZE)
     {
-        qCritical() << "The selected file is not a Standard MIDI File";
+        qCCritical(LOG_CAT_DU_OBJECT) << "The selected file is not a Standard MIDI File";
 
         return DuMidiFilePtr();
     }
@@ -54,7 +53,7 @@ DuMidiFilePtr DuMidiFile::fromMidiBinary(QDataStream &stream)
 
     if (format > 0x01)
     {
-        qCritical() << "The software cannot read MIDI format" << format;
+        qCCritical(LOG_CAT_DU_OBJECT) << "The software cannot read MIDI format" << format;
 
         return DuMidiFilePtr();
     }
@@ -74,7 +73,7 @@ DuMidiFilePtr DuMidiFile::fromMidiBinary(QDataStream &stream)
 
     if (!verif)
     {
-        qCritical() << "Invalid MIDI header parameters";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Invalid MIDI header parameters";
 
         return DuMidiFilePtr();
     }

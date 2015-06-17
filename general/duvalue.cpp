@@ -1,6 +1,5 @@
 #include "duvalue.h"
 
-#include <QDebug>
 
 DU_OBJECT_IMPL(DuValue)
 

@@ -1,7 +1,5 @@
 #include "dusound.h"
 
-#include <QDebug>
-
 DU_OBJECT_IMPL(DuSound)
 
 DuSound::DuSound() :
@@ -35,9 +33,9 @@ DuSoundPtr DuSound::fromBinary(QIODevice *input)
 
     if (array.isEmpty())
     {
-        qCritical() << "DuSound::fromBinary():\n"
-                    << "failed to generate DuSound\n"
-                    << "selected file could not be read";
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuSound::fromBinary():\n"
+                                      << "failed to generate DuSound\n"
+                                      << "selected file could not be read";
 
         return DuSoundPtr();
     }

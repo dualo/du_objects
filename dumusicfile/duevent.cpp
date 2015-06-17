@@ -1,7 +1,6 @@
 #include "duevent.h"
 
 #include <QJsonObject>
-#include <QDebug>
 
 
 DU_OBJECT_IMPL(DuEvent)
@@ -73,7 +72,7 @@ DuEventPtr DuEvent::fromDuMusicBinary(const music_sample &du_sample)
 
     if (!verif)
     {
-        qWarning() << "DuEvent::fromDuMusicBinary():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuEvent::fromDuMusicBinary():\n"
                    << "an attribute was not properly set";
     }
 
@@ -93,7 +92,7 @@ DuEventPtr DuEvent::fromJson(const QJsonObject &jsonEvent)
             ||  !jsonKbrd.isDouble()    ||  !jsonNote.isDouble()
             ||  !jsonVal.isDouble())
     {
-        qCritical() << "DuEvent::fromJson():\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuEvent::fromJson():\n"
                     << "failed to generate DuEvent\n"
                     << "a json key did not contain the proper type";
 
@@ -112,7 +111,7 @@ DuEventPtr DuEvent::fromJson(const QJsonObject &jsonEvent)
 
     if (!verif)
     {
-        qWarning() << "DuEvent::fromJson():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuEvent::fromJson():\n"
                    << "an attribute was not properly set";
     }
 

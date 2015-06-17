@@ -1,6 +1,5 @@
 #include "duversion.h"
 
-#include <QDebug>
 
 
 DU_OBJECT_IMPL(DuVersion)
@@ -63,7 +62,7 @@ bool DuVersion::setVersion(const QString &version)
 
     if (nbs.size() != 3)
     {
-        qWarning() << "DuVersion::setVersion():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuVersion::setVersion():\n"
                    << "failed";
 
         return false;
@@ -74,7 +73,7 @@ bool DuVersion::setVersion(const QString &version)
     int major = nbs[0].toInt(&ok);
     if (!ok)
     {
-        qWarning() << "DuVersion::setVersion():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuVersion::setVersion():\n"
                    << "failed";
 
         return false;
@@ -83,7 +82,7 @@ bool DuVersion::setVersion(const QString &version)
     int minor = nbs[1].toInt(&ok);
     if (!ok)
     {
-        qWarning() << "DuVersion::setVersion():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuVersion::setVersion():\n"
                    << "failed";
 
         return false;
@@ -92,7 +91,7 @@ bool DuVersion::setVersion(const QString &version)
     int patch = nbs[2].toInt(&ok);
     if (!ok)
     {
-        qWarning() << "DuVersion::setVersion():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuVersion::setVersion():\n"
                    << "failed";
 
         return false;
@@ -110,7 +109,7 @@ bool DuVersion::setVersion(int major, int minor, int patch)
 {
     if (major < 0 || minor < 0 || patch < 0)
     {
-        qWarning() << "DuVersion::setVersion():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuVersion::setVersion():\n"
                    << "failed";
 
         return false;

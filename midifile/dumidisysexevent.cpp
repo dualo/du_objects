@@ -1,6 +1,5 @@
 #include "dumidisysexevent.h"
 
-#include <QDebug>
 
 
 DU_OBJECT_IMPL(DuMidiSysExEvent)

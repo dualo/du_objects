@@ -3,7 +3,6 @@
 #include <cstring>
 
 #include <QJsonObject>
-#include <QDebug>
 
 DU_OBJECT_IMPL(DuChorus)
 
@@ -88,7 +87,7 @@ DuChorusPtr DuChorus::fromDuMusicBinary(const FX_chorus &du_chorus)
 
     if (!verif)
     {
-        qWarning() << "DuChorus::fromDuMusicBinary():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuChorus::fromDuMusicBinary():\n"
                    << "an attribute was not properly set";
     }
 
@@ -118,7 +117,7 @@ DuChorusPtr DuChorus::fromJson(const QJsonObject &jsonChorus)
             ||  !jsonEffectName.isString())
     {
 
-        qCritical() << "DuChorus::fromJson():\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuChorus::fromJson():\n"
                     << "failed to generate DuChorus\n"
                     << "a json key did not contain the proper type";
 
@@ -145,7 +144,7 @@ DuChorusPtr DuChorus::fromJson(const QJsonObject &jsonChorus)
 
     if (!verif)
     {
-        qWarning() << "DuChorus::fromJson():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuChorus::fromJson():\n"
                    << "an attribute was not properly set";
     }
 

@@ -3,7 +3,6 @@
 #include <cstring>
 
 #include <QJsonObject>
-#include <QDebug>
 
 DU_OBJECT_IMPL(DuPreset)
 
@@ -81,7 +80,7 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
 
     if (!verif)
     {
-        qWarning() << "DuPreset::fromDuMusicBinary():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuPreset::fromDuMusicBinary():\n"
                    << "an attribute was not properly set";
     }
 
@@ -108,7 +107,7 @@ DuPresetPtr DuPreset::fromJson(const QJsonObject &jsonPreset)
             ||  !jsonPortaCtrl.isDouble()   ||  !jsonPortaTime.isDouble()
             ||  !jsonPitchBend.isDouble()   ||  !jsonDisposition.isDouble())
     {
-        qCritical() << "DuPreset::fromJson():\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuPreset::fromJson():\n"
                     << "failed to generate DuPreset\n"
                     << "a json key did not contain the proper type";
 
@@ -134,7 +133,7 @@ DuPresetPtr DuPreset::fromJson(const QJsonObject &jsonPreset)
 
     if (!verif)
     {
-        qWarning() << "DuPreset::fromJson():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuPreset::fromJson():\n"
                    << "an attribute was not properly set";
     }
 

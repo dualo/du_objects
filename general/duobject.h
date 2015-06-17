@@ -4,10 +4,13 @@
 #include <QHttpPart>
 #include <QJsonValue>
 #include <QSharedPointer>
+#include <QLoggingCategory>
 
 #pragma pack(push, 4)
 #include "../du-touch/parameters/music_parameters_mng.h"
 #pragma pack(pop)
+
+Q_DECLARE_LOGGING_CATEGORY(LOG_CAT_DU_OBJECT)
 
 
 #define DU_OBJECT(name) \

@@ -1,6 +1,5 @@
 #include "duurl.h"
 
-#include <QDebug>
 
 
 DU_OBJECT_IMPL(DuUrl)
