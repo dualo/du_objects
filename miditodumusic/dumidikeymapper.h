@@ -4,6 +4,7 @@
 #include "../general/duobject.h"
 
 #include <QJsonObject>
+#include <QStringList>
 
 
 #define SCALE_NONE                  "None"
@@ -39,7 +40,9 @@ public:
 
     int size() const;
 
-    void setMaps(QJsonObject value);
+    void importMaps(QJsonObject value);
+
+    QStringList mapList() const;
     void chooseMap(QString scale, quint8 tonality);
 
     int fetchKeyboard(quint8 octave, quint8 key);

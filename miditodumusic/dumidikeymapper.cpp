@@ -55,9 +55,15 @@ int DuMidiKeyMapper::size() const
 }
 
 
-void DuMidiKeyMapper::setMaps(QJsonObject value)
+void DuMidiKeyMapper::importMaps(QJsonObject value)
 {
     m_maps = value;
+}
+
+
+QStringList DuMidiKeyMapper::mapList() const
+{
+    return m_maps.keys();
 }
 
 void DuMidiKeyMapper::chooseMap(QString scale, quint8 tonality)
@@ -108,7 +114,10 @@ int DuMidiKeyMapper::fetchKeyboard(quint8 octave, quint8 key)
 
     int chosenKeyboard = chosenKeyboardValue.toInt();
 
-    if (octave % 2 != 0)
+    // The first possible instrument octave is the second octave in MIDI.
+    int parity = (key / 12 - octave + 1) % 2;
+
+    if (parity != 0)
         chosenKeyboard ^= 0x08;
 
     return chosenKeyboard;
