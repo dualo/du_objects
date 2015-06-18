@@ -1,5 +1,7 @@
 HEADERS += \
-    $$PWD/Util.h
+    $$PWD/Util.h \
+    $$PWD/FileWriter.h
 
 SOURCES += \
-    $$PWD/Util.cpp
+    $$PWD/Util.cpp \
+    $$PWD/FileWriter.cpp
