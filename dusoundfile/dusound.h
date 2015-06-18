@@ -1,7 +1,7 @@
 #ifndef DUSOUND_H
 #define DUSOUND_H
 
-#include <du_objects/general/dubinarydata.h>
+#include "../general/dubinarydata.h"
 
 
 //TODO: this will be in an external
