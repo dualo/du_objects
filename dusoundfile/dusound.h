@@ -62,9 +62,6 @@ public:
 private:
     int m_databaseId;
     QStringList m_lists;
-
-    //TODO: put it in children
-    QString m_name;
 };
 
 Q_DECLARE_METATYPE(DuSoundPtr)
