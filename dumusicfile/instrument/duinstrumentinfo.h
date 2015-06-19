@@ -12,6 +12,7 @@
 #define KEY_INSTRINFO_USERID                "UserID"
 #define KEY_INSTRINFO_MIDIPROGRAMCHANGE     "MidiProgramChange"
 #define KEY_INSTRINFO_MIDICONTROLCHANGE0    "MidiControlChange0"
+#define KEY_INSTRINFO_OCTAVE                "Octave"
 #define KEY_INSTRINFO_ACTIVENOTEOFF         "ActiveNoteOff"
 #define KEY_INSTRINFO_RELVOLUME             "RelativeVolume"
 
@@ -50,6 +51,9 @@ public:
 
     int getMidiControlChange0() const;
     bool setMidiControlChange0(int value);
+
+    int getOctave() const;
+    bool setOctave(int value);
 
     int getActiveNoteOff() const;
     bool setActiveNoteOff(int value);
