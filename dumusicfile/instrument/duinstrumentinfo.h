@@ -15,6 +15,7 @@
 #define KEY_INSTRINFO_OCTAVE                "Octave"
 #define KEY_INSTRINFO_ACTIVENOTEOFF         "ActiveNoteOff"
 #define KEY_INSTRINFO_RELVOLUME             "RelativeVolume"
+#define KEY_INSTRINFO_TYPE                  "Type"
 
 
 DU_OBJECT(DuInstrumentInfo)
@@ -60,6 +61,9 @@ public:
 
     int getRelativeVolume() const;
     bool setRelativeVolume(int value);
+
+    int getType() const;
+    bool setType(int value);
 };
 
 #endif // DUINSTRUMENTINFO_H

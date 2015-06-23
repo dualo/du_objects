@@ -36,6 +36,10 @@ DuInstrumentInfo::DuInstrumentInfo() :
     addChild(KEY_INSTRINFO_RELVOLUME,
              new DuNumeric(0x40, NUMERIC_DEFAULT_SIZE,
                            0xFF, 0x00));
+
+    addChild(KEY_INSTRINFO_TYPE,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0xFF, 0x00));
 }
 
 DuInstrumentInfo::~DuInstrumentInfo()
@@ -67,6 +71,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrI
     verif = verif && instrInfo->setOctave(du_instrInfo.instr_octave);
     verif = verif && instrInfo->setActiveNoteOff(du_instrInfo.instr_noteoff);
     verif = verif && instrInfo->setRelativeVolume(du_instrInfo.instr_relvolume);
+    verif = verif && instrInfo->setType(du_instrInfo.instr_type);
 
     if (!verif)
     {
@@ -89,12 +94,13 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
     QJsonValue jsonOctave       = jsonInstrInfo[KEY_INSTRINFO_OCTAVE];
     QJsonValue jsonNoteOff      = jsonInstrInfo[KEY_INSTRINFO_ACTIVENOTEOFF];
     QJsonValue jsonRelVolume    = jsonInstrInfo[KEY_INSTRINFO_RELVOLUME];
+    QJsonValue jsonType         = jsonInstrInfo[KEY_INSTRINFO_TYPE];
 
     if (        !jsonCategory.isString()    ||  !jsonName.isString()
             ||  !jsonId.isDouble()          ||  !jsonUserId.isString()
             ||  !jsonProgChange.isDouble()  ||  !jsonCtrlChange.isDouble()
             ||  !jsonOctave.isDouble()      ||  !jsonNoteOff.isDouble()
-            ||  !jsonRelVolume.isDouble())
+            ||  !jsonRelVolume.isDouble()   ||  !jsonType.isDouble())
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrumentInfo::fromJson():\n"
                     << "failed to generate DuInstrumentInfo\n"
@@ -118,6 +124,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
     verif = verif && instrInfo->setOctave(jsonOctave.toInt());
     verif = verif && instrInfo->setActiveNoteOff(jsonNoteOff.toInt());
     verif = verif && instrInfo->setRelativeVolume(jsonRelVolume.toInt());
+    verif = verif && instrInfo->setType(jsonType.toInt());
 
     if (!verif)
     {
@@ -163,6 +170,11 @@ QByteArray DuInstrumentInfo::toDuMusicBinary() const
     if (tmpNum == -1)
         return QByteArray();
     du_instrumentinfo.instr_relvolume = tmpNum;
+
+    tmpNum = getType();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_instrumentinfo.instr_type = tmpNum;
 
     tmpNum = getID();
     if (tmpNum == -1)
@@ -387,7 +399,8 @@ bool DuInstrumentInfo::setActiveNoteOff(int value)
 
 int DuInstrumentInfo::getRelativeVolume() const
 {
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_INSTRINFO_RELVOLUME);
+    const DuNumericConstPtr &tmp =
+            getChildAs<DuNumeric>(KEY_INSTRINFO_RELVOLUME);
 
     if (tmp == NULL)
         return -1;
@@ -399,6 +412,28 @@ bool DuInstrumentInfo::setRelativeVolume(int value)
 {
     const DuNumericPtr &tmp =
             getChildAs<DuNumeric>(KEY_INSTRINFO_RELVOLUME);
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
+}
+
+int DuInstrumentInfo::getType() const
+{
+    const DuNumericConstPtr &tmp =
+            getChildAs<DuNumeric>(KEY_INSTRINFO_TYPE);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuInstrumentInfo::setType(int value)
+{
+    const DuNumericPtr &tmp =
+            getChildAs<DuNumeric>(KEY_INSTRINFO_TYPE);
 
     if (tmp == NULL)
         return false;

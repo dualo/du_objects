@@ -48,6 +48,52 @@ DuPreset::DuPreset() :
     addChild(KEY_PRESET_DISPOSITION,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
+
+
+    addChild(KEY_PRESET_ARPEGIATORTYPE,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0x7F, 0x00));
+
+    addChild(KEY_PRESET_ARPEGIATORBEAT,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0x7F, 0x00));
+
+
+    addChild(KEY_PRESET_DIRECTIONGYROP,
+             new DuNumeric(DIRECTIONGYRO_MINVALUE, NUMERIC_DEFAULT_SIZE,
+                           DIRECTIONGYRO_MAXVALUE, DIRECTIONGYRO_MINVALUE));
+
+    addChild(KEY_PRESET_DIRECTIONGYROR,
+             new DuNumeric(DIRECTIONGYRO_MINVALUE, NUMERIC_DEFAULT_SIZE,
+                           DIRECTIONGYRO_MAXVALUE, DIRECTIONGYRO_MINVALUE));
+
+    addChild(KEY_PRESET_DIRECTIONGYROY,
+             new DuNumeric(DIRECTIONGYRO_MINVALUE, NUMERIC_DEFAULT_SIZE,
+                           DIRECTIONGYRO_MAXVALUE, DIRECTIONGYRO_MINVALUE));
+
+    addChild(KEY_PRESET_ACTIVEAFTERTOUCH,
+             new DuNumeric(0x00, PARAMS_NUMERIC_SIZE,
+                           0x7F, 0x00));
+
+    addChild(KEY_PRESET_ACTIVESLIDERL,
+             new DuNumeric(0x00, PARAMS_NUMERIC_SIZE,
+                           0x7F, 0x00));
+
+    addChild(KEY_PRESET_ACTIVESLIDERR,
+             new DuNumeric(0x00, PARAMS_NUMERIC_SIZE,
+                           0x7F, 0x00));
+
+    addChild(KEY_PRESET_ACTIVEGYROP,
+             new DuNumeric(0x00, PARAMS_NUMERIC_SIZE,
+                           0x7F, 0x00));
+
+    addChild(KEY_PRESET_ACTIVEGYROR,
+             new DuNumeric(0x00, PARAMS_NUMERIC_SIZE,
+                           0x7F, 0x00));
+
+    addChild(KEY_PRESET_ACTIVEGYROY,
+             new DuNumeric(0x00, PARAMS_NUMERIC_SIZE,
+                           0x7F, 0x00));
 }
 
 DuPreset::~DuPreset()
@@ -73,10 +119,25 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
     verif = verif && preset->setPortamentoOnOff(du_preset.s_portamento_on_off);
     verif = verif && preset->setPortamentoControl(du_preset.s_portamento_ctrl);
     verif = verif && preset->setPortamentoTime(du_preset.s_portamento_time);
-
     verif = verif && preset->setExpression(du_preset.s_expression);
     verif = verif && preset->setPitchBendSensitivity(du_preset.s_pitch_bend_sensitivity);
     verif = verif && preset->setDisposition(du_preset.s_disposition);
+
+
+    verif = verif && preset->setArpeggiatorType(du_preset.s_arpegiator_type);
+    verif = verif && preset->setArpeggiatorBeat(du_preset.s_arpegiator_beat);
+
+    verif = verif && preset->setDirectionGyroP(du_preset.s_direction_gyro_P);
+    verif = verif && preset->setDirectionGyroR(du_preset.s_direction_gyro_R);
+    verif = verif && preset->setDirectionGyroY(du_preset.s_direction_gyro_Y);
+
+    verif = verif && preset->setActiveAftertouch(du_preset.s_activ_aftertouch);
+    verif = verif && preset->setActiveSliderL(du_preset.s_activ_slider_L);
+    verif = verif && preset->setActiveSliderR(du_preset.s_activ_slider_R);
+
+    verif = verif && preset->setActiveGyroP(du_preset.s_activ_gyro_P);
+    verif = verif && preset->setActiveGyroR(du_preset.s_activ_gyro_R);
+    verif = verif && preset->setActiveGyroY(du_preset.s_activ_gyro_Y);
 
     if (!verif)
     {
@@ -101,11 +162,32 @@ DuPresetPtr DuPreset::fromJson(const QJsonObject &jsonPreset)
     QJsonValue jsonPitchBend    = jsonPreset[KEY_PRESET_PITCHBENDSENSITIVITY];
     QJsonValue jsonDisposition  = jsonPreset[KEY_PRESET_DISPOSITION];
 
+    QJsonValue jsonArpeggiatorType      = jsonPreset[KEY_PRESET_ARPEGIATORTYPE];
+    QJsonValue jsonArpeggiatorBeat      = jsonPreset[KEY_PRESET_ARPEGIATORBEAT];
+
+    QJsonValue jsonDirectionGyroP       = jsonPreset[KEY_PRESET_DIRECTIONGYROP];
+    QJsonValue jsonDirectionGyroR       = jsonPreset[KEY_PRESET_DIRECTIONGYROR];
+    QJsonValue jsonDirectionGyroY       = jsonPreset[KEY_PRESET_DIRECTIONGYROY];
+    QJsonValue jsonActiveAftertouch     = jsonPreset[KEY_PRESET_ACTIVEAFTERTOUCH];
+    QJsonValue jsonActiveSliderL        = jsonPreset[KEY_PRESET_ACTIVESLIDERL];
+    QJsonValue jsonActiveSliderR        = jsonPreset[KEY_PRESET_ACTIVESLIDERR];
+    QJsonValue jsonActiveGyroP          = jsonPreset[KEY_PRESET_ACTIVEGYROP];
+    QJsonValue jsonActiveGyroR          = jsonPreset[KEY_PRESET_ACTIVEGYROR];
+    QJsonValue jsonActiveGyroY          = jsonPreset[KEY_PRESET_ACTIVEGYROY];
+
     if (        !jsonVolume.isDouble()      ||  !jsonPanning.isDouble()
             ||  !jsonExpression.isDouble()  ||  !jsonOctave.isDouble()
             ||  !jsonToReverb.isDouble()    ||  !jsonPortaOnOff.isDouble()
             ||  !jsonPortaCtrl.isDouble()   ||  !jsonPortaTime.isDouble()
-            ||  !jsonPitchBend.isDouble()   ||  !jsonDisposition.isDouble())
+            ||  !jsonPitchBend.isDouble()   ||  !jsonDisposition.isDouble()
+
+            || !jsonArpeggiatorType.isDouble()  || !jsonArpeggiatorBeat.isDouble()
+
+            ||  !jsonDirectionGyroP.isDouble()  ||  !jsonDirectionGyroR.isDouble()
+            ||  !jsonDirectionGyroY.isDouble()  ||  !jsonActiveAftertouch.isDouble()
+            ||  !jsonActiveSliderL.isDouble()   ||  !jsonActiveSliderR.isDouble()
+            ||  !jsonActiveGyroP.isDouble()     ||  !jsonActiveGyroR.isDouble()
+            ||  !jsonActiveGyroY.isDouble())
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuPreset::fromJson():\n"
                     << "failed to generate DuPreset\n"
@@ -126,10 +208,26 @@ DuPresetPtr DuPreset::fromJson(const QJsonObject &jsonPreset)
     verif = verif && preset->setPortamentoOnOff(jsonPortaOnOff.toInt());
     verif = verif && preset->setPortamentoControl(jsonPortaCtrl.toInt());
     verif = verif && preset->setPortamentoTime(jsonPortaTime.toInt());
-
     verif = verif && preset->setExpression(jsonExpression.toInt());
     verif = verif && preset->setPitchBendSensitivity(jsonPitchBend.toInt());
     verif = verif && preset->setDisposition(jsonDisposition.toInt());
+
+
+    verif = verif && preset->setArpeggiatorType(jsonArpeggiatorType.toInt());
+    verif = verif && preset->setArpeggiatorBeat(jsonArpeggiatorBeat.toInt());
+
+
+    verif = verif && preset->setDirectionGyroP(jsonDirectionGyroP.toInt());
+    verif = verif && preset->setDirectionGyroR(jsonDirectionGyroR.toInt());
+    verif = verif && preset->setDirectionGyroY(jsonDirectionGyroY.toInt());
+
+    verif = verif && preset->setActiveAftertouch(jsonActiveAftertouch.toInt());
+    verif = verif && preset->setActiveSliderL(jsonActiveSliderL.toInt());
+    verif = verif && preset->setActiveSliderR(jsonActiveSliderR.toInt());
+
+    verif = verif && preset->setActiveGyroP(jsonActiveGyroP.toInt());
+    verif = verif && preset->setActiveGyroR(jsonActiveGyroR.toInt());
+    verif = verif && preset->setActiveGyroY(jsonActiveGyroY.toInt());
 
     if (!verif)
     {
@@ -202,6 +300,65 @@ QByteArray DuPreset::toDuMusicBinary() const
     du_preset.s_disposition = tmpNum;
 
 
+    tmpNum = getArpeggiatorType();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_preset.s_arpegiator_type = tmpNum;
+
+    tmpNum = getArpeggiatorBeat();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_preset.s_arpegiator_beat = tmpNum;
+
+
+    tmpNum = getDirectionGyroP();
+    if (tmpNum == 0)
+        return QByteArray();
+    du_preset.s_direction_gyro_P = tmpNum;
+
+    tmpNum = getDirectionGyroR();
+    if (tmpNum == 0)
+        return QByteArray();
+    du_preset.s_direction_gyro_R = tmpNum;
+
+    tmpNum = getDirectionGyroY();
+    if (tmpNum == 0)
+        return QByteArray();
+    du_preset.s_direction_gyro_Y = tmpNum;
+
+
+    tmpNum = getActiveAftertouch();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_preset.s_activ_aftertouch = tmpNum;
+
+    tmpNum = getActiveSliderL();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_preset.s_activ_slider_L = tmpNum;
+
+    tmpNum = getActiveSliderR();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_preset.s_activ_slider_R = tmpNum;
+
+
+    tmpNum = getActiveGyroP();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_preset.s_activ_gyro_P = tmpNum;
+
+    tmpNum = getActiveGyroR();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_preset.s_activ_gyro_R = tmpNum;
+
+    tmpNum = getActiveGyroY();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_preset.s_activ_gyro_Y = tmpNum;
+
+
     return QByteArray((char *)&(du_preset), size());
 }
 
@@ -224,7 +381,7 @@ int DuPreset::getVolume() const
 
 bool DuPreset::setVolume(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PRESET_VOLUME);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_VOLUME);
 
     if (tmp == NULL)
         return false;
@@ -244,7 +401,7 @@ int DuPreset::getPanning() const
 
 bool DuPreset::setPanning(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PRESET_PANNING);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_PANNING);
 
     if (tmp == NULL)
         return false;
@@ -264,7 +421,7 @@ int DuPreset::getSendToReverb() const
 
 bool DuPreset::setSendToReverb(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PRESET_SENDTOREVERB);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_SENDTOREVERB);
 
     if (tmp == NULL)
         return false;
@@ -284,7 +441,7 @@ int DuPreset::getOctave() const
 
 bool DuPreset::setOctave(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PRESET_OCTAVE);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_OCTAVE);
 
     if (tmp == NULL)
         return false;
@@ -305,7 +462,7 @@ int DuPreset::getPortamentoOnOff() const
 
 bool DuPreset::setPortamentoOnOff(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOONOFF);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOONOFF);
 
     if (tmp == NULL)
         return false;
@@ -325,7 +482,7 @@ int DuPreset::getPortamentoControl() const
 
 bool DuPreset::setPortamentoControl(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOCONTROL);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOCONTROL);
 
     if (tmp == NULL)
         return false;
@@ -345,7 +502,7 @@ int DuPreset::getPortamentoTime() const
 
 bool DuPreset::setPortamentoTime(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOTIME);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_PORTAMENTOTIME);
 
     if (tmp == NULL)
         return false;
@@ -366,7 +523,7 @@ int DuPreset::getExpression() const
 
 bool DuPreset::setExpression(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PRESET_EXPRESSION);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_EXPRESSION);
 
     if (tmp == NULL)
         return false;
@@ -386,7 +543,7 @@ int DuPreset::getPitchBendSensitivity() const
 
 bool DuPreset::setPitchBendSensitivity(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PRESET_PITCHBENDSENSITIVITY);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_PITCHBENDSENSITIVITY);
 
     if (tmp == NULL)
         return false;
@@ -406,7 +563,258 @@ int DuPreset::getDisposition() const
 
 bool DuPreset::setDisposition(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PRESET_DISPOSITION);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_DISPOSITION);
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
+}
+
+
+int DuPreset::getArpeggiatorType() const
+{
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_PRESET_ARPEGIATORTYPE);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuPreset::setArpeggiatorType(int value)
+{
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_ARPEGIATORTYPE);
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
+}
+
+int DuPreset::getArpeggiatorBeat() const
+{
+    const DuNumericConstPtr& tmp = getChildAs<DuNumeric>(KEY_PRESET_ARPEGIATORBEAT);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuPreset::setArpeggiatorBeat(int value)
+{
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_ARPEGIATORBEAT);
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
+}
+
+
+//Warning: the direction gyro parameters should be either 1 or -1 so the error
+//return value can't be -1.
+
+int DuPreset::getDirectionGyroP() const
+{
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_DIRECTIONGYROP);
+
+    if (tmp == NULL)
+        return 0;
+
+    return tmp->getNumeric();
+}
+
+bool DuPreset::setDirectionGyroP(int value)
+{
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_DIRECTIONGYROP);
+
+    if (tmp == NULL)
+        return false;
+
+    if (value == 0)
+    {
+        tmp->setNumeric(DIRECTIONGYRO_MINVALUE);
+        return false;
+    }
+
+    return tmp->setNumeric(value);
+}
+
+
+int DuPreset::getDirectionGyroR() const
+{
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_DIRECTIONGYROR);
+
+    if (tmp == NULL)
+        return 0;
+
+    return tmp->getNumeric();
+}
+
+bool DuPreset::setDirectionGyroR(int value)
+{
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_DIRECTIONGYROR);
+
+    if (tmp == NULL)
+        return false;
+
+    if (value == 0)
+    {
+        tmp->setNumeric(DIRECTIONGYRO_MINVALUE);
+        return false;
+    }
+
+    return tmp->setNumeric(value);
+}
+
+
+int DuPreset::getDirectionGyroY() const
+{
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_DIRECTIONGYROY);
+
+    if (tmp == NULL)
+        return 0;
+
+    return tmp->getNumeric();
+}
+
+bool DuPreset::setDirectionGyroY(int value)
+{
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_DIRECTIONGYROY);
+
+    if (tmp == NULL)
+        return false;
+
+    if (value == 0)
+    {
+        tmp->setNumeric(DIRECTIONGYRO_MINVALUE);
+        return false;
+    }
+
+    return tmp->setNumeric(value);
+}
+
+
+int DuPreset::getActiveAftertouch() const
+{
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_ACTIVEAFTERTOUCH);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuPreset::setActiveAftertouch(int value)
+{
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_ACTIVEAFTERTOUCH);
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
+}
+
+
+int DuPreset::getActiveSliderL() const
+{
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_ACTIVESLIDERL);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuPreset::setActiveSliderL(int value)
+{
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_ACTIVESLIDERL);
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
+}
+
+
+int DuPreset::getActiveSliderR() const
+{
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_ACTIVESLIDERR);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuPreset::setActiveSliderR(int value)
+{
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_ACTIVESLIDERR);
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
+}
+
+
+int DuPreset::getActiveGyroP() const
+{
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_ACTIVEGYROP);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuPreset::setActiveGyroP(int value)
+{
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_ACTIVEGYROP);
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
+}
+
+
+int DuPreset::getActiveGyroR() const
+{
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_ACTIVEGYROR);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuPreset::setActiveGyroR(int value)
+{
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_ACTIVEGYROR);
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
+}
+
+
+int DuPreset::getActiveGyroY() const
+{
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_ACTIVEGYROY);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuPreset::setActiveGyroY(int value)
+{
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_PRESET_ACTIVEGYROY);
 
     if (tmp == NULL)
         return false;
