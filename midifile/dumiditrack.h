@@ -32,6 +32,7 @@ public:
 
     int size() const;
 
+    DuArrayPtr getEvents();
     DuArrayConstPtr getEvents() const;
     void setEvents(const DuArrayPtr &array);
 

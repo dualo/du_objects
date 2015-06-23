@@ -143,6 +143,11 @@ int DuMidiTrack::size() const
 }
 
 
+DuArrayPtr DuMidiTrack::getEvents()
+{
+    return getChildAs<DuArray>(KEY_MIDITRACK_EVENTS);
+}
+
 DuArrayConstPtr DuMidiTrack::getEvents() const
 {
     return getChildAs<DuArray>(KEY_MIDITRACK_EVENTS);

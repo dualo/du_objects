@@ -177,6 +177,11 @@ bool DuMidiFile::setDivision(quint16 value)
 }
 
 
+DuArrayPtr DuMidiFile::getTracks()
+{
+    return getChildAs<DuArray>(KEY_MIDIFILE_TRACKS);
+}
+
 DuArrayConstPtr DuMidiFile::getTracks() const
 {
     return getChildAs<DuArray>(KEY_MIDIFILE_TRACKS);

@@ -41,6 +41,7 @@ public:
     int getDivision() const;
     bool setDivision(quint16 value);
 
+    DuArrayPtr getTracks();
     DuArrayConstPtr getTracks() const;
     void setTracks(const DuArrayPtr &array);
     bool appendTrack(const DuMidiTrackPtr &track);
