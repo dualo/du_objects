@@ -70,9 +70,15 @@ public:
 
     void setTitle(const QString &title);
     void setInstrumentName(const QString &instrument);
+
+    int getTempo() const;
     void setTempo(quint8 bpm);
+
     void setTimeSignature(quint8 nn, quint8 dd = 0x02,
                           quint8 cc = 0x18, quint8 bb = 0x08);
+
+    int getTonality() const;
+    int getScale() const;
     void setKeySignature(quint8 key, bool isMinor);
     void setEndOfTrack();
 };

@@ -230,6 +230,41 @@ void DuMidiMetaEvent::setInstrumentName(const QString &instrument)
     setData(instrument.toUtf8());
 }
 
+
+int DuMidiMetaEvent::getTempo() const
+{
+    if (getType() != Tempo)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMidiMetaEvent::getTempo():\n"
+                    << "this event does not have tempo meta type";
+
+        return -1;
+    }
+
+    const QByteArray &tempoArray = getData();
+    if (tempoArray.size() != 3)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMidiMetaEvent::getTempo():\n"
+                    << "incorrect data";
+
+        return -1;
+    }
+
+    quint32 tmpByte = 0;
+    quint32 tmp = 0;
+
+    tmpByte = tempoArray[0];
+    tmp += (tmpByte << 16) & 0xFF0000;
+
+    tmpByte = tempoArray[1];
+    tmp += (tmpByte << 8) & 0xFF00;
+
+    tmpByte = tempoArray[2];
+    tmp += tmpByte & 0xFF;
+
+    return MICROSECS_PER_MIN / tmp;
+}
+
 void DuMidiMetaEvent::setTempo(quint8 bpm)
 {
     if (bpm < 4)
@@ -252,6 +287,7 @@ void DuMidiMetaEvent::setTempo(quint8 bpm)
     setData(tempoArray);
 }
 
+
 void DuMidiMetaEvent::setTimeSignature(quint8 nn, quint8 dd, quint8 cc, quint8 bb)
 {
     if (nn == 0 ||  dd == 0 || cc == 0  ||bb == 0)
@@ -272,6 +308,51 @@ void DuMidiMetaEvent::setTimeSignature(quint8 nn, quint8 dd, quint8 cc, quint8 b
     timeSigArray.append(bb);
 
     setData(timeSigArray);
+}
+
+
+int DuMidiMetaEvent::getTonality() const
+{
+    if (getType() != KeySignature)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMidiMetaEvent::getTonality():\n"
+                    << "this event does not have key signature meta type";
+
+        return -1;
+    }
+
+    const QByteArray &keySigArray = getData();
+    if (keySigArray.size() != 2)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMidiMetaEvent::getTempo():\n"
+                    << "incorrect data";
+
+        return -1;
+    }
+
+    return (keySigArray[0] + 6 * (2 + keySigArray[0] / 2) - 3 * keySigArray[1]) % 12;
+}
+
+int DuMidiMetaEvent::getScale() const
+{
+    if (getType() != KeySignature)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMidiMetaEvent::getTonality():\n"
+                    << "this event does not have key signature meta type";
+
+        return -1;
+    }
+
+    const QByteArray &keySigArray = getData();
+    if (keySigArray.size() != 2)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMidiMetaEvent::getTempo():\n"
+                    << "incorrect data";
+
+        return -1;
+    }
+
+    return keySigArray[1] + 1;
 }
 
 void DuMidiMetaEvent::setKeySignature(quint8 key, bool isMinor)
@@ -297,6 +378,7 @@ void DuMidiMetaEvent::setKeySignature(quint8 key, bool isMinor)
 
     setData(keySigArray);
 }
+
 
 void DuMidiMetaEvent::setEndOfTrack()
 {
