@@ -3,7 +3,12 @@
 
 #include "../general/ducontainer.h"
 #include "../general/dunumeric.h"
+#include "../general/dustring.h"
 
+
+#define KEY_SONG_SONGID                 "SongID"
+#define KEY_SONG_SONGNAME               "SongName"
+#define KEY_SONG_SONGVERSION            "SongVersion"
 
 #define KEY_SONG_REFERENCETRACK         "ReferenceTrack"
 #define KEY_SONG_REFERENCELOOPDURATION  "ReferenceLoopDuration"
@@ -21,7 +26,10 @@
 #define KEY_SONG_SCALE                  "Scale"
 #define KEY_SONG_TONALITY               "Tonality"
 
-#define SONGINFO_SIZE                   19 + NUM_LED_VALUE + FX_MIX_SIZE + 25
+#define KEY_SONG_REVERBPRESET           "ReverbPreset"
+
+#define SONGINFO_SIZE       8 + MUSIC_SONG_NAME_SIZE + 20 + NUM_LED_VALUE + FX_MIX_SIZE
+#define SONGINFO_OFFSET     4 + 8 * 16 + 10 + 3 + 15
 
 
 DU_OBJECT(DuSongInfo)
@@ -40,6 +48,15 @@ public:
     QByteArray toDuMusicBinary() const;
 
     int size() const;
+
+    int getSongId() const;
+    bool setSongId(int value);
+
+    QString getSongName() const;
+    bool setSongName(const QString value);
+
+    int getSongVersion() const;
+    bool setSongVersion(int value);
 
     int getReferenceTrack() const;
     bool setReferenceTrack(int value);
@@ -76,6 +93,9 @@ public:
 
     int getTimeSignature() const;
     bool setTimeSignature(int value);
+
+    int getReverbPreset() const;
+    bool setReverbPreset(int value);
 };
 
 #endif // DUSONGINFO_H

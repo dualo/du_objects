@@ -16,7 +16,11 @@ DuMusic::DuMusic() :
 {
     addChild(KEY_MUSIC_HEADER, new DuHeader());
 
+    addChild(KEY_MUSIC_PARAMETERS, new DuParameters());
+
     addChild(KEY_MUSIC_SONGINFO, new DuSongInfo());
+
+    addChild(KEY_MUSIC_REVERB, new DuReverb());
 
     addChild(KEY_MUSIC_TRACKS, new DuArray(MUSIC_MAXTRACK));
 }
@@ -58,6 +62,19 @@ DuMusicPtr DuMusic::fromDuMusicBinary(const s_total_buffer &du_music, int fileSi
         return DuMusicPtr();
     }
 
+    const DuParametersPtr &parameters =
+            DuParameters::fromDuMusicBinary(du_music.local_song);
+    if (parameters != NULL)
+        music->setParameters(parameters);
+    else
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
+                    << "failed to generate DuMusic\n"
+                    << "the DuParameters was not properly generated";
+
+        return DuMusicPtr();
+    }
+
     const DuSongInfoPtr &songInfo =
             DuSongInfo::fromDuMusicBinary(du_music.local_song);
     if (songInfo != NULL)
@@ -67,6 +84,19 @@ DuMusicPtr DuMusic::fromDuMusicBinary(const s_total_buffer &du_music, int fileSi
         qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
                     << "failed to generate DuMusic\n"
                     << "the DuSongInfo was not properly generated";
+
+        return DuMusicPtr();
+    }
+
+    const DuReverbPtr &reverb =
+            DuReverb::fromDuMusicBinary(du_music.local_song.s_reverb);
+    if (reverb != NULL)
+        music->setReverb(reverb);
+    else
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
+                    << "failed to generate DuMusic\n"
+                    << "the DuReverb was not properly generated";
 
         return DuMusicPtr();
     }
@@ -114,6 +144,19 @@ DuMusicPtr DuMusic::fromDuMusicBinary(const music_song &du_song)
         return DuMusicPtr();
     }
 
+    const DuParametersPtr &parameters =
+            DuParameters::fromDuMusicBinary(du_song);
+    if (parameters != NULL)
+        music->setParameters(parameters);
+    else
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
+                    << "failed to generate DuMusic\n"
+                    << "the DuParameters was not properly generated";
+
+        return DuMusicPtr();
+    }
+
     const DuSongInfoPtr &songInfo =
             DuSongInfo::fromDuMusicBinary(du_song);
     if (songInfo != NULL)
@@ -123,6 +166,19 @@ DuMusicPtr DuMusic::fromDuMusicBinary(const music_song &du_song)
         qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
                     << "failed to generate DuMusic\n"
                     << "the DuSongInfo was not properly generated";
+
+        return DuMusicPtr();
+    }
+
+    const DuReverbPtr &reverb =
+            DuReverb::fromDuMusicBinary(du_song.s_reverb);
+    if (reverb != NULL)
+        music->setReverb(reverb);
+    else
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
+                    << "failed to generate DuMusic\n"
+                    << "the DuReverb was not properly generated";
 
         return DuMusicPtr();
     }
@@ -155,11 +211,14 @@ DuMusicPtr DuMusic::fromDuMusicBinary(const music_song &du_song)
 
 DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
 {
-    QJsonValue jsonHeader   = jsonMusic[KEY_MUSIC_HEADER];
-    QJsonValue jsonSongInfo = jsonMusic[KEY_MUSIC_SONGINFO];
-    QJsonValue jsonTracks   = jsonMusic[KEY_MUSIC_TRACKS];
+    QJsonValue jsonHeader       = jsonMusic[KEY_MUSIC_HEADER];
+    QJsonValue jsonParameters   = jsonMusic[KEY_MUSIC_PARAMETERS];
+    QJsonValue jsonSongInfo     = jsonMusic[KEY_MUSIC_SONGINFO];
+    QJsonValue jsonReverb       = jsonMusic[KEY_MUSIC_REVERB];
+    QJsonValue jsonTracks       = jsonMusic[KEY_MUSIC_TRACKS];
 
-    if (        !jsonHeader.isObject()  ||  !jsonSongInfo.isObject()
+    if (        !jsonHeader.isObject()      ||  !jsonParameters.isObject()
+            ||  !jsonSongInfo.isObject()    ||  !jsonReverb.isObject()
             ||  !jsonTracks.isArray())
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromJson():\n"
@@ -184,6 +243,19 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
         return DuMusicPtr();
     }
 
+    const DuParametersPtr &parameters =
+            DuParameters::fromJson(jsonParameters.toObject());
+    if (parameters != NULL)
+        music->setParameters(parameters);
+    else
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromJson():\n"
+                    << "failed to generate DuMusic\n"
+                    << "the DuParameters was not properly generated";
+
+        return DuMusicPtr();
+    }
+
     const DuSongInfoPtr &songInfo = DuSongInfo::fromJson(jsonSongInfo.toObject());
     if (songInfo != NULL)
         music->setSongInfo(songInfo);
@@ -192,6 +264,18 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
         qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromJson():\n"
                     << "failed to generate DuMusic\n"
                     << "the DuSongInfo was not properly generated";
+
+        return DuMusicPtr();
+    }
+
+    const DuReverbPtr &reverb = DuReverb::fromJson(jsonReverb.toObject());
+    if (reverb != NULL)
+        music->setReverb(reverb);
+    else
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromJson():\n"
+                    << "failed to generate DuMusic\n"
+                    << "the DuReverb was not properly generated";
 
         return DuMusicPtr();
     }
@@ -289,11 +373,25 @@ QByteArray DuMusic::toDuMusicBinary() const
     if (headerArray.isNull())
         return QByteArray();
 
+    const DuParametersConstPtr &parameters = getParameters();
+    if (parameters == NULL)
+        return QByteArray();
+    const QByteArray &parametersArray = parameters->toDuMusicBinary();
+    if (parametersArray.isNull())
+        return QByteArray();
+
     const DuSongInfoConstPtr &songInfo = getSongInfo();
     if (songInfo == NULL)
         return QByteArray();
     const QByteArray &songInfoArray = songInfo->toDuMusicBinary();
     if (songInfoArray.isNull())
+        return QByteArray();
+
+    const DuReverbConstPtr &reverb = getReverb();
+    if (reverb == NULL)
+        return QByteArray();
+    const QByteArray &reverbArray = reverb->toDuMusicBinary();
+    if (reverbArray.isNull())
         return QByteArray();
 
     const DuArrayConstPtr &tracks = getTracks();
@@ -303,9 +401,8 @@ QByteArray DuMusic::toDuMusicBinary() const
     if (tracksArray.isNull())
         return QByteArray();
 
-    tmpLocalSong = headerArray.left(header->size())
-            + songInfoArray.mid(header->size(), songInfo->size())
-            + tracksArray;
+    tmpLocalSong =
+            headerArray + parametersArray + songInfoArray + reverbArray + tracksArray;
 
     std::memcpy(&(du_music->local_song), tmpLocalSong.data(), MUSIC_SONG_SIZE);
 
@@ -384,7 +481,7 @@ QByteArray DuMusic::toMidiBinary() const
     }
 
 
-    const QString &songName = header->getSongName();
+    const QString &songName = songInfo->getSongName();
     int tempo = songInfo->getTempo();
     int timeSig = songInfo->getTimeSignature();
     int tonality = songInfo->getTonality();
@@ -525,26 +622,26 @@ void DuMusic::setLists(const QStringList &lists)
 
 QString DuMusic::getSongName() const
 {
-    const DuHeaderConstPtr &header = getChildAs<DuHeader>(KEY_MUSIC_HEADER);
+    const DuSongInfoConstPtr &songInfo = getChildAs<DuSongInfo>(KEY_MUSIC_SONGINFO);
 
-    if (header == NULL)
+    if (songInfo == NULL)
     {
         return QString();
     }
 
-    return header->getSongName();
+    return songInfo->getSongName();
 }
 
 bool DuMusic::setSongName(const QString &value)
 {
-    const DuHeaderPtr &header = getChildAs<DuHeader>(KEY_MUSIC_HEADER);
+    const DuSongInfoPtr &songInfo = getChildAs<DuSongInfo>(KEY_MUSIC_SONGINFO);
 
-    if (header == NULL)
+    if (songInfo == NULL)
     {
         return false;
     }
 
-    return header->setSongName(value);
+    return songInfo->setSongName(value);
 }
 
 int DuMusic::getFileVersion() const
@@ -581,6 +678,16 @@ void DuMusic::setHeader(const DuHeaderPtr &header)
     addChild(KEY_MUSIC_HEADER, header);
 }
 
+DuParametersConstPtr DuMusic::getParameters() const
+{
+    return getChildAs<DuParameters>(KEY_MUSIC_PARAMETERS);
+}
+
+void DuMusic::setParameters(const DuParametersPtr &parameters)
+{
+    addChild(KEY_MUSIC_PARAMETERS, parameters);
+}
+
 DuSongInfoConstPtr DuMusic::getSongInfo() const
 {
     return getChildAs<DuSongInfo>(KEY_MUSIC_SONGINFO);
@@ -589,6 +696,16 @@ DuSongInfoConstPtr DuMusic::getSongInfo() const
 void DuMusic::setSongInfo(const DuSongInfoPtr &songInfo)
 {
     addChild(KEY_MUSIC_SONGINFO, songInfo);
+}
+
+DuReverbConstPtr DuMusic::getReverb() const
+{
+    return getChildAs<DuReverb>(KEY_MUSIC_REVERB);
+}
+
+void DuMusic::setReverb(const DuReverbPtr &reverb)
+{
+    addChild(KEY_MUSIC_REVERB, reverb);
 }
 
 DuArrayConstPtr DuMusic::getTracks() const

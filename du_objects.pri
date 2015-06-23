@@ -14,6 +14,7 @@ HEADERS += \
     $$PWD/general/duurl.h \
     $$PWD/dumusicfile/dumusic.h \
     $$PWD/dumusicfile/duheader.h \
+    $$PWD/dumusicfile/duparameters.h \
     $$PWD/dumusicfile/dusonginfo.h \
     $$PWD/dumusicfile/dutrack.h \
     $$PWD/dumusicfile/duloop.h \
@@ -31,6 +32,7 @@ HEADERS += \
     $$PWD/dumusicfile/instrument/effects/dumixer.h \
     $$PWD/dumusicfile/instrument/effects/duvibrato.h \
     $$PWD/dumusicfile/instrument/effects/duwah.h \
+    $$PWD/dumusicfile/instrument/effects/dureverb.h \
     $$PWD/midifile/dumidivariablelength.h \
     $$PWD/midifile/dumidistatus.h \
     $$PWD/midifile/dumidibasicevent.h \
@@ -60,6 +62,7 @@ SOURCES += \
     $$PWD/general/duurl.cpp \
     $$PWD/dumusicfile/dumusic.cpp \
     $$PWD/dumusicfile/duheader.cpp \
+    $$PWD/dumusicfile/duparameters.cpp \
     $$PWD/dumusicfile/dusonginfo.cpp \
     $$PWD/dumusicfile/dutrack.cpp \
     $$PWD/dumusicfile/duloop.cpp \
@@ -77,6 +80,7 @@ SOURCES += \
     $$PWD/dumusicfile/instrument/effects/dumixer.cpp \
     $$PWD/dumusicfile/instrument/effects/duvibrato.cpp \
     $$PWD/dumusicfile/instrument/effects/duwah.cpp \
+    $$PWD/dumusicfile/instrument/effects/dureverb.cpp \
     $$PWD/midifile/dumidivariablelength.cpp \
     $$PWD/midifile/dumidistatus.cpp \
     $$PWD/midifile/dumidibasicevent.cpp \
