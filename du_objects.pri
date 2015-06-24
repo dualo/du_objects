@@ -23,6 +23,7 @@ HEADERS += \
     $$PWD/dumusicfile/instrument/dupreset.h \
     $$PWD/dumusicfile/instrument/duexpression.h \
     $$PWD/dumusicfile/instrument/ducontrollers.h \
+    $$PWD/dumusicfile/instrument/dueffectset.h \
     $$PWD/dumusicfile/instrument/effects/duadsr.h \
     $$PWD/dumusicfile/instrument/effects/duchorus.h \
     $$PWD/dumusicfile/instrument/effects/ducompressor.h \
@@ -72,6 +73,7 @@ SOURCES += \
     $$PWD/dumusicfile/instrument/dupreset.cpp \
     $$PWD/dumusicfile/instrument/duexpression.cpp \
     $$PWD/dumusicfile/instrument/ducontrollers.cpp \
+    $$PWD/dumusicfile/instrument/dueffectset.cpp \
     $$PWD/dumusicfile/instrument/effects/duadsr.cpp \
     $$PWD/dumusicfile/instrument/effects/duchorus.cpp \
     $$PWD/dumusicfile/instrument/effects/ducompressor.cpp \

@@ -14,13 +14,13 @@ DuMusic::DuMusic() :
     DuContainer(),
     m_databaseId(-1)
 {
-    addChild(KEY_MUSIC_HEADER, new DuHeader());
+    addChild(KEY_MUSIC_HEADER, new DuHeader);
 
-    addChild(KEY_MUSIC_CONTROLLERS, new DuControllers());
+    addChild(KEY_MUSIC_CONTROLLERS, new DuControllers);
 
-    addChild(KEY_MUSIC_SONGINFO, new DuSongInfo());
+    addChild(KEY_MUSIC_SONGINFO, new DuSongInfo);
 
-    addChild(KEY_MUSIC_REVERB, new DuReverb());
+    addChild(KEY_MUSIC_REVERB, new DuReverb);
 
     addChild(KEY_MUSIC_TRACKS, new DuArray(MUSIC_MAXTRACK));
 }

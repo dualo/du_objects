@@ -4,14 +4,17 @@
 
 #include <QJsonObject>
 
+
 DU_OBJECT_IMPL(DuPreset)
 
 DuPreset::DuPreset() :
     DuContainer()
 {
-    addChild(KEY_PRESET_EXPRESSION, new DuExpression());
+    addChild(KEY_PRESET_EXPRESSION, new DuExpression);
 
-    addChild(KEY_PRESET_CONTROLLERS, new DuControllers());
+    addChild(KEY_PRESET_CONTROLLERS, new DuControllers);
+
+    addChild(KEY_PRESET_EFFECTSET, new DuEffectSet);
 }
 
 DuPreset::~DuPreset()
@@ -54,6 +57,19 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
         return DuPresetPtr();
     }
 
+    const DuEffectSetPtr &effectSet =
+            DuEffectSet::fromDuMusicBinary(du_preset);
+    if (effectSet != NULL)
+        preset->setEffectSet(effectSet);
+    else
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuPreset::fromDuMusicBinary():\n"
+                    << "failed to generate DuPreset\n"
+                    << "the DuEffectSet was not properly generated";
+
+        return DuPresetPtr();
+    }
+
     return preset;
 }
 
@@ -62,8 +78,10 @@ DuPresetPtr DuPreset::fromJson(const QJsonObject &jsonPreset)
 {
     QJsonValue jsonExpression       = jsonPreset[KEY_PRESET_EXPRESSION];
     QJsonValue jsonControllers      = jsonPreset[KEY_PRESET_CONTROLLERS];
+    QJsonValue jsonEffectSet        = jsonPreset[KEY_PRESET_EFFECTSET];
 
-    if (        !jsonExpression.isObject()      ||  !jsonControllers.isObject())
+    if (        !jsonExpression.isObject()      ||  !jsonControllers.isObject()
+            ||  !jsonEffectSet.isObject())
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuPreset::fromJson():\n"
                     << "failed to generate DuPreset\n"
@@ -101,6 +119,19 @@ DuPresetPtr DuPreset::fromJson(const QJsonObject &jsonPreset)
         return DuPresetPtr();
     }
 
+    const DuEffectSetPtr &effectSet =
+            DuEffectSet::fromJson(jsonEffectSet.toObject());
+    if (controllers != NULL)
+        preset->setEffectSet(effectSet);
+    else
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuPreset::fromJson():\n"
+                    << "failed to generate DuPreset\n"
+                    << "the DuEffectSet was not properly generated";
+
+        return DuPresetPtr();
+    }
+
     return preset;
 }
 
@@ -130,7 +161,14 @@ QByteArray DuPreset::toDuMusicBinary() const
     if (controllersArray.isNull())
         return QByteArray();
 
-    tmpPreset = expressionArray + controllersArray;
+    const DuEffectSetConstPtr &effectSet = getEffectSet();
+    if (effectSet == NULL)
+        return QByteArray();
+    const QByteArray &effecSetArray = effectSet->toDuMusicBinary();
+    if (effecSetArray.isNull())
+        return QByteArray();
+
+    tmpPreset = expressionArray + controllersArray + effecSetArray;
 
 
     return QByteArray((char *)&(du_preset), size());
@@ -162,4 +200,15 @@ DuControllersConstPtr DuPreset::getControllers() const
 void DuPreset::setControllers(const DuControllersPtr &controllers)
 {
     addChild(KEY_PRESET_CONTROLLERS, controllers);
+}
+
+
+DuEffectSetConstPtr DuPreset::getEffectSet() const
+{
+    return getChildAs<DuEffectSet>(KEY_PRESET_EFFECTSET);
+}
+
+void DuPreset::setEffectSet(const DuEffectSetPtr &effectSet)
+{
+    addChild(KEY_PRESET_EFFECTSET, effectSet);
 }
