@@ -39,6 +39,7 @@ public:
     virtual DuObjectPtr clone() const;
 
     static DuControllersPtr fromDuMusicBinary(const music_song &du_song);
+    static DuControllersPtr fromDuMusicBinary(const preset_instr &du_preset);
     static DuControllersPtr fromJson(const QJsonObject &jsonControllers);
 
     QByteArray toDuMusicBinary() const;

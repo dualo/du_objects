@@ -82,6 +82,32 @@ DuControllersPtr DuControllers::fromDuMusicBinary(const music_song &du_song)
     return controllers;
 }
 
+DuControllersPtr DuControllers::fromDuMusicBinary(const preset_instr &du_preset)
+{
+    DuControllersPtr controllers(new DuControllers);
+    bool verif = true;
+
+    verif = verif && controllers->setDirectionGyroP(du_preset.s_direction_gyro_P);
+    verif = verif && controllers->setDirectionGyroR(du_preset.s_direction_gyro_R);
+    verif = verif && controllers->setDirectionGyroY(du_preset.s_direction_gyro_Y);
+
+    verif = verif && controllers->setActiveAftertouch(du_preset.s_activ_aftertouch);
+    verif = verif && controllers->setActiveSliderL(du_preset.s_activ_slider_L);
+    verif = verif && controllers->setActiveSliderR(du_preset.s_activ_slider_R);
+
+    verif = verif && controllers->setActiveGyroP(du_preset.s_activ_gyro_P);
+    verif = verif && controllers->setActiveGyroR(du_preset.s_activ_gyro_R);
+    verif = verif && controllers->setActiveGyroY(du_preset.s_activ_gyro_Y);
+
+    if (!verif)
+    {
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuControllers::fromDuMusicBinary():\n"
+                   << "an attribute was not properly set";
+    }
+
+    return controllers;
+}
+
 
 DuControllersPtr DuControllers::fromJson(const QJsonObject &jsonControllers)
 {
