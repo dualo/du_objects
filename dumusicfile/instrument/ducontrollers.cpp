@@ -22,27 +22,27 @@ DuControllers::DuControllers() :
 
     addChild(KEY_CONTROLS_ACTIVEAFTERTOUCH,
              new DuNumeric(0x00, CONTROLS_NUMERIC_SIZE,
-                           0x7F, 0x00));
+                           0xFFFF, 0x0000));
 
     addChild(KEY_CONTROLS_ACTIVESLIDERL,
              new DuNumeric(0x00, CONTROLS_NUMERIC_SIZE,
-                           0x7F, 0x00));
+                           0xFFFF, 0x0000));
 
     addChild(KEY_CONTROLS_ACTIVESLIDERR,
              new DuNumeric(0x00, CONTROLS_NUMERIC_SIZE,
-                           0x7F, 0x00));
+                           0xFFFF, 0x0000));
 
     addChild(KEY_CONTROLS_ACTIVEGYROP,
              new DuNumeric(0x00, CONTROLS_NUMERIC_SIZE,
-                           0x7F, 0x00));
+                           0xFFFF, 0x0000));
 
     addChild(KEY_CONTROLS_ACTIVEGYROR,
              new DuNumeric(0x00, CONTROLS_NUMERIC_SIZE,
-                           0x7F, 0x00));
+                           0xFFFF, 0x0000));
 
     addChild(KEY_CONTROLS_ACTIVEGYROY,
              new DuNumeric(0x00, CONTROLS_NUMERIC_SIZE,
-                           0x7F, 0x00));
+                           0xFFFF, 0x0000));
 }
 
 DuControllers::~DuControllers()
@@ -251,6 +251,9 @@ bool DuControllers::setDirectionGyroP(int value)
 
     if (value == 0)
     {
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuControllers::setDirectionGyroP():\n"
+                   << "incorrect value found, default value used instead";
+
         tmp->setNumeric(DIRECTIONGYRO_MINVALUE);
         return false;
     }
@@ -278,6 +281,9 @@ bool DuControllers::setDirectionGyroR(int value)
 
     if (value == 0)
     {
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuControllers::setDirectionGyroP():\n"
+                   << "incorrect value found, default value used instead";
+
         tmp->setNumeric(DIRECTIONGYRO_MINVALUE);
         return false;
     }
@@ -305,6 +311,9 @@ bool DuControllers::setDirectionGyroY(int value)
 
     if (value == 0)
     {
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuControllers::setDirectionGyroP():\n"
+                   << "incorrect value found, default value used instead";
+
         tmp->setNumeric(DIRECTIONGYRO_MINVALUE);
         return false;
     }

@@ -65,7 +65,7 @@ DuSongInfo::DuSongInfo() :
 
     addChild(KEY_SONG_REVERBPRESET,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x00, 0x7F));
+                           0x7F, 0x00));
 }
 
 DuSongInfo::~DuSongInfo()
