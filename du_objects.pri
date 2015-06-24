@@ -14,7 +14,6 @@ HEADERS += \
     $$PWD/general/duurl.h \
     $$PWD/dumusicfile/dumusic.h \
     $$PWD/dumusicfile/duheader.h \
-    $$PWD/dumusicfile/duparameters.h \
     $$PWD/dumusicfile/dusonginfo.h \
     $$PWD/dumusicfile/dutrack.h \
     $$PWD/dumusicfile/duloop.h \
@@ -22,6 +21,7 @@ HEADERS += \
     $$PWD/dumusicfile/instrument/duinstrument.h \
     $$PWD/dumusicfile/instrument/duinstrumentinfo.h \
     $$PWD/dumusicfile/instrument/dupreset.h \
+    $$PWD/dumusicfile/instrument/ducontrollers.h \
     $$PWD/dumusicfile/instrument/effects/duadsr.h \
     $$PWD/dumusicfile/instrument/effects/duchorus.h \
     $$PWD/dumusicfile/instrument/effects/ducompressor.h \
@@ -62,7 +62,6 @@ SOURCES += \
     $$PWD/general/duurl.cpp \
     $$PWD/dumusicfile/dumusic.cpp \
     $$PWD/dumusicfile/duheader.cpp \
-    $$PWD/dumusicfile/duparameters.cpp \
     $$PWD/dumusicfile/dusonginfo.cpp \
     $$PWD/dumusicfile/dutrack.cpp \
     $$PWD/dumusicfile/duloop.cpp \
@@ -70,6 +69,7 @@ SOURCES += \
     $$PWD/dumusicfile/instrument/duinstrument.cpp \
     $$PWD/dumusicfile/instrument/duinstrumentinfo.cpp \
     $$PWD/dumusicfile/instrument/dupreset.cpp \
+    $$PWD/dumusicfile/instrument/ducontrollers.cpp \
     $$PWD/dumusicfile/instrument/effects/duadsr.cpp \
     $$PWD/dumusicfile/instrument/effects/duchorus.cpp \
     $$PWD/dumusicfile/instrument/effects/ducompressor.cpp \

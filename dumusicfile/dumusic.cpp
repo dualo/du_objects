@@ -16,7 +16,7 @@ DuMusic::DuMusic() :
 {
     addChild(KEY_MUSIC_HEADER, new DuHeader());
 
-    addChild(KEY_MUSIC_PARAMETERS, new DuParameters());
+    addChild(KEY_MUSIC_CONTROLLERS, new DuControllers());
 
     addChild(KEY_MUSIC_SONGINFO, new DuSongInfo());
 
@@ -62,15 +62,15 @@ DuMusicPtr DuMusic::fromDuMusicBinary(const s_total_buffer &du_music, int fileSi
         return DuMusicPtr();
     }
 
-    const DuParametersPtr &parameters =
-            DuParameters::fromDuMusicBinary(du_music.local_song);
-    if (parameters != NULL)
-        music->setParameters(parameters);
+    const DuControllersPtr &controllers =
+            DuControllers::fromDuMusicBinary(du_music.local_song);
+    if (controllers != NULL)
+        music->setControllers(controllers);
     else
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
                     << "failed to generate DuMusic\n"
-                    << "the DuParameters was not properly generated";
+                    << "the DuControllers was not properly generated";
 
         return DuMusicPtr();
     }
@@ -144,15 +144,15 @@ DuMusicPtr DuMusic::fromDuMusicBinary(const music_song &du_song)
         return DuMusicPtr();
     }
 
-    const DuParametersPtr &parameters =
-            DuParameters::fromDuMusicBinary(du_song);
-    if (parameters != NULL)
-        music->setParameters(parameters);
+    const DuControllersPtr &controllers =
+            DuControllers::fromDuMusicBinary(du_song);
+    if (controllers != NULL)
+        music->setControllers(controllers);
     else
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
                     << "failed to generate DuMusic\n"
-                    << "the DuParameters was not properly generated";
+                    << "the DuControllers was not properly generated";
 
         return DuMusicPtr();
     }
@@ -212,12 +212,12 @@ DuMusicPtr DuMusic::fromDuMusicBinary(const music_song &du_song)
 DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
 {
     QJsonValue jsonHeader       = jsonMusic[KEY_MUSIC_HEADER];
-    QJsonValue jsonParameters   = jsonMusic[KEY_MUSIC_PARAMETERS];
+    QJsonValue jsonControllers  = jsonMusic[KEY_MUSIC_CONTROLLERS];
     QJsonValue jsonSongInfo     = jsonMusic[KEY_MUSIC_SONGINFO];
     QJsonValue jsonReverb       = jsonMusic[KEY_MUSIC_REVERB];
     QJsonValue jsonTracks       = jsonMusic[KEY_MUSIC_TRACKS];
 
-    if (        !jsonHeader.isObject()      ||  !jsonParameters.isObject()
+    if (        !jsonHeader.isObject()      ||  !jsonControllers.isObject()
             ||  !jsonSongInfo.isObject()    ||  !jsonReverb.isObject()
             ||  !jsonTracks.isArray())
     {
@@ -243,15 +243,15 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
         return DuMusicPtr();
     }
 
-    const DuParametersPtr &parameters =
-            DuParameters::fromJson(jsonParameters.toObject());
-    if (parameters != NULL)
-        music->setParameters(parameters);
+    const DuControllersPtr &controllers =
+            DuControllers::fromJson(jsonControllers.toObject());
+    if (controllers != NULL)
+        music->setControllers(controllers);
     else
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromJson():\n"
                     << "failed to generate DuMusic\n"
-                    << "the DuParameters was not properly generated";
+                    << "the DuControllers was not properly generated";
 
         return DuMusicPtr();
     }
@@ -373,11 +373,11 @@ QByteArray DuMusic::toDuMusicBinary() const
     if (headerArray.isNull())
         return QByteArray();
 
-    const DuParametersConstPtr &parameters = getParameters();
-    if (parameters == NULL)
+    const DuControllersConstPtr &controllers = getControllers();
+    if (controllers == NULL)
         return QByteArray();
-    const QByteArray &parametersArray = parameters->toDuMusicBinary();
-    if (parametersArray.isNull())
+    const QByteArray &controllersArray = controllers->toDuMusicBinary();
+    if (controllersArray.isNull())
         return QByteArray();
 
     const DuSongInfoConstPtr &songInfo = getSongInfo();
@@ -402,7 +402,7 @@ QByteArray DuMusic::toDuMusicBinary() const
         return QByteArray();
 
     tmpLocalSong =
-            headerArray + parametersArray + songInfoArray + reverbArray + tracksArray;
+            headerArray + controllersArray + songInfoArray + reverbArray + tracksArray;
 
     std::memcpy(&(du_music->local_song), tmpLocalSong.data(), MUSIC_SONG_SIZE);
 
@@ -678,14 +678,14 @@ void DuMusic::setHeader(const DuHeaderPtr &header)
     addChild(KEY_MUSIC_HEADER, header);
 }
 
-DuParametersConstPtr DuMusic::getParameters() const
+DuControllersConstPtr DuMusic::getControllers() const
 {
-    return getChildAs<DuParameters>(KEY_MUSIC_PARAMETERS);
+    return getChildAs<DuControllers>(KEY_MUSIC_CONTROLLERS);
 }
 
-void DuMusic::setParameters(const DuParametersPtr &parameters)
+void DuMusic::setControllers(const DuControllersPtr &controllers)
 {
-    addChild(KEY_MUSIC_PARAMETERS, parameters);
+    addChild(KEY_MUSIC_CONTROLLERS, controllers);
 }
 
 DuSongInfoConstPtr DuMusic::getSongInfo() const

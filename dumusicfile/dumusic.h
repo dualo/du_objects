@@ -2,16 +2,16 @@
 #define DUMUSIC_H
 
 #include "duheader.h"
-#include "duparameters.h"
 #include "dusonginfo.h"
 #include "dutrack.h"
+#include "instrument/ducontrollers.h"
 #include "instrument/effects/dureverb.h"
 
 #include <QIODevice>
 
 
 #define KEY_MUSIC_HEADER        "FileHeader"
-#define KEY_MUSIC_PARAMETERS    "ControllerParameters"
+#define KEY_MUSIC_CONTROLLERS   "ControllerParameters"
 #define KEY_MUSIC_SONGINFO      "SongInfo"
 #define KEY_MUSIC_REVERB        "ReverbSettings"
 #define KEY_MUSIC_TRACKS        "Tracks"
@@ -54,8 +54,8 @@ public:
     DuHeaderConstPtr getHeader() const;
     void setHeader(const DuHeaderPtr &header);
 
-    DuParametersConstPtr getParameters() const;
-    void setParameters(const DuParametersPtr &parameters);
+    DuControllersConstPtr getControllers() const;
+    void setControllers(const DuControllersPtr &controllers);
 
     DuSongInfoConstPtr getSongInfo() const;
     void setSongInfo(const DuSongInfoPtr &songInfo);
