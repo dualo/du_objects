@@ -2,6 +2,7 @@
 
 #include <cstring>
 
+#include <QIODevice>
 #include <QJsonArray>
 #include <QJsonObject>
 

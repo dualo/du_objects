@@ -7,8 +7,6 @@
 #include "instrument/ducontrollers.h"
 #include "instrument/effects/dureverb.h"
 
-#include <QIODevice>
-
 
 #define KEY_MUSIC_HEADER        "FileHeader"
 #define KEY_MUSIC_CONTROLLERS   "ControllerParameters"
@@ -16,6 +14,8 @@
 #define KEY_MUSIC_REVERB        "ReverbSettings"
 #define KEY_MUSIC_TRACKS        "Tracks"
 
+
+class QIODevice;
 
 DU_OBJECT(DuMusic)
 
