@@ -53,12 +53,15 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
 
         int sampleSize = sizeof(music_sample);
         if (totalSample * sampleSize
+                < (int)du_loop.l_adress + du_loop.l_numsample * sampleSize
+            || RECORD_SAMPLEBUFFERSIZE * sampleSize
                 < (int)du_loop.l_adress + du_loop.l_numsample * sampleSize)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
                         << "failed to generate DuTrack\n"
                         << "invalid number of events\n"
-                        << "(du_sample size =" << (RECORD_SAMPLEBUFFERSIZE * sampleSize)
+                        << "(du_sample size =" << (totalSample * sampleSize)
+                        << "(max size =" << (RECORD_SAMPLEBUFFERSIZE * sampleSize)
                         << ", du_loop.l_adress =" << du_loop.l_adress
                         << ", du_loop.l_numsample =" << du_loop.l_numsample
                         << ", sizeof(music_sample) =" << sampleSize << ")";
