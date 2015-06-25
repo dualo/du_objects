@@ -39,7 +39,7 @@ DuObjectPtr DuLoop::clone() const
 
 
 DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
-                                const music_sample *du_sample)
+                                    const music_sample *du_sample)
 {
     if (du_loop.l_state == REC_EMPTY)
     {

@@ -75,7 +75,8 @@ DuMusicPtr DuMusic::fromDuMusicBinary(const s_total_buffer &du_music, int fileSi
     {
         const DuTrackPtr &track =
                 DuTrack::fromDuMusicBinary(du_music.local_song.s_track[i],
-                                           du_music.local_buffer);
+                                           du_music.local_buffer,
+                                           du_music.local_song.s_totalsample);
         if (track == NULL)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
