@@ -259,10 +259,10 @@ public:
     quint8 getChannel() const;
     void setChannel(quint8 value);
 
-    quint8 getKey() const;
+    int getKey() const;
     void setKey(quint8 value);
 
-    quint8 getValue() const;
+    int getValue() const;
     void setValue(quint8 value);
 };
 
