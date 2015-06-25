@@ -36,8 +36,15 @@ DuObjectPtr DuMusic::clone() const
 }
 
 
-DuMusicPtr DuMusic::fromDuMusicBinary(const s_total_buffer &du_music, int fileSize)
+DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
 {
+    if (!upgrade(du_music))
+    {
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
+                                     << "failed to generate DuMusic\n"
+                                     << "upgrade failed";
+    }
+
     if (fileSize - MUSIC_SONG_SIZE !=
             du_music.local_song.s_totalsample * MUSIC_SAMPLE_SIZE)
     {
@@ -128,8 +135,15 @@ DuMusicPtr DuMusic::fromDuMusicBinary(const s_total_buffer &du_music, int fileSi
     return music;
 }
 
-DuMusicPtr DuMusic::fromDuMusicBinary(const music_song &du_song)
+DuMusicPtr DuMusic::fromDuMusicBinary(music_song &du_song)
 {
+    if (!upgrade(du_song))
+    {
+        qWarning() << "DuMusic::fromDuMusicBinary():\n"
+                                     << "failed to generate DuMusic\n"
+                                     << "upgrade failed";
+    }
+
     DuMusicPtr music(new DuMusic);
 
     const DuHeaderPtr &header =
@@ -351,6 +365,86 @@ DuMusicPtr DuMusic::fromBinary(QIODevice *input)
     return DuMusic::fromBinary(array);
 }
 
+bool DuMusic::upgrade(s_total_buffer &du_music)
+{
+    return upgrade(du_music.local_song);
+}
+
+bool DuMusic::upgrade(music_song &du_song)
+{
+    if (du_song.s_version_music <= 0)
+    {
+        return false;
+    }
+    else if (du_song.s_version_music > VERSION_MUSIC)
+    {
+        return false;
+    }
+    else if (du_song.s_version_music == VERSION_MUSIC)
+    {
+        return true;
+    }
+
+    if (du_song.s_version_music == 1)
+    {
+        int32_t i, j;
+        du_song.s_size = MUSIC_SONG_SIZE + (du_song.s_totalsample * MUSIC_SAMPLE_SIZE);
+        du_song.s_metadata = 0;
+        du_song.s_playhead = 0;
+        du_song.s_transpose = RECORD_TRANSPOSEDEFAULT;
+
+        du_song.s_reverb_preset = FX_REVERB_PRESET_DEFAULTVALUE;
+
+        du_song.s_direction_gyro_P = -1;
+        du_song.s_direction_gyro_R = -1;
+        du_song.s_direction_gyro_Y = -1;
+        du_song.s_activ_aftertouch = 0;
+        du_song.s_activ_slider_L = 0;
+        du_song.s_activ_slider_R = 0;
+        du_song.s_activ_gyro_P = 0;
+        du_song.s_activ_gyro_R = 0;
+        du_song.s_activ_gyro_Y = 0;
+
+
+        for(i = 0; i<MUSIC_MAXTRACK; i++)
+        {
+            for(j = 0; j<MUSIC_MAXLAYER; j++)
+            {
+                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_arpegiator_type = 0;
+                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_arpegiator_beat = 0;
+
+                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_direction_gyro_P = -1;
+                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_direction_gyro_R = -1;
+                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_direction_gyro_Y = -1;
+
+                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_adsr_onoff = 0;
+                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_compressor_onoff = 0;
+                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_delay_onoff = 0;
+                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_distortion_onoff = 0;
+                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_eq_onoff = 0;
+                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_chorus_onoff = 0;
+                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_vibrato_onoff = 0;
+                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_wah_onoff = 0;
+
+                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_autopitch_rate = 0;
+                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_autopitch_range = 127;
+
+                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_tremolo_rate = 0;
+                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_tremolo_range = 127;
+
+                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_autopan_rate = 0;
+                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_autopan_range = 127;
+
+                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_autowah_rate = 0;
+                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_autowah_range = 127;
+            }
+        }
+    }
+
+    du_song.s_version_music = VERSION_MUSIC;
+
+    return true;
+}
 
 QByteArray DuMusic::toDuMusicBinary() const
 {

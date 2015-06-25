@@ -27,11 +27,14 @@ public:
 
     virtual DuObjectPtr clone() const;
 
-    static DuMusicPtr fromDuMusicBinary(const s_total_buffer &du_music, int fileSize);
-    static DuMusicPtr fromDuMusicBinary(const music_song &du_song);
+    static DuMusicPtr fromDuMusicBinary(s_total_buffer &du_music, int fileSize);
+    static DuMusicPtr fromDuMusicBinary(music_song &du_song);
     static DuMusicPtr fromJson(const QJsonObject &jsonMusic);
     static DuMusicPtr fromBinary(const QByteArray &data);
     static DuMusicPtr fromBinary(QIODevice *input);
+
+    static bool upgrade(s_total_buffer &du_music);
+    static bool upgrade(music_song &du_song);
 
     QByteArray toDuMusicBinary() const;
     QByteArray toMidiBinary() const;
