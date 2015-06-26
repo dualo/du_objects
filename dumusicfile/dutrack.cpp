@@ -33,7 +33,7 @@ DuObjectPtr DuTrack::clone() const
 
 DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
                                       const music_sample *du_sample_start,
-                                      int totalSample)
+                                      uint16_t totalSample)
 {
     const DuTrackPtr track(new DuTrack);
     bool verif = true;
@@ -51,20 +51,19 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
     {
         const music_loop &du_loop = du_track.t_loop[i];
 
-        int sampleSize = sizeof(music_sample);
-        if (totalSample * sampleSize
-                < (int)du_loop.l_adress + du_loop.l_numsample * sampleSize
-            || RECORD_SAMPLEBUFFERSIZE * sampleSize
-                < (int)du_loop.l_adress + du_loop.l_numsample * sampleSize)
+        if (totalSample * MUSIC_SAMPLE_SIZE
+                < du_loop.l_adress + du_loop.l_numsample * MUSIC_SAMPLE_SIZE
+            || RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE
+                < du_loop.l_adress + du_loop.l_numsample * MUSIC_SAMPLE_SIZE)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
                         << "failed to generate DuTrack\n"
                         << "invalid number of events\n"
-                        << "(du_sample size =" << (totalSample * sampleSize)
-                        << "(max size =" << (RECORD_SAMPLEBUFFERSIZE * sampleSize)
+                        << "(du_sample size =" << (totalSample * MUSIC_SAMPLE_SIZE)
+                        << "(max size =" << (RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE)
                         << ", du_loop.l_adress =" << du_loop.l_adress
                         << ", du_loop.l_numsample =" << du_loop.l_numsample
-                        << ", sizeof(music_sample) =" << sampleSize << ")";
+                        << ", sizeof(music_sample) =" << MUSIC_SAMPLE_SIZE << ")";
 
             return DuTrackPtr();
         }
