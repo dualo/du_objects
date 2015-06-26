@@ -17,8 +17,16 @@ DuObjectPtr DuSound::clone() const
 
 DuSoundPtr DuSound::fromBinary(const QByteArray &data)
 {
+    QScopedPointer<s_instr_m3> soundM3Infos(new s_instr_m3);
+
+    std::memcpy((char*)soundM3Infos.data(), &data.data()[0x20], INSTR_INFO_INSTR_SIZE);
+
     DuSoundPtr sound(new DuSound);
-    sound->setData(data);
+
+    if (soundM3Infos->instr_midi_pc != 0xFF)
+    {
+        sound->setData(data);
+    }
 
     return sound;
 }
