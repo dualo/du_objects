@@ -60,7 +60,8 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
                         << "failed to generate DuTrack\n"
                         << "invalid number of events\n"
                         << "(du_sample size =" << (totalSample * MUSIC_SAMPLE_SIZE)
-                        << "(max size =" << (RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE)
+                        << ", max size =" << (RECORD_SAMPLEBUFFERSIZE
+                                              * MUSIC_SAMPLE_SIZE)
                         << ", du_loop.l_adress =" << du_loop.l_adress
                         << ", du_loop.l_numsample =" << du_loop.l_numsample
                         << ", sizeof(music_sample) =" << MUSIC_SAMPLE_SIZE << ")";
