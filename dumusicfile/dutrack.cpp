@@ -51,8 +51,8 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
     {
         const music_loop &du_loop = du_track.t_loop[i];
 
-        if (totalSample * MUSIC_SAMPLE_SIZE
-                < du_loop.l_adress + du_loop.l_numsample * MUSIC_SAMPLE_SIZE
+        if ((quint32)totalSample * MUSIC_SAMPLE_SIZE
+                < (du_loop.l_adress + du_loop.l_numsample * MUSIC_SAMPLE_SIZE)
             || RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE
                 < du_loop.l_adress + du_loop.l_numsample * MUSIC_SAMPLE_SIZE)
         {
