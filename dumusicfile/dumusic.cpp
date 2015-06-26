@@ -234,21 +234,22 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
 
 DuMusicPtr DuMusic::fromBinary(const QByteArray &data)
 {
-    int sizeTest = data.size() - MUSIC_SONG_SIZE;
-    if (sizeTest < 0 || sizeTest > RECORD_SAMPLEBUFFERSIZE)
+    int dataSize = data.size() ;
+    if (dataSize - MUSIC_SONG_SIZE < 0
+            || dataSize - MUSIC_SONG_SIZE > RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromBinary():\n"
                     << "failed to generate DuMusic\n"
-                    << "this file is not a dumusic file";
+                    << "this file is not a valid dumusic file";
 
         return DuMusicPtr();
     }
 
     QScopedPointer<s_total_buffer> temp_total_buffer(new s_total_buffer);
 
-    std::memcpy((char *)(temp_total_buffer.data()), data.data(), data.size());
+    std::memcpy((char *)(temp_total_buffer.data()), data.data(), dataSize);
 
-    return DuMusic::fromDuMusicBinary(*temp_total_buffer, data.size());
+    return DuMusic::fromDuMusicBinary(*temp_total_buffer, dataSize);
 }
 
 DuMusicPtr DuMusic::fromBinary(QIODevice *input)
