@@ -4,6 +4,7 @@
 #include "duheader.h"
 #include "dusonginfo.h"
 #include "dutrack.h"
+
 #include <QIODevice>
 
 
@@ -24,9 +25,12 @@ public:
 
     static DuMusicPtr fromDuMusicBinary(const s_total_buffer &du_music, int fileSize);
     static DuMusicPtr fromDuMusicBinary(const music_song &du_song);
-    static DuMusicPtr fromJson(const QJsonObject &jsonMusic);
     static DuMusicPtr fromBinary(const QByteArray &data);
     static DuMusicPtr fromBinary(QIODevice *input);
+
+    static DuMusicPtr fromJson(const QJsonObject &jsonMusic);
+
+    static DuMusicPtr fromMidi(const MidiConversionHelper &helper);
 
     QByteArray toDuMusicBinary() const;
     QByteArray toMidiBinary() const;

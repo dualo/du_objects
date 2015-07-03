@@ -4,6 +4,8 @@
 #include "../general/ducontainer.h"
 #include "../general/dunumeric.h"
 
+#include "../miditodumusic/midiconversionhelper.h"
+
 
 #define KEY_SONG_REFERENCETRACK         "ReferenceTrack"
 #define KEY_SONG_REFERENCELOOPDURATION  "ReferenceLoopDuration"
@@ -36,6 +38,7 @@ public:
 
     static DuSongInfoPtr fromDuMusicBinary(const music_song &du_song);
     static DuSongInfoPtr fromJson(const QJsonObject &jsonSongInfo);
+    static DuSongInfoPtr fromMidi(const MidiConversionHelper &helper);
 
     QByteArray toDuMusicBinary() const;
 

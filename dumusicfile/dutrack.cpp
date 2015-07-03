@@ -44,7 +44,7 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
     if (!verif)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
-                   << "an attribute was not properly set";
+                                     << "an attribute was not properly set";
     }
 
     for (int i = 0; i < MUSIC_MAXLAYER; i++)
@@ -56,15 +56,15 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
             || RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE
                 < du_loop.l_adress + du_loop.l_numsample * MUSIC_SAMPLE_SIZE)
         {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
-                        << "failed to generate DuTrack\n"
-                        << "invalid number of events\n"
-                        << "(du_sample size =" << (totalSample * MUSIC_SAMPLE_SIZE)
-                        << ", max size =" << (RECORD_SAMPLEBUFFERSIZE
-                                              * MUSIC_SAMPLE_SIZE)
-                        << ", du_loop.l_adress =" << du_loop.l_adress
-                        << ", du_loop.l_numsample =" << du_loop.l_numsample
-                        << ", sizeof(music_sample) =" << MUSIC_SAMPLE_SIZE << ")";
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuTrack::fromDuMusicBinary():\n"
+                    << "failed to generate DuTrack\n"
+                    << "invalid number of events\n"
+                    << "(du_sample size =" << (totalSample * MUSIC_SAMPLE_SIZE)
+                    << ", max size =" << (RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE)
+                    << ", du_loop.l_adress =" << du_loop.l_adress
+                    << ", du_loop.l_numsample =" << du_loop.l_numsample
+                    << ", sizeof(music_sample) =" << MUSIC_SAMPLE_SIZE << ")";
 
             return DuTrackPtr();
         }
@@ -77,16 +77,16 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
         if (loop == NULL)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
-                        << "failed to generate DuTrack\n"
-                        << "a DuLoop was not properly generated";
+                                          << "failed to generate DuTrack\n"
+                                          << "a DuLoop was not properly generated";
 
             return DuTrackPtr();
         }
         if (!track->appendLoop(loop))
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
-                        << "failed to generate DuTrack\n"
-                        << "a DuLoop was not properly appended";
+                                          << "failed to generate DuTrack\n"
+                                          << "a DuLoop was not properly appended";
 
             return DuTrackPtr();
         }
@@ -106,7 +106,7 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track)
     if (!verif)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
-                   << "an attribute was not properly set";
+                                     << "an attribute was not properly set";
     }
 
     for (int i = 0; i < MUSIC_MAXLAYER; i++)
@@ -116,16 +116,16 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track)
         if (loop == NULL)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
-                        << "failed to generate DuTrack\n"
-                        << "a DuLoop was not properly generated";
+                                          << "failed to generate DuTrack\n"
+                                          << "a DuLoop was not properly generated";
 
             return DuTrackPtr();
         }
         if (!track->appendLoop(loop))
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
-                        << "failed to generate DuTrack\n"
-                        << "a DuLoop was not properly appended";
+                                          << "failed to generate DuTrack\n"
+                                          << "a DuLoop was not properly appended";
 
             return DuTrackPtr();
         }
@@ -145,8 +145,8 @@ DuTrackPtr DuTrack::fromJson(const QJsonObject &jsonTrack)
             ||  !jsonLoops.isArray())
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromJson():\n"
-                    << "failed to generate DuTrack\n"
-                    << "a json key did not contain the proper type";
+                                      << "failed to generate DuTrack\n"
+                                      << "a json key did not contain the proper type";
 
         return DuTrackPtr();
     }
@@ -161,15 +161,16 @@ DuTrackPtr DuTrack::fromJson(const QJsonObject &jsonTrack)
     if (!verif)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "DuTrack::fromJson():\n"
-                   << "an attribute was not properly set";
+                                     << "an attribute was not properly set";
     }
 
     const QJsonArray &jsonLoopArray = jsonLoops.toArray();
     if (jsonLoopArray.count() != MUSIC_MAXLAYER)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromJson():\n"
-                    << "failed to generate DuTrack\n"
-                    << "json file does not contain the proper amount of tracks";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuTrack::fromJson():\n"
+                << "failed to generate DuTrack\n"
+                << "json file does not contain the proper amount of tracks";
 
         return DuTrackPtr();
     }
@@ -180,18 +181,86 @@ DuTrackPtr DuTrack::fromJson(const QJsonObject &jsonTrack)
         if (loop == NULL)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromJson():\n"
-                        << "failed to generate DuTrack\n"
-                        << "a DuLoop was not properly generated";
+                                          << "failed to generate DuTrack\n"
+                                          << "a DuLoop was not properly generated";
 
             return DuTrackPtr();
         }
         if (!track->appendLoop(loop))
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromJson():\n"
+                                          << "failed to generate DuTrack\n"
+                                          << "a DuLoop was not properly appended";
+
+            return DuTrackPtr();
+        }
+    }
+
+    return track;
+}
+
+
+DuTrackPtr DuTrack::fromMidi(const MidiConversionHelper &helper, int trackIndex)
+{
+    if (!helper.isValid())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromMidi():\n"
+                                      << "failed to generate DuTrack\n"
+                                      << "invalid conversion helper";
+
+        return DuTrackPtr();
+    }
+
+    const DuTrackPtr track(new DuTrack);
+    bool verif = true;
+
+    verif = verif && track->setChannel(7 - trackIndex);
+//    verif = verif && track->setCurrentLoop(0);
+
+    if (!verif)
+    {
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuTrack::fromMidi():\n"
+                                     << "an attribute was not properly set";
+    }
+
+    for (int i = 0; i < MUSIC_MAXLAYER; i++)
+    {
+        int index = helper.findIndexes(trackIndex, i);
+
+        if (index == -1)
+        {
+            if (!track->appendLoop(DuLoopPtr(new DuLoop)))
+            {
+                qCCritical(LOG_CAT_DU_OBJECT)
+                        << "DuTrack::fromMidi():\n"
                         << "failed to generate DuTrack\n"
                         << "a DuLoop was not properly appended";
 
-            return DuTrackPtr();
+                return DuTrackPtr();
+            }
+        }
+
+        else
+        {
+            const DuLoopPtr &loop = DuLoop::fromMidi(helper, index);
+            if (loop == NULL)
+            {
+                qCCritical(LOG_CAT_DU_OBJECT)
+                        << "DuTrack::fromMidi():\n"
+                        << "failed to generate DuTrack\n"
+                        << "a DuLoop was not properly generated";
+
+                return DuTrackPtr();
+            }
+            if (!track->appendLoop(loop))
+            {
+                qCCritical(LOG_CAT_DU_OBJECT)
+                        << "DuTrack::fromMidi():\n"
+                        << "failed to generate DuTrack\n"
+                        << "a DuLoop was not properly appended";
+
+                return DuTrackPtr();
+            }
         }
     }
 
