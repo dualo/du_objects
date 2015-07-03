@@ -118,6 +118,58 @@ DuEventPtr DuEvent::fromJson(const QJsonObject &jsonEvent)
     return event;
 }
 
+DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
+                             const MidiConversionHelper &helper,
+                             int loopIndex)
+{
+    if (!helper.isValid())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuEvent::fromMidi():\n"
+                                      << "failed to generate DuEvent\n"
+                                      << "invalid conversion helper";
+
+        return DuEventPtr();
+    }
+
+    //This case should not occur since it is already tested in DuLoop::fromMidi()
+    if (channelEvent->getType() == DuMidiChannelEvent::ProgramChange)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuEvent::fromMidi():\n"
+                                      << "failed to generate DuEvent\n"
+                                      << "invalid channel event type";
+
+        return DuEventPtr();
+    }
+
+    DuEventPtr event(new DuEvent);
+    bool verif = true;
+
+    verif = verif && event->setTime(channelEvent->getTime());
+    verif = verif && event->setControl(channelEvent->getType() - 0x08);
+    verif = verif && event->setValue(channelEvent->getValue());
+
+    int key = channelEvent->getKey();
+
+    if (!helper.isPercu(loopIndex))
+    {
+        verif = verif && event->setKeyboard(helper.fetchKeyboard(key, loopIndex));
+        verif = verif && event->setNote(key);
+    }
+    else
+    {
+        verif = verif && event->setKeyboard(0);
+        verif = verif && event->setNote(helper.fetchPercuKey(key, loopIndex));
+    }
+
+    if (!verif)
+    {
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuEvent::fromMidi():\n"
+                                     << "an attribute was not properly set";
+    }
+
+    return event;
+}
+
 
 QByteArray DuEvent::toDuMusicBinary() const
 {

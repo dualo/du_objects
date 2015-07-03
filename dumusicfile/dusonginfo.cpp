@@ -111,7 +111,7 @@ DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
     if (!verif)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "DuSongInfo::fromDuMusicBinary():\n"
-                   << "an attribute was not properly set";
+                                     << "an attribute was not properly set";
     }
 
     return songInfo;
@@ -148,8 +148,8 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
             ||  !jsonReverbPreset.isDouble())
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuSongInfo::fromJson():\n"
-                    << "failed to generate DuSongInfo\n"
-                    << "a json key did not contain the proper type";
+                                      << "failed to generate DuSongInfo\n"
+                                      << "a json key did not contain the proper type";
 
         return DuSongInfoPtr();
     }
@@ -183,7 +183,47 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
     if (!verif)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "DuSongInfo::fromJson():\n"
-                   << "an attribute was not properly set";
+                                     << "an attribute was not properly set";
+    }
+
+    return songInfo;
+}
+
+
+DuSongInfoPtr DuSongInfo::fromMidi(const MidiConversionHelper &helper)
+{
+    if (!helper.isValid())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromMidi():\n"
+                                      << "failed to generate DuMusic\n"
+                                      << "invalid conversion helper";
+
+        return DuSongInfoPtr();
+    }
+
+    DuSongInfoPtr songInfo(new DuSongInfo);
+    bool verif = true;
+
+    verif = verif && songInfo->setReferenceTrack(helper.getIndexes(0).first);
+    verif = verif && songInfo->setReferenceLoopDuration(helper.getDuration());
+
+//    verif = verif && songInfo->setVolume();
+    verif = verif && songInfo->setTempo(helper.getTempo());
+//    verif = verif && songInfo->setClickVolume();
+//    verif = verif && songInfo->setOffset(jsonOffset.toInt());
+
+//    verif = verif && songInfo->setGain(jsonGain.toInt());
+//    verif = verif && songInfo->setLowCutFilterFrequency(jsonLoCutFreq.toInt());
+//    verif = verif && songInfo->setHighCutFilterFrequency(jsonHiCutFreq.toInt());
+
+    verif = verif && songInfo->setScale(helper.getScale());
+    verif = verif && songInfo->setTonality(helper.getTonality());
+    verif = verif && songInfo->setTimeSignature(helper.getTimeSig());
+
+    if (!verif)
+    {
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuSongInfo::fromMidi():\n"
+                                     << "an attribute was not properly set";
     }
 
     return songInfo;

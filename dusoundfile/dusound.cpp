@@ -1,5 +1,7 @@
 #include "dusound.h"
 
+#include <cstring>
+
 DU_OBJECT_IMPL(DuSound)
 
 DuSound::DuSound() :

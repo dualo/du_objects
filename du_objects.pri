@@ -44,6 +44,7 @@ HEADERS += \
     $$PWD/midifile/dumiditrack.h \
     $$PWD/midifile/dumidifile.h \
     $$PWD/miditodumusic/dumidikeymapper.h \
+    $$PWD/miditodumusic/midiconversionhelper.h \
     $$PWD/dudevice.h \
     $$PWD/dutouch.h \
     $$PWD/dulist.h \
@@ -94,6 +95,7 @@ SOURCES += \
     $$PWD/midifile/dumiditrack.cpp \
     $$PWD/midifile/dumidifile.cpp \
     $$PWD/miditodumusic/dumidikeymapper.cpp \
+    $$PWD/miditodumusic/midiconversionhelper.cpp \
     $$PWD/dudevice.cpp \
     $$PWD/dutouch.cpp \
     $$PWD/dulist.cpp \

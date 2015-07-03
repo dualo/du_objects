@@ -22,9 +22,11 @@ public:
     virtual DuObjectPtr clone() const;
 
     static DuTrackPtr fromDuMusicBinary(const music_track &du_track,
-                                        const music_sample *du_sample_start);
+                                        const music_sample *du_sample_start,
+                                        uint16_t totalSample);
     static DuTrackPtr fromDuMusicBinary(const music_track &du_track);
     static DuTrackPtr fromJson(const QJsonObject &jsonTrack);
+    static DuTrackPtr fromMidi(const MidiConversionHelper &helper, int trackIndex);
 
     QByteArray toDuMusicBinary() const;
     QList<DuMidiTrackPtr> toDuMidiTrackArray(int durationRef) const;

@@ -352,7 +352,7 @@ int DuMidiMetaEvent::getScale() const
         return -1;
     }
 
-    return keySigArray[1] + 1;
+    return keySigArray[1];
 }
 
 void DuMidiMetaEvent::setKeySignature(quint8 key, bool isMinor)

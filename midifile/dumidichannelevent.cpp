@@ -220,7 +220,7 @@ void DuMidiChannelEvent::setChannel(quint8 value)
 }
 
 
-quint8 DuMidiChannelEvent::getKey() const
+int DuMidiChannelEvent::getKey() const
 {
     const DuNumericConstPtr &tmp =
             getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_KEY);
@@ -243,7 +243,7 @@ void DuMidiChannelEvent::setKey(quint8 value)
 }
 
 
-quint8 DuMidiChannelEvent::getValue() const
+int DuMidiChannelEvent::getValue() const
 {
     const DuNumericConstPtr &tmp =
             getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_VALUE);

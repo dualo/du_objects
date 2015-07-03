@@ -5,6 +5,8 @@
 #include "../general/dunumeric.h"
 #include "../general/dustring.h"
 
+#include "../miditodumusic/midiconversionhelper.h"
+
 
 #define KEY_SONG_SONGID                 "SongID"
 #define KEY_SONG_SONGNAME               "SongName"
@@ -44,6 +46,7 @@ public:
 
     static DuSongInfoPtr fromDuMusicBinary(const music_song &du_song);
     static DuSongInfoPtr fromJson(const QJsonObject &jsonSongInfo);
+    static DuSongInfoPtr fromMidi(const MidiConversionHelper &helper);
 
     QByteArray toDuMusicBinary() const;
 

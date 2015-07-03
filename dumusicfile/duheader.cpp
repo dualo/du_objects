@@ -140,6 +140,35 @@ DuHeaderPtr DuHeader::fromJson(const QJsonObject &jsonHeader)
     return header;
 }
 
+
+DuHeaderPtr DuHeader::fromMidi(const MidiConversionHelper &helper)
+{
+    if (!helper.isValid())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuHeader::fromMidi():\n"
+                                      << "failed to generate DuHeader\n"
+                                      << "invalid conversion helper";
+
+        return DuHeaderPtr();
+    }
+
+    DuHeaderPtr header(new DuHeader);
+    bool verif = true;
+
+    //TODO
+
+    //verif = verif && header->setSongName(helper.getTitle());
+
+    if (!verif)
+    {
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuHeader::fromMidi():\n"
+                                     << "an attribute was not properly set";
+    }
+
+    return header;
+}
+
+
 QByteArray DuHeader::toDuMusicBinary() const
 {
     //TODO: restructure music_song into music_header and music_info
