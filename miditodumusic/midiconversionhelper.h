@@ -64,6 +64,8 @@ public:
     int fetchKeyboard(int key, int index) const;
     int fetchPercuKey(int gmKey, int index) const;
 
+    static int percuKey(quint8 duKey, quint8 keyboard, quint8 mapIndex);
+
 private:
     bool importMidiFile();
     bool populateMapper();

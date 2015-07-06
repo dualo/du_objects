@@ -343,6 +343,15 @@ int MidiConversionHelper::fetchPercuKey(int gmKey, int index) const
 }
 
 
+int MidiConversionHelper::percuKey(quint8 duKey, quint8 keyboard, quint8 mapIndex)
+{
+    if (duKey > 57 || keyboard > 1 || mapIndex > 3)
+        return -1;
+
+    return keyboard_note_map[mapIndex][keyboard][duKey].note_gmref;
+}
+
+
 bool MidiConversionHelper::populateMapper()
 {
     QString fileName = QFileDialog::getOpenFileName(0, "Open json maps",
