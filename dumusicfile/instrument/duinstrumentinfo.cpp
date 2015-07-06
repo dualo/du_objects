@@ -42,8 +42,8 @@ DuInstrumentInfo::DuInstrumentInfo() :
                            0xFF, 0x00));
 
     addChild(KEY_INSTRINFO_TYPE,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0xFF, 0x00));
+             new DuNumeric(INSTR_HARMONIC, NUMERIC_DEFAULT_SIZE,
+                           NUM_INSTR_TYPE, INSTR_HARMONIC));
 
     addChild(KEY_INSTRINFO_USERID,
              new DuString(16));
