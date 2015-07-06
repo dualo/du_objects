@@ -41,7 +41,7 @@ public:
 
     static DuHeaderPtr fromDuMusicBinary(const music_song &du_song);
     static DuHeaderPtr fromJson(const QJsonObject &jsonHeader);
-    static DuHeaderPtr fromMidi(const MidiConversionHelper &helper);
+    //static DuHeaderPtr fromMidi(const MidiConversionHelper &helper);
 
     QByteArray toDuMusicBinary() const;
 

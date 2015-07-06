@@ -141,32 +141,32 @@ DuHeaderPtr DuHeader::fromJson(const QJsonObject &jsonHeader)
 }
 
 
-DuHeaderPtr DuHeader::fromMidi(const MidiConversionHelper &helper)
-{
-    if (!helper.isValid())
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuHeader::fromMidi():\n"
-                                      << "failed to generate DuHeader\n"
-                                      << "invalid conversion helper";
+//DuHeaderPtr DuHeader::fromMidi(const MidiConversionHelper &helper)
+//{
+//    if (!helper.isValid())
+//    {
+//        qCCritical(LOG_CAT_DU_OBJECT) << "DuHeader::fromMidi():\n"
+//                                      << "failed to generate DuHeader\n"
+//                                      << "invalid conversion helper";
 
-        return DuHeaderPtr();
-    }
+//        return DuHeaderPtr();
+//    }
 
-    DuHeaderPtr header(new DuHeader);
-    bool verif = true;
+//    DuHeaderPtr header(new DuHeader);
+//    bool verif = true;
 
-    //TODO
+//    //TODO
 
-    //verif = verif && header->setSongName(helper.getTitle());
+//    //verif = verif && header->setSongName(helper.getTitle());
 
-    if (!verif)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuHeader::fromMidi():\n"
-                                     << "an attribute was not properly set";
-    }
+//    if (!verif)
+//    {
+//        qCWarning(LOG_CAT_DU_OBJECT) << "DuHeader::fromMidi():\n"
+//                                     << "an attribute was not properly set";
+//    }
 
-    return header;
-}
+//    return header;
+//}
 
 
 QByteArray DuHeader::toDuMusicBinary() const

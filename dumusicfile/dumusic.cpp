@@ -382,17 +382,17 @@ DuMusicPtr DuMusic::fromMidi(const MidiConversionHelper &helper)
 
     DuMusicPtr music(new DuMusic);
 
-    const DuHeaderPtr &header = DuHeader::fromMidi(helper);
-    if (header != NULL)
-        music->setHeader(header);
-    else
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromMidi():\n"
-                                      << "failed to generate DuMusic\n"
-                                      << "the DuHeader was not properly generated";
+//    const DuHeaderPtr &header = DuHeader::fromMidi(helper);
+//    if (header != NULL)
+//        music->setHeader(header);
+//    else
+//    {
+//        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromMidi():\n"
+//                                      << "failed to generate DuMusic\n"
+//                                      << "the DuHeader was not properly generated";
 
-        return DuMusicPtr();
-    }
+//        return DuMusicPtr();
+//    }
 
     const DuSongInfoPtr &songInfo = DuSongInfo::fromMidi(helper);
     if (songInfo != NULL)

@@ -204,6 +204,8 @@ DuSongInfoPtr DuSongInfo::fromMidi(const MidiConversionHelper &helper)
     DuSongInfoPtr songInfo(new DuSongInfo);
     bool verif = true;
 
+    verif = verif && songInfo->setSongName(helper.getTitle());
+
     verif = verif && songInfo->setReferenceTrack(helper.getIndexes(0).first);
     verif = verif && songInfo->setReferenceLoopDuration(helper.getDuration());
 
