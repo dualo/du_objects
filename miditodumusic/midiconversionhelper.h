@@ -55,6 +55,8 @@ public:
     const DuInstrumentPtr getInstrument(int index) const;
     void setSelectedInstr(int index, const DuInstrumentPtr &instrument);
 
+    QPair<bool, int> getPercuSetting(int index) const;
+
     void setPercuMapping(int index, const QPair<bool, int> &mapping);
 
     bool isPercu(int index) const;

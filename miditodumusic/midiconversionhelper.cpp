@@ -5,7 +5,7 @@
 
 #include <QDebug>
 
-//#include "duobject/du-touch/parameters/instr_mapping.c"
+#include "../du-touch/parameters/instr_mapping.c"
 
 
 MidiConversionHelper::MidiConversionHelper() :
@@ -275,6 +275,15 @@ void MidiConversionHelper::setSelectedInstr(int index,
 }
 
 
+QPair<bool, int> MidiConversionHelper::getPercuSetting(int index) const
+{
+    if (index >= percuMappings.count())
+        return QPair<bool, int>(true, 0xFF);
+
+    return percuMappings[index];
+}
+
+
 void MidiConversionHelper::setPercuMapping(int index, const QPair<bool, int> &mapping)
 {
     if (index >= percuMappings.count())
@@ -298,8 +307,12 @@ int MidiConversionHelper::fetchKeyboard(int key, int index) const
     if (index >= selectedInstruments.count())
         return -1;
 
+    const DuInstrumentPtr &instrument = selectedInstruments[index];
+    if (instrument == NULL)
+        return -1;
+
     const DuInstrumentInfoConstPtr &instrInfo =
-            selectedInstruments[index]->getInstrumentInfo();
+            instrument->getInstrumentInfo();
     if (instrInfo == NULL)
         return -1;
 
@@ -312,8 +325,21 @@ int MidiConversionHelper::fetchPercuKey(int gmKey, int index) const
     if (!isPercu(index))
         return gmKey;
 
-    //TODO: use instr_mapping.c
-    return gmKey;
+    int percuMap = percuMappings[index].second;
+
+    s_note tmpNote;
+    int tmpKey = 0xFF;
+
+    for (int i = 0; i < 58; i++)
+    {
+        tmpNote = keyboard_note_map[percuMap][0][i];
+        tmpKey = tmpNote.note_gmref;
+
+        if (tmpKey == gmKey)
+            return i;
+    }
+
+    return -1;
 }
 
 
@@ -548,6 +574,8 @@ bool MidiConversionHelper::filterMetaEvents()
         if (metaEvent->getType() != DuMidiMetaEvent::EndOfTrack)
             return false;
         int trackDuration = metaEvent->getTime();
+
+        midiEvents->removeAt(j);
 
         if (trackDuration > duration)
             duration = trackDuration;
