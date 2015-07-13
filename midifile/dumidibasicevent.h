@@ -24,11 +24,11 @@ public:
     virtual QByteArray toMidiBinary() const;
     QJsonValue toJson() const;
 
-    quint32 getTime() const;
+    int getTime() const;
     void setTime(quint32 delta, quint32 offset);
     void setTime(QDataStream &stream, quint32 offset);
 
-    quint8 getStatus() const;
+    int getStatus() const;
     void setStatus(quint8 value);   // Status bytes are > 0x7F, data bytes are < 0x80
 
     bool runningStatus() const;
