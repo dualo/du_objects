@@ -18,6 +18,8 @@
 #define KEY_INSTRINFO_TYPE                  "Type"
 #define KEY_INSTRINFO_USERID                "UserID"
 
+//TODO: add parameters for du-sounds when possible
+
 
 DU_OBJECT(DuInstrumentInfo)
 

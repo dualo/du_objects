@@ -5,7 +5,9 @@
 
 #include <QDebug>
 
+//#pragma pack(push, 4)
 #include "../du-touch/parameters/instr_mapping.c"
+//#pragma pack(pop)
 
 
 MidiConversionHelper::MidiConversionHelper() :
