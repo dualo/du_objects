@@ -403,6 +403,16 @@ bool MidiConversionHelper::importMidiFile()
 
 bool MidiConversionHelper::filterMetaEvents()
 {
+    int midiDivision = selectedFile->getDivision();
+    if (midiDivision == -1)
+    {
+        qCritical() << "MidiConversionHelper::filterMetaEvents()\n"
+                    << "failed to filter midi file\n"
+                    << "invalid time division";
+
+        return false;
+    }
+
     bool tempoFound = false;
     bool timeSigFound = false;
     bool keySigFound = false;
@@ -435,17 +445,30 @@ bool MidiConversionHelper::filterMetaEvents()
         if (midiEvents->count() == -1)
             return false;
 
-        int j = 0;
 
         //The last event in a midi track should always be an EndOfTrack meta event
         //We will need the information provided by these events later so we won't
         //remove them now.
+
+        int j = 0;
         while (j < midiEvents->count() - 1)
         {
             const DuMidiBasicEventPtr &midiEvent =
                     midiEvents->at(j).dynamicCast<DuMidiBasicEvent>();
             if (midiEvent == NULL)
                 return false;
+
+            //Adjusting timestamp for .dumusic time division
+
+            int time = midiEvent->getTime();
+            if (time != -1)
+            {
+                quint64 tmp = time;
+                tmp *= DUMUSIC_DIVISION;
+                tmp /= midiDivision;
+
+                midiEvent->setTime((quint32)tmp, 0);
+            }
 
             const DuMidiMetaEventPtr &metaEvent =
                     midiEvent.dynamicCast<DuMidiMetaEvent>();
@@ -588,8 +611,15 @@ bool MidiConversionHelper::filterMetaEvents()
 
         midiEvents->removeAt(j);
 
-        if (trackDuration > duration)
-            duration = trackDuration;
+        if (trackDuration != -1)
+        {
+            quint64 tmp = trackDuration;
+            tmp *= DUMUSIC_DIVISION;
+            tmp /= midiDivision;
+
+            if ((quint32)tmp > (quint32)duration)
+                duration = tmp;
+        }
     }
 
     if (!titleFound)
