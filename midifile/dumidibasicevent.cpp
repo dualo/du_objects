@@ -42,7 +42,7 @@ QJsonValue DuMidiBasicEvent::toJson() const
 }
 
 
-quint32 DuMidiBasicEvent::getTime() const
+int DuMidiBasicEvent::getTime() const
 {
     const DuMidiVariableLengthConstPtr &tmp =
             getChildAs<DuMidiVariableLength>(KEY_MIDIEVENT_TIME);
@@ -76,7 +76,7 @@ void DuMidiBasicEvent::setTime(QDataStream &stream, quint32 offset)
 }
 
 
-quint8 DuMidiBasicEvent::getStatus() const
+int DuMidiBasicEvent::getStatus() const
 {
     const DuMidiStatusConstPtr &tmp =
             getChildAs<DuMidiStatus>(KEY_MIDIEVENT_STATUS);
