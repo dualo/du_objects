@@ -4,6 +4,7 @@
 
 #include <QJsonObject>
 
+
 DU_OBJECT_IMPL(DuHeader)
 
 DuHeader::DuHeader() :
@@ -134,6 +135,35 @@ DuHeaderPtr DuHeader::fromJson(const QJsonObject &jsonHeader)
     return header;
 }
 
+
+DuHeaderPtr DuHeader::fromMidi(const MidiConversionHelper &helper)
+{
+    if (!helper.isValid())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuHeader::fromMidi():\n"
+                                      << "failed to generate DuHeader\n"
+                                      << "invalid conversion helper";
+
+        return DuHeaderPtr();
+    }
+
+    DuHeaderPtr header(new DuHeader);
+    bool verif = true;
+
+    //TODO
+
+    verif = verif && header->setSongName(helper.getTitle());
+
+    if (!verif)
+    {
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuHeader::fromMidi():\n"
+                                     << "an attribute was not properly set";
+    }
+
+    return header;
+}
+
+
 QByteArray DuHeader::toDuMusicBinary() const
 {
     //TODO: restructure music_song into music_header and music_info
@@ -262,7 +292,7 @@ int DuHeader::getFileVersion() const
 
 bool DuHeader::setFileVersion(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_HEAD_FILEVERSION);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_HEAD_FILEVERSION);
 
     if (tmp == NULL)
         return false;
@@ -283,7 +313,7 @@ QString DuHeader::getOriginalSerialNumber() const
 
 bool DuHeader::setOriginalSerialNumber(const QString value)
 {
-    DuStringPtr tmp = getChildAs<DuString>(KEY_HEAD_ORIGINALSN);
+    const DuStringPtr &tmp = getChildAs<DuString>(KEY_HEAD_ORIGINALSN);
 
     if (tmp == NULL)
         return false;
@@ -303,7 +333,7 @@ QString DuHeader::getOriginalName() const
 
 bool DuHeader::setOriginalName(const QString value)
 {
-    DuStringPtr tmp = getChildAs<DuString>(KEY_HEAD_ORIGINALNAME);
+    const DuStringPtr &tmp = getChildAs<DuString>(KEY_HEAD_ORIGINALNAME);
 
     if (tmp == NULL)
         return false;
@@ -323,7 +353,7 @@ QString DuHeader::getOriginalUser() const
 
 bool DuHeader::setOriginalUser(const QString value)
 {
-    DuStringPtr tmp = getChildAs<DuString>(KEY_HEAD_ORIGINALUSER);
+    const DuStringPtr &tmp = getChildAs<DuString>(KEY_HEAD_ORIGINALUSER);
 
     if (tmp == NULL)
         return false;
@@ -343,7 +373,7 @@ QString DuHeader::getOriginalUserId() const
 
 bool DuHeader::setOriginalUserId(const QString value)
 {
-    DuStringPtr tmp = getChildAs<DuString>(KEY_HEAD_ORIGINALUSERID);
+    const DuStringPtr &tmp = getChildAs<DuString>(KEY_HEAD_ORIGINALUSERID);
 
     if (tmp == NULL)
         return false;
@@ -364,7 +394,7 @@ QString DuHeader::getLastModifSerialNumber() const
 
 bool DuHeader::setLastModifSerialNumber(const QString value)
 {
-    DuStringPtr tmp = getChildAs<DuString>(KEY_HEAD_LASTMODIFSN);
+    const DuStringPtr &tmp = getChildAs<DuString>(KEY_HEAD_LASTMODIFSN);
 
     if (tmp == NULL)
         return false;
@@ -384,7 +414,7 @@ QString DuHeader::getLastModifName() const
 
 bool DuHeader::setLastModifName(const QString value)
 {
-    DuStringPtr tmp = getChildAs<DuString>(KEY_HEAD_LASTMODIFNAME);
+    const DuStringPtr &tmp = getChildAs<DuString>(KEY_HEAD_LASTMODIFNAME);
 
     if (tmp == NULL)
         return false;
@@ -404,7 +434,7 @@ QString DuHeader::getLastModifUser() const
 
 bool DuHeader::setLastModifUser(const QString value)
 {
-    DuStringPtr tmp = getChildAs<DuString>(KEY_HEAD_LASTMODIFUSER);
+    const DuStringPtr &tmp = getChildAs<DuString>(KEY_HEAD_LASTMODIFUSER);
 
     if (tmp == NULL)
         return false;
@@ -424,7 +454,7 @@ QString DuHeader::getLastModifUserId() const
 
 bool DuHeader::setLastModifUserId(const QString value)
 {
-    DuStringPtr tmp = getChildAs<DuString>(KEY_HEAD_LASTMODIFUSERID);
+    const DuStringPtr &tmp = getChildAs<DuString>(KEY_HEAD_LASTMODIFUSERID);
 
     if (tmp == NULL)
         return false;
@@ -445,7 +475,7 @@ int DuHeader::getSongId() const
 
 bool DuHeader::setSongId(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_HEAD_SONGID);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_HEAD_SONGID);
 
     if (tmp == NULL)
         return false;
@@ -465,7 +495,7 @@ QString DuHeader::getSongName() const
 
 bool DuHeader::setSongName(const QString value)
 {
-    DuStringPtr tmp = getChildAs<DuString>(KEY_HEAD_SONGNAME);
+    const DuStringPtr &tmp = getChildAs<DuString>(KEY_HEAD_SONGNAME);
 
     if (tmp == NULL)
         return false;
@@ -485,7 +515,7 @@ int DuHeader::getSongVersion() const
 
 bool DuHeader::setSongVersion(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_HEAD_SONGVERSION);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_HEAD_SONGVERSION);
 
     if (tmp == NULL)
         return false;

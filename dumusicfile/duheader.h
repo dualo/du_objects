@@ -5,6 +5,8 @@
 #include "../general/dustring.h"
 #include "../general/dunumeric.h"
 
+#include "../miditodumusic/midiconversionhelper.h"
+
 
 #define KEY_HEAD_FILEVERSION        "FileVersion"
 
@@ -38,6 +40,7 @@ public:
 
     static DuHeaderPtr fromDuMusicBinary(const music_song &du_song);
     static DuHeaderPtr fromJson(const QJsonObject &jsonHeader);
+    static DuHeaderPtr fromMidi(const MidiConversionHelper &helper);
 
     QByteArray toDuMusicBinary() const;
 

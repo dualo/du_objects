@@ -26,6 +26,7 @@ public:
                                         uint16_t totalSample);
     static DuTrackPtr fromDuMusicBinary(const music_track &du_track);
     static DuTrackPtr fromJson(const QJsonObject &jsonTrack);
+    static DuTrackPtr fromMidi(const MidiConversionHelper &helper, int trackIndex);
 
     QByteArray toDuMusicBinary() const;
     QList<DuMidiTrackPtr> toDuMidiTrackArray(int durationRef) const;

@@ -54,10 +54,10 @@ public:
 
     virtual QByteArray toMidiBinary() const;
 
-    quint8 getType() const;
+    int getType() const;
     void setType(quint8 value);
 
-    quint32 getLength() const;
+    int getLength() const;
     void setLength(quint32 value);
     void setLength(QDataStream &stream);
 
