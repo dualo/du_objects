@@ -21,6 +21,8 @@
 #define KEY_SONG_SCALE                  "Scale"
 #define KEY_SONG_TONALITY               "Tonality"
 
+#define KEY_SONG_LEDS                   "LEDs"
+
 #define SONGINFO_SIZE                   19 + NUM_LED_VALUE + FX_MIX_SIZE + 25
 
 
@@ -71,6 +73,9 @@ public:
 
     int getTimeSignature() const;
     bool setTimeSignature(int value);
+
+    QByteArray getLeds() const;
+    bool setLeds(const QByteArray &value);
 };
 
 #endif // DUSONGINFO_H

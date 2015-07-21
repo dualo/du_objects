@@ -34,6 +34,7 @@ DuSongInfo::DuSongInfo() :
 
     addChild(KEY_SONG_MIXER, new DuMixer());
 
+
     addChild(KEY_SONG_SCALE,
              new DuNumeric(MAJOR_LED_MODE, NUMERIC_DEFAULT_SIZE,
                            NUM_LED_MODE, NONE_LED_MODE));
@@ -45,6 +46,9 @@ DuSongInfo::DuSongInfo() :
     addChild(KEY_SONG_TIMESIGNATURE,
              new DuNumeric(TIME_4_4, NUMERIC_DEFAULT_SIZE,
                            NUM_TIMESIGNATURE, TIME_OFF));
+
+    addChild(KEY_SONG_LEDS,
+             new DuBinaryData(NUM_LED_VALUE));
 }
 
 DuSongInfo::~DuSongInfo()
@@ -62,6 +66,17 @@ DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
     DuSongInfoPtr songInfo(new DuSongInfo);
     bool verif = true;
 
+    const DuMixerPtr &mixer = DuMixer::fromDuMusicBinary(du_song.s_mix);
+    if (mixer == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuSongInfo::fromDuMusicBinary():\n"
+                << "the DuMixer was not properly generated";
+
+        return DuSongInfoPtr();
+    }
+    songInfo->setMixer(mixer);
+
     verif = verif && songInfo->setReferenceTrack(du_song.s_reftrack);
     verif = verif && songInfo->setReferenceLoopDuration(du_song.s_looptimer);
 
@@ -74,23 +89,15 @@ DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
     verif = verif && songInfo->setTonality(du_song.s_scaletonality);
     verif = verif && songInfo->setTimeSignature(du_song.s_timesignature);
 
+    verif = verif && songInfo->setLeds(
+                QByteArray((char *)du_song.s_leds, NUM_LED_VALUE));
+
     if (!verif)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "DuSongInfo::fromDuMusicBinary():\n"
                                      << "an attribute was not properly set";
     }
-
-    const DuMixerPtr &mixer = DuMixer::fromDuMusicBinary(du_song.s_mix);
-    if (mixer == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT)
-                << "DuSongInfo::fromDuMusicBinary():\n"
-                << "the DuMixer was not properly generated";
-
-        return DuSongInfoPtr();
-    }
-    songInfo->setMixer(mixer);
-
+    
     return songInfo;
 }
 
@@ -107,12 +114,14 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
     QJsonValue jsonScale            = jsonSongInfo[KEY_SONG_SCALE];
     QJsonValue jsonTonality         = jsonSongInfo[KEY_SONG_TONALITY];
     QJsonValue jsonTimeSignature    = jsonSongInfo[KEY_SONG_TIMESIGNATURE];
+    QJsonValue jsonLeds             = jsonSongInfo[KEY_SONG_LEDS];
 
     if (        !jsonRefTrack.isDouble()    ||  !jsonRefDuration.isDouble()
             ||  !jsonVolume.isDouble()      ||  !jsonTempo.isDouble()
             ||  !jsonClickVolume.isDouble() ||  !jsonOffset.isDouble()
             ||  !jsonMixer.isObject()       ||  !jsonScale.isDouble()
-            ||  !jsonTonality.isDouble()    ||  !jsonTimeSignature.isDouble())
+            ||  !jsonTonality.isDouble()    ||  !jsonTimeSignature.isDouble()
+            ||  !jsonLeds.isString())
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuSongInfo::fromJson():\n"
@@ -137,6 +146,8 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
     verif = verif && songInfo->setScale(jsonScale.toInt());
     verif = verif && songInfo->setTonality(jsonTonality.toInt());
     verif = verif && songInfo->setTimeSignature(jsonTimeSignature.toInt());
+
+    verif = verif && songInfo->setLeds(jsonLeds.toString().toUtf8());
 
     if (!verif)
     {
@@ -185,6 +196,8 @@ DuSongInfoPtr DuSongInfo::fromMidi(const MidiConversionHelper &helper)
     verif = verif && songInfo->setTonality(helper.getTonality());
     verif = verif && songInfo->setTimeSignature(helper.getTimeSig());
 
+//    verif = verif && songInfo->setLeds();
+
     if (!verif)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "DuSongInfo::fromMidi():\n"
@@ -200,6 +213,8 @@ QByteArray DuSongInfo::toDuMusicBinary() const
     //TODO: restructure music_song into music_header and music_info
     music_song du_songinfo;
 
+    QByteArray tmpArray;
+    QString tmpStr;
     int tmpNum = 0;
 
     QByteArray tmpClear(MUSIC_SONG_SIZE, (char)0x00);
@@ -267,10 +282,13 @@ QByteArray DuSongInfo::toDuMusicBinary() const
     du_songinfo.s_totalsample = 0x00;
 
 
-    for(int i = 0; i < NUM_LED_VALUE; i++)
-    {
-        du_songinfo.s_leds[i] = 0x00;
-    }
+    tmpClear = QByteArray(NUM_LED_VALUE, char(0x00));
+
+    tmpArray = getLeds();
+    if (tmpArray.isNull())
+        return QByteArray();
+
+    std::memcpy(du_songinfo.s_leds, tmpArray.data(), NUM_LED_VALUE);
 
 
     return QByteArray((char *)&(du_songinfo), MUSIC_SONG_SIZE);
@@ -476,4 +494,25 @@ bool DuSongInfo::setTimeSignature(int value)
         return false;
 
     return tmp->setNumeric(value);
+}
+
+
+QByteArray DuSongInfo::getLeds() const
+{
+    const DuBinaryDataConstPtr &tmp = getChildAs<DuBinaryData>(KEY_SONG_LEDS);
+
+    if (tmp == NULL)
+        return QByteArray();
+
+    return tmp->getData();
+}
+
+bool DuSongInfo::setLeds(const QByteArray &value)
+{
+    const DuBinaryDataPtr &tmp = getChildAs<DuBinaryData>(KEY_SONG_LEDS);
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setData(value);
 }
