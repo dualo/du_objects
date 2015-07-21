@@ -15,9 +15,7 @@
 #define KEY_SONG_OFFSET                 "Offset"
 #define KEY_SONG_CLICKVOLUME            "ClickVolume"
 
-#define KEY_SONG_GAIN                   "Gain"
-#define KEY_SONG_LOWCUTFILTERFREQ       "LowCutFilterFrequency"
-#define KEY_SONG_HIGHCUTFILTERFREQ      "HighCutFilterFrequency"
+#define KEY_SONG_MIXER                  "Mixer"
 
 #define KEY_SONG_TIMESIGNATURE          "TimeSignature"
 #define KEY_SONG_SCALE                  "Scale"
@@ -62,14 +60,8 @@ public:
     int getOffset() const;
     bool setOffset(int value);
 
-    int getGain() const;
-    bool setGain(int value);
-
-    int getLowCutFilterFrequency() const;
-    bool setLowCutFilterFrequency(int value);
-
-    int getHighCutFilterFrequency() const;
-    bool setHighCutFilterFrequency(int value);
+    DuMixerConstPtr getMixer() const;
+    void setMixer(const DuMixerPtr &mixer);
 
     int getScale() const;
     bool setScale(int value);

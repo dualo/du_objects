@@ -32,17 +32,7 @@ DuSongInfo::DuSongInfo() :
              new DuNumeric(MUSIC_TEMPOVOL_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            MUSIC_TEMPOVOL_MAXVALUE, MUSIC_TEMPOVOL_MINVALUE));
 
-    addChild(KEY_SONG_GAIN,
-             new DuNumeric(FX_MIX_INGAIN_MAXVALUE, NUMERIC_DEFAULT_SIZE,
-                           FX_MIX_INGAIN_MAXVALUE, FX_MIX_INGAIN_MINVALUE));
-
-    addChild(KEY_SONG_LOWCUTFILTERFREQ,
-             new DuNumeric(FX_MIX_LCFREQ_MINVALUE, NUMERIC_DEFAULT_SIZE,
-                           FX_MIX_LCFREQ_MAXVALUE, FX_MIX_LCFREQ_MINVALUE));
-
-    addChild(KEY_SONG_HIGHCUTFILTERFREQ,
-             new DuNumeric(FX_MIX_HCFREQ_MAXVALUE, NUMERIC_DEFAULT_SIZE,
-                           FX_MIX_HCFREQ_MAXVALUE, FX_MIX_HCFREQ_MINVALUE));
+    addChild(KEY_SONG_MIXER, new DuMixer());
 
     addChild(KEY_SONG_SCALE,
              new DuNumeric(MAJOR_LED_MODE, NUMERIC_DEFAULT_SIZE,
@@ -80,12 +70,6 @@ DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
     verif = verif && songInfo->setOffset(du_song.s_decaltempo);
     verif = verif && songInfo->setClickVolume(du_song.s_voltempo);
 
-    verif = verif && songInfo->setGain(du_song.s_mix.m_inputgain);
-    verif = verif && songInfo->setLowCutFilterFrequency(
-                du_song.s_mix.m_locutfilterfrequency);
-    verif = verif && songInfo->setHighCutFilterFrequency(
-                du_song.s_mix.m_hicutfilterfrequency);
-
     verif = verif && songInfo->setScale(du_song.s_displaynote);
     verif = verif && songInfo->setTonality(du_song.s_scaletonality);
     verif = verif && songInfo->setTimeSignature(du_song.s_timesignature);
@@ -95,6 +79,17 @@ DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
         qCWarning(LOG_CAT_DU_OBJECT) << "DuSongInfo::fromDuMusicBinary():\n"
                                      << "an attribute was not properly set";
     }
+
+    DuMixerPtr &mixer = DuMixer::fromDuMusicBinary(du_song.s_mix);
+    if (mixer == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuSongInfo::fromDuMusicBinary():\n"
+                << "the DuMixer was not properly generated";
+
+        return DuSongInfoPtr();
+    }
+    songInfo->setMixer(mixer);
 
     return songInfo;
 }
@@ -108,9 +103,7 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
     QJsonValue jsonTempo            = jsonSongInfo[KEY_SONG_TEMPO];
     QJsonValue jsonClickVolume      = jsonSongInfo[KEY_SONG_CLICKVOLUME];
     QJsonValue jsonOffset           = jsonSongInfo[KEY_SONG_OFFSET];
-    QJsonValue jsonGain             = jsonSongInfo[KEY_SONG_GAIN];
-    QJsonValue jsonLoCutFreq        = jsonSongInfo[KEY_SONG_LOWCUTFILTERFREQ];
-    QJsonValue jsonHiCutFreq        = jsonSongInfo[KEY_SONG_HIGHCUTFILTERFREQ];
+    QJsonValue jsonMixer            = jsonSongInfo[KEY_SONG_MIXER];
     QJsonValue jsonScale            = jsonSongInfo[KEY_SONG_SCALE];
     QJsonValue jsonTonality         = jsonSongInfo[KEY_SONG_TONALITY];
     QJsonValue jsonTimeSignature    = jsonSongInfo[KEY_SONG_TIMESIGNATURE];
@@ -118,13 +111,13 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
     if (        !jsonRefTrack.isDouble()    ||  !jsonRefDuration.isDouble()
             ||  !jsonVolume.isDouble()      ||  !jsonTempo.isDouble()
             ||  !jsonClickVolume.isDouble() ||  !jsonOffset.isDouble()
-            ||  !jsonGain.isDouble()        ||  !jsonLoCutFreq.isDouble()
-            ||  !jsonHiCutFreq.isDouble()   ||  !jsonScale.isDouble()
+            ||  !jsonMixer.isObject()       ||  !jsonScale.isDouble()
             ||  !jsonTonality.isDouble()    ||  !jsonTimeSignature.isDouble())
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuSongInfo::fromJson():\n"
-                                      << "failed to generate DuSongInfo\n"
-                                      << "a json key did not contain the proper type";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuSongInfo::fromJson():\n"
+                << "failed to generate DuSongInfo\n"
+                << "a json key did not contain the proper type";
 
         return DuSongInfoPtr();
     }
@@ -141,10 +134,6 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
     verif = verif && songInfo->setClickVolume(jsonClickVolume.toInt());
     verif = verif && songInfo->setOffset(jsonOffset.toInt());
 
-    verif = verif && songInfo->setGain(jsonGain.toInt());
-    verif = verif && songInfo->setLowCutFilterFrequency(jsonLoCutFreq.toInt());
-    verif = verif && songInfo->setHighCutFilterFrequency(jsonHiCutFreq.toInt());
-
     verif = verif && songInfo->setScale(jsonScale.toInt());
     verif = verif && songInfo->setTonality(jsonTonality.toInt());
     verif = verif && songInfo->setTimeSignature(jsonTimeSignature.toInt());
@@ -154,6 +143,17 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
         qCWarning(LOG_CAT_DU_OBJECT) << "DuSongInfo::fromJson():\n"
                                      << "an attribute was not properly set";
     }
+
+    DuMixerPtr &mixer = DuMixer::fromJson(jsonMixer.toObject());
+    if (mixer == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuSongInfo::fromJson():\n"
+                << "the DuMixer was not properly generated";
+
+        return DuSongInfoPtr();
+    }
+    songInfo->setMixer(mixer);
 
     return songInfo;
 }
@@ -181,10 +181,6 @@ DuSongInfoPtr DuSongInfo::fromMidi(const MidiConversionHelper &helper)
 //    verif = verif && songInfo->setClickVolume();
 //    verif = verif && songInfo->setOffset(jsonOffset.toInt());
 
-//    verif = verif && songInfo->setGain(jsonGain.toInt());
-//    verif = verif && songInfo->setLowCutFilterFrequency(jsonLoCutFreq.toInt());
-//    verif = verif && songInfo->setHighCutFilterFrequency(jsonHiCutFreq.toInt());
-
     verif = verif && songInfo->setScale(helper.getScale());
     verif = verif && songInfo->setTonality(helper.getTonality());
     verif = verif && songInfo->setTimeSignature(helper.getTimeSig());
@@ -208,6 +204,16 @@ QByteArray DuSongInfo::toDuMusicBinary() const
 
     QByteArray tmpClear(MUSIC_SONG_SIZE, (char)0x00);
     std::memcpy((char *)&(du_songinfo), tmpClear.data(), MUSIC_SONG_SIZE);
+
+
+    const DuMixerConstPtr &mixer = getMixer();
+    if (mixer == NULL)
+        return QByteArray();
+    const QByteArray &mixerArray = mixer->toDuMusicBinary();
+    if (mixerArray.isNull())
+        return QByteArray();
+
+    std::memcpy(&(du_songinfo.s_mix), mixerArray.data(), FX_MIX_SIZE);
 
 
     tmpNum = getReferenceTrack();
@@ -240,21 +246,6 @@ QByteArray DuSongInfo::toDuMusicBinary() const
         return QByteArray();
     du_songinfo.s_decaltempo = tmpNum;
 
-    tmpNum = getGain();
-    if (tmpNum == -1)
-        return QByteArray();
-    du_songinfo.s_mix.m_inputgain = tmpNum;
-
-    tmpNum = getLowCutFilterFrequency();
-    if (tmpNum == -1)
-        return QByteArray();
-    du_songinfo.s_mix.m_locutfilterfrequency = tmpNum;
-
-    tmpNum = getHighCutFilterFrequency();
-    if (tmpNum == -1)
-        return QByteArray();
-    du_songinfo.s_mix.m_hicutfilterfrequency = tmpNum;
-
     tmpNum = getScale();
     if (tmpNum == -1)
         return QByteArray();
@@ -275,12 +266,6 @@ QByteArray DuSongInfo::toDuMusicBinary() const
     du_songinfo.s_quantification = 0x00;
     du_songinfo.s_totalsample = 0x00;
 
-    du_songinfo.s_mix.m_ouputlevel = 0x7F;
-    du_songinfo.s_mix.m_outputpanning = 0x40;
-    du_songinfo.s_mix.m_ouputfrontrear = 0x00;
-
-    du_songinfo.s_mix.m_sendtoreverb = 0x00;
-    du_songinfo.s_mix.m_sendtochorus = 0x00;
 
     for(int i = 0; i < NUM_LED_VALUE; i++)
     {
@@ -311,7 +296,7 @@ int DuSongInfo::getReferenceTrack() const
 
 bool DuSongInfo::setReferenceTrack(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_SONG_REFERENCETRACK);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_REFERENCETRACK);
 
     if (tmp == NULL)
         return false;
@@ -332,7 +317,7 @@ int DuSongInfo::getReferenceLoopDuration() const
 
 bool DuSongInfo::setReferenceLoopDuration(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_SONG_REFERENCELOOPDURATION);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_REFERENCELOOPDURATION);
 
     if (tmp == NULL)
         return false;
@@ -353,7 +338,7 @@ int DuSongInfo::getVolume() const
 
 bool DuSongInfo::setVolume(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_SONG_VOLUME);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_VOLUME);
 
     if (tmp == NULL)
         return false;
@@ -373,7 +358,7 @@ int DuSongInfo::getTempo() const
 
 bool DuSongInfo::setTempo(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_SONG_TEMPO);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_TEMPO);
 
     if (tmp == NULL)
         return false;
@@ -393,7 +378,7 @@ int DuSongInfo::getClickVolume() const
 
 bool DuSongInfo::setClickVolume(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_SONG_CLICKVOLUME);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_CLICKVOLUME);
 
     if (tmp == NULL)
         return false;
@@ -413,7 +398,7 @@ int DuSongInfo::getOffset() const
 
 bool DuSongInfo::setOffset(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_SONG_OFFSET);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_OFFSET);
 
     if (tmp == NULL)
         return false;
@@ -422,64 +407,14 @@ bool DuSongInfo::setOffset(int value)
 }
 
 
-int DuSongInfo::getGain() const
+DuMixerConstPtr DuSongInfo::getMixer() const
 {
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_GAIN);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
+    return getChildAs<DuMixer>(KEY_SONG_MIXER);
 }
 
-bool DuSongInfo::setGain(int value)
+void DuSongInfo::setMixer(const DuMixerPtr &mixer)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_SONG_GAIN);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuSongInfo::getLowCutFilterFrequency() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_LOWCUTFILTERFREQ);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuSongInfo::setLowCutFilterFrequency(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_SONG_LOWCUTFILTERFREQ);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuSongInfo::getHighCutFilterFrequency() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_HIGHCUTFILTERFREQ);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuSongInfo::setHighCutFilterFrequency(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_SONG_HIGHCUTFILTERFREQ);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
+    addChild(KEY_SONG_MIXER, mixer);
 }
 
 
@@ -495,7 +430,7 @@ int DuSongInfo::getScale() const
 
 bool DuSongInfo::setScale(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_SONG_SCALE);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_SCALE);
 
     if (tmp == NULL)
         return false;
@@ -515,7 +450,7 @@ int DuSongInfo::getTonality() const
 
 bool DuSongInfo::setTonality(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_SONG_TONALITY);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_TONALITY);
 
     if (tmp == NULL)
         return false;
@@ -535,7 +470,7 @@ int DuSongInfo::getTimeSignature() const
 
 bool DuSongInfo::setTimeSignature(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_SONG_TIMESIGNATURE);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_TIMESIGNATURE);
 
     if (tmp == NULL)
         return false;
