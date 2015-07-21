@@ -80,7 +80,7 @@ DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
                                      << "an attribute was not properly set";
     }
 
-    DuMixerPtr &mixer = DuMixer::fromDuMusicBinary(du_song.s_mix);
+    const DuMixerPtr &mixer = DuMixer::fromDuMusicBinary(du_song.s_mix);
     if (mixer == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
@@ -144,7 +144,7 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
                                      << "an attribute was not properly set";
     }
 
-    DuMixerPtr &mixer = DuMixer::fromJson(jsonMixer.toObject());
+    const DuMixerPtr &mixer = DuMixer::fromJson(jsonMixer.toObject());
     if (mixer == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
