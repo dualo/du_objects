@@ -56,18 +56,17 @@ DuCompressorPtr DuCompressor::fromDuMusicBinary(const FX_compressor &du_compress
     DuCompressorPtr compressor(new DuCompressor);
     bool verif = true;
 
-    verif = verif && compressor->setOnOff(du_compressor.c_on_off);
+    verif = compressor->setOnOff(du_compressor.c_on_off) ? verif : false;
 
-    verif = verif && compressor->setAttackTime(du_compressor.c_attacktime);
-    verif = verif && compressor->setReleaseTime(du_compressor.c_releasetime);
+    verif = compressor->setAttackTime(du_compressor.c_attacktime) ? verif : false;
+    verif = compressor->setReleaseTime(du_compressor.c_releasetime) ? verif : false;
 
-    verif = verif && compressor->setThreshold(du_compressor.c_threshold);
-    verif = verif && compressor->setRatio(du_compressor.c_ratio);
-    verif = verif && compressor->setBoost(du_compressor.c_boost);
-    verif = verif && compressor->setKneeType(du_compressor.c_kneetype);
+    verif = compressor->setThreshold(du_compressor.c_threshold) ? verif : false;
+    verif = compressor->setRatio(du_compressor.c_ratio) ? verif : false;
+    verif = compressor->setBoost(du_compressor.c_boost) ? verif : false;
+    verif = compressor->setKneeType(du_compressor.c_kneetype) ? verif : false;
 
-    verif = verif && compressor->setEffectName(
-            QString(QByteArray((char *)du_compressor.c_name, NAME_CARACT)));
+    verif = compressor->setEffectName(QString(QByteArray((char *)du_compressor.c_name, NAME_CARACT))) ? verif : false;
 
     if (!verif)
     {
@@ -106,17 +105,17 @@ DuCompressorPtr DuCompressor::fromJson(const QJsonObject &jsonCompressor)
     DuCompressorPtr compressor(new DuCompressor);
     bool verif = true;
 
-    verif = verif && compressor->setOnOff(jsonOnOff.toInt());
+    verif = compressor->setOnOff(jsonOnOff.toInt()) ? verif : false;
 
-    verif = verif && compressor->setAttackTime(jsonAttTime.toInt());
-    verif = verif && compressor->setReleaseTime(jsonRelTime.toInt());
-    verif = verif && compressor->setThreshold(jsonThreshold.toInt());
+    verif = compressor->setAttackTime(jsonAttTime.toInt()) ? verif : false;
+    verif = compressor->setReleaseTime(jsonRelTime.toInt()) ? verif : false;
+    verif = compressor->setThreshold(jsonThreshold.toInt()) ? verif : false;
 
-    verif = verif && compressor->setRatio(jsonRatio.toInt());
-    verif = verif && compressor->setBoost(jsonBoost.toInt());
-    verif = verif && compressor->setKneeType(jsonKneeType.toInt());
+    verif = compressor->setRatio(jsonRatio.toInt()) ? verif : false;
+    verif = compressor->setBoost(jsonBoost.toInt()) ? verif : false;
+    verif = compressor->setKneeType(jsonKneeType.toInt()) ? verif : false;
 
-    verif = verif && compressor->setEffectName(jsonEffectName.toString());
+    verif = compressor->setEffectName(jsonEffectName.toString()) ? verif : false;
 
     if (!verif)
     {

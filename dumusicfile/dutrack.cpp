@@ -38,8 +38,8 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
     const DuTrackPtr track(new DuTrack);
     bool verif = true;
 
-    verif = verif && track->setChannel(du_track.t_midichannel);
-    verif = verif && track->setCurrentLoop(du_track.t_currentloop);
+    verif = track->setChannel(du_track.t_midichannel) ? verif : false;
+    verif = track->setCurrentLoop(du_track.t_currentloop) ? verif : false;
 
     if (!verif)
     {
@@ -103,8 +103,8 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track)
     const DuTrackPtr track(new DuTrack);
     bool verif = true;
 
-    verif = verif && track->setChannel(du_track.t_midichannel);
-    verif = verif && track->setCurrentLoop(du_track.t_currentloop);
+    verif = track->setChannel(du_track.t_midichannel) ? verif : false;
+    verif = track->setCurrentLoop(du_track.t_currentloop) ? verif : false;
 
     if (!verif)
     {
@@ -158,8 +158,8 @@ DuTrackPtr DuTrack::fromJson(const QJsonObject &jsonTrack)
     DuTrackPtr track(new DuTrack);
     bool verif = true;
 
-    verif = verif && track->setChannel(jsonChannel.toInt());
-    verif = verif && track->setCurrentLoop(jsonCurrentLoop.toInt());
+    verif = track->setChannel(jsonChannel.toInt()) ? verif : false;
+    verif = track->setCurrentLoop(jsonCurrentLoop.toInt()) ? verif : false;
 
     if (!verif)
     {
@@ -217,8 +217,8 @@ DuTrackPtr DuTrack::fromMidi(const MidiConversionHelper &helper, int trackIndex)
     const DuTrackPtr track(new DuTrack);
     bool verif = true;
 
-    verif = verif && track->setChannel(7 - trackIndex);
-//    verif = verif && track->setCurrentLoop(0);
+    verif = track->setChannel(7 - trackIndex) ? verif : false;
+//    verif = track->setCurrentLoop(0) ? verif : false;
 
     if (!verif)
     {

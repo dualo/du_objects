@@ -40,12 +40,11 @@ DuVibratoPtr DuVibrato::fromDuMusicBinary(const FX_vibrato &du_vibrato)
     DuVibratoPtr vibrato(new DuVibrato);
     bool verif = true;
 
-    verif = verif && vibrato->setDepth(du_vibrato.v_depth);
-    verif = verif && vibrato->setDelay(du_vibrato.v_delay);
-    verif = verif && vibrato->setRate(du_vibrato.v_rate);
+    verif = vibrato->setDepth(du_vibrato.v_depth) ? verif : false;
+    verif = vibrato->setDelay(du_vibrato.v_delay) ? verif : false;
+    verif = vibrato->setRate(du_vibrato.v_rate) ? verif : false;
 
-    verif = verif && vibrato->setEffectName(
-                QString(QByteArray((char *)du_vibrato.v_name, NAME_CARACT)));
+    verif = vibrato->setEffectName(QString(QByteArray((char *)du_vibrato.v_name, NAME_CARACT))) ? verif : false;
 
     if (!verif)
     {
@@ -78,11 +77,11 @@ DuVibratoPtr DuVibrato::fromJson(const QJsonObject &jsonVibrato)
     DuVibratoPtr vibrato(new DuVibrato);
     bool verif = true;
 
-    verif = verif && vibrato->setDepth(jsonDepth.toInt());
-    verif = verif && vibrato->setDelay(jsonDelay.toInt());
-    verif = verif && vibrato->setRate(jsonRate.toInt());
+    verif = vibrato->setDepth(jsonDepth.toInt()) ? verif : false;
+    verif = vibrato->setDelay(jsonDelay.toInt()) ? verif : false;
+    verif = vibrato->setRate(jsonRate.toInt()) ? verif : false;
 
-    verif = verif && vibrato->setEffectName(jsonEffectName.toString());
+    verif = vibrato->setEffectName(jsonEffectName.toString()) ? verif : false;
 
     if (!verif)
     {

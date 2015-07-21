@@ -55,16 +55,16 @@ DuMixerPtr DuMixer::fromDuMusicBinary(const FX_mix &du_mixer)
     DuMixerPtr mixer(new DuMixer);
     bool verif = true;
 
-    verif = verif && mixer->setInputGain(du_mixer.m_inputgain);
-    verif = verif && mixer->setLowCutFilterFrequency(du_mixer.m_locutfilterfrequency);
-    verif = verif && mixer->setHighCutFilterFrequency(du_mixer.m_hicutfilterfrequency);
+    verif = mixer->setInputGain(du_mixer.m_inputgain) ? verif : false;
+    verif = mixer->setLowCutFilterFrequency(du_mixer.m_locutfilterfrequency) ? verif : false;
+    verif = mixer->setHighCutFilterFrequency(du_mixer.m_hicutfilterfrequency) ? verif : false;
 
-    verif = verif && mixer->setOutputLevel(du_mixer.m_ouputlevel);
-    verif = verif && mixer->setOutputPanning(du_mixer.m_outputpanning);
-    verif = verif && mixer->setOutputFrontRear(du_mixer.m_ouputfrontrear);
+    verif = mixer->setOutputLevel(du_mixer.m_ouputlevel) ? verif : false;
+    verif = mixer->setOutputPanning(du_mixer.m_outputpanning) ? verif : false;
+    verif = mixer->setOutputFrontRear(du_mixer.m_ouputfrontrear) ? verif : false;
 
-    verif = verif && mixer->setSendToReverb(du_mixer.m_sendtoreverb);
-    verif = verif && mixer->setSendToChorus(du_mixer.m_sendtochorus);
+    verif = mixer->setSendToReverb(du_mixer.m_sendtoreverb) ? verif : false;
+    verif = mixer->setSendToChorus(du_mixer.m_sendtochorus) ? verif : false;
 
     if (!verif)
     {
@@ -102,16 +102,16 @@ DuMixerPtr DuMixer::fromJson(const QJsonObject &jsonMixer)
     DuMixerPtr mixer(new DuMixer);
     bool verif = true;
 
-    verif = verif && mixer->setInputGain(jsonInputGain.toInt());
-    verif = verif && mixer->setLowCutFilterFrequency(jsonLoCutFreq.toInt());
-    verif = verif && mixer->setHighCutFilterFrequency(jsonHiCutFreq.toInt());
+    verif = mixer->setInputGain(jsonInputGain.toInt()) ? verif : false;
+    verif = mixer->setLowCutFilterFrequency(jsonLoCutFreq.toInt()) ? verif : false;
+    verif = mixer->setHighCutFilterFrequency(jsonHiCutFreq.toInt()) ? verif : false;
 
-    verif = verif && mixer->setOutputLevel(jsonOutputLvl.toInt());
-    verif = verif && mixer->setOutputPanning(jsonPanning.toInt());
-    verif = verif && mixer->setOutputFrontRear(jsonFrontRear.toInt());
+    verif = mixer->setOutputLevel(jsonOutputLvl.toInt()) ? verif : false;
+    verif = mixer->setOutputPanning(jsonPanning.toInt()) ? verif : false;
+    verif = mixer->setOutputFrontRear(jsonFrontRear.toInt()) ? verif : false;
 
-    verif = verif && mixer->setSendToReverb(jsonToReverb.toInt());
-    verif = verif && mixer->setSendToChorus(jsonToChorus.toInt());
+    verif = mixer->setSendToReverb(jsonToReverb.toInt()) ? verif : false;
+    verif = mixer->setSendToChorus(jsonToChorus.toInt()) ? verif : false;
 
     if (!verif)
     {

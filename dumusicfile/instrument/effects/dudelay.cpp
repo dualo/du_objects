@@ -56,18 +56,17 @@ DuDelayPtr DuDelay::fromDuMusicBinary(const FX_delay &du_delay)
     DuDelayPtr delay(new DuDelay);
     bool verif = true;
 
-    verif = verif && delay->setOnOff(du_delay.d_on_off);
+    verif = delay->setOnOff(du_delay.d_on_off) ? verif : false;
 
-    verif = verif && delay->setMode(du_delay.d_mode);
-    verif = verif && delay->setPreLowPassFilter(du_delay.d_prelp);
+    verif = delay->setMode(du_delay.d_mode) ? verif : false;
+    verif = delay->setPreLowPassFilter(du_delay.d_prelp) ? verif : false;
 
-    verif = verif && delay->setEffectLevel(du_delay.d_level);
-    verif = verif && delay->setEffectTime(du_delay.d_time);
-    verif = verif && delay->setFeedback(du_delay.d_feedback);
-    verif = verif && delay->setHDAmp(du_delay.d_hdamp);
+    verif = delay->setEffectLevel(du_delay.d_level) ? verif : false;
+    verif = delay->setEffectTime(du_delay.d_time) ? verif : false;
+    verif = delay->setFeedback(du_delay.d_feedback) ? verif : false;
+    verif = delay->setHDAmp(du_delay.d_hdamp) ? verif : false;
 
-    verif = verif && delay->setEffectName(
-                QString(QByteArray((char *)du_delay.d_name, NAME_CARACT)));
+    verif = delay->setEffectName(QString(QByteArray((char *)du_delay.d_name, NAME_CARACT))) ? verif : false;
 
     if (!verif)
     {
@@ -106,18 +105,18 @@ DuDelayPtr DuDelay::fromJson(const QJsonObject &jsonDelay)
     DuDelayPtr delay(new DuDelay);
     bool verif = true;
 
-    verif = verif && delay->setOnOff(jsonOnOff.toInt());
+    verif = delay->setOnOff(jsonOnOff.toInt()) ? verif : false;
 
-    verif = verif && delay->setMode(jsonMode.toInt());
-    verif = verif && delay->setPreLowPassFilter(jsonLoPassFilt.toInt());
+    verif = delay->setMode(jsonMode.toInt()) ? verif : false;
+    verif = delay->setPreLowPassFilter(jsonLoPassFilt.toInt()) ? verif : false;
 
-    verif = verif && delay->setEffectLevel(jsonEffectLvl.toInt());
-    verif = verif && delay->setEffectTime(jsonEffectTime.toInt());
+    verif = delay->setEffectLevel(jsonEffectLvl.toInt()) ? verif : false;
+    verif = delay->setEffectTime(jsonEffectTime.toInt()) ? verif : false;
 
-    verif = verif && delay->setFeedback(jsonFeedback.toInt());
-    verif = verif && delay->setHDAmp(jsonHDAmp.toInt());
+    verif = delay->setFeedback(jsonFeedback.toInt()) ? verif : false;
+    verif = delay->setHDAmp(jsonHDAmp.toInt()) ? verif : false;
 
-    verif = verif && delay->setEffectName(jsonEffectName.toString());
+    verif = delay->setEffectName(jsonEffectName.toString()) ? verif : false;
 
     if (!verif)
     {

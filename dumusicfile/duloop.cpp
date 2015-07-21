@@ -101,9 +101,9 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop)
         return DuLoopPtr();
     }
 
-    verif = verif && loop->setState(du_loop.l_state);
-    verif = verif && loop->setDurationModifier(du_loop.l_loopmod);
-    verif = verif && loop->setMidiOutChannel(du_loop.l_midioutchannel);
+    verif = loop->setState(du_loop.l_state) ? verif : false;
+    verif = loop->setDurationModifier(du_loop.l_loopmod) ? verif : false;
+    verif = loop->setMidiOutChannel(du_loop.l_midioutchannel) ? verif : false;
 
     if (!verif)
     {
@@ -138,9 +138,9 @@ DuLoopPtr DuLoop::fromJson(const QJsonObject &jsonLoop)
     DuLoopPtr loop(new DuLoop);
     bool verif = true;
 
-    verif = verif && loop->setState(jsonState.toInt());
-    verif = verif && loop->setDurationModifier(jsonDurationMod.toInt());
-    verif = verif && loop->setMidiOutChannel(jsonOutChannel.toInt());
+    verif = loop->setState(jsonState.toInt()) ? verif : false;
+    verif = loop->setDurationModifier(jsonDurationMod.toInt()) ? verif : false;
+    verif = loop->setMidiOutChannel(jsonOutChannel.toInt()) ? verif : false;
 
     if (!verif)
     {
@@ -217,9 +217,9 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
         return DuLoopPtr();
     }
 
-    verif = verif && loop->setState(REC_STOP);
-    verif = verif && loop->setDurationModifier(1);
-    verif = verif && loop->setMidiOutChannel(helper.getMidiChannel(loopIndex));
+    verif = loop->setState(REC_STOP) ? verif : false;
+    verif = loop->setDurationModifier(1) ? verif : false;
+    verif = loop->setMidiOutChannel(helper.getMidiChannel(loopIndex)) ? verif : false;
 
     if (!verif)
     {

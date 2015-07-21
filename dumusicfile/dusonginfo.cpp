@@ -77,20 +77,19 @@ DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
     }
     songInfo->setMixer(mixer);
 
-    verif = verif && songInfo->setReferenceTrack(du_song.s_reftrack);
-    verif = verif && songInfo->setReferenceLoopDuration(du_song.s_looptimer);
+    verif = songInfo->setReferenceTrack(du_song.s_reftrack) ? verif : false;
+    verif = songInfo->setReferenceLoopDuration(du_song.s_looptimer) ? verif : false;
 
-    verif = verif && songInfo->setVolume(du_song.s_volume);
-    verif = verif && songInfo->setTempo(du_song.s_tempo);
-    verif = verif && songInfo->setOffset(du_song.s_decaltempo);
-    verif = verif && songInfo->setClickVolume(du_song.s_voltempo);
+    verif = songInfo->setVolume(du_song.s_volume) ? verif : false;
+    verif = songInfo->setTempo(du_song.s_tempo) ? verif : false;
+    verif = songInfo->setOffset(du_song.s_decaltempo) ? verif : false;
+    verif = songInfo->setClickVolume(du_song.s_voltempo) ? verif : false;
 
-    verif = verif && songInfo->setScale(du_song.s_displaynote);
-    verif = verif && songInfo->setTonality(du_song.s_scaletonality);
-    verif = verif && songInfo->setTimeSignature(du_song.s_timesignature);
+    verif = songInfo->setScale(du_song.s_displaynote) ? verif : false;
+    verif = songInfo->setTonality(du_song.s_scaletonality) ? verif : false;
+    verif = songInfo->setTimeSignature(du_song.s_timesignature) ? verif : false;
 
-    verif = verif && songInfo->setLeds(
-                QByteArray((char *)du_song.s_leds, NUM_LED_VALUE));
+    verif = songInfo->setLeds(QByteArray((char *)du_song.s_leds, NUM_LED_VALUE)) ? verif : false;
 
     if (!verif)
     {
@@ -135,19 +134,19 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
     DuSongInfoPtr songInfo(new DuSongInfo);
     bool verif = true;
 
-    verif = verif && songInfo->setReferenceTrack(jsonRefTrack.toInt());
-    verif = verif && songInfo->setReferenceLoopDuration(jsonRefDuration.toInt());
+    verif = songInfo->setReferenceTrack(jsonRefTrack.toInt()) ? verif : false;
+    verif = songInfo->setReferenceLoopDuration(jsonRefDuration.toInt()) ? verif : false;
 
-    verif = verif && songInfo->setVolume(jsonVolume.toInt());
-    verif = verif && songInfo->setTempo(jsonTempo.toInt());
-    verif = verif && songInfo->setClickVolume(jsonClickVolume.toInt());
-    verif = verif && songInfo->setOffset(jsonOffset.toInt());
+    verif = songInfo->setVolume(jsonVolume.toInt()) ? verif : false;
+    verif = songInfo->setTempo(jsonTempo.toInt()) ? verif : false;
+    verif = songInfo->setClickVolume(jsonClickVolume.toInt()) ? verif : false;
+    verif = songInfo->setOffset(jsonOffset.toInt()) ? verif : false;
 
-    verif = verif && songInfo->setScale(jsonScale.toInt());
-    verif = verif && songInfo->setTonality(jsonTonality.toInt());
-    verif = verif && songInfo->setTimeSignature(jsonTimeSignature.toInt());
+    verif = songInfo->setScale(jsonScale.toInt()) ? verif : false;
+    verif = songInfo->setTonality(jsonTonality.toInt()) ? verif : false;
+    verif = songInfo->setTimeSignature(jsonTimeSignature.toInt()) ? verif : false;
 
-    verif = verif && songInfo->setLeds(jsonLeds.toString().toUtf8());
+    verif = songInfo->setLeds(jsonLeds.toString().toUtf8()) ? verif : false;
 
     if (!verif)
     {
@@ -184,19 +183,19 @@ DuSongInfoPtr DuSongInfo::fromMidi(const MidiConversionHelper &helper)
     DuSongInfoPtr songInfo(new DuSongInfo);
     bool verif = true;
 
-    verif = verif && songInfo->setReferenceTrack(helper.getIndexes(0).first);
-    verif = verif && songInfo->setReferenceLoopDuration(helper.getDuration());
+    verif = songInfo->setReferenceTrack(helper.getIndexes(0).first) ? verif : false;
+    verif = songInfo->setReferenceLoopDuration(helper.getDuration()) ? verif : false;
 
-//    verif = verif && songInfo->setVolume();
-    verif = verif && songInfo->setTempo(helper.getTempo());
-//    verif = verif && songInfo->setClickVolume();
-//    verif = verif && songInfo->setOffset(jsonOffset.toInt());
+//    verif = songInfo->setVolume() ? verif : false;
+    verif = songInfo->setTempo(helper.getTempo()) ? verif : false;
+//    verif = songInfo->setClickVolume() ? verif : false;
+//    verif = songInfo->setOffset(jsonOffset.toInt()) ? verif : false;
 
-    verif = verif && songInfo->setScale(helper.getScale());
-    verif = verif && songInfo->setTonality(helper.getTonality());
-    verif = verif && songInfo->setTimeSignature(helper.getTimeSig());
+    verif = songInfo->setScale(helper.getScale()) ? verif : false;
+    verif = songInfo->setTonality(helper.getTonality()) ? verif : false;
+    verif = songInfo->setTimeSignature(helper.getTimeSig()) ? verif : false;
 
-//    verif = verif && songInfo->setLeds();
+//    verif = songInfo->setLeds() ? verif : false;
 
     if (!verif)
     {
