@@ -100,25 +100,25 @@ DuEffectSetPtr DuEffectSet::fromDuMusicBinary(const preset_instr &du_preset)
     DuEffectSetPtr effectSet(new DuEffectSet);
     bool verif = true;
 
-    verif = verif && effectSet->setAdsrOnOff(du_preset.s_adsr_onoff);
-    verif = verif && effectSet->setCompressorOnOff(du_preset.s_compressor_onoff);
-    verif = verif && effectSet->setDelayOnOff(du_preset.s_delay_onoff);
-    verif = verif && effectSet->setDistortionOnOff(du_preset.s_distortion_onoff);
-    verif = verif && effectSet->setEqualizerOnOff(du_preset.s_eq_onoff);
-    verif = verif && effectSet->setChorusOnOff(du_preset.s_chorus_onoff);
-    verif = verif && effectSet->setVibratoOnOff(du_preset.s_vibrato_onoff);
-    verif = verif && effectSet->setWahOnOff(du_preset.s_wah_onoff);
+    verif = effectSet->setAdsrOnOff(du_preset.s_adsr_onoff) ? verif : false;
+    verif = effectSet->setCompressorOnOff(du_preset.s_compressor_onoff) ? verif : false;
+    verif = effectSet->setDelayOnOff(du_preset.s_delay_onoff) ? verif : false;
+    verif = effectSet->setDistortionOnOff(du_preset.s_distortion_onoff) ? verif : false;
+    verif = effectSet->setEqualizerOnOff(du_preset.s_eq_onoff) ? verif : false;
+    verif = effectSet->setChorusOnOff(du_preset.s_chorus_onoff) ? verif : false;
+    verif = effectSet->setVibratoOnOff(du_preset.s_vibrato_onoff) ? verif : false;
+    verif = effectSet->setWahOnOff(du_preset.s_wah_onoff) ? verif : false;
 
-    verif = verif && effectSet->setPitch(du_preset.s_pitch);
+    verif = effectSet->setPitch(du_preset.s_pitch) ? verif : false;
 
-    verif = verif && effectSet->setAutopitchRate(du_preset.s_autopitch_rate);
-    verif = verif && effectSet->setAutopitchRange(du_preset.s_autopitch_range);
-    verif = verif && effectSet->setTremoloRate(du_preset.s_tremolo_rate);
-    verif = verif && effectSet->setTremoloRange(du_preset.s_tremolo_range);
-    verif = verif && effectSet->setAutopanRate(du_preset.s_autopan_rate);
-    verif = verif && effectSet->setAutopanRange(du_preset.s_autopan_range);
-    verif = verif && effectSet->setAutowahRate(du_preset.s_autowah_rate);
-    verif = verif && effectSet->setAutowahRange(du_preset.s_autowah_range);
+    verif = effectSet->setAutopitchRate(du_preset.s_autopitch_rate) ? verif : false;
+    verif = effectSet->setAutopitchRange(du_preset.s_autopitch_range) ? verif : false;
+    verif = effectSet->setTremoloRate(du_preset.s_tremolo_rate) ? verif : false;
+    verif = effectSet->setTremoloRange(du_preset.s_tremolo_range) ? verif : false;
+    verif = effectSet->setAutopanRate(du_preset.s_autopan_rate) ? verif : false;
+    verif = effectSet->setAutopanRange(du_preset.s_autopan_range) ? verif : false;
+    verif = effectSet->setAutowahRate(du_preset.s_autowah_rate) ? verif : false;
+    verif = effectSet->setAutowahRange(du_preset.s_autowah_range) ? verif : false;
 
     if (!verif)
     {
@@ -175,25 +175,25 @@ DuEffectSetPtr DuEffectSet::fromJson(const QJsonObject &jsonEffectSet)
     DuEffectSetPtr effectSet(new DuEffectSet);
     bool verif = true;
 
-    verif = verif && effectSet->setAdsrOnOff(jsonAdsrOnOff.toInt());
-    verif = verif && effectSet->setCompressorOnOff(jsonComprOnOff.toInt());
-    verif = verif && effectSet->setDelayOnOff(jsonDelayOnOff.toInt());
-    verif = verif && effectSet->setDistortionOnOff(jsonDistoOnOff.toInt());
-    verif = verif && effectSet->setEqualizerOnOff(jsonEqualOnOff.toInt());
-    verif = verif && effectSet->setChorusOnOff(jsonChorusOnOff.toInt());
-    verif = verif && effectSet->setVibratoOnOff(jsonVibOnOff.toInt());
-    verif = verif && effectSet->setWahOnOff(jsonWahOnOff.toInt());
+    verif = effectSet->setAdsrOnOff(jsonAdsrOnOff.toInt()) ? verif : false;
+    verif = effectSet->setCompressorOnOff(jsonComprOnOff.toInt()) ? verif : false;
+    verif = effectSet->setDelayOnOff(jsonDelayOnOff.toInt()) ? verif : false;
+    verif = effectSet->setDistortionOnOff(jsonDistoOnOff.toInt()) ? verif : false;
+    verif = effectSet->setEqualizerOnOff(jsonEqualOnOff.toInt()) ? verif : false;
+    verif = effectSet->setChorusOnOff(jsonChorusOnOff.toInt()) ? verif : false;
+    verif = effectSet->setVibratoOnOff(jsonVibOnOff.toInt()) ? verif : false;
+    verif = effectSet->setWahOnOff(jsonWahOnOff.toInt()) ? verif : false;
 
-    verif = verif && effectSet->setPitch(jsonPitch.toInt());
+    verif = effectSet->setPitch(jsonPitch.toInt()) ? verif : false;
 
-    verif = verif && effectSet->setAutopitchRate(jsonAutopitchRate.toInt());
-    verif = verif && effectSet->setAutopitchRange(jsonAutopitchRange.toInt());
-    verif = verif && effectSet->setTremoloRate(jsonTremoloRate.toInt());
-    verif = verif && effectSet->setTremoloRange(jsonTremoloRange.toInt());
-    verif = verif && effectSet->setAutopanRate(jsonAutopanRate.toInt());
-    verif = verif && effectSet->setAutopanRange(jsonAutopanRange.toInt());
-    verif = verif && effectSet->setAutowahRate(jsonAutowahRate.toInt());
-    verif = verif && effectSet->setAutowahRange(jsonAutowahRange.toInt());
+    verif = effectSet->setAutopitchRate(jsonAutopitchRate.toInt()) ? verif : false;
+    verif = effectSet->setAutopitchRange(jsonAutopitchRange.toInt()) ? verif : false;
+    verif = effectSet->setTremoloRate(jsonTremoloRate.toInt()) ? verif : false;
+    verif = effectSet->setTremoloRange(jsonTremoloRange.toInt()) ? verif : false;
+    verif = effectSet->setAutopanRate(jsonAutopanRate.toInt()) ? verif : false;
+    verif = effectSet->setAutopanRange(jsonAutopanRange.toInt()) ? verif : false;
+    verif = effectSet->setAutowahRate(jsonAutowahRate.toInt()) ? verif : false;
+    verif = effectSet->setAutowahRange(jsonAutowahRange.toInt()) ? verif : false;
 
     if (!verif)
     {

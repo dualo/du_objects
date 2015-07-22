@@ -56,21 +56,18 @@ DuDistortionPtr DuDistortion::fromDuMusicBinary(const FX_distortion &du_distorti
     DuDistortionPtr distortion(new DuDistortion);
     bool verif = true;
 
-    verif = verif && distortion->setOnOff(du_distortion.d_on_off);
+    verif = distortion->setOnOff(du_distortion.d_on_off) ? verif : false;
 
-    verif = verif && distortion->setPreGain(du_distortion.d_pre_gain);
-    verif = verif && distortion->setEffectType(du_distortion.d_type);
+    verif = distortion->setPreGain(du_distortion.d_pre_gain) ? verif : false;
+    verif = distortion->setEffectType(du_distortion.d_type) ? verif : false;
 
-    verif = verif && distortion->setLowPassFilterFrequency(
-                du_distortion.d_lowpassfilterfreq);
-    verif = verif && distortion->setLowPassFilterResonance(
-                du_distortion.d_lowpassfilterres);
+    verif = distortion->setLowPassFilterFrequency(du_distortion.d_lowpassfilterfreq) ? verif : false;
+    verif = distortion->setLowPassFilterResonance(du_distortion.d_lowpassfilterres) ? verif : false;
 
-    verif = verif && distortion->setPostGain(du_distortion.d_postgain);
-    verif = verif && distortion->setDrive(du_distortion.d_drive);
+    verif = distortion->setPostGain(du_distortion.d_postgain) ? verif : false;
+    verif = distortion->setDrive(du_distortion.d_drive) ? verif : false;
 
-    verif = verif && distortion->setEffectName(
-            QString(QByteArray((char *)du_distortion.d_name, NAME_CARACT)));
+    verif = distortion->setEffectName(QString(QByteArray((char *)du_distortion.d_name, NAME_CARACT))) ? verif : false;
 
     if (!verif)
     {
@@ -109,18 +106,18 @@ DuDistortionPtr DuDistortion::fromJson(const QJsonObject &jsonDistortion)
     DuDistortionPtr distortion(new DuDistortion);
     bool verif = true;
 
-    verif = verif && distortion->setOnOff(jsonOnOff.toInt());
+    verif = distortion->setOnOff(jsonOnOff.toInt()) ? verif : false;
 
-    verif = verif && distortion->setPreGain(jsonPreGain.toInt());
-    verif = verif && distortion->setEffectType(jsonEffectType.toInt());
+    verif = distortion->setPreGain(jsonPreGain.toInt()) ? verif : false;
+    verif = distortion->setEffectType(jsonEffectType.toInt()) ? verif : false;
 
-    verif = verif && distortion->setLowPassFilterFrequency(jsonLoPassFreq.toInt());
-    verif = verif && distortion->setLowPassFilterResonance(jsonLoPassRes.toInt());
+    verif = distortion->setLowPassFilterFrequency(jsonLoPassFreq.toInt()) ? verif : false;
+    verif = distortion->setLowPassFilterResonance(jsonLoPassRes.toInt()) ? verif : false;
 
-    verif = verif && distortion->setPostGain(jsonPostGain.toInt());
-    verif = verif && distortion->setDrive(jsonDrive.toInt());
+    verif = distortion->setPostGain(jsonPostGain.toInt()) ? verif : false;
+    verif = distortion->setDrive(jsonDrive.toInt()) ? verif : false;
 
-    verif = verif && distortion->setEffectName(jsonEffectName.toString());
+    verif = distortion->setEffectName(jsonEffectName.toString()) ? verif : false;
 
     if (!verif)
     {

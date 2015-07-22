@@ -48,16 +48,13 @@ DuAdsrPtr DuAdsr::fromDuMusicBinary(const FX_adsr &du_adsr)
     DuAdsrPtr adsr(new DuAdsr);
     bool verif = true;
 
-    verif = verif && adsr->setEnvelopeAttackTime(du_adsr.a_env_attack_time);
-    verif = verif && adsr->setEnvelopeDecayTime(du_adsr.a_env_decay_time);
-    verif = verif && adsr->setTimeVariantFilterCutoffResonance(
-                du_adsr.a_tvf_cutoff_res);
-    verif = verif && adsr->setTimeVariantFilterCutoffFrequency(
-                du_adsr.a_tvf_cutoff_freq);
-    verif = verif && adsr->setEnvelopeReleaseTime(du_adsr.a_env_release_time);
+    verif = adsr->setEnvelopeAttackTime(du_adsr.a_env_attack_time) ? verif : false;
+    verif = adsr->setEnvelopeDecayTime(du_adsr.a_env_decay_time) ? verif : false;
+    verif = adsr->setTimeVariantFilterCutoffResonance(du_adsr.a_tvf_cutoff_res) ? verif : false;
+    verif = adsr->setTimeVariantFilterCutoffFrequency(du_adsr.a_tvf_cutoff_freq) ? verif : false;
+    verif = adsr->setEnvelopeReleaseTime(du_adsr.a_env_release_time) ? verif : false;
 
-    verif = verif && adsr->setEffectName(
-                QString(QByteArray((char *)du_adsr.a_name, NAME_CARACT)));
+    verif = adsr->setEffectName( QString(QByteArray((char *)du_adsr.a_name, NAME_CARACT))) ? verif : false;
 
     if (!verif)
     {
@@ -93,13 +90,13 @@ DuAdsrPtr DuAdsr::fromJson(const QJsonObject &jsonAdsr)
     DuAdsrPtr adsr(new DuAdsr);
     bool verif = true;
 
-    verif = verif && adsr->setEnvelopeAttackTime(jsonEnvAttTime.toInt());
-    verif = verif && adsr->setEnvelopeDecayTime(jsonEnvDecTime.toInt());
-    verif = verif && adsr->setTimeVariantFilterCutoffResonance(jsonTvfCutRes.toInt());
-    verif = verif && adsr->setTimeVariantFilterCutoffFrequency(jsonTvfCutFreq.toInt());
-    verif = verif && adsr->setEnvelopeReleaseTime(jsonEnvRelTime.toInt());
+    verif = adsr->setEnvelopeAttackTime(jsonEnvAttTime.toInt()) ? verif : false;
+    verif = adsr->setEnvelopeDecayTime(jsonEnvDecTime.toInt()) ? verif : false;
+    verif = adsr->setTimeVariantFilterCutoffResonance(jsonTvfCutRes.toInt()) ? verif : false;
+    verif = adsr->setTimeVariantFilterCutoffFrequency(jsonTvfCutFreq.toInt()) ? verif : false;
+    verif = adsr->setEnvelopeReleaseTime(jsonEnvRelTime.toInt()) ? verif : false;
 
-    verif = verif && adsr->setEffectName(jsonEffectName.toString());
+    verif = adsr->setEffectName(jsonEffectName.toString()) ? verif : false;
 
     if (!verif)
     {

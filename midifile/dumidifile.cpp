@@ -68,8 +68,8 @@ DuMidiFilePtr DuMidiFile::fromMidiBinary(QDataStream &stream)
 
     bool verif = true;
 
-    verif = verif && midiFile->setFormat(format);
-    verif = verif && midiFile->setDivision(division);
+    verif = midiFile->setFormat(format) ? verif : false;
+    verif = midiFile->setDivision(division) ? verif : false;
 
     if (!verif)
     {

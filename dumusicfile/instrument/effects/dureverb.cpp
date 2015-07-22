@@ -69,19 +69,19 @@ DuReverbPtr DuReverb::fromDuMusicBinary(const FX_reverb &du_reverb)
     DuReverbPtr reverb(new DuReverb);
     bool verif = true;
 
-    verif = verif && reverb->setLevel(du_reverb.r_level);
-    verif = verif && reverb->setDirectLevel(du_reverb.r_directlevel);
-    verif = verif && reverb->setReverbSend(du_reverb.r_revsend);
+    verif = reverb->setLevel(du_reverb.r_level) ? verif : false;
+    verif = reverb->setDirectLevel(du_reverb.r_directlevel) ? verif : false;
+    verif = reverb->setReverbSend(du_reverb.r_revsend) ? verif : false;
 
-    verif = verif && reverb->setToneGain(du_reverb.r_tonegain);
-    verif = verif && reverb->setToneFrequency(du_reverb.r_tonefreq);
-    verif = verif && reverb->setPreHPFilter(du_reverb.r_prehp);
+    verif = reverb->setToneGain(du_reverb.r_tonegain) ? verif : false;
+    verif = reverb->setToneFrequency(du_reverb.r_tonefreq) ? verif : false;
+    verif = reverb->setPreHPFilter(du_reverb.r_prehp) ? verif : false;
 
-    verif = verif && reverb->setTime(du_reverb.r_time);
-    verif = verif && reverb->setEchoFeedback(du_reverb.r_echofeedback);
-    verif = verif && reverb->setHDAmp(du_reverb.r_hdamp);
-    verif = verif && reverb->setThresholdGate(du_reverb.r_thresgate);
-    verif = verif && reverb->setPreDelayTime(du_reverb.r_predelaytime);
+    verif = reverb->setTime(du_reverb.r_time) ? verif : false;
+    verif = reverb->setEchoFeedback(du_reverb.r_echofeedback) ? verif : false;
+    verif = reverb->setHDAmp(du_reverb.r_hdamp) ? verif : false;
+    verif = reverb->setThresholdGate(du_reverb.r_thresgate) ? verif : false;
+    verif = reverb->setPreDelayTime(du_reverb.r_predelaytime) ? verif : false;
 
     verif = verif && reverb->setEffectName(
                 QString(QByteArray((char *)du_reverb.r_name, NAME_CARACT)));
@@ -129,21 +129,21 @@ DuReverbPtr DuReverb::fromJson(const QJsonObject &jsonReverb)
     DuReverbPtr reverb(new DuReverb);
     bool verif = true;
 
-    verif = verif && reverb->setLevel(jsonLevel.toInt());
-    verif = verif && reverb->setDirectLevel(jsonDirectLevel.toInt());
-    verif = verif && reverb->setReverbSend(jsonRevSend.toInt());
+    verif = reverb->setLevel(jsonLevel.toInt()) ? verif : false;
+    verif = reverb->setDirectLevel(jsonDirectLevel.toInt()) ? verif : false;
+    verif = reverb->setReverbSend(jsonRevSend.toInt()) ? verif : false;
 
-    verif = verif && reverb->setToneGain(jsonToneGain.toInt());
-    verif = verif && reverb->setToneFrequency(jsonToneFreq.toInt());
-    verif = verif && reverb->setPreHPFilter(jsonPreHPFilter.toInt());
+    verif = reverb->setToneGain(jsonToneGain.toInt()) ? verif : false;
+    verif = reverb->setToneFrequency(jsonToneFreq.toInt()) ? verif : false;
+    verif = reverb->setPreHPFilter(jsonPreHPFilter.toInt()) ? verif : false;
 
-    verif = verif && reverb->setTime(jsonTime.toInt());
-    verif = verif && reverb->setEchoFeedback(jsonEchoFeedback.toInt());
-    verif = verif && reverb->setHDAmp(jsonHDAmp.toInt());
-    verif = verif && reverb->setThresholdGate(jsonThreshGate.toInt());
-    verif = verif && reverb->setPreDelayTime(jsonPreDelayTime.toInt());
+    verif = reverb->setTime(jsonTime.toInt()) ? verif : false;
+    verif = reverb->setEchoFeedback(jsonEchoFeedback.toInt()) ? verif : false;
+    verif = reverb->setHDAmp(jsonHDAmp.toInt()) ? verif : false;
+    verif = reverb->setThresholdGate(jsonThreshGate.toInt()) ? verif : false;
+    verif = reverb->setPreDelayTime(jsonPreDelayTime.toInt()) ? verif : false;
 
-    verif = verif && reverb->setEffectName(jsonEffectName.toString());
+    verif = reverb->setEffectName(jsonEffectName.toString()) ? verif : false;
 
     if (!verif)
     {

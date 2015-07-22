@@ -38,8 +38,8 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
     const DuTrackPtr track(new DuTrack);
     bool verif = true;
 
-    verif = verif && track->setChannel(du_track.t_midichannel);
-    verif = verif && track->setCurrentLoop(du_track.t_currentloop);
+    verif = track->setChannel(du_track.t_midichannel) ? verif : false;
+    verif = track->setCurrentLoop(du_track.t_currentloop) ? verif : false;
 
     if (!verif)
     {
@@ -47,48 +47,51 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
                                      << "an attribute was not properly set";
     }
 
-    for (int i = 0; i < MUSIC_MAXLAYER; i++)
+    if (totalSample > 0)
     {
-        const music_loop &du_loop = du_track.t_loop[i];
-
-        if ((quint32)totalSample * MUSIC_SAMPLE_SIZE
-                < (du_loop.l_adress + du_loop.l_numsample * MUSIC_SAMPLE_SIZE)
-            || RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE
-                < du_loop.l_adress + du_loop.l_numsample * MUSIC_SAMPLE_SIZE)
+        for (int i = 0; i < MUSIC_MAXLAYER; i++)
         {
-            qCCritical(LOG_CAT_DU_OBJECT)
-                    << "DuTrack::fromDuMusicBinary():\n"
-                    << "failed to generate DuTrack\n"
-                    << "invalid number of events\n"
-                    << "(du_sample size =" << (totalSample * MUSIC_SAMPLE_SIZE)
-                    << ", max size =" << (RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE)
-                    << ", du_loop.l_adress =" << du_loop.l_adress
-                    << ", du_loop.l_numsample =" << du_loop.l_numsample
-                    << ", sizeof(music_sample) =" << MUSIC_SAMPLE_SIZE << ")";
+            const music_loop &du_loop = du_track.t_loop[i];
 
-            return DuTrackPtr();
-        }
+            if ((quint32)totalSample * MUSIC_SAMPLE_SIZE
+                    < (du_loop.l_adress + du_loop.l_numsample * MUSIC_SAMPLE_SIZE)
+                || RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE
+                    < du_loop.l_adress + du_loop.l_numsample * MUSIC_SAMPLE_SIZE)
+            {
+                qCCritical(LOG_CAT_DU_OBJECT)
+                        << "DuTrack::fromDuMusicBinary():\n"
+                        << "failed to generate DuTrack\n"
+                        << "invalid number of events\n"
+                        << "(du_sample size =" << (totalSample * MUSIC_SAMPLE_SIZE)
+                        << ", max size =" << (RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE)
+                        << ", du_loop.l_adress =" << du_loop.l_adress
+                        << ", du_loop.l_numsample =" << du_loop.l_numsample
+                        << ", sizeof(music_sample) =" << MUSIC_SAMPLE_SIZE << ")";
 
-        const music_sample *du_sample_address = (music_sample*)
-                ((long)du_sample_start + du_loop.l_adress);
+                return DuTrackPtr();
+            }
 
-        const DuLoopPtr &loop =
-                DuLoop::fromDuMusicBinary(du_loop, du_sample_address);
-        if (loop == NULL)
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
-                                          << "failed to generate DuTrack\n"
-                                          << "a DuLoop was not properly generated";
+            const music_sample *du_sample_address = (music_sample*)
+                    ((long)du_sample_start + du_loop.l_adress);
 
-            return DuTrackPtr();
-        }
-        if (!track->appendLoop(loop))
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
-                                          << "failed to generate DuTrack\n"
-                                          << "a DuLoop was not properly appended";
+            const DuLoopPtr &loop =
+                    DuLoop::fromDuMusicBinary(du_loop, du_sample_address);
+            if (loop == NULL)
+            {
+                qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
+                                              << "failed to generate DuTrack\n"
+                                              << "a DuLoop was not properly generated";
 
-            return DuTrackPtr();
+                return DuTrackPtr();
+            }
+            if (!track->appendLoop(loop))
+            {
+                qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
+                                              << "failed to generate DuTrack\n"
+                                              << "a DuLoop was not properly appended";
+
+                return DuTrackPtr();
+            }
         }
     }
 
@@ -100,8 +103,8 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track)
     const DuTrackPtr track(new DuTrack);
     bool verif = true;
 
-    verif = verif && track->setChannel(du_track.t_midichannel);
-    verif = verif && track->setCurrentLoop(du_track.t_currentloop);
+    verif = track->setChannel(du_track.t_midichannel) ? verif : false;
+    verif = track->setCurrentLoop(du_track.t_currentloop) ? verif : false;
 
     if (!verif)
     {
@@ -155,8 +158,8 @@ DuTrackPtr DuTrack::fromJson(const QJsonObject &jsonTrack)
     DuTrackPtr track(new DuTrack);
     bool verif = true;
 
-    verif = verif && track->setChannel(jsonChannel.toInt());
-    verif = verif && track->setCurrentLoop(jsonCurrentLoop.toInt());
+    verif = track->setChannel(jsonChannel.toInt()) ? verif : false;
+    verif = track->setCurrentLoop(jsonCurrentLoop.toInt()) ? verif : false;
 
     if (!verif)
     {
@@ -214,8 +217,8 @@ DuTrackPtr DuTrack::fromMidi(const MidiConversionHelper &helper, int trackIndex)
     const DuTrackPtr track(new DuTrack);
     bool verif = true;
 
-    verif = verif && track->setChannel(7 - trackIndex);
-//    verif = verif && track->setCurrentLoop(0);
+    verif = track->setChannel(7 - trackIndex) ? verif : false;
+//    verif = track->setCurrentLoop(0) ? verif : false;
 
     if (!verif)
     {

@@ -45,31 +45,23 @@ DuHeaderPtr DuHeader::fromDuMusicBinary(const music_song &du_song)
     DuHeaderPtr header(new DuHeader);
     bool verif = true;
 
-    verif = verif && header->setFileVersion(du_song.s_version_music);
+    verif = header->setFileVersion(du_song.s_version_music) ? verif : false;
 
-    verif = verif && header->setOriginalSerialNumber(
-            QString(QByteArray((char *)du_song.s_original_sn, HEADER_NAME_SIZE)));
-    verif = verif && header->setOriginalName(
-            QString(QByteArray((char *)du_song.s_original_name, HEADER_NAME_SIZE)));
-    verif = verif && header->setOriginalUser(
-            QString(QByteArray((char *)du_song.s_original_user, HEADER_NAME_SIZE)));
-    verif = verif && header->setOriginalUserId(
-            QString(QByteArray((char *)du_song.s_original_userid, HEADER_NAME_SIZE)));
+    verif = header->setOriginalSerialNumber(QString(QByteArray((char *)du_song.s_original_sn, HEADER_NAME_SIZE))) ? verif : false;
+    verif = header->setOriginalName(QString(QByteArray((char *)du_song.s_original_name, HEADER_NAME_SIZE))) ? verif : false;
+    verif = header->setOriginalUser(QString(QByteArray((char *)du_song.s_original_user, HEADER_NAME_SIZE))) ? verif : false;
+    verif = header->setOriginalUserId(QString(QByteArray((char *)du_song.s_original_userid, HEADER_NAME_SIZE))) ? verif : false;
 
-    verif = verif && header->setLastModifSerialNumber(
-            QString(QByteArray((char *)du_song.s_modif_sn, HEADER_NAME_SIZE)));
-    verif = verif && header->setLastModifName(
-            QString(QByteArray((char *)du_song.s_modif_name, HEADER_NAME_SIZE)));
-    verif = verif && header->setLastModifUser(
-            QString(QByteArray((char *)du_song.s_modif_user, HEADER_NAME_SIZE)));
-    verif = verif && header->setLastModifUserId(
-            QString(QByteArray((char *)du_song.s_modif_userid, HEADER_NAME_SIZE)));
+    verif = header->setLastModifSerialNumber(QString(QByteArray((char *)du_song.s_modif_sn, HEADER_NAME_SIZE))) ? verif : false;
+    verif = header->setLastModifName(QString(QByteArray((char *)du_song.s_modif_name, HEADER_NAME_SIZE))) ? verif : false;
+    verif = header->setLastModifUser(QString(QByteArray((char *)du_song.s_modif_user, HEADER_NAME_SIZE))) ? verif : false;
+    verif = header->setLastModifUserId(QString(QByteArray((char *)du_song.s_modif_userid, HEADER_NAME_SIZE))) ? verif : false;
 
-    verif = verif && header->setSize(du_song.s_size);
-    verif = verif && header->setMetaData(du_song.s_metadata);
+    verif = header->setSize(du_song.s_size) ? verif : false;
+    verif = header->setMetaData(du_song.s_metadata) ? verif : false;
 
-    verif = verif && header->setTranspose(du_song.s_transpose);
-
+    verif = header->setTranspose(du_song.s_transpose) ? verif : false;
+    
     if (!verif)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "DuHeader::fromDuMusicBinary():\n"
@@ -114,22 +106,22 @@ DuHeaderPtr DuHeader::fromJson(const QJsonObject &jsonHeader)
     DuHeaderPtr header(new DuHeader);
     bool verif = true;
 
-    verif = verif && header->setFileVersion(jsonFileVersion.toInt());
+    verif = header->setFileVersion(jsonFileVersion.toInt()) ? verif : false;
 
-    verif = verif && header->setOriginalSerialNumber(jsonOrigSerialNum.toString());
-    verif = verif && header->setOriginalName(jsonOrigName.toString());
-    verif = verif && header->setOriginalUser(jsonOrigUser.toString());
-    verif = verif && header->setOriginalUserId(jsonOrigUserId.toString());
+    verif = header->setOriginalSerialNumber(jsonOrigSerialNum.toString()) ? verif : false;
+    verif = header->setOriginalName(jsonOrigName.toString()) ? verif : false;
+    verif = header->setOriginalUser(jsonOrigUser.toString()) ? verif : false;
+    verif = header->setOriginalUserId(jsonOrigUserId.toString()) ? verif : false;
 
-    verif = verif && header->setLastModifSerialNumber(jsonLastSerialNum.toString());
-    verif = verif && header->setLastModifName(jsonLastName.toString());
-    verif = verif && header->setLastModifUser(jsonLastUser.toString());
-    verif = verif && header->setLastModifUserId(jsonLastUserId.toString());
+    verif = header->setLastModifSerialNumber(jsonLastSerialNum.toString()) ? verif : false;
+    verif = header->setLastModifName(jsonLastName.toString()) ? verif : false;
+    verif = header->setLastModifUser(jsonLastUser.toString()) ? verif : false;
+    verif = header->setLastModifUserId(jsonLastUserId.toString()) ? verif : false;
 
-    verif = verif && header->setSize(jsonSize.toInt());
-    verif = verif && header->setMetaData(jsonMetaData.toInt());
+    verif = header->setSize(jsonSize.toInt()) ? verif : false;
+    verif = header->setMetaData(jsonMetaData.toInt()) ? verif : false;
 
-    verif = verif && header->setTranspose(jsonTranspose.toInt());
+    verif = header->setTranspose(jsonTranspose.toInt()) ? verif : false;
 
     if (!verif)
     {
@@ -156,8 +148,6 @@ DuHeaderPtr DuHeader::fromJson(const QJsonObject &jsonHeader)
 //    bool verif = true;
 
 //    //TODO
-
-//    //verif = verif && header->setSongName(helper.getTitle());
 
 //    if (!verif)
 //    {

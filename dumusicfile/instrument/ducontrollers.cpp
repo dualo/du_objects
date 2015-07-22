@@ -61,17 +61,17 @@ DuControllersPtr DuControllers::fromDuMusicBinary(const music_song &du_song)
     DuControllersPtr controllers(new DuControllers);
     bool verif = true;
 
-    verif = verif && controllers->setDirectionGyroP(du_song.s_direction_gyro_P);
-    verif = verif && controllers->setDirectionGyroR(du_song.s_direction_gyro_R);
-    verif = verif && controllers->setDirectionGyroY(du_song.s_direction_gyro_Y);
+    verif = controllers->setDirectionGyroP(du_song.s_direction_gyro_P) ? verif : false;
+    verif = controllers->setDirectionGyroR(du_song.s_direction_gyro_R) ? verif : false;
+    verif = controllers->setDirectionGyroY(du_song.s_direction_gyro_Y) ? verif : false;
 
-    verif = verif && controllers->setActiveAftertouch(du_song.s_activ_aftertouch);
-    verif = verif && controllers->setActiveSliderL(du_song.s_activ_slider_L);
-    verif = verif && controllers->setActiveSliderR(du_song.s_activ_slider_R);
+    verif = controllers->setActiveAftertouch(du_song.s_activ_aftertouch) ? verif : false;
+    verif = controllers->setActiveSliderL(du_song.s_activ_slider_L) ? verif : false;
+    verif = controllers->setActiveSliderR(du_song.s_activ_slider_R) ? verif : false;
 
-    verif = verif && controllers->setActiveGyroP(du_song.s_activ_gyro_P);
-    verif = verif && controllers->setActiveGyroR(du_song.s_activ_gyro_R);
-    verif = verif && controllers->setActiveGyroY(du_song.s_activ_gyro_Y);
+    verif = controllers->setActiveGyroP(du_song.s_activ_gyro_P) ? verif : false;
+    verif = controllers->setActiveGyroR(du_song.s_activ_gyro_R) ? verif : false;
+    verif = controllers->setActiveGyroY(du_song.s_activ_gyro_Y) ? verif : false;
 
     if (!verif)
     {
@@ -87,17 +87,17 @@ DuControllersPtr DuControllers::fromDuMusicBinary(const preset_instr &du_preset)
     DuControllersPtr controllers(new DuControllers);
     bool verif = true;
 
-    verif = verif && controllers->setDirectionGyroP(du_preset.s_direction_gyro_P);
-    verif = verif && controllers->setDirectionGyroR(du_preset.s_direction_gyro_R);
-    verif = verif && controllers->setDirectionGyroY(du_preset.s_direction_gyro_Y);
+    verif = controllers->setDirectionGyroP(du_preset.s_direction_gyro_P) ? verif : false;
+    verif = controllers->setDirectionGyroR(du_preset.s_direction_gyro_R) ? verif : false;
+    verif = controllers->setDirectionGyroY(du_preset.s_direction_gyro_Y) ? verif : false;
 
-    verif = verif && controllers->setActiveAftertouch(du_preset.s_activ_aftertouch);
-    verif = verif && controllers->setActiveSliderL(du_preset.s_activ_slider_L);
-    verif = verif && controllers->setActiveSliderR(du_preset.s_activ_slider_R);
+    verif = controllers->setActiveAftertouch(du_preset.s_activ_aftertouch) ? verif : false;
+    verif = controllers->setActiveSliderL(du_preset.s_activ_slider_L) ? verif : false;
+    verif = controllers->setActiveSliderR(du_preset.s_activ_slider_R) ? verif : false;
 
-    verif = verif && controllers->setActiveGyroP(du_preset.s_activ_gyro_P);
-    verif = verif && controllers->setActiveGyroR(du_preset.s_activ_gyro_R);
-    verif = verif && controllers->setActiveGyroY(du_preset.s_activ_gyro_Y);
+    verif = controllers->setActiveGyroP(du_preset.s_activ_gyro_P) ? verif : false;
+    verif = controllers->setActiveGyroR(du_preset.s_activ_gyro_R) ? verif : false;
+    verif = controllers->setActiveGyroY(du_preset.s_activ_gyro_Y) ? verif : false;
 
     if (!verif)
     {
@@ -138,17 +138,17 @@ DuControllersPtr DuControllers::fromJson(const QJsonObject &jsonControllers)
     DuControllersPtr controllers(new DuControllers);
     bool verif = true;
 
-    verif = verif && controllers->setDirectionGyroP(jsonDirectionGyroP.toInt());
-    verif = verif && controllers->setDirectionGyroR(jsonDirectionGyroR.toInt());
-    verif = verif && controllers->setDirectionGyroY(jsonDirectionGyroY.toInt());
+    verif = controllers->setDirectionGyroP(jsonDirectionGyroP.toInt()) ? verif : false;
+    verif = controllers->setDirectionGyroR(jsonDirectionGyroR.toInt()) ? verif : false;
+    verif = controllers->setDirectionGyroY(jsonDirectionGyroY.toInt()) ? verif : false;
 
-    verif = verif && controllers->setActiveAftertouch(jsonActiveAftertouch.toInt());
-    verif = verif && controllers->setActiveSliderL(jsonActiveSliderL.toInt());
-    verif = verif && controllers->setActiveSliderR(jsonActiveSliderR.toInt());
+    verif = controllers->setActiveAftertouch(jsonActiveAftertouch.toInt()) ? verif : false;
+    verif = controllers->setActiveSliderL(jsonActiveSliderL.toInt()) ? verif : false;
+    verif = controllers->setActiveSliderR(jsonActiveSliderR.toInt()) ? verif : false;
 
-    verif = verif && controllers->setActiveGyroP(jsonActiveGyroP.toInt());
-    verif = verif && controllers->setActiveGyroR(jsonActiveGyroR.toInt());
-    verif = verif && controllers->setActiveGyroY(jsonActiveGyroY.toInt());
+    verif = controllers->setActiveGyroP(jsonActiveGyroP.toInt()) ? verif : false;
+    verif = controllers->setActiveGyroR(jsonActiveGyroR.toInt()) ? verif : false;
+    verif = controllers->setActiveGyroY(jsonActiveGyroY.toInt()) ? verif : false;
 
     if (!verif)
     {

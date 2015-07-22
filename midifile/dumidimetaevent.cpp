@@ -98,7 +98,7 @@ QByteArray DuMidiMetaEvent::toMidiBinary() const
 }
 
 
-quint8 DuMidiMetaEvent::getType() const
+int DuMidiMetaEvent::getType() const
 {
     const DuNumericConstPtr &tmp =
             getChildAs<DuNumeric>(KEY_MIDIMETAEVENT_TYPE);
@@ -121,7 +121,7 @@ void DuMidiMetaEvent::setType(quint8 value)
 }
 
 
-quint32 DuMidiMetaEvent::getLength() const
+int DuMidiMetaEvent::getLength() const
 {
     const DuMidiVariableLengthConstPtr &tmp =
             getChildAs<DuMidiVariableLength>(KEY_MIDIMETAEVENT_LENGTH);

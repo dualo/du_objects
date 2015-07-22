@@ -76,20 +76,20 @@ DuExpressionPtr DuExpression::fromDuMusicBinary(const preset_instr &du_preset)
     DuExpressionPtr expression(new DuExpression);
     bool verif = true;
 
-    verif = verif && expression->setVolume(du_preset.s_volume);
-    verif = verif && expression->setPanning(du_preset.s_panning);
-    verif = verif && expression->setSendToReverb(du_preset.s_sendtorev);
-    verif = verif && expression->setOctave(du_preset.s_instr_octave);
+    verif = expression->setVolume(du_preset.s_volume) ? verif : false;
+    verif = expression->setPanning(du_preset.s_panning) ? verif : false;
+    verif = expression->setSendToReverb(du_preset.s_sendtorev) ? verif : false;
+    verif = expression->setOctave(du_preset.s_instr_octave) ? verif : false;
 
-    verif = verif && expression->setPortamentoOnOff(du_preset.s_portamento_on_off);
-    verif = verif && expression->setPortamentoControl(du_preset.s_portamento_ctrl);
-    verif = verif && expression->setPortamentoTime(du_preset.s_portamento_time);
-    verif = verif && expression->setExpression(du_preset.s_expression);
-    verif = verif && expression->setPitchBendSensitivity(du_preset.s_pitch_bend_sensitivity);
-    verif = verif && expression->setDisposition(du_preset.s_disposition);
+    verif = expression->setPortamentoOnOff(du_preset.s_portamento_on_off) ? verif : false;
+    verif = expression->setPortamentoControl(du_preset.s_portamento_ctrl) ? verif : false;
+    verif = expression->setPortamentoTime(du_preset.s_portamento_time) ? verif : false;
+    verif = expression->setExpression(du_preset.s_expression) ? verif : false;
+    verif = expression->setPitchBendSensitivity(du_preset.s_pitch_bend_sensitivity) ? verif : false;
+    verif = expression->setDisposition(du_preset.s_disposition) ? verif : false;
 
-    verif = verif && expression->setArpeggiatorType(du_preset.s_arpegiator_type);
-    verif = verif && expression->setArpeggiatorBeat(du_preset.s_arpegiator_beat);
+    verif = expression->setArpeggiatorType(du_preset.s_arpegiator_type) ? verif : false;
+    verif = expression->setArpeggiatorBeat(du_preset.s_arpegiator_beat) ? verif : false;
 
     if (!verif)
     {
@@ -136,20 +136,20 @@ DuExpressionPtr DuExpression::fromJson(const QJsonObject &jsonExpression)
     DuExpressionPtr expression(new DuExpression);
     bool verif = true;
 
-    verif = verif && expression->setVolume(jsonVolume.toInt());
-    verif = verif && expression->setPanning(jsonPanning.toInt());
-    verif = verif && expression->setSendToReverb(jsonToReverb.toInt());
-    verif = verif && expression->setOctave(jsonOctave.toInt());
+    verif = expression->setVolume(jsonVolume.toInt()) ? verif : false;
+    verif = expression->setPanning(jsonPanning.toInt()) ? verif : false;
+    verif = expression->setSendToReverb(jsonToReverb.toInt()) ? verif : false;
+    verif = expression->setOctave(jsonOctave.toInt()) ? verif : false;
 
-    verif = verif && expression->setPortamentoOnOff(jsonPortaOnOff.toInt());
-    verif = verif && expression->setPortamentoControl(jsonPortaCtrl.toInt());
-    verif = verif && expression->setPortamentoTime(jsonPortaTime.toInt());
-    verif = verif && expression->setExpression(jsonExpr.toInt());
-    verif = verif && expression->setPitchBendSensitivity(jsonPitchBend.toInt());
-    verif = verif && expression->setDisposition(jsonDisposition.toInt());
+    verif = expression->setPortamentoOnOff(jsonPortaOnOff.toInt()) ? verif : false;
+    verif = expression->setPortamentoControl(jsonPortaCtrl.toInt()) ? verif : false;
+    verif = expression->setPortamentoTime(jsonPortaTime.toInt()) ? verif : false;
+    verif = expression->setExpression(jsonExpr.toInt()) ? verif : false;
+    verif = expression->setPitchBendSensitivity(jsonPitchBend.toInt()) ? verif : false;
+    verif = expression->setDisposition(jsonDisposition.toInt()) ? verif : false;
 
-    verif = verif && expression->setArpeggiatorType(jsonArpeggiatorType.toInt());
-    verif = verif && expression->setArpeggiatorBeat(jsonArpeggiatorBeat.toInt());
+    verif = expression->setArpeggiatorType(jsonArpeggiatorType.toInt()) ? verif : false;
+    verif = expression->setArpeggiatorBeat(jsonArpeggiatorBeat.toInt()) ? verif : false;
 
     if (!verif)
     {

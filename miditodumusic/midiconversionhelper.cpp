@@ -13,11 +13,11 @@
 MidiConversionHelper::MidiConversionHelper() :
     valid(false),
     duration(0),
+    mapper(DuMidiKeyMapperPtr(new DuMidiKeyMapper)),
     tempo(100),
     timeSig(-1),
     scale(-1),
-    tonality(-1),
-    mapper(DuMidiKeyMapperPtr(new DuMidiKeyMapper))
+    tonality(-1)
 {
     if (importMidiFile())
     {
@@ -365,7 +365,7 @@ bool MidiConversionHelper::populateMapper()
     if (!input->open(QIODevice::ReadOnly))
         return false;
 
-    QJsonObject &jsonMaps =
+    const QJsonObject &jsonMaps =
             QJsonDocument::fromJson(input->readAll()).object();
 
     input->close();
@@ -387,7 +387,7 @@ bool MidiConversionHelper::importMidiFile()
     if (!input->open(QIODevice::ReadOnly))
         return false;
 
-    DuMidiFilePtr &midiFile = DuMidiFile::fromMidiBinary(input);
+    const DuMidiFilePtr &midiFile = DuMidiFile::fromMidiBinary(input);
 
     input->close();
 

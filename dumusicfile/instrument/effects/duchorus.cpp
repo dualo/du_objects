@@ -68,22 +68,20 @@ DuChorusPtr DuChorus::fromDuMusicBinary(const FX_chorus &du_chorus)
     DuChorusPtr chorus(new DuChorus);
     bool verif = true;
 
-    verif = verif && chorus->setMode(du_chorus.c_mode);
+    verif = chorus->setMode(du_chorus.c_mode) ? verif : false;
 
-    verif = verif && chorus->setEffectLevel(du_chorus.c_effectlevel);
-    verif = verif && chorus->setDelayTime(du_chorus.c_delaytime);
-    verif = verif && chorus->setFeedback(du_chorus.c_feedback);
-    verif = verif && chorus->setInputHighPassFilterFrequency(
-                du_chorus.c_inputhighpassfilter);
-    verif = verif && chorus->setHDAmp(du_chorus.c_hdamp);
+    verif = chorus->setEffectLevel(du_chorus.c_effectlevel) ? verif : false;
+    verif = chorus->setDelayTime(du_chorus.c_delaytime) ? verif : false;
+    verif = chorus->setFeedback(du_chorus.c_feedback) ? verif : false;
+    verif = chorus->setInputHighPassFilterFrequency(du_chorus.c_inputhighpassfilter) ? verif : false;
+    verif = chorus->setHDAmp(du_chorus.c_hdamp) ? verif : false;
 
-    verif = verif && chorus->setModulationDepth(du_chorus.c_modulationdepth);
-    verif = verif && chorus->setModulationRate(du_chorus.c_modulationrate);
-    verif = verif && chorus->setTremoloShape(du_chorus.c_tremoloshape);
-    verif = verif && chorus->setRotarySpeed(du_chorus.c_rotaryspeed);
+    verif = chorus->setModulationDepth(du_chorus.c_modulationdepth) ? verif : false;
+    verif = chorus->setModulationRate(du_chorus.c_modulationrate) ? verif : false;
+    verif = chorus->setTremoloShape(du_chorus.c_tremoloshape) ? verif : false;
+    verif = chorus->setRotarySpeed(du_chorus.c_rotaryspeed) ? verif : false;
 
-    verif = verif && chorus->setEffectName(
-                QString(QByteArray((char *)du_chorus.c_name, NAME_CARACT)));
+    verif = chorus->setEffectName(QString(QByteArray((char *)du_chorus.c_name, NAME_CARACT))) ? verif : false;
 
     if (!verif)
     {
@@ -128,19 +126,19 @@ DuChorusPtr DuChorus::fromJson(const QJsonObject &jsonChorus)
     DuChorusPtr chorus(new DuChorus);
     bool verif = true;
 
-    verif = verif && chorus->setMode(jsonMode.toInt());
-    verif = verif && chorus->setEffectLevel(jsonEffectLvl.toInt());
-    verif = verif && chorus->setDelayTime(jsonDelayTime.toInt());
-    verif = verif && chorus->setFeedback(jsonFeedback.toInt());
-    verif = verif && chorus->setInputHighPassFilterFrequency(jsonHiPassFreq.toInt());
-    verif = verif && chorus->setHDAmp(jsonHDAmp.toInt());
+    verif = chorus->setMode(jsonMode.toInt()) ? verif : false;
+    verif = chorus->setEffectLevel(jsonEffectLvl.toInt()) ? verif : false;
+    verif = chorus->setDelayTime(jsonDelayTime.toInt()) ? verif : false;
+    verif = chorus->setFeedback(jsonFeedback.toInt()) ? verif : false;
+    verif = chorus->setInputHighPassFilterFrequency(jsonHiPassFreq.toInt()) ? verif : false;
+    verif = chorus->setHDAmp(jsonHDAmp.toInt()) ? verif : false;
 
-    verif = verif && chorus->setModulationDepth(jsonModDepth.toInt());
-    verif = verif && chorus->setModulationRate(jsonModRate.toInt());
-    verif = verif && chorus->setTremoloShape(jsonTremShape.toInt());
-    verif = verif && chorus->setRotarySpeed(jsonRotSpeed.toInt());
+    verif = chorus->setModulationDepth(jsonModDepth.toInt()) ? verif : false;
+    verif = chorus->setModulationRate(jsonModRate.toInt()) ? verif : false;
+    verif = chorus->setTremoloShape(jsonTremShape.toInt()) ? verif : false;
+    verif = chorus->setRotarySpeed(jsonRotSpeed.toInt()) ? verif : false;
 
-    verif = verif && chorus->setEffectName(jsonEffectName.toString());
+    verif = chorus->setEffectName(jsonEffectName.toString()) ? verif : false;
 
     if (!verif)
     {

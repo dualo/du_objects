@@ -20,15 +20,15 @@
 #define KEY_SONG_OFFSET                 "Offset"
 #define KEY_SONG_CLICKVOLUME            "ClickVolume"
 
-#define KEY_SONG_GAIN                   "Gain"
-#define KEY_SONG_LOWCUTFILTERFREQ       "LowCutFilterFrequency"
-#define KEY_SONG_HIGHCUTFILTERFREQ      "HighCutFilterFrequency"
+#define KEY_SONG_MIXER                  "Mixer"
 
 #define KEY_SONG_TIMESIGNATURE          "TimeSignature"
 #define KEY_SONG_SCALE                  "Scale"
 #define KEY_SONG_TONALITY               "Tonality"
 
 #define KEY_SONG_REVERBPRESET           "ReverbPreset"
+
+#define KEY_SONG_LEDS                   "LEDs"
 
 #define SONGINFO_SIZE       8 + MUSIC_SONG_NAME_SIZE + 20 + NUM_LED_VALUE + FX_MIX_SIZE
 #define SONGINFO_OFFSET     4 + 8 * 16 + 10 + 3 + 15
@@ -79,14 +79,8 @@ public:
     int getOffset() const;
     bool setOffset(int value);
 
-    int getGain() const;
-    bool setGain(int value);
-
-    int getLowCutFilterFrequency() const;
-    bool setLowCutFilterFrequency(int value);
-
-    int getHighCutFilterFrequency() const;
-    bool setHighCutFilterFrequency(int value);
+    DuMixerConstPtr getMixer() const;
+    void setMixer(const DuMixerPtr &mixer);
 
     int getScale() const;
     bool setScale(int value);
@@ -99,6 +93,9 @@ public:
 
     int getReverbPreset() const;
     bool setReverbPreset(int value);
+
+    QByteArray getLeds() const;
+    bool setLeds(const QByteArray &value);
 };
 
 #endif // DUSONGINFO_H

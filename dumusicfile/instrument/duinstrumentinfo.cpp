@@ -64,25 +64,23 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrI
     DuInstrumentInfoPtr instrInfo(new DuInstrumentInfo);
     bool verif = true;
 
-    verif = verif && instrInfo->setName(
-            QString(QByteArray((char *)du_instrInfo.instr_name, NAME_CARACT)));
+    verif = instrInfo->setName(QString(QByteArray((char *)du_instrInfo.instr_name, NAME_CARACT))) ? verif : false;
 
-    verif = verif && instrInfo->setMidiProgramChange(du_instrInfo.instr_midi_pc);
-    verif = verif && instrInfo->setMidiControlChange0(du_instrInfo.instr_midi_C0);
+    verif = instrInfo->setMidiProgramChange(du_instrInfo.instr_midi_pc) ? verif : false;
+    verif = instrInfo->setMidiControlChange0(du_instrInfo.instr_midi_C0) ? verif : false;
 
-    verif = verif && instrInfo->setKeyMap(du_instrInfo.instr_key_map);
-    verif = verif && instrInfo->setOctave(du_instrInfo.instr_octave);
-    verif = verif && instrInfo->setID(du_instrInfo.instr_id);
+    verif = instrInfo->setKeyMap(du_instrInfo.instr_key_map) ? verif : false;
+    verif = instrInfo->setOctave(du_instrInfo.instr_octave) ? verif : false;
+    verif = instrInfo->setID(du_instrInfo.instr_id) ? verif : false;
 
-    verif = verif && instrInfo->setActiveNoteOff(du_instrInfo.instr_noteoff);
-    verif = verif && instrInfo->setCategory(
-            QString(QByteArray((char *)du_instrInfo.instr_cat, NAME_CARACT)));
+    verif = instrInfo->setActiveNoteOff(du_instrInfo.instr_noteoff) ? verif : false;
+    verif = instrInfo->setCategory(QString(QByteArray((char *)du_instrInfo.instr_cat, NAME_CARACT))) ? verif : false;
 
-    verif = verif && instrInfo->setRelativeVolume(du_instrInfo.instr_relvolume);
+    verif = instrInfo->setRelativeVolume(du_instrInfo.instr_relvolume) ? verif : false;
 
-    verif = verif && instrInfo->setType(du_instrInfo.instr_type);
+    verif = instrInfo->setType(du_instrInfo.instr_type) ? verif : false;
 
-    //verif = verif && instrInfo->setUserID(instrInfo.instr_userid);
+    //verif = instrInfo->setUserID(instrInfo.instr_userid) ? verif : false;
     //TODO: add userID when possible.
 
     if (!verif)
@@ -127,23 +125,23 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
     DuInstrumentInfoPtr instrInfo(new DuInstrumentInfo);
     bool verif = true;
 
-    verif = verif && instrInfo->setName(jsonName.toString());
+    verif = instrInfo->setName(jsonName.toString()) ? verif : false;
 
-    verif = verif && instrInfo->setMidiProgramChange(jsonProgChange.toInt());
-    verif = verif && instrInfo->setMidiControlChange0(jsonCtrlChange.toInt());
+    verif = instrInfo->setMidiProgramChange(jsonProgChange.toInt()) ? verif : false;
+    verif = instrInfo->setMidiControlChange0(jsonCtrlChange.toInt()) ? verif : false;
 
-    verif = verif && instrInfo->setKeyMap(jsonKeyMap.toInt());
-    verif = verif && instrInfo->setOctave(jsonOctave.toInt());
-    verif = verif && instrInfo->setID(jsonId.toInt());
+    verif = instrInfo->setKeyMap(jsonKeyMap.toInt()) ? verif : false;
+    verif = instrInfo->setOctave(jsonOctave.toInt()) ? verif : false;
+    verif = instrInfo->setID(jsonId.toInt()) ? verif : false;
 
-    verif = verif && instrInfo->setActiveNoteOff(jsonNoteOff.toInt());
-    verif = verif && instrInfo->setCategory(jsonCategory.toString());
+    verif = instrInfo->setActiveNoteOff(jsonNoteOff.toInt()) ? verif : false;
+    verif = instrInfo->setCategory(jsonCategory.toString()) ? verif : false;
 
-    verif = verif && instrInfo->setRelativeVolume(jsonRelVolume.toInt());
+    verif = instrInfo->setRelativeVolume(jsonRelVolume.toInt()) ? verif : false;
 
-    verif = verif && instrInfo->setType(jsonType.toInt());
+    verif = instrInfo->setType(jsonType.toInt()) ? verif : false;
 
-    verif = verif && instrInfo->setUserID(jsonUserId.toString());
+    verif = instrInfo->setUserID(jsonUserId.toString()) ? verif : false;
 
     if (!verif)
     {
