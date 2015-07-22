@@ -44,13 +44,12 @@ DuWahPtr DuWah::fromDuMusicBinary(const FX_wah &du_wah)
     DuWahPtr wah(new DuWah);
     bool verif = true;
 
-    verif = verif && wah->setFilterType(du_wah.w_filtertype);
-    verif = verif && wah->setFilterFrequency(du_wah.w_filterfreq);
-    verif = verif && wah->setFilterResonance(du_wah.w_filterres);
-    verif = verif && wah->setAutoWahSensitivity(du_wah.w_autowahsensitivity);
+    verif = wah->setFilterType(du_wah.w_filtertype) ? verif : false;
+    verif = wah->setFilterFrequency(du_wah.w_filterfreq) ? verif : false;
+    verif = wah->setFilterResonance(du_wah.w_filterres) ? verif : false;
+    verif = wah->setAutoWahSensitivity(du_wah.w_autowahsensitivity) ? verif : false;
 
-    verif = verif && wah->setEffectName(
-                QString(QByteArray((char *)du_wah.w_name, NAME_CARACT)));
+    verif = wah->setEffectName(QString(QByteArray((char *)du_wah.w_name, NAME_CARACT))) ? verif : false;
 
     if (!verif)
     {
@@ -85,12 +84,12 @@ DuWahPtr DuWah::fromJson(const QJsonObject &jsonWah)
     DuWahPtr wah(new DuWah);
     bool verif = true;
 
-    verif = verif && wah->setFilterType(jsonFilterType.toInt());
-    verif = verif && wah->setFilterFrequency(jsonFilterFreq.toInt());
-    verif = verif && wah->setFilterResonance(jsonFilterRes.toInt());
-    verif = verif && wah->setAutoWahSensitivity(jsonSensitivity.toInt());
+    verif = wah->setFilterType(jsonFilterType.toInt()) ? verif : false;
+    verif = wah->setFilterFrequency(jsonFilterFreq.toInt()) ? verif : false;
+    verif = wah->setFilterResonance(jsonFilterRes.toInt()) ? verif : false;
+    verif = wah->setAutoWahSensitivity(jsonSensitivity.toInt()) ? verif : false;
 
-    verif = verif && wah->setEffectName(jsonEffectName.toString());
+    verif = wah->setEffectName(jsonEffectName.toString()) ? verif : false;
 
     if (!verif)
     {

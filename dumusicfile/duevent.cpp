@@ -64,11 +64,11 @@ DuEventPtr DuEvent::fromDuMusicBinary(const music_sample &du_sample)
     DuEventPtr event(new DuEvent);
     bool verif = true;
 
-    verif = verif && event->setTime(du_sample.time);
-    verif = verif && event->setControl(du_sample.control);
-    verif = verif && event->setKeyboard(du_sample.canal);
-    verif = verif && event->setNote(du_sample.note & 0x7F);
-    verif = verif && event->setValue(du_sample.value & 0x7F);
+    verif = event->setTime(du_sample.time) ? verif : false;
+    verif = event->setControl(du_sample.control) ? verif : false;
+    verif = event->setKeyboard(du_sample.canal) ? verif : false;
+    verif = event->setNote(du_sample.note & 0x7F) ? verif : false;
+    verif = event->setValue(du_sample.value & 0x7F) ? verif : false;
 
     if (!verif)
     {
@@ -103,11 +103,11 @@ DuEventPtr DuEvent::fromJson(const QJsonObject &jsonEvent)
     DuEventPtr event(new DuEvent);
     bool verif = true;
 
-    verif = verif && event->setTime(jsonTime.toInt());
-    verif = verif && event->setControl(jsonCtrl.toInt());
-    verif = verif && event->setKeyboard(jsonKbrd.toInt());
-    verif = verif && event->setNote(jsonNote.toInt());
-    verif = verif && event->setValue(jsonVal.toInt());
+    verif = event->setTime(jsonTime.toInt()) ? verif : false;
+    verif = event->setControl(jsonCtrl.toInt()) ? verif : false;
+    verif = event->setKeyboard(jsonKbrd.toInt()) ? verif : false;
+    verif = event->setNote(jsonNote.toInt()) ? verif : false;
+    verif = event->setValue(jsonVal.toInt()) ? verif : false;
 
     if (!verif)
     {
@@ -144,21 +144,21 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
     DuEventPtr event(new DuEvent);
     bool verif = true;
 
-    verif = verif && event->setTime(channelEvent->getTime());
-    verif = verif && event->setControl(channelEvent->getType() - 0x08);
-    verif = verif && event->setValue(channelEvent->getValue());
+    verif = event->setTime(channelEvent->getTime()) ? verif : false;
+    verif = event->setControl(channelEvent->getType() - 0x08) ? verif : false;
+    verif = event->setValue(channelEvent->getValue()) ? verif : false;
 
     int key = channelEvent->getKey();
 
     if (!helper.isPercu(loopIndex))
     {
-        verif = verif && event->setKeyboard(helper.fetchKeyboard(key, loopIndex));
-        verif = verif && event->setNote(key);
+        verif = event->setKeyboard(helper.fetchKeyboard(key, loopIndex)) ? verif : false;
+        verif = event->setNote(key) ? verif : false;
     }
     else
     {
-        verif = verif && event->setKeyboard(0);
-        verif = verif && event->setNote(helper.fetchPercuKey(key, loopIndex));
+        verif = event->setKeyboard(0) ? verif : false;
+        verif = event->setNote(helper.fetchPercuKey(key, loopIndex)) ? verif : false;
     }
 
     if (!verif)

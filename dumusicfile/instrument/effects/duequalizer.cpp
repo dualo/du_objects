@@ -72,20 +72,20 @@ DuEqualizerPtr DuEqualizer::fromDuMusicBinary(const FX_equalizer du_equalizer)
     DuEqualizerPtr equalizer(new DuEqualizer);
     bool verif = true;
 
-    verif = verif && equalizer->setOnOff(du_equalizer.e_on_off);
+    verif = equalizer->setOnOff(du_equalizer.e_on_off) ? verif : false;
 
-    verif = verif && equalizer->setLowBandGain(du_equalizer.e_lowbandgain);
-    verif = verif && equalizer->setLowMidBandGain(du_equalizer.e_lowmidbandgain);
-    verif = verif && equalizer->setHighMidBandGain(du_equalizer.e_highmidbandgain);
-    verif = verif && equalizer->setHighBandGain(du_equalizer.e_highbandgain);
+    verif = equalizer->setLowBandGain(du_equalizer.e_lowbandgain) ? verif : false;
+    verif = equalizer->setLowMidBandGain(du_equalizer.e_lowmidbandgain) ? verif : false;
+    verif = equalizer->setHighMidBandGain(du_equalizer.e_highmidbandgain) ? verif : false;
+    verif = equalizer->setHighBandGain(du_equalizer.e_highbandgain) ? verif : false;
 
-    verif = verif && equalizer->setLowBandFrequency(du_equalizer.e_lowbandfrequency);
-    verif = verif && equalizer->setLowMidBandFrequency(du_equalizer.e_lowmidbandfrequency);
-    verif = verif && equalizer->setHighMidBandFrequency(du_equalizer.e_highmidbandfrequency);
-    verif = verif && equalizer->setHighBandFrequency(du_equalizer.e_highbandfrequency);
+    verif = equalizer->setLowBandFrequency(du_equalizer.e_lowbandfrequency) ? verif : false;
+    verif = equalizer->setLowMidBandFrequency(du_equalizer.e_lowmidbandfrequency) ? verif : false;
+    verif = equalizer->setHighMidBandFrequency(du_equalizer.e_highmidbandfrequency) ? verif : false;
+    verif = equalizer->setHighBandFrequency(du_equalizer.e_highbandfrequency) ? verif : false;
 
-    verif = verif && equalizer->setLowMidBandQualityFactor(du_equalizer.e_lowmidbandQ);
-    verif = verif && equalizer->setHighMidBandQualityFactor(du_equalizer.e_highmidbandQ);
+    verif = equalizer->setLowMidBandQualityFactor(du_equalizer.e_lowmidbandQ) ? verif : false;
+    verif = equalizer->setHighMidBandQualityFactor(du_equalizer.e_highmidbandQ) ? verif : false;
 
     equalizer->setEffectName(
             QString(QByteArray((char *)du_equalizer.e_name, NAME_CARACT)));
@@ -133,22 +133,22 @@ DuEqualizerPtr DuEqualizer::fromJson(const QJsonObject &jsonEqualizer)
     DuEqualizerPtr equalizer(new DuEqualizer);
     bool verif = true;
 
-    verif = verif && equalizer->setOnOff(jsonOnOff.toInt());
+    verif = equalizer->setOnOff(jsonOnOff.toInt()) ? verif : false;
 
-    verif = verif && equalizer->setLowBandGain(jsonLowGain.toInt());
-    verif = verif && equalizer->setLowMidBandGain(jsonLoMidGain.toInt());
-    verif = verif && equalizer->setHighMidBandGain(jsonHiMidGain.toInt());
-    verif = verif && equalizer->setHighBandGain(jsonHighGain.toInt());
+    verif = equalizer->setLowBandGain(jsonLowGain.toInt()) ? verif : false;
+    verif = equalizer->setLowMidBandGain(jsonLoMidGain.toInt()) ? verif : false;
+    verif = equalizer->setHighMidBandGain(jsonHiMidGain.toInt()) ? verif : false;
+    verif = equalizer->setHighBandGain(jsonHighGain.toInt()) ? verif : false;
 
-    verif = verif && equalizer->setLowBandFrequency(jsonLowFreq.toInt());
-    verif = verif && equalizer->setLowMidBandFrequency(jsonLoMidFreq.toInt());
-    verif = verif && equalizer->setHighMidBandFrequency(jsonHiMidFreq.toInt());
-    verif = verif && equalizer->setHighBandFrequency(jsonHighFreq.toInt());
+    verif = equalizer->setLowBandFrequency(jsonLowFreq.toInt()) ? verif : false;
+    verif = equalizer->setLowMidBandFrequency(jsonLoMidFreq.toInt()) ? verif : false;
+    verif = equalizer->setHighMidBandFrequency(jsonHiMidFreq.toInt()) ? verif : false;
+    verif = equalizer->setHighBandFrequency(jsonHighFreq.toInt()) ? verif : false;
 
-    verif = verif && equalizer->setLowMidBandQualityFactor(jsonLoMidQual.toInt());
-    verif = verif && equalizer->setHighMidBandQualityFactor(jsonHiMidQual.toInt());
+    verif = equalizer->setLowMidBandQualityFactor(jsonLoMidQual.toInt()) ? verif : false;
+    verif = equalizer->setHighMidBandQualityFactor(jsonHiMidQual.toInt()) ? verif : false;
 
-    verif = verif && equalizer->setEffectName(jsonEffectName.toString());
+    verif = equalizer->setEffectName(jsonEffectName.toString()) ? verif : false;
 
     if (!verif)
     {

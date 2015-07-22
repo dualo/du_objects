@@ -65,18 +65,18 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
     DuPresetPtr preset(new DuPreset);
     bool verif = true;
 
-    verif = verif && preset->setVolume(du_preset.s_volume);
-    verif = verif && preset->setPanning(du_preset.s_panning);
-    verif = verif && preset->setSendToReverb(du_preset.s_sendtorev);
-    verif = verif && preset->setOctave(du_preset.s_instr_octave);
+    verif = preset->setVolume(du_preset.s_volume) ? verif : false;
+    verif = preset->setPanning(du_preset.s_panning) ? verif : false;
+    verif = preset->setSendToReverb(du_preset.s_sendtorev) ? verif : false;
+    verif = preset->setOctave(du_preset.s_instr_octave) ? verif : false;
 
-    verif = verif && preset->setPortamentoOnOff(du_preset.s_portamento_on_off);
-    verif = verif && preset->setPortamentoControl(du_preset.s_portamento_ctrl);
-    verif = verif && preset->setPortamentoTime(du_preset.s_portamento_time);
+    verif = preset->setPortamentoOnOff(du_preset.s_portamento_on_off) ? verif : false;
+    verif = preset->setPortamentoControl(du_preset.s_portamento_ctrl) ? verif : false;
+    verif = preset->setPortamentoTime(du_preset.s_portamento_time) ? verif : false;
 
-    verif = verif && preset->setExpression(du_preset.s_expression);
-    verif = verif && preset->setPitchBendSensitivity(du_preset.s_pitch_bend_sensitivity);
-    verif = verif && preset->setDisposition(du_preset.s_disposition);
+    verif = preset->setExpression(du_preset.s_expression) ? verif : false;
+    verif = preset->setPitchBendSensitivity(du_preset.s_pitch_bend_sensitivity) ? verif : false;
+    verif = preset->setDisposition(du_preset.s_disposition) ? verif : false;
 
     if (!verif)
     {
@@ -118,18 +118,18 @@ DuPresetPtr DuPreset::fromJson(const QJsonObject &jsonPreset)
     DuPresetPtr preset(new DuPreset);
     bool verif = true;
 
-    verif = verif && preset->setVolume(jsonVolume.toInt());
-    verif = verif && preset->setPanning(jsonPanning.toInt());
-    verif = verif && preset->setSendToReverb(jsonToReverb.toInt());
-    verif = verif && preset->setOctave(jsonOctave.toInt());
+    verif = preset->setVolume(jsonVolume.toInt()) ? verif : false;
+    verif = preset->setPanning(jsonPanning.toInt()) ? verif : false;
+    verif = preset->setSendToReverb(jsonToReverb.toInt()) ? verif : false;
+    verif = preset->setOctave(jsonOctave.toInt()) ? verif : false;
 
-    verif = verif && preset->setPortamentoOnOff(jsonPortaOnOff.toInt());
-    verif = verif && preset->setPortamentoControl(jsonPortaCtrl.toInt());
-    verif = verif && preset->setPortamentoTime(jsonPortaTime.toInt());
+    verif = preset->setPortamentoOnOff(jsonPortaOnOff.toInt()) ? verif : false;
+    verif = preset->setPortamentoControl(jsonPortaCtrl.toInt()) ? verif : false;
+    verif = preset->setPortamentoTime(jsonPortaTime.toInt()) ? verif : false;
 
-    verif = verif && preset->setExpression(jsonExpression.toInt());
-    verif = verif && preset->setPitchBendSensitivity(jsonPitchBend.toInt());
-    verif = verif && preset->setDisposition(jsonDisposition.toInt());
+    verif = preset->setExpression(jsonExpression.toInt()) ? verif : false;
+    verif = preset->setPitchBendSensitivity(jsonPitchBend.toInt()) ? verif : false;
+    verif = preset->setDisposition(jsonDisposition.toInt()) ? verif : false;
 
     if (!verif)
     {
