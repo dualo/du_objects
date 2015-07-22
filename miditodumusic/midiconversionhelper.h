@@ -62,13 +62,16 @@ public:
     int fetchKeyboard(int key, int index) const;
     int fetchPercuKey(int gmKey, int index) const;
 
+    bool importMidiFile(const DuMidiFilePtr &midiFile);
+    bool populateMapper(const QJsonObject &jsonMaps);
+
 private:
-    bool importMidiFile();
-    bool populateMapper();
     bool filterMetaEvents();
 
 private:
-    bool valid;
+    bool midiValid;
+    bool mapsValid;
+
     int duration;
 
     DuMidiKeyMapperPtr mapper;
