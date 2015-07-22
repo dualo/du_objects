@@ -50,7 +50,8 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
                     << "failed to generate DuMusic\n"
-                    << "invalid total event size";
+                    << "invalid total event size :"
+                    << fileSize - MUSIC_SONG_SIZE << "!=" << du_music.local_song.s_totalsample * MUSIC_SAMPLE_SIZE;
 
         return DuMusicPtr();
     }
@@ -471,9 +472,9 @@ bool DuMusic::upgrade(music_song &du_song)
         du_song.s_activ_gyro_Y = 0;
 
 
-        for(i = 0; i<MUSIC_MAXTRACK; i++)
+        for(i = 0; i < MUSIC_MAXTRACK; i++)
         {
-            for(j = 0; j<MUSIC_MAXLAYER; j++)
+            for(j = 0; j < MUSIC_MAXLAYER; j++)
             {
                 du_song.s_track[i].t_loop[j].l_instr.i_preset.s_arpegiator_type = 0;
                 du_song.s_track[i].t_loop[j].l_instr.i_preset.s_arpegiator_beat = 0;
