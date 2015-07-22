@@ -32,7 +32,7 @@ public:
 
     QByteArray toDuMusicBinary() const;
     DuMidiChannelEventPtr toDuMidiChannelEvent(quint32 prevTime, quint8 prevType,
-                                               bool isPercu, quint8 instrKeyMap) const;
+                                               bool isPercu, int instrKeyMap) const;
 
     int size() const;
 

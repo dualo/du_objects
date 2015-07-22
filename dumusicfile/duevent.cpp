@@ -220,7 +220,7 @@ QByteArray DuEvent::toDuMusicBinary() const
 DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
                                                     quint8 prevType,
                                                     bool isPercu,
-                                                    quint8 instrKeyMap) const
+                                                    int instrKeyMap) const
 {
     //This case should not occur since it is already tested in DuLoop::toDuMidiTrack()
     if (isPercu && instrKeyMap == -1)
