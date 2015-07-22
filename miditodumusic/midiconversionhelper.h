@@ -65,14 +65,17 @@ public:
     int fetchPercuKey(int gmKey, int index) const;
 
     static int percuKey(quint8 duKey, quint8 keyboard, quint8 mapIndex);
+    
+    bool importMidiFile(const DuMidiFilePtr &midiFile);
+    bool populateMapper(const QJsonObject &jsonMaps);
 
 private:
-    bool importMidiFile();
-    bool populateMapper();
     bool filterMetaEvents();
 
 private:
-    bool valid;
+    bool midiValid;
+    bool mapsValid;
+
     int duration;
 
     DuMidiKeyMapperPtr mapper;

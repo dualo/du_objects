@@ -11,7 +11,8 @@
 
 
 MidiConversionHelper::MidiConversionHelper() :
-    valid(false),
+    midiValid(false),
+    mapsValid(false),
     duration(0),
     mapper(DuMidiKeyMapperPtr(new DuMidiKeyMapper)),
     tempo(100),
@@ -19,16 +20,6 @@ MidiConversionHelper::MidiConversionHelper() :
     scale(-1),
     tonality(-1)
 {
-    if (importMidiFile())
-    {
-        if (!populateMapper())
-            qCritical() << "failed to import jsonMaps";
-
-        else if (duration != 0)
-            valid = true;
-    }
-    else
-        qCritical() << "failed to import midiFile";
 }
 
 MidiConversionHelper::~MidiConversionHelper()
@@ -38,7 +29,7 @@ MidiConversionHelper::~MidiConversionHelper()
 
 bool MidiConversionHelper::isValid() const
 {
-    return valid;
+    return midiValid && mapsValid;
 }
 
 
@@ -354,50 +345,30 @@ int MidiConversionHelper::percuKey(quint8 duKey, quint8 keyboard, quint8 mapInde
 }
 
 
-bool MidiConversionHelper::populateMapper()
+bool MidiConversionHelper::populateMapper(const QJsonObject &jsonMaps)
 {
-    QString fileName = QFileDialog::getOpenFileName(0, "Open json maps",
-                                                    "", "json (*.json)");
-    if(fileName.isEmpty())
-        return false;
-
-    QFile *input = new QFile(fileName);
-    if (!input->open(QIODevice::ReadOnly))
-        return false;
-
-    const QJsonObject &jsonMaps =
-            QJsonDocument::fromJson(input->readAll()).object();
-
-    input->close();
-
     mapper->importMaps(jsonMaps);
 
-    return true;
+    mapsValid = true;
+
+    return mapsValid;
 }
 
 
-bool MidiConversionHelper::importMidiFile()
+bool MidiConversionHelper::importMidiFile(const DuMidiFilePtr &midiFile)
 {
-    QString fileName = QFileDialog::getOpenFileName(0, "Open midi file",
-                                                    "", "midi (*.mid *.midi)");
-    if(fileName.isEmpty())
-        return false;
-
-    QFile *input = new QFile(fileName);
-    if (!input->open(QIODevice::ReadOnly))
-        return false;
-
-    const DuMidiFilePtr &midiFile = DuMidiFile::fromMidiBinary(input);
-
-    input->close();
-
     if (midiFile->getFormat() != 1)
+    {
+        midiValid = false;
         return false;
+    }
 
     selectedFile = midiFile;
     trackNames.clear();
 
-    return filterMetaEvents();
+    midiValid = filterMetaEvents() ? (duration != 0) : false;
+
+    return midiValid;
 }
 
 
