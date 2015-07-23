@@ -72,7 +72,7 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
             }
 
             const music_sample *du_sample_address = (music_sample*)
-                    ((long)du_sample_start + du_loop.l_adress);
+                    ((quintptr)du_sample_start + du_loop.l_adress);
 
             const DuLoopPtr &loop =
                     DuLoop::fromDuMusicBinary(du_loop, du_sample_address);
