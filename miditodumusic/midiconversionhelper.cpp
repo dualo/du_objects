@@ -268,7 +268,7 @@ void MidiConversionHelper::setSelectedInstr(int index,
 }
 
 
-QPair<bool, int> MidiConversionHelper::getPercuSetting(int index) const
+QPair<bool, int> MidiConversionHelper::getPercuMapping(int index) const
 {
     if (index >= percuMappings.count())
         return QPair<bool, int>(true, 0xFF);
