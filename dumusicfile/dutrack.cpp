@@ -284,11 +284,16 @@ QByteArray DuTrack::toDuMusicBinary() const
     const DuArrayConstPtr &loops = getLoops();
     if (loops == NULL)
         return QByteArray();
+
+    int loopSize = loops->size();
+    if (loopSize == -1)
+        return QByteArray();
+
     const QByteArray &loopsArray = loops->toDuMusicBinary();
     if (loopsArray.isNull())
         return QByteArray();
 
-    std::memcpy(&(du_track.t_loop), loopsArray.data(), loops->size());
+    std::memcpy(&(du_track.t_loop), loopsArray.data(), loopSize);
 
 
     tmpNum = getChannel();

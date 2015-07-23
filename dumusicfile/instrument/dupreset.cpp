@@ -170,6 +170,8 @@ QByteArray DuPreset::toDuMusicBinary() const
 
     tmpPreset = expressionArray + controllersArray + effecSetArray;
 
+    std::memcpy(&(du_preset), tmpPreset.data(), size());
+
 
     return QByteArray((char *)&(du_preset), size());
 }
