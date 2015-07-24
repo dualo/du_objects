@@ -430,13 +430,19 @@ bool DuMusic::upgrade(s_total_buffer &du_music)
                     instr.instr_type = INSTR_HARMONIC;
 
                 // harmonic instrument -> remove octave from sample
-                if (instr.instr_type == INSTR_HARMONIC
-                        && loop.l_state != REC_EMPTY)
+                if (loop.l_state != REC_EMPTY)
                 {
                     music_sample *played_buffer = (music_sample*)(loop.l_adress + (quintptr)du_music.local_buffer);
                     for (k = 0; k < loop.l_numsample; k++)
                     {
-                        played_buffer[k].note -= (12 * preset.s_instr_octave) + (song.s_transpose - RECORD_TRANSPOSEMAX);
+                        played_buffer[k].canal = played_buffer[k].canal & 0xF7; // remove canals 8 -> 15 not used (and initialized anymore)
+                        if (loop.l_instr.i_instrument.instr_type == INSTR_HARMONIC) // harmonic instrument -> remove octave from sample
+                        {
+                            if (played_buffer[k].control == 0 || played_buffer[k].control == 1)
+                            {
+                                played_buffer[k].note -= (12 * preset.s_instr_octave) + (song.s_transpose - RECORD_TRANSPOSEMAX);
+                            }
+                        }
                     }
                 }
             }
