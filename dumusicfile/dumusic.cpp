@@ -345,78 +345,105 @@ DuMusicPtr DuMusic::fromMidi(const MidiConversionHelper &helper)
 
 bool DuMusic::upgrade(s_total_buffer &du_music)
 {
-    music_song &du_song = du_music.local_song;
+    music_song &song = du_music.local_song;
 
-    if (du_song.s_version_music <= 0)
+    if (song.s_version_music <= 0)
     {
         return false;
     }
-    else if (du_song.s_version_music > VERSION_MUSIC)
+    else if (song.s_version_music > VERSION_MUSIC)
     {
         return false;
     }
-    else if (du_song.s_version_music == VERSION_MUSIC)
+    else if (song.s_version_music == VERSION_MUSIC)
     {
         return true;
     }
 
-    if (du_song.s_version_music == 1)
+    if (song.s_version_music == 1)
     {
-        int32_t i, j;
-        du_song.s_size = MUSIC_SONG_SIZE + (du_song.s_totalsample * MUSIC_SAMPLE_SIZE);
-        du_song.s_metadata = 0;
-        du_song.s_playhead = 0;
-        du_song.s_transpose = RECORD_TRANSPOSEDEFAULT;
+        int32_t i, j, k;
+        song.s_size = MUSIC_SONG_SIZE + (song.s_totalsample * MUSIC_SAMPLE_SIZE);
+        song.s_metadata = 0;
+        song.s_playhead = 0;
+        song.s_transpose = RECORD_TRANSPOSEDEFAULT;
 
-        du_song.s_reverb_preset = FX_REVERB_PRESET_DEFAULTVALUE;
+        song.s_reverb_preset = FX_REVERB_PRESET_DEFAULTVALUE;
 
-        du_song.s_direction_gyro_P = -1;
-        du_song.s_direction_gyro_R = -1;
-        du_song.s_direction_gyro_Y = -1;
-        du_song.s_activ_aftertouch = 0;
-        du_song.s_activ_slider_L = 0;
-        du_song.s_activ_slider_R = 0;
-        du_song.s_activ_gyro_P = 0;
-        du_song.s_activ_gyro_R = 0;
-        du_song.s_activ_gyro_Y = 0;
+        song.s_direction_gyro_P = -1;
+        song.s_direction_gyro_R = -1;
+        song.s_direction_gyro_Y = -1;
+        song.s_activ_aftertouch = 0;
+        song.s_activ_slider_L = 0;
+        song.s_activ_slider_R = 0;
+        song.s_activ_gyro_P = 0;
+        song.s_activ_gyro_R = 0;
+        song.s_activ_gyro_Y = 0;
 
 
-        for(i = 0; i < MUSIC_MAXTRACK; i++)
+        for (i = 0; i < MUSIC_MAXTRACK; i++)
         {
-            for(j = 0; j < MUSIC_MAXLAYER; j++)
+            for (j = 0; j < MUSIC_MAXLAYER; j++)
             {
-                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_arpegiator_type = 0;
-                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_arpegiator_beat = 0;
+                music_loop& loop = song.s_track[i].t_loop[j];
+                preset_instr& preset = loop.l_instr.i_preset;
 
-                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_direction_gyro_P = -1;
-                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_direction_gyro_R = -1;
-                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_direction_gyro_Y = -1;
+                preset.s_arpegiator_type = 0;
+                preset.s_arpegiator_beat = 0;
 
-                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_adsr_onoff = 0;
-                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_compressor_onoff = 0;
-                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_delay_onoff = 0;
-                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_distortion_onoff = 0;
-                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_eq_onoff = 0;
-                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_chorus_onoff = 0;
-                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_vibrato_onoff = 0;
-                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_wah_onoff = 0;
+                preset.s_direction_gyro_P = -1;
+                preset.s_direction_gyro_R = -1;
+                preset.s_direction_gyro_Y = -1;
 
-                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_autopitch_rate = 0;
-                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_autopitch_range = 127;
+                preset.s_adsr_onoff = 0;
+                preset.s_compressor_onoff = 0;
+                preset.s_delay_onoff = 0;
+                preset.s_distortion_onoff = 0;
+                preset.s_eq_onoff = 0;
+                preset.s_chorus_onoff = 0;
+                preset.s_vibrato_onoff = 0;
+                preset.s_wah_onoff = 0;
 
-                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_tremolo_rate = 0;
-                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_tremolo_range = 127;
+                preset.s_autopitch_rate = 0;
+                preset.s_autopitch_range = 127;
 
-                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_autopan_rate = 0;
-                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_autopan_range = 127;
+                preset.s_tremolo_rate = 0;
+                preset.s_tremolo_range = 127;
 
-                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_autowah_rate = 0;
-                du_song.s_track[i].t_loop[j].l_instr.i_preset.s_autowah_range = 127;
+                preset.s_autopan_rate = 0;
+                preset.s_autopan_range = 127;
+
+                preset.s_autowah_rate = 0;
+                preset.s_autowah_range = 127;
+
+                preset.s_multinote_act = 0;
+                preset.s_multinote[0] = 0;
+                preset.s_multinote[1] = 0;
+                preset.s_multinote[2] = 0;
+                preset.s_multinote[3] = 0;
+
+                s_instr& instr = loop.l_instr.i_instrument;
+
+                if (instr.instr_key_map)
+                    instr.instr_type = INSTR_PERCU;
+                else
+                    instr.instr_type = INSTR_HARMONIC;
+
+                // harmonic instrument -> remove octave from sample
+                if (instr.instr_type == INSTR_HARMONIC
+                        && loop.l_state != REC_EMPTY)
+                {
+                    music_sample *played_buffer = (music_sample*)(loop.l_adress + (quintptr)du_music.local_buffer);
+                    for (k = 0; k < loop.l_numsample; k++)
+                    {
+                        played_buffer[k].note -= (12 * preset.s_instr_octave) + (song.s_transpose - RECORD_TRANSPOSEMAX);
+                    }
+                }
             }
         }
     }
 
-    du_song.s_version_music = VERSION_MUSIC;
+    song.s_version_music = VERSION_MUSIC;
 
     return true;
 }
