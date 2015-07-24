@@ -46,45 +46,6 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
         return DuLoopPtr(new DuLoop);
     }
 
-    DuLoopPtr loop = fromDuMusicBinary(du_loop);
-    if (loop == NULL)
-    {
-        //A Critical Message was already issued.
-        return DuLoopPtr();
-    }
-
-
-    for (int i = 0; i < du_loop.l_numsample; i++)
-    {
-        const DuEventPtr &event = DuEvent::fromDuMusicBinary(du_sample[i]);
-        if (event == NULL)
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuLoop::fromDuMusicBinary():\n"
-                        << "failed to generate DuLoop\n"
-                        << "a DuEvent was not properly generated";
-
-            return DuLoopPtr();
-        }
-        if (!loop->appendEvent(event))
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuLoop::fromDuMusicBinary():\n"
-                        << "failed to generate DuLoop\n"
-                        << "a DuEvent was not properly appended";
-
-            return DuLoopPtr();
-        }
-    }
-
-    return loop;
-}
-
-DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop)
-{
-    if (du_loop.l_state == 0)
-    {
-        return DuLoopPtr(new DuLoop);
-    }
-
     DuLoopPtr loop(new DuLoop);
     bool verif = true;
 
@@ -109,6 +70,27 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "DuLoop::fromDuMusicBinary():\n"
                    << "an attribute was not properly set";
+    }
+
+    for (int i = 0; i < du_loop.l_numsample; i++)
+    {
+        const DuEventPtr &event = DuEvent::fromDuMusicBinary(du_sample[i]);
+        if (event == NULL)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "DuLoop::fromDuMusicBinary():\n"
+                        << "failed to generate DuLoop\n"
+                        << "a DuEvent was not properly generated";
+
+            return DuLoopPtr();
+        }
+        if (!loop->appendEvent(event))
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "DuLoop::fromDuMusicBinary():\n"
+                        << "failed to generate DuLoop\n"
+                        << "a DuEvent was not properly appended";
+
+            return DuLoopPtr();
+        }
     }
 
     return loop;

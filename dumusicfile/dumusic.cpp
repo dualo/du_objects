@@ -137,94 +137,6 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
     return music;
 }
 
-DuMusicPtr DuMusic::fromDuMusicBinary(music_song &du_song)
-{
-    if (!upgrade(du_song))
-    {
-        qWarning() << "DuMusic::fromDuMusicBinary():\n"
-                                     << "failed to generate DuMusic\n"
-                                     << "upgrade failed";
-    }
-
-    DuMusicPtr music(new DuMusic);
-
-    const DuHeaderPtr &header =
-            DuHeader::fromDuMusicBinary(du_song);
-    if (header != NULL)
-        music->setHeader(header);
-    else
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
-                                      << "failed to generate DuMusic\n"
-                                      << "the DuHeader was not properly generated";
-
-        return DuMusicPtr();
-    }
-
-    const DuControllersPtr &controllers =
-            DuControllers::fromDuMusicBinary(du_song);
-    if (controllers != NULL)
-        music->setControllers(controllers);
-    else
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
-                    << "failed to generate DuMusic\n"
-                    << "the DuControllers was not properly generated";
-
-        return DuMusicPtr();
-    }
-
-    const DuSongInfoPtr &songInfo =
-            DuSongInfo::fromDuMusicBinary(du_song);
-    if (songInfo != NULL)
-        music->setSongInfo(songInfo);
-    else
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
-                                      << "failed to generate DuMusic\n"
-                                      << "the DuSongInfo was not properly generated";
-
-        return DuMusicPtr();
-    }
-
-    const DuReverbPtr &reverb =
-            DuReverb::fromDuMusicBinary(du_song.s_reverb);
-    if (reverb != NULL)
-        music->setReverb(reverb);
-    else
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
-                    << "failed to generate DuMusic\n"
-                    << "the DuReverb was not properly generated";
-
-        return DuMusicPtr();
-    }
-
-    for (int i = 0; i < MUSIC_MAXTRACK; i++)
-    {
-        const DuTrackPtr &track =
-                DuTrack::fromDuMusicBinary(du_song.s_track[i]);
-        if (track == NULL)
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
-                                          << "failed to generate DuMusic\n"
-                                          << "a DuTrack was not properly generated";
-
-            return DuMusicPtr();
-        }
-        if (!music->appendTrack(track))
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
-                                          << "failed to generate DuMusic\n"
-                                          << "a DuTrack was not properly appended";
-
-            return DuMusicPtr();
-        }
-    }
-
-    return music;
-}
-
 
 DuMusicPtr DuMusic::fromBinary(const QByteArray &data)
 {
@@ -433,11 +345,8 @@ DuMusicPtr DuMusic::fromMidi(const MidiConversionHelper &helper)
 
 bool DuMusic::upgrade(s_total_buffer &du_music)
 {
-    return upgrade(du_music.local_song);
-}
+    music_song &du_song = du_music.local_song;
 
-bool DuMusic::upgrade(music_song &du_song)
-{
     if (du_song.s_version_music <= 0)
     {
         return false;
