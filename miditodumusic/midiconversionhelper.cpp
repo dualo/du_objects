@@ -10,7 +10,8 @@
 //#pragma pack(pop)
 
 
-MidiConversionHelper::MidiConversionHelper() :
+MidiConversionHelper::MidiConversionHelper(QObject *parent) :
+    QObject(parent),
     midiValid(false),
     mapsValid(false),
     duration(0),
@@ -36,20 +37,6 @@ bool MidiConversionHelper::isValid() const
 int MidiConversionHelper::getDuration() const
 {
     return duration;
-}
-
-
-QList<QString> MidiConversionHelper::mapList() const
-{
-    return mapper->mapList();
-}
-
-void MidiConversionHelper::chooseMap()
-{
-    if (scale == -1 || tonality == -1)
-        return;
-
-    mapper->chooseMap(mapper->mapList()[scale], tonality);
 }
 
 
@@ -101,20 +88,6 @@ QString MidiConversionHelper::getTitle() const
 void MidiConversionHelper::setTitle(const QString &value)
 {
     title = value;
-}
-
-
-QString MidiConversionHelper::getTrackName(int index) const
-{
-    if (index >= trackNames.count())
-        return QString();
-
-    return trackNames[index];
-}
-
-const QStringList MidiConversionHelper::getTrackNames() const
-{
-    return trackNames;
 }
 
 
@@ -177,6 +150,34 @@ int MidiConversionHelper::getMidiChannel(int index) const
         return -1;
 
     return channelEvent->getChannel();
+}
+
+
+QString MidiConversionHelper::getTrackName(int index) const
+{
+    if (index >= trackNames.count())
+        return QString();
+
+    return trackNames[index];
+}
+
+const QStringList MidiConversionHelper::getTrackNames() const
+{
+    return trackNames;
+}
+
+
+QList<QString> MidiConversionHelper::mapList() const
+{
+    return mapper->mapList();
+}
+
+void MidiConversionHelper::chooseMap()
+{
+    if (scale == -1 || tonality == -1)
+        return;
+
+    mapper->chooseMap(mapper->mapList()[scale], tonality);
 }
 
 

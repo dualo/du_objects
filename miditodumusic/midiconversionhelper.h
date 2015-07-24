@@ -9,33 +9,35 @@
 #include <QPair>
 
 
-class MidiConversionHelper
+class MidiConversionHelper : public QObject
 {
+    Q_OBJECT
+
+    Q_PROPERTY(bool valid READ isValid NOTIFY validChanged)
+
+    Q_PROPERTY(int duration READ getDuration NOTIFY durationChanged)
+
+    Q_PROPERTY(int tempo READ getTempo WRITE setTempo NOTIFY tempoChanged)
+    Q_PROPERTY(int timeSig READ getTimeSig WRITE setTimeSig NOTIFY timeSigChanged)
+    Q_PROPERTY(int scale READ getScale WRITE setScale NOTIFY scaleChanged)
+    Q_PROPERTY(int tonality READ getTonality WRITE setTonality NOTIFY tonalityChanged)
+
+    Q_PROPERTY(QString title READ getTitle WRITE setTitle NOTIFY titleChanged)
+
 public:
-    explicit MidiConversionHelper();
+    explicit MidiConversionHelper(QObject *parent = 0);
     ~MidiConversionHelper();
 
     bool isValid() const;
 
     int getDuration() const;
 
-    QList<QString> mapList() const;
-    void chooseMap();
-
     int getTempo() const;
-    void setTempo(int value);
-
     int getTimeSig() const;
-    void setTimeSig(int value);
-
     int getScale() const;
-    void setScale(int value);
-
     int getTonality() const;
-    void setTonality(int value);
 
     QString getTitle() const;
-    void setTitle(const QString &value);
 
     QList<DuMidiTrackPtr> getTracks();
     int getMidiChannel(int index) const;
@@ -43,21 +45,14 @@ public:
     QString getTrackName(int index) const;
     const QStringList getTrackNames() const;
 
-    void addSelection(int trackNum, int loopNum);
-    void removeSelectionAt(int index);
+    QList<QString> mapList() const;
+    void chooseMap();
 
     QPair<int, int> getIndexes(int index) const;
-    int findIndexes(int trackIndex, int loopIndex) const;
 
     const DuMidiTrackPtr getMidiTrack(int index) const;
-    void setSelectedTrack(int index, const DuMidiTrackPtr &midiTrack);
 
     const DuInstrumentPtr getInstrument(int index) const;
-    void setSelectedInstr(int index, const DuInstrumentPtr &instrument);
-
-    QPair<bool, int> getPercuMapping(int index) const;
-
-    void setPercuMapping(int index, const QPair<bool, int> &mapping);
 
     bool isPercu(int index) const;
 
@@ -65,9 +60,42 @@ public:
     int fetchPercuKey(int gmKey, int index) const;
 
     static int percuKey(quint8 duKey, quint8 keyboard, quint8 mapIndex);
-    
+
+public slots:
+    void setTempo(int value);
+    void setTimeSig(int value);
+    void setScale(int value);
+    void setTonality(int value);
+
+    void setTitle(const QString &value);
+
+    void addSelection(int trackNum, int loopNum);
+    void removeSelectionAt(int index);
+
+    int findIndexes(int trackIndex, int loopIndex) const;
+
+    void setSelectedTrack(int index, const DuMidiTrackPtr &midiTrack);
+
+    void setSelectedInstr(int index, const DuInstrumentPtr &instrument);
+
+    QPair<bool, int> getPercuMapping(int index) const;
+
+    void setPercuMapping(int index, const QPair<bool, int> &mapping);
+
     bool importMidiFile(const DuMidiFilePtr &midiFile);
     bool populateMapper(const QJsonObject &jsonMaps);
+
+signals:
+    void validChanged();
+
+    void durationChanged();
+
+    void tempoChanged();
+    void timeSigChanged();
+    void scaleChanged();
+    void tonalityChanged();
+
+    void titleChanged();
 
 private:
     bool filterMetaEvents();
