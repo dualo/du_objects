@@ -1,5 +1,7 @@
 #include "ducontrollers.h"
 
+#include <cstring>
+
 #include <QJsonObject>
 
 

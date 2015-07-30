@@ -1,5 +1,7 @@
 #include "dureverb.h"
 
+#include <cstring>
+
 #include <QJsonObject>
 
 
