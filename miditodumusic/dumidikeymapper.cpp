@@ -149,5 +149,7 @@ int DuMidiKeyMapper::fetchKeyboard(quint8 octave, quint8 key)
     if (parity != 0)
         chosenKeyboard ^= 0x08;
 
-    return chosenKeyboard;
+    // Return result in a form that can be directly added to a DuEvent note
+    //(8th bit coding whether the note is played on the left or the right keyboard)
+    return ((chosenKeyboard << 8) & 0x80);
 }
