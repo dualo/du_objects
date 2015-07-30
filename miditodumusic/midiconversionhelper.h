@@ -4,8 +4,12 @@
 #include "../midifile/dumidifile.h"
 #include "../dumusicfile/instrument/duinstrument.h"
 
+#include "dutimesignaturemodel.h"
+#include "dutonalitymodel.h"
+
 #include "dumidikeymapper.h"
 
+#include <QStringList>
 #include <QPair>
 
 
@@ -17,12 +21,15 @@ class MidiConversionHelper : public QObject
 
     Q_PROPERTY(int duration READ getDuration NOTIFY durationChanged)
 
-    Q_PROPERTY(int tempo READ getTempo WRITE setTempo NOTIFY tempoChanged)
-    Q_PROPERTY(int timeSig READ getTimeSig WRITE setTimeSig NOTIFY timeSigChanged)
-    Q_PROPERTY(int scale READ getScale WRITE setScale NOTIFY scaleChanged)
-    Q_PROPERTY(int tonality READ getTonality WRITE setTonality NOTIFY tonalityChanged)
+    Q_PROPERTY(int tempo READ getTempo NOTIFY tempoChanged)
+    Q_PROPERTY(int timeSig READ getTimeSig NOTIFY timeSigChanged)
+    Q_PROPERTY(int scale READ getScale NOTIFY scaleChanged)
+    Q_PROPERTY(int tonality READ getTonality NOTIFY tonalityChanged)
 
     Q_PROPERTY(QString title READ getTitle WRITE setTitle NOTIFY titleChanged)
+
+    Q_PROPERTY(QString midiTimeSig READ getMidiTimeSigStr NOTIFY timeSigChanged)
+    Q_PROPERTY(QStringList midiScales READ midiScales)
 
 public:
     explicit MidiConversionHelper(QObject *parent = 0);
@@ -61,6 +68,12 @@ public:
 
     static int percuKey(quint8 duKey, quint8 keyboard, quint8 mapIndex);
 
+    DuTimeSignatureModel *getTimeSigBoxModel();
+
+    DuTonalityModel *getTonalityBoxModel();
+
+    QStringList midiScales() const;
+
 public slots:
     void setTempo(int value);
     void setTimeSig(int value);
@@ -68,6 +81,11 @@ public slots:
     void setTonality(int value);
 
     void setTitle(const QString &value);
+
+    QString getMidiTimeSigStr() const;
+
+    int findTimeSig(const QString &key);
+    int findTonality(const QString &key);
 
     void addSelection(int trackNum, int loopNum);
     void removeSelectionAt(int index);
@@ -84,6 +102,9 @@ public slots:
 
     bool importMidiFile(const DuMidiFilePtr &midiFile);
     bool populateMapper(const QJsonObject &jsonMaps);
+
+    void importMidiFromFile();
+    void importMapsFromFile();
 
 signals:
     void validChanged();
@@ -106,8 +127,6 @@ private:
 
     int duration;
 
-    DuMidiKeyMapperPtr mapper;
-
     int tempo;
     int timeSig;
     int scale;
@@ -115,8 +134,9 @@ private:
     QString title;
 
     DuMidiFilePtr selectedFile;
+    DuMidiKeyMapperPtr mapper;
 
-    QList<QString> trackNames;
+    QStringList trackNames;
 
     QList<QPair<int, int>> selectedIndexes;
 
@@ -125,6 +145,11 @@ private:
 
     QList<QPair<bool, int>> percuMappings;
 
+    QStringList midiScaleBoxModel;
+
+    DuTimeSignatureModel timeSigBoxModel;
+    QList<QPair<int, QString>> scaleBoxModel;
+    DuTonalityModel tonalityBoxModel;
 };
 
 #endif // MIDICONVERSIONHELPER_H
