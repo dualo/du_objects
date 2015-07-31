@@ -153,8 +153,13 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
 
     if (!helper.isPercu(loopIndex))
     {
-        verif = event->setKeyboard(helper.fetchKeyboard(key, loopIndex)) ? verif : false;
-        verif = event->setNote(key) ? verif : false;
+        int side = helper.fetchKeyboard(key, loopIndex);
+        verif = event->setKeyboard(0) ? verif : false;
+
+        if (side != -1)
+            verif = event->setNote(key + side) ? verif : false;
+        else
+            verif = event->setNote(key) ? verif : false;
     }
     else
     {

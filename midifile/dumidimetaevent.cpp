@@ -324,13 +324,16 @@ int DuMidiMetaEvent::getTonality() const
     const QByteArray &keySigArray = getData();
     if (keySigArray.size() != 2)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMidiMetaEvent::getTempo():\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMidiMetaEvent::getTonality():\n"
                     << "incorrect data";
 
         return -1;
     }
 
-    return (keySigArray[0] + 6 * (2 + keySigArray[0] / 2) - 3 * keySigArray[1]) % 12;
+    qint8 sf = keySigArray[0];
+    quint8 mi = keySigArray[1];
+
+    return ((sf + 6 * (2 + sf % 2) - 3 * mi) % 12);
 }
 
 int DuMidiMetaEvent::getScale() const
