@@ -111,25 +111,35 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
     }
 
 
-    int fileSampleSize = fileSize - MUSIC_SONG_SIZE;
+    uint fileSampleSize = fileSize - MUSIC_SONG_SIZE;
 
-    if (du_music.local_song.s_totalsample * MUSIC_SAMPLE_SIZE != fileSampleSize)
+    if (fileSampleSize % MUSIC_SAMPLE_SIZE != 0)
     {
         qCWarning(LOG_CAT_DU_OBJECT)
                 << "DuMusic::fromDuMusicBinary():\n"
-                << "file size different from theoretical size"
-                << "(totalSample =" << du_music.local_song.s_totalsample << ","
-                << "sizeof(music_sample) =" << MUSIC_SAMPLE_SIZE << ","
-                << "fileSampleSize =" << fileSampleSize << ")";
+                << "file size (without header) is not a multiple of MUSIC_SAMPLE_SIZE\n"
+                << "fileSampleSize =" << fileSampleSize << "\n"
+                << "MUSIC_SAMPLE_SIZE =" << MUSIC_SAMPLE_SIZE;
     }
 
-    if (RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE < fileSampleSize)
+    uint nbSamples = fileSampleSize / MUSIC_SAMPLE_SIZE;
+
+    if (nbSamples != du_music.local_song.s_totalsample)
+    {
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromDuMusicBinary():\n"
+                << "Nb samples calculated from file size different from s_totalsample value in header\n"
+                << "s_totalsample =" << du_music.local_song.s_totalsample << "\n"
+                << "nbSamples =" << nbSamples;
+    }
+
+    if (nbSamples > RECORD_SAMPLEBUFFERSIZE)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuMusic::fromDuMusicBinary():\n"
-                << "file size greater than maximum possible size"
-                << "(max sample size =" << RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE << ","
-                << "fileSampleSize =" << fileSampleSize << ")";
+                << "Nb samples greater than maximum possible nb samples\n"
+                << "RECORD_SAMPLEBUFFERSIZE =" << RECORD_SAMPLEBUFFERSIZE << "\n"
+                << "nbSamples =" << nbSamples;
 
         return DuMusicPtr();
     }
@@ -140,7 +150,7 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
         const DuTrackPtr &track =
                 DuTrack::fromDuMusicBinary(du_music.local_song.s_track[i],
                                            du_music.local_buffer,
-                                           fileSampleSize);
+                                           nbSamples);
         if (track == NULL)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
@@ -411,6 +421,34 @@ bool DuMusic::upgrade(s_total_buffer &du_music)
             for (j = 0; j < MUSIC_MAXLAYER; j++)
             {
                 music_loop& loop = song.s_track[i].t_loop[j];
+
+                if (loop.l_state == REC_EMPTY)
+                {
+                    // Loop empty
+                    continue;
+                }
+
+                if (loop.l_adress % MUSIC_SAMPLE_SIZE != 0)
+                {
+                    qCCritical(LOG_CAT_DU_OBJECT) << "Fucked up du-music:\n"
+                                                  << "l_adress is not a multiple of MUSIC_SAMPLE_SIZE\n"
+                                                  << "l_adress =" << loop.l_adress << "\n"
+                                                  << "MUSIC_SAMPLE_SIZE =" << MUSIC_SAMPLE_SIZE;
+                    return false;
+                }
+
+                music_sample_p firstSampleIndex = loop.l_adress / MUSIC_SAMPLE_SIZE;
+                if ((firstSampleIndex) + loop.l_numsample > RECORD_SAMPLEBUFFERSIZE)
+                {
+                    qCCritical(LOG_CAT_DU_OBJECT) << "Fucked up du-music:\n"
+                                                  << "sample adresses point outside sample array\n"
+                                                  << "firstSampleIndex =" << firstSampleIndex << "\n"
+                                                  << "l_numsample =" << loop.l_numsample << "\n"
+                                                  << "RECORD_SAMPLEBUFFERSIZE =" << RECORD_SAMPLEBUFFERSIZE;
+                    return false;
+                }
+
+                // PRESETS
                 preset_instr& preset = loop.l_instr.i_preset;
 
                 preset.s_arpegiator_type = 0;
@@ -447,6 +485,7 @@ bool DuMusic::upgrade(s_total_buffer &du_music)
                 preset.s_multinote[2] = 0;
                 preset.s_multinote[3] = 0;
 
+                // INSTR
                 s_instr& instr = loop.l_instr.i_instrument;
 
                 if (instr.instr_key_map)
@@ -454,19 +493,16 @@ bool DuMusic::upgrade(s_total_buffer &du_music)
                 else
                     instr.instr_type = INSTR_HARMONIC;
 
-                // harmonic instrument -> remove octave from sample
-                if (loop.l_state != REC_EMPTY)
+                // SAMPLES
+                music_sample *played_buffer = &du_music.local_buffer[firstSampleIndex];
+                for (k = 0; k < loop.l_numsample; k++)
                 {
-                    music_sample *played_buffer = (music_sample*)(loop.l_adress + (quintptr)du_music.local_buffer);
-                    for (k = 0; k < loop.l_numsample; k++)
+                    played_buffer[k].canal = played_buffer[k].canal & 0xF7; // remove canals 8 -> 15 not used (and initialized anymore)
+                    if (loop.l_instr.i_instrument.instr_type == INSTR_HARMONIC) // harmonic instrument -> remove octave from sample
                     {
-                        played_buffer[k].canal = played_buffer[k].canal & 0xF7; // remove canals 8 -> 15 not used (and initialized anymore)
-                        if (loop.l_instr.i_instrument.instr_type == INSTR_HARMONIC) // harmonic instrument -> remove octave from sample
+                        if (played_buffer[k].control == 0 || played_buffer[k].control == 1)
                         {
-                            if (played_buffer[k].control == 0 || played_buffer[k].control == 1)
-                            {
-                                played_buffer[k].note -= (12 * preset.s_instr_octave) + (song.s_transpose - RECORD_TRANSPOSEMAX);
-                            }
+                            played_buffer[k].note -= (12 * preset.s_instr_octave) + (song.s_transpose - RECORD_TRANSPOSEMAX);
                         }
                     }
                 }

@@ -33,7 +33,7 @@ DuObjectPtr DuTrack::clone() const
 
 DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
                                       const music_sample *du_sample_start,
-                                      int fileSampleSize)
+                                      uint totalNbSamples)
 {
     const DuTrackPtr track(new DuTrack);
     bool verif = true;
@@ -51,40 +51,45 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
     {
         const music_loop &du_loop = du_track.t_loop[i];
 
-        if (du_loop.l_state != REC_EMPTY)
+        DuLoopPtr loop;
+
+        if (du_loop.l_state == REC_EMPTY)
+        {
+            loop = DuLoopPtr(new DuLoop);
+        }
+        else
         {
             if (du_loop.l_adress % MUSIC_SAMPLE_SIZE != 0)
             {
                 qCCritical(LOG_CAT_DU_OBJECT)
                         << "DuTrack::fromDuMusicBinary():\n"
                         << "failed to generate DuTrack\n"
-                        << "invalid loop address\n"
-                        << "(du_loop.l_adress =" << du_loop.l_adress << ")";
+                        << "invalid loop address (not a multiple of MUSIC_SAMPLE_SIZE)\n"
+                        << "du_loop.l_adress =" << du_loop.l_adress << "\n"
+                        << "MUSIC_SAMPLE_SIZE =" << MUSIC_SAMPLE_SIZE;
 
                 return DuTrackPtr();
             }
 
-            if (du_loop.l_adress + du_loop.l_numsample * MUSIC_SAMPLE_SIZE
-                    > (quint32)fileSampleSize)
+            music_sample_p firstSampleIndex = du_loop.l_adress / MUSIC_SAMPLE_SIZE;
+            if (firstSampleIndex + du_loop.l_numsample > totalNbSamples)
             {
                 qCCritical(LOG_CAT_DU_OBJECT)
                         << "DuTrack::fromDuMusicBinary():\n"
                         << "failed to generate DuTrack\n"
                         << "invalid number of events\n"
-                        << "(file sample size =" << fileSampleSize
-                        << ", du_loop.l_adress =" << du_loop.l_adress
-                        << ", du_loop.l_numsample =" << du_loop.l_numsample
-                        << ", sizeof(music_sample) =" << MUSIC_SAMPLE_SIZE << ")";
+                        << "totalNbSamples =" << totalNbSamples << "\n"
+                        << "firstSampleIndex =" << firstSampleIndex << "\n"
+                        << "du_loop.l_numsample =" << du_loop.l_numsample;
 
                 return DuTrackPtr();
             }
+
+            const music_sample *du_sample_address = &du_sample_start[firstSampleIndex];
+
+            loop = DuLoop::fromDuMusicBinary(du_loop, du_sample_address);
         }
 
-        const music_sample *du_sample_address = (music_sample*)
-                ((quintptr)du_sample_start + du_loop.l_adress);
-
-        const DuLoopPtr &loop =
-                DuLoop::fromDuMusicBinary(du_loop, du_sample_address);
         if (loop == NULL)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
@@ -93,6 +98,7 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
 
             return DuTrackPtr();
         }
+
         if (!track->appendLoop(loop))
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
