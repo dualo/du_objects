@@ -45,6 +45,20 @@ int DuTonalityModel::findValue(const QString &name) const
     return -1;
 }
 
+int DuTonalityModel::indexFromValue(int value) const
+{
+    int count = m_tonalities.count();
+
+    for (int i = 0; i < count; i++)
+    {
+        const DuTonality &tmpTonality = m_tonalities[i];
+        if (tmpTonality.value() == value)
+            return i;
+    }
+
+    return -1;
+}
+
 int DuTonalityModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);

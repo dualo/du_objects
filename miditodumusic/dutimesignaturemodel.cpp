@@ -45,6 +45,20 @@ int DuTimeSignatureModel::findValue(const QString &name) const
     return -1;
 }
 
+int DuTimeSignatureModel::indexFromValue(int value) const
+{
+    int count = m_timeSigs.count();
+
+    for (int i = 0; i < count; i++)
+    {
+        const DuTimeSignature &tmpTimeSig = m_timeSigs[i];
+        if (tmpTimeSig.value() == value)
+            return i;
+    }
+
+    return -1;
+}
+
 int DuTimeSignatureModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);

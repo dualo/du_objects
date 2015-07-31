@@ -25,10 +25,16 @@ class MidiConversionHelper : public QObject
     Q_PROPERTY(int timeSig READ getTimeSig NOTIFY timeSigChanged)
     Q_PROPERTY(int scale READ getScale NOTIFY scaleChanged)
     Q_PROPERTY(int tonality READ getTonality NOTIFY tonalityChanged)
+    Q_PROPERTY(QString title READ getTitle NOTIFY titleChanged)
 
-    Q_PROPERTY(QString title READ getTitle WRITE setTitle NOTIFY titleChanged)
+    Q_PROPERTY(QStringList scales READ scales NOTIFY validChanged)
 
-    Q_PROPERTY(QString midiTimeSig READ getMidiTimeSigStr NOTIFY timeSigChanged)
+    Q_PROPERTY(int midiTempo READ getMidiTempo NOTIFY validChanged)
+    Q_PROPERTY(QString midiTimeSig READ getMidiTimeSigStr NOTIFY validChanged)
+    Q_PROPERTY(int midiScale READ getMidiScale NOTIFY validChanged)
+    Q_PROPERTY(int midiTonality READ getMidiTonality NOTIFY validChanged)
+    Q_PROPERTY(QString midiTitle READ getMidiTitle NOTIFY validChanged)
+
     Q_PROPERTY(QStringList midiScales READ midiScales)
 
 public:
@@ -43,8 +49,13 @@ public:
     int getTimeSig() const;
     int getScale() const;
     int getTonality() const;
-
     QString getTitle() const;
+
+    int getMidiTempo() const;
+    QString getMidiTimeSigStr() const;
+    int getMidiScale() const;
+    int getMidiTonality() const;
+    QString getMidiTitle() const;
 
     QList<DuMidiTrackPtr> getTracks();
     int getMidiChannel(int index) const;
@@ -72,19 +83,20 @@ public:
 
     DuTonalityModel *getTonalityBoxModel();
 
+    QStringList scales() const;
+
     QStringList midiScales() const;
 
 public slots:
     void setTempo(int value);
     void setTimeSig(int value);
-    void setScale(int value);
+    void setScale(const QString value);
     void setTonality(int value);
 
     void setTitle(const QString &value);
 
-    QString getMidiTimeSigStr() const;
-
     int findTimeSig(const QString &key);
+    int findScale(const QString &key) const;
     int findTonality(const QString &key);
 
     void addSelection(int trackNum, int loopNum);
@@ -115,11 +127,18 @@ signals:
     void timeSigChanged();
     void scaleChanged();
     void tonalityChanged();
-
     void titleChanged();
 
 private:
     bool filterMetaEvents();
+
+    void setDuration(int value);
+
+    void setMidiTempo(int value);
+    void setMidiTimeSig(int value);
+    void setMidiScale(int value);
+    void setMidiTonality(int value);
+    void setMidiTitle(const QString &value);
 
 private:
     bool midiValid;
@@ -129,9 +148,15 @@ private:
 
     int tempo;
     int timeSig;
-    int scale;
+    QString scale;
     int tonality;
     QString title;
+
+    int midiTempo;
+    int midiTimeSig;
+    int midiScale;
+    int midiTonality;
+    QString midiTitle;
 
     DuMidiFilePtr selectedFile;
     DuMidiKeyMapperPtr mapper;
@@ -148,7 +173,7 @@ private:
     QStringList midiScaleBoxModel;
 
     DuTimeSignatureModel timeSigBoxModel;
-    QList<QPair<int, QString>> scaleBoxModel;
+    QStringList scaleBoxModel;
     DuTonalityModel tonalityBoxModel;
 };
 

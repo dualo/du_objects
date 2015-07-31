@@ -20,10 +20,15 @@ MidiConversionHelper::MidiConversionHelper(QObject *parent) :
     mapsValid(false),
     duration(0),
     tempo(100),
-    timeSig(-1),
-    scale(-1),
-    tonality(-1),
+    timeSig(TIME_4_4),
+    scale(SCALE_MAJOR),
+    tonality(0),
     title(""),
+    midiTempo(100),
+    midiTimeSig(0x0404),
+    midiScale(0),
+    midiTonality(0),
+    midiTitle(""),
     selectedFile(DuMidiFilePtr()),
     mapper(DuMidiKeyMapperPtr(new DuMidiKeyMapper)),
     trackNames(QStringList()),
@@ -33,7 +38,7 @@ MidiConversionHelper::MidiConversionHelper(QObject *parent) :
     percuMappings(QList<QPair<bool, int>>()),
     midiScaleBoxModel(QStringList()),
     timeSigBoxModel(DuTimeSignatureModel(this)),
-    scaleBoxModel(QList<QPair<int, QString>>()),
+    scaleBoxModel(QStringList()),
     tonalityBoxModel(DuTonalityModel(this))
 {
     midiScaleBoxModel.append(tr("Major"));
@@ -58,7 +63,6 @@ MidiConversionHelper::MidiConversionHelper(QObject *parent) :
     tonalityBoxModel.addTonality(DuTonality(9,  tr("A")));
     tonalityBoxModel.addTonality(DuTonality(10, tr("A#")));
     tonalityBoxModel.addTonality(DuTonality(11, tr("B")));
-
 }
 
 MidiConversionHelper::~MidiConversionHelper()
@@ -91,7 +95,7 @@ void MidiConversionHelper::setTempo(int value)
 
 int MidiConversionHelper::getTimeSig() const
 {
-    return timeSig;
+    return timeSigBoxModel.indexFromValue(timeSig);
 }
 
 void MidiConversionHelper::setTimeSig(int value)
@@ -102,10 +106,10 @@ void MidiConversionHelper::setTimeSig(int value)
 
 int MidiConversionHelper::getScale() const
 {
-    return scale;
+    return findScale(scale);
 }
 
-void MidiConversionHelper::setScale(int value)
+void MidiConversionHelper::setScale(const QString value)
 {
     scale = value;
     emit scaleChanged();
@@ -113,7 +117,7 @@ void MidiConversionHelper::setScale(int value)
 
 int MidiConversionHelper::getTonality() const
 {
-    return tonality;
+    return tonalityBoxModel.indexFromValue(tonality);
 }
 
 void MidiConversionHelper::setTonality(int value)
@@ -134,12 +138,32 @@ void MidiConversionHelper::setTitle(const QString &value)
 }
 
 
+int MidiConversionHelper::getMidiTempo() const
+{
+    return midiTempo;
+}
+
 QString MidiConversionHelper::getMidiTimeSigStr() const
 {
-    quint8 num = timeSig & 0xFF;
-    quint8 denom = (timeSig >> 8) & 0xFF;
+    quint8 num = midiTimeSig & 0xFF;
+    quint8 denom = (midiTimeSig >> 8) & 0xFF;
 
     return QString::number(num) + QString(" : ") + QString::number(denom);
+}
+
+int MidiConversionHelper::getMidiScale() const
+{
+    return midiScale;
+}
+
+int MidiConversionHelper::getMidiTonality() const
+{
+    return tonalityBoxModel.indexFromValue(midiTonality);
+}
+
+QString MidiConversionHelper::getMidiTitle() const
+{
+    return midiTitle;
 }
 
 
@@ -226,10 +250,10 @@ QList<QString> MidiConversionHelper::mapList() const
 
 void MidiConversionHelper::chooseMap()
 {
-    if (scale == -1 || tonality == -1)
+    if (scale == "" || tonality == -1)
         return;
 
-    mapper->chooseMap(mapper->mapList()[scale], tonality);
+    mapper->chooseMap(scale, tonality);
 }
 
 
@@ -408,6 +432,19 @@ DuTimeSignatureModel *MidiConversionHelper::getTimeSigBoxModel()
     return &timeSigBoxModel;
 }
 
+int MidiConversionHelper::findScale(const QString &key) const
+{
+    int count = scaleBoxModel.count();
+
+    for (int i = 0; i < count; i++)
+    {
+        if (scaleBoxModel[i] == key)
+            return i;
+    }
+
+    return -1;
+}
+
 int MidiConversionHelper::findTonality(const QString &key)
 {
     return tonalityBoxModel.findValue(key);
@@ -416,6 +453,11 @@ int MidiConversionHelper::findTonality(const QString &key)
 DuTonalityModel *MidiConversionHelper::getTonalityBoxModel()
 {
     return &tonalityBoxModel;
+}
+
+QStringList MidiConversionHelper::scales() const
+{
+    return scaleBoxModel;
 }
 
 QStringList MidiConversionHelper::midiScales() const
@@ -427,6 +469,9 @@ QStringList MidiConversionHelper::midiScales() const
 bool MidiConversionHelper::populateMapper(const QJsonObject &jsonMaps)
 {
     mapper->importMaps(jsonMaps);
+
+    scaleBoxModel = mapper->mapList();
+    emit scaleChanged();
 
     mapsValid = true;
     emit validChanged();
@@ -475,29 +520,31 @@ void MidiConversionHelper::importMidiFromFile()
 void MidiConversionHelper::importMapsFromFile()
 {
     QSettings settings;
-    QString mapperDirName = settings.contains("midi/lastMapperDir") ?
-                settings.value("midi/lastMapperDir").toString() :
-                QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    QString mapperName = settings.contains("midi/lastMapper") ?
+                settings.value("midi/lastMapper").toString() :
+                QString();
 
-    QFileDialog::Options options = 0;
-#if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
-    options = QFileDialog::DontUseNativeDialog;
-#endif
-    QString mapperPath = QFileDialog::getOpenFileName(NULL,
-                                                      tr("Import mapper"),
-                                                      mapperDirName,
-                                                      tr("JSON (*.json)"),
-                                                      0,
-                                                      options);
-    if (mapperPath.isEmpty())
+    if (mapperName.isNull())
     {
-        return;
+        QFileDialog::Options options = 0;
+        #if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
+        options = QFileDialog::DontUseNativeDialog;
+        #endif
+
+        QString dir =
+                QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+        mapperName = QFileDialog::getOpenFileName(NULL,
+                                                  tr("Import mapper"),
+                                                  dir,
+                                                  tr("JSON (*.json)"),
+                                                  0,
+                                                  options);
     }
 
-    settings.setValue("midi/lastMapperDir", QFileInfo(mapperPath).absolutePath());
+    settings.setValue("midi/lastMapper", mapperName);
 
 
-    QFile *mapsInput = new QFile(mapperPath);
+    QFile *mapsInput = new QFile(mapperName);
     if (!mapsInput->open(QIODevice::ReadOnly))
         return;
 
@@ -648,7 +695,7 @@ bool MidiConversionHelper::filterMetaEvents()
                     if (!tempoFound)
                     {
                         tempoFound = true;
-                        setTempo(metaEvent->getTempo());
+                        setMidiTempo(metaEvent->getTempo());
                         if (tempo == -1)
                             return false;
                     }
@@ -666,7 +713,7 @@ bool MidiConversionHelper::filterMetaEvents()
                         quint32 tmpNum = tmpData[1];
                         quint8 tmpDecal = 8 + tmpData[1] - 1;
 
-                        setTimeSig(((tmpNum << tmpDecal) & 0xFF00) + tmpData[0]);
+                        setMidiTimeSig(((tmpNum << tmpDecal) & 0xFF00) + tmpData[0]);
                     }
                 }
 
@@ -681,8 +728,8 @@ bool MidiConversionHelper::filterMetaEvents()
                         if (tmpScale == -1 || tmpTonality == -1)
                             return false;
 
-                        setScale(tmpScale);
-                        setTonality(tmpTonality);
+                        setMidiScale(tmpScale);
+                        setMidiTonality(tmpTonality);
                     }
                 }
 
@@ -691,7 +738,7 @@ bool MidiConversionHelper::filterMetaEvents()
                     if (!titleFound)
                     {
                         titleFound = true;
-                        setTitle(QString(metaEvent->getData().data()));
+                        setMidiTitle(QString(metaEvent->getData().data()));
                         if (title.isNull())
                             return false;
                         qDebug() << title;
@@ -750,12 +797,68 @@ bool MidiConversionHelper::filterMetaEvents()
             tmp /= midiDivision;
 
             if ((quint32)tmp > (quint32)duration)
-                duration = tmp;
+                setDuration(tmp);
         }
     }
 
     if (!titleFound)
-        setTitle(tr("No Title"));
+        setMidiTitle(tr("No Title"));
 
     return true;
+}
+
+
+void MidiConversionHelper::setDuration(int value)
+{
+    duration = value;
+    emit durationChanged();
+}
+
+
+// The following methods are used only in filterMetaEvents() to initialize
+// the midi meta data.
+// The corresponding parameters to be used in export to du-music format are
+// also initialized.
+
+void MidiConversionHelper::setMidiTempo(int value)
+{
+    midiTempo = value;
+    setTempo(value);
+}
+
+void MidiConversionHelper::setMidiTimeSig(int value)
+{
+    midiTimeSig = value;
+
+    quint8 num = midiTimeSig & 0xFF;
+    quint8 denom = (midiTimeSig >> 8) & 0xFF;
+
+    if (denom == 4 && num < 6 && num != 1)
+        setTimeSig(num - 1);
+    else
+        setTimeSig(NUM_TIMESIGNATURE);
+}
+
+void MidiConversionHelper::setMidiScale(int value)
+{
+    midiScale = value;
+
+    if (midiScale == 0)
+        setScale(SCALE_MAJOR);
+    else if (midiScale == 1)
+        setScale(SCALE_MINOR);
+    else
+        setScale("");
+}
+
+void MidiConversionHelper::setMidiTonality(int value)
+{
+    midiTonality = value;
+    setTonality(value);
+}
+
+void MidiConversionHelper::setMidiTitle(const QString &value)
+{
+    midiTitle = value;
+    setTitle(value);
 }
