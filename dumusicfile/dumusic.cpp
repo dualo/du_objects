@@ -38,7 +38,8 @@ DuMusicPtr DuMusic::fromDuMusicBinary(const s_total_buffer &du_music, int fileSi
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
                     << "failed to generate DuMusic\n"
-                    << "invalid total event size";
+                    << "invalid total event size :"
+                    << fileSize - MUSIC_SONG_SIZE << "!=" << du_music.local_song.s_totalsample * MUSIC_SAMPLE_SIZE;
 
         return DuMusicPtr();
     }
@@ -71,12 +72,37 @@ DuMusicPtr DuMusic::fromDuMusicBinary(const s_total_buffer &du_music, int fileSi
         return DuMusicPtr();
     }
 
+
+    int fileSampleSize = fileSize - MUSIC_SONG_SIZE;
+
+    if (du_music.local_song.s_totalsample * MUSIC_SAMPLE_SIZE != fileSampleSize)
+    {
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromDuMusicBinary():\n"
+                << "file size different from theoretical size"
+                << "(totalSample =" << du_music.local_song.s_totalsample << ","
+                << "sizeof(music_sample) =" << MUSIC_SAMPLE_SIZE << ","
+                << "fileSampleSize =" << fileSampleSize << ")";
+    }
+
+    if (RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE < fileSampleSize)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromDuMusicBinary():\n"
+                << "file size greater than maximum possible size"
+                << "(max sample size =" << RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE << ","
+                << "fileSampleSize =" << fileSampleSize << ")";
+
+        return DuMusicPtr();
+    }
+
+
     for (int i = 0; i < MUSIC_MAXTRACK; i++)
     {
         const DuTrackPtr &track =
                 DuTrack::fromDuMusicBinary(du_music.local_song.s_track[i],
                                            du_music.local_buffer,
-                                           du_music.local_song.s_totalsample);
+                                           fileSampleSize);
         if (track == NULL)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
@@ -132,6 +158,7 @@ DuMusicPtr DuMusic::fromDuMusicBinary(const music_song &du_song)
     {
         const DuTrackPtr &track =
                 DuTrack::fromDuMusicBinary(du_song.s_track[i]);
+
         if (track == NULL)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
