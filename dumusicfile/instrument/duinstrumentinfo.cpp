@@ -220,7 +220,6 @@ QByteArray DuInstrumentInfo::toDuMusicBinary() const
 
     std::memcpy(du_instrumentinfo.instr_cat, tmpCategory.data(), NAME_CARACT);
 
->>>>>>> dutouchV2
 /*
     QByteArray tmpUserID(NAME_CARACT, (char)0x00);
     tmpString = getUserID();
