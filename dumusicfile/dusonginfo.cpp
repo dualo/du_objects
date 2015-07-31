@@ -4,11 +4,18 @@
 
 #include <QJsonObject>
 
+
 DU_OBJECT_IMPL(DuSongInfo)
 
 DuSongInfo::DuSongInfo() :
     DuContainer()
 {
+    addChild(KEY_SONG_SONGID, new DuNumeric(0));
+
+    addChild(KEY_SONG_SONGNAME, new DuString(MUSIC_SONG_NAME_SIZE));
+
+    addChild(KEY_SONG_SONGVERSION, new DuNumeric(0));
+
     addChild(KEY_SONG_REFERENCETRACK,
              new DuNumeric(0, NUMERIC_DEFAULT_SIZE,
                            MUSIC_MAXTRACK, 0));
@@ -47,6 +54,10 @@ DuSongInfo::DuSongInfo() :
              new DuNumeric(TIME_4_4, NUMERIC_DEFAULT_SIZE,
                            NUM_TIMESIGNATURE, TIME_OFF));
 
+    addChild(KEY_SONG_REVERBPRESET,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0x7F, 0x00));
+
     addChild(KEY_SONG_LEDS,
              new DuBinaryData(NUM_LED_VALUE));
 }
@@ -77,6 +88,10 @@ DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
     }
     songInfo->setMixer(mixer);
 
+    verif = songInfo->setSongId(du_song.s_id & 0x7FFFFFFF) ? verif : false;
+    verif = songInfo->setSongName(QString(QByteArray((char *)du_song.s_name, MUSIC_SONG_NAME_SIZE))) ? verif : false;
+    verif = songInfo->setSongVersion(du_song.s_version_song & 0x7FFFFFFF) ? verif : false;
+
     verif = songInfo->setReferenceTrack(du_song.s_reftrack) ? verif : false;
     verif = songInfo->setReferenceLoopDuration(du_song.s_looptimer) ? verif : false;
 
@@ -91,6 +106,8 @@ DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
 
     verif = songInfo->setLeds(QByteArray((char *)du_song.s_leds, NUM_LED_VALUE)) ? verif : false;
 
+    verif = songInfo->setReverbPreset(du_song.s_reverb_preset) ? verif : false;
+
     if (!verif)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "DuSongInfo::fromDuMusicBinary():\n"
@@ -103,6 +120,9 @@ DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
 
 DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
 {
+    QJsonValue jsonSongId           = jsonSongInfo[KEY_SONG_SONGID];
+    QJsonValue jsonSongName         = jsonSongInfo[KEY_SONG_SONGNAME];
+    QJsonValue jsonSongVersion      = jsonSongInfo[KEY_SONG_SONGVERSION];
     QJsonValue jsonRefTrack         = jsonSongInfo[KEY_SONG_REFERENCETRACK];
     QJsonValue jsonRefDuration      = jsonSongInfo[KEY_SONG_REFERENCELOOPDURATION];
     QJsonValue jsonVolume           = jsonSongInfo[KEY_SONG_VOLUME];
@@ -113,14 +133,17 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
     QJsonValue jsonScale            = jsonSongInfo[KEY_SONG_SCALE];
     QJsonValue jsonTonality         = jsonSongInfo[KEY_SONG_TONALITY];
     QJsonValue jsonTimeSignature    = jsonSongInfo[KEY_SONG_TIMESIGNATURE];
+    QJsonValue jsonReverbPreset     = jsonSongInfo[KEY_SONG_REVERBPRESET];
     QJsonValue jsonLeds             = jsonSongInfo[KEY_SONG_LEDS];
 
-    if (        !jsonRefTrack.isDouble()    ||  !jsonRefDuration.isDouble()
+    if (        !jsonSongId.isDouble()      ||  !jsonSongName.isString()
+            ||  !jsonSongVersion.isDouble()
+            ||  !jsonRefTrack.isDouble()    ||  !jsonRefDuration.isDouble()
             ||  !jsonVolume.isDouble()      ||  !jsonTempo.isDouble()
             ||  !jsonClickVolume.isDouble() ||  !jsonOffset.isDouble()
             ||  !jsonMixer.isObject()       ||  !jsonScale.isDouble()
             ||  !jsonTonality.isDouble()    ||  !jsonTimeSignature.isDouble()
-            ||  !jsonLeds.isString())
+            ||  !jsonLeds.isString()        ||  !jsonReverbPreset.isDouble())
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuSongInfo::fromJson():\n"
@@ -133,6 +156,10 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
 
     DuSongInfoPtr songInfo(new DuSongInfo);
     bool verif = true;
+
+    verif = songInfo->setSongId(jsonSongId.toInt()) ? verif : false;
+    verif = songInfo->setSongName(jsonSongName.toString()) ? verif : false;
+    verif = songInfo->setSongVersion(jsonSongVersion.toInt()) ? verif : false;
 
     verif = songInfo->setReferenceTrack(jsonRefTrack.toInt()) ? verif : false;
     verif = songInfo->setReferenceLoopDuration(jsonRefDuration.toInt()) ? verif : false;
@@ -147,6 +174,8 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
     verif = songInfo->setTimeSignature(jsonTimeSignature.toInt()) ? verif : false;
 
     verif = songInfo->setLeds(jsonLeds.toString().toUtf8()) ? verif : false;
+
+    verif = songInfo->setReverbPreset(jsonReverbPreset.toInt()) ? verif : false;
 
     if (!verif)
     {
@@ -183,6 +212,8 @@ DuSongInfoPtr DuSongInfo::fromMidi(const MidiConversionHelper &helper)
     DuSongInfoPtr songInfo(new DuSongInfo);
     bool verif = true;
 
+    verif = songInfo->setSongName(helper.getTitle()) ? verif : false;
+
     verif = songInfo->setReferenceTrack(helper.getIndexes(0).first) ? verif : false;
     verif = songInfo->setReferenceLoopDuration(helper.getDuration()) ? verif : false;
 
@@ -209,7 +240,7 @@ DuSongInfoPtr DuSongInfo::fromMidi(const MidiConversionHelper &helper)
 
 QByteArray DuSongInfo::toDuMusicBinary() const
 {
-    //TODO: restructure music_song into music_header and music_info
+    //TODO: restructure music_song to match du-objects
     music_song du_songinfo;
 
     QByteArray tmpArray;
@@ -229,6 +260,28 @@ QByteArray DuSongInfo::toDuMusicBinary() const
 
     std::memcpy(&(du_songinfo.s_mix), mixerArray.data(), FX_MIX_SIZE);
 
+
+    tmpClear = QByteArray(MUSIC_SONG_NAME_SIZE, char(0x00));
+
+    tmpArray = tmpClear;
+    tmpStr = getSongName();
+    if (tmpStr.isNull())
+        return QByteArray();
+    tmpArray.prepend(tmpStr.toUtf8());
+
+    std::memcpy(du_songinfo.s_name, tmpArray.data(), MUSIC_SONG_NAME_SIZE);
+
+
+    tmpNum = getSongId();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_songinfo.s_id = tmpNum;
+
+    tmpNum = getSongVersion();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_songinfo.s_version_song = tmpNum;
+    
 
     tmpNum = getReferenceTrack();
     if (tmpNum == -1)
@@ -275,6 +328,11 @@ QByteArray DuSongInfo::toDuMusicBinary() const
         return QByteArray();
     du_songinfo.s_timesignature = tmpNum;
 
+    tmpNum = getReverbPreset();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_songinfo.s_reverb_preset = tmpNum;
+
 
     du_songinfo.s_currenttrack = 0x00;
     du_songinfo.s_quantification = 0x00;
@@ -290,7 +348,7 @@ QByteArray DuSongInfo::toDuMusicBinary() const
     std::memcpy(du_songinfo.s_leds, tmpArray.data(), NUM_LED_VALUE);
 
 
-    return QByteArray((char *)&(du_songinfo), MUSIC_SONG_SIZE);
+    return QByteArray((char *)&(du_songinfo) + SONGINFO_OFFSET, size());
 }
 
 
@@ -298,6 +356,67 @@ int DuSongInfo::size() const
 {
     //TODO: add defines for dummy sizes in music_parameters_mng.h
     return SONGINFO_SIZE;
+}
+
+
+int DuSongInfo::getSongId() const
+{
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_SONGID);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuSongInfo::setSongId(int value)
+{
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_SONGID);
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
+}
+
+QString DuSongInfo::getSongName() const
+{
+    const DuStringConstPtr &tmp = getChildAs<DuString>(KEY_SONG_SONGNAME);
+
+    if (tmp == NULL)
+        return QString();
+
+    return tmp->getString();
+}
+
+bool DuSongInfo::setSongName(const QString value)
+{
+    const DuStringPtr &tmp = getChildAs<DuString>(KEY_SONG_SONGNAME);
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setString(value);
+}
+
+int DuSongInfo::getSongVersion() const
+{
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_SONGVERSION);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuSongInfo::setSongVersion(int value)
+{
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_SONGVERSION);
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
 }
 
 
@@ -488,6 +607,27 @@ int DuSongInfo::getTimeSignature() const
 bool DuSongInfo::setTimeSignature(int value)
 {
     const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_TIMESIGNATURE);
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
+}
+
+
+int DuSongInfo::getReverbPreset() const
+{
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_REVERBPRESET);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuSongInfo::setReverbPreset(int value)
+{
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_REVERBPRESET);
 
     if (tmp == NULL)
         return false;

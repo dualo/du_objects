@@ -15,7 +15,10 @@
 #define KEY_INSTRINFO_ACTIVENOTEOFF         "ActiveNoteOff"
 #define KEY_INSTRINFO_CATEGORY              "Category"
 #define KEY_INSTRINFO_RELVOLUME             "RelativeVolume"
+#define KEY_INSTRINFO_TYPE                  "Type"
 #define KEY_INSTRINFO_USERID                "UserID"
+
+//TODO: add parameters for du-sounds when possible
 
 
 DU_OBJECT(DuInstrumentInfo)
@@ -61,6 +64,9 @@ public:
 
     int getRelativeVolume() const;
     bool setRelativeVolume(int value);
+
+    int getType() const;
+    bool setType(int value);
 
     QString getUserID() const;
     bool setUserID(const QString &value);

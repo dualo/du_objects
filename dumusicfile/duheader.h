@@ -20,12 +20,13 @@
 #define KEY_HEAD_LASTMODIFUSER      "LastModifUser"
 #define KEY_HEAD_LASTMODIFUSERID    "LastModifUserID"
 
-#define KEY_HEAD_SONGID             "SongID"
-#define KEY_HEAD_SONGNAME           "SongName"
-#define KEY_HEAD_SONGVERSION        "SongVersion"
+#define KEY_HEAD_SIZE               "Size"
+#define KEY_HEAD_METADATA           "MetaData"
+
+#define KEY_HEAD_TRANSPOSE          "Transpose"
 
 #define HEADER_NAME_SIZE            16
-#define HEADER_SIZE                 12 + 8*HEADER_NAME_SIZE + MUSIC_SONG_NAME_SIZE + 28
+#define HEADER_SIZE                 4 + 8 * HEADER_NAME_SIZE + 10 + 3
 
 
 DU_OBJECT(DuHeader)
@@ -40,7 +41,7 @@ public:
 
     static DuHeaderPtr fromDuMusicBinary(const music_song &du_song);
     static DuHeaderPtr fromJson(const QJsonObject &jsonHeader);
-    static DuHeaderPtr fromMidi(const MidiConversionHelper &helper);
+    //static DuHeaderPtr fromMidi(const MidiConversionHelper &helper);
 
     QByteArray toDuMusicBinary() const;
 
@@ -73,14 +74,14 @@ public:
     QString getLastModifUserId() const;
     bool setLastModifUserId(const QString value);
 
-    int getSongId() const;
-    bool setSongId(int value);
+    int getSize() const;
+    bool setSize(int value);
 
-    QString getSongName() const;
-    bool setSongName(const QString value);
+    int getMetaData() const;
+    bool setMetaData(int value);
 
-    int getSongVersion() const;
-    bool setSongVersion(int value);
+    int getTranspose() const;
+    bool setTranspose(int value);
 };
 
 #endif // DUHEADER_H

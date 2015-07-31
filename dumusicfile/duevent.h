@@ -31,7 +31,8 @@ public:
                                const MidiConversionHelper &helper, int loopIndex);
 
     QByteArray toDuMusicBinary() const;
-    DuMidiChannelEventPtr toDuMidiChannelEvent(quint32 prevTime, quint8 prevType) const;
+    DuMidiChannelEventPtr toDuMidiChannelEvent(quint32 prevTime, quint8 prevType,
+                                               bool isPercu, int instrKeyMap) const;
 
     int size() const;
 

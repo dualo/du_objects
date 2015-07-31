@@ -4,14 +4,18 @@
 #include "duheader.h"
 #include "dusonginfo.h"
 #include "dutrack.h"
-
-#include <QIODevice>
+#include "instrument/ducontrollers.h"
+#include "instrument/effects/dureverb.h"
 
 
 #define KEY_MUSIC_HEADER        "FileHeader"
+#define KEY_MUSIC_CONTROLLERS   "ControllerParameters"
 #define KEY_MUSIC_SONGINFO      "SongInfo"
+#define KEY_MUSIC_REVERB        "ReverbSettings"
 #define KEY_MUSIC_TRACKS        "Tracks"
 
+
+class QIODevice;
 
 DU_OBJECT(DuMusic)
 
@@ -23,10 +27,11 @@ public:
 
     virtual DuObjectPtr clone() const;
 
-    static DuMusicPtr fromDuMusicBinary(const s_total_buffer &du_music, int fileSize);
-    static DuMusicPtr fromDuMusicBinary(const music_song &du_song);
+    static DuMusicPtr fromDuMusicBinary(s_total_buffer &du_music, int fileSize);
     static DuMusicPtr fromBinary(const QByteArray &data);
     static DuMusicPtr fromBinary(QIODevice *input);
+
+    static bool upgrade(s_total_buffer &du_music);
 
     static DuMusicPtr fromJson(const QJsonObject &jsonMusic);
 
@@ -53,8 +58,14 @@ public:
     DuHeaderConstPtr getHeader() const;
     void setHeader(const DuHeaderPtr &header);
 
+    DuControllersConstPtr getControllers() const;
+    void setControllers(const DuControllersPtr &controllers);
+
     DuSongInfoConstPtr getSongInfo() const;
     void setSongInfo(const DuSongInfoPtr &songInfo);
+
+    DuReverbConstPtr getReverb() const;
+    void setReverb(const DuReverbPtr &reverb);
 
     DuArrayConstPtr getTracks() const;
     void setTracks(const DuArrayPtr &array);

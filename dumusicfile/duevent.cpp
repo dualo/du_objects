@@ -122,6 +122,7 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
                              const MidiConversionHelper &helper,
                              int loopIndex)
 {
+    //This case should not occur since it is already tested in DuMusic::fromMidi();
     if (!helper.isValid())
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuEvent::fromMidi():\n"
@@ -152,13 +153,27 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
 
     if (!helper.isPercu(loopIndex))
     {
-        verif = event->setKeyboard(helper.fetchKeyboard(key, loopIndex)) ? verif : false;
-        verif = event->setNote(key) ? verif : false;
+        int side = helper.fetchKeyboard(key, loopIndex);
+        verif = event->setKeyboard(0) ? verif : false;
+
+        if (side != -1)
+            verif = event->setNote(key + side) ? verif : false;
+        else
+            verif = event->setNote(key) ? verif : false;
     }
     else
     {
+        int tmpKey = helper.fetchPercuKey(key, loopIndex);
+        if (tmpKey == -1)
+        {
+            qCWarning(LOG_CAT_DU_OBJECT) << "DuEvent::fromMidi():\n"
+                                         << "key not found in this mapping";
+
+            return DuEventPtr();
+        }
+
         verif = event->setKeyboard(0) ? verif : false;
-        verif = event->setNote(helper.fetchPercuKey(key, loopIndex)) ? verif : false;
+        verif = event->setNote(tmpKey) ? verif : false;
     }
 
     if (!verif)
@@ -208,8 +223,20 @@ QByteArray DuEvent::toDuMusicBinary() const
 }
 
 DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
-                                                    quint8 prevType) const
+                                                    quint8 prevType,
+                                                    bool isPercu,
+                                                    int instrKeyMap) const
 {
+    //This case should not occur since it is already tested in DuLoop::toDuMidiTrack()
+    if (isPercu && instrKeyMap == -1)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuEvent::toDuMidiChannelEvent():\n"
+                << "invalid mapping for a percussive type instrument";
+
+        return DuMidiChannelEventPtr();
+    }
+
     DuMidiChannelEventPtr channelEvent(new DuMidiChannelEvent);
     int tmp = 0;
 
@@ -231,12 +258,31 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
     channelEvent->setType((quint8)tmp + 0x08);
 
 
+    quint8 midiType = (quint8)tmp + 0x08;
+    int keyboard = getKeyboard();
+
     tmp = getNote();
 
     if (tmp == -1)
         return DuMidiChannelEventPtr();
 
-    channelEvent->setKey((quint8)tmp);
+    if (isPercu && midiType < DuMidiChannelEvent::KeyAftertouch)
+    {
+        if (keyboard == -1)
+            return DuMidiChannelEventPtr();
+
+        int midiKey =
+                MidiConversionHelper::percuKey(tmp, (quint8)keyboard, instrKeyMap);
+
+        if (midiKey == -1 || (quint8)midiKey > 0x7F)
+            return DuMidiChannelEventPtr();
+
+        channelEvent->setKey(midiKey);
+    }
+    else
+    {
+        channelEvent->setKey((quint8)tmp);
+    }
 
 
     tmp = getValue();

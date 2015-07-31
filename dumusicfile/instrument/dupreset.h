@@ -1,24 +1,19 @@
 #ifndef DUPRESET_H
 #define DUPRESET_H
 
-#include "../../general/ducontainer.h"
-#include "../../general/dunumeric.h"
+#include "duexpression.h"
+#include "ducontrollers.h"
+#include "dueffectset.h"
 
 
-#define KEY_PRESET_VOLUME                   "Volume"
-#define KEY_PRESET_PANNING                  "Panning"
-#define KEY_PRESET_EXPRESSION               "Expression"
-#define KEY_PRESET_OCTAVE                   "Octave"
-#define KEY_PRESET_SENDTOREVERB             "SendToReverb"
+#define KEY_PRESET_EXPRESSION           "ExpressionSettings"
+#define KEY_PRESET_CONTROLLERS          "ControllerParameters"
+#define KEY_PRESET_EFFECTSET            "EffectChainSettings"
 
-#define KEY_PRESET_PORTAMENTOONOFF          "PortamentoOnOff"
-#define KEY_PRESET_PORTAMENTOCONTROL        "PortamentoControl"
-#define KEY_PRESET_PORTAMENTOTIME           "PortamentoTime"
 
-#define KEY_PRESET_PITCHBENDSENSITIVITY     "PitchBendSensitivity"
-#define KEY_PRESET_DISPOSITION              "Disposition"
-
-//TODO: add missing parameters (gyro, sliders...)
+#define PARAMS_NUMERIC_SIZE     2
+#define DIRECTIONGYRO_MINVALUE  -1
+#define DIRECTIONGYRO_MAXVALUE  1
 
 
 DU_OBJECT(DuPreset)
@@ -38,35 +33,14 @@ public:
 
     int size() const;
 
-    int getVolume() const;
-    bool setVolume(int value);
+    DuExpressionConstPtr getExpression() const;
+    void setExpression(const DuExpressionPtr &expression);
 
-    int getPanning() const;
-    bool setPanning(int value);
+    DuControllersConstPtr getControllers() const;
+    void setControllers(const DuControllersPtr &controllers);
 
-    int getSendToReverb() const;
-    bool setSendToReverb(int value);
-
-    int getOctave() const;
-    bool setOctave(int value);
-
-    int getPortamentoOnOff() const;
-    bool setPortamentoOnOff(int value);
-
-    int getPortamentoControl() const;
-    bool setPortamentoControl(int value);
-
-    int getPortamentoTime() const;
-    bool setPortamentoTime(int value);
-
-    int getExpression() const;
-    bool setExpression(int value);
-
-    int getPitchBendSensitivity() const;
-    bool setPitchBendSensitivity(int value);
-
-    int getDisposition() const;
-    bool setDisposition(int value);
+    DuEffectSetConstPtr getEffectSet() const;
+    void setEffectSet(const DuEffectSetPtr &effectSet);
 };
 
 #endif // DUPRESET_H

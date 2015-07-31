@@ -2,6 +2,7 @@ HEADERS += \
     $$PWD/du-touch/parameters/music_parameters_mng.h \
     $$PWD/du-touch/parameters/sound_parameters_mng.h \
     $$PWD/du-touch/parameters/g_parameters_mng.h \
+    $$PWD/du-touch/parameters/instr_mapping.h \
     $$PWD/general/duobject.h \
     $$PWD/general/ducontainer.h \
     $$PWD/general/duarray.h \
@@ -21,6 +22,9 @@ HEADERS += \
     $$PWD/dumusicfile/instrument/duinstrument.h \
     $$PWD/dumusicfile/instrument/duinstrumentinfo.h \
     $$PWD/dumusicfile/instrument/dupreset.h \
+    $$PWD/dumusicfile/instrument/duexpression.h \
+    $$PWD/dumusicfile/instrument/ducontrollers.h \
+    $$PWD/dumusicfile/instrument/dueffectset.h \
     $$PWD/dumusicfile/instrument/effects/duadsr.h \
     $$PWD/dumusicfile/instrument/effects/duchorus.h \
     $$PWD/dumusicfile/instrument/effects/ducompressor.h \
@@ -31,6 +35,7 @@ HEADERS += \
     $$PWD/dumusicfile/instrument/effects/dumixer.h \
     $$PWD/dumusicfile/instrument/effects/duvibrato.h \
     $$PWD/dumusicfile/instrument/effects/duwah.h \
+    $$PWD/dumusicfile/instrument/effects/dureverb.h \
     $$PWD/midifile/dumidivariablelength.h \
     $$PWD/midifile/dumidistatus.h \
     $$PWD/midifile/dumidibasicevent.h \
@@ -41,6 +46,8 @@ HEADERS += \
     $$PWD/midifile/dumidifile.h \
     $$PWD/miditodumusic/dumidikeymapper.h \
     $$PWD/miditodumusic/midiconversionhelper.h \
+    $$PWD/miditodumusic/dutimesignaturemodel.h \
+    $$PWD/miditodumusic/dutonalitymodel.h \
     $$PWD/dudevice.h \
     $$PWD/dutouch.h \
     $$PWD/dulist.h \
@@ -49,6 +56,7 @@ HEADERS += \
     $$PWD/dusoundfile/dusound.h
 
 SOURCES += \
+    $$PWD/du-touch/parameters/instr_mapping.c \
     $$PWD/general/duobject.cpp \
     $$PWD/general/ducontainer.cpp \
     $$PWD/general/duarray.cpp \
@@ -68,6 +76,9 @@ SOURCES += \
     $$PWD/dumusicfile/instrument/duinstrument.cpp \
     $$PWD/dumusicfile/instrument/duinstrumentinfo.cpp \
     $$PWD/dumusicfile/instrument/dupreset.cpp \
+    $$PWD/dumusicfile/instrument/duexpression.cpp \
+    $$PWD/dumusicfile/instrument/ducontrollers.cpp \
+    $$PWD/dumusicfile/instrument/dueffectset.cpp \
     $$PWD/dumusicfile/instrument/effects/duadsr.cpp \
     $$PWD/dumusicfile/instrument/effects/duchorus.cpp \
     $$PWD/dumusicfile/instrument/effects/ducompressor.cpp \
@@ -78,6 +89,7 @@ SOURCES += \
     $$PWD/dumusicfile/instrument/effects/dumixer.cpp \
     $$PWD/dumusicfile/instrument/effects/duvibrato.cpp \
     $$PWD/dumusicfile/instrument/effects/duwah.cpp \
+    $$PWD/dumusicfile/instrument/effects/dureverb.cpp \
     $$PWD/midifile/dumidivariablelength.cpp \
     $$PWD/midifile/dumidistatus.cpp \
     $$PWD/midifile/dumidibasicevent.cpp \
@@ -88,6 +100,8 @@ SOURCES += \
     $$PWD/midifile/dumidifile.cpp \
     $$PWD/miditodumusic/dumidikeymapper.cpp \
     $$PWD/miditodumusic/midiconversionhelper.cpp \
+    $$PWD/miditodumusic/dutimesignaturemodel.cpp \
+    $$PWD/miditodumusic/dutonalitymodel.cpp \
     $$PWD/dudevice.cpp \
     $$PWD/dutouch.cpp \
     $$PWD/dulist.cpp \

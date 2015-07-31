@@ -174,7 +174,7 @@ int DuAdsr::getEnvelopeAttackTime() const
 
 bool DuAdsr::setEnvelopeAttackTime(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_ADSR_ENVELOPEATTACKTIME);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_ADSR_ENVELOPEATTACKTIME);
 
     if (tmp == NULL)
         return false;
@@ -195,7 +195,7 @@ int DuAdsr::getEnvelopeDecayTime() const
 
 bool DuAdsr::setEnvelopeDecayTime(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_ADSR_ENVELOPEDECAYTIME);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_ADSR_ENVELOPEDECAYTIME);
 
     if (tmp == NULL)
         return false;
@@ -216,7 +216,7 @@ int DuAdsr::getTimeVariantFilterCutoffResonance() const
 
 bool DuAdsr::setTimeVariantFilterCutoffResonance(int value)
 {
-    DuNumericPtr tmp =
+    const DuNumericPtr &tmp =
             getChildAs<DuNumeric>(KEY_ADSR_TIMEVARIANTFILTERCUTOFFRESONANCE);
 
     if (tmp == NULL)
@@ -238,7 +238,7 @@ int DuAdsr::getTimeVariantFilterCutoffFrequency() const
 
 bool DuAdsr::setTimeVariantFilterCutoffFrequency(int value)
 {
-    DuNumericPtr tmp =
+    const DuNumericPtr &tmp =
             getChildAs<DuNumeric>(KEY_ADSR_TIMEVARIANTFILTERCUTOFFFREQUENCY);
 
     if (tmp == NULL)
@@ -260,7 +260,7 @@ int DuAdsr::getEnvelopeReleaseTime() const
 
 bool DuAdsr::setEnvelopeReleaseTime(int value)
 {
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_ADSR_ENVELOPERELEASETIME);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_ADSR_ENVELOPERELEASETIME);
 
     if (tmp == NULL)
         return false;
@@ -280,7 +280,7 @@ QString DuAdsr::getEffectName() const
 
 bool DuAdsr::setEffectName(const QString &value)
 {
-    DuStringPtr tmp = getChildAs<DuString>(KEY_ADSR_EFFECTNAME);
+    const DuStringPtr &tmp = getChildAs<DuString>(KEY_ADSR_EFFECTNAME);
 
     if (tmp == NULL)
         return false;
