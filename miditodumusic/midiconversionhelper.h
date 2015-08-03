@@ -132,6 +132,9 @@ signals:
 private:
     bool filterMetaEvents();
 
+    void setMidiValid(bool value);
+    void setMapsValid(bool value);
+
     void setDuration(int value);
 
     void setMidiTempo(int value);

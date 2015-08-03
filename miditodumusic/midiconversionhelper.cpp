@@ -473,9 +473,7 @@ bool MidiConversionHelper::populateMapper(const QJsonObject &jsonMaps)
     scaleBoxModel = mapper->mapList();
     emit scaleChanged();
 
-    mapsValid = true;
-    emit validChanged();
-
+    setMapsValid(true);
     return mapsValid;
 }
 
@@ -499,6 +497,7 @@ void MidiConversionHelper::importMidiFromFile()
                                                       options);
     if (importPath.isEmpty())
     {
+        setMidiValid(false);
         return;
     }
 
@@ -507,7 +506,10 @@ void MidiConversionHelper::importMidiFromFile()
 
     QFile *midiInput = new QFile(importPath);
     if (!midiInput->open(QIODevice::ReadOnly))
+    {
+        setMidiValid(false);
         return;
+    }
 
     const DuMidiFilePtr &midiFile = DuMidiFile::fromMidiBinary(midiInput);
 
@@ -539,6 +541,11 @@ void MidiConversionHelper::importMapsFromFile()
                                                   tr("JSON (*.json)"),
                                                   0,
                                                   options);
+        if (mapperName.isEmpty())
+        {
+            setMapsValid(false);
+            return;
+        }
     }
 
     settings.setValue("midi/lastMapper", mapperName);
@@ -546,7 +553,10 @@ void MidiConversionHelper::importMapsFromFile()
 
     QFile *mapsInput = new QFile(mapperName);
     if (!mapsInput->open(QIODevice::ReadOnly))
+    {
+        setMapsValid(false);
         return;
+    }
 
     const QJsonObject &jsonMaps =
             QJsonDocument::fromJson(mapsInput->readAll()).object();
@@ -561,17 +571,14 @@ bool MidiConversionHelper::importMidiFile(const DuMidiFilePtr &midiFile)
 {
     if (midiFile->getFormat() != 1)
     {
-        midiValid = false;
-        emit validChanged();
+        setMidiValid(false);
         return false;
     }
 
     selectedFile = midiFile;
     trackNames.clear();
 
-    midiValid = filterMetaEvents() ? (duration != 0) : false;
-    emit validChanged();
-
+    setMidiValid(filterMetaEvents() ? (duration != 0) : false);
     return midiValid;
 }
 
@@ -741,7 +748,6 @@ bool MidiConversionHelper::filterMetaEvents()
                         setMidiTitle(QString(metaEvent->getData().data()));
                         if (title.isNull())
                             return false;
-                        qDebug() << title;
                     }
                 }
 
@@ -805,6 +811,19 @@ bool MidiConversionHelper::filterMetaEvents()
         setMidiTitle(tr("No Title"));
 
     return true;
+}
+
+
+void MidiConversionHelper::setMidiValid(bool value)
+{
+    midiValid = value;
+    emit validChanged();
+}
+
+void MidiConversionHelper::setMapsValid(bool value)
+{
+    mapsValid = value;
+    emit validChanged();
 }
 
 
