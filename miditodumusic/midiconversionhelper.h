@@ -31,13 +31,11 @@ class MidiConversionHelper : public QObject
 
     Q_PROPERTY(int midiTempo READ getMidiTempo NOTIFY validChanged)
     Q_PROPERTY(QString midiTimeSig READ getMidiTimeSigStr NOTIFY validChanged)
-    Q_PROPERTY(int midiScale READ getMidiScale NOTIFY validChanged)
-    Q_PROPERTY(int midiTonality READ getMidiTonality NOTIFY validChanged)
+    Q_PROPERTY(QString midiScale READ getMidiScale NOTIFY validChanged)
+    Q_PROPERTY(QString midiTonality READ getMidiTonality NOTIFY validChanged)
     Q_PROPERTY(QString midiTitle READ getMidiTitle NOTIFY validChanged)
 
-    Q_PROPERTY(QStringList midiScales READ midiScales)
-
-    Q_PROPERTY(QStringList midiTracks READ getTrackNames)
+    Q_PROPERTY(QStringList midiTracks READ getTrackNames NOTIFY validChanged)
 
 public:
     explicit MidiConversionHelper(QObject *parent = 0);
@@ -55,8 +53,8 @@ public:
 
     int getMidiTempo() const;
     QString getMidiTimeSigStr() const;
-    int getMidiScale() const;
-    int getMidiTonality() const;
+    QString getMidiScale() const;
+    QString getMidiTonality() const;
     QString getMidiTitle() const;
 
     QList<DuMidiTrackPtr> getTracks();

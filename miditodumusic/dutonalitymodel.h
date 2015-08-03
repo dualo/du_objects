@@ -37,6 +37,7 @@ public:
     void addTonality(const DuTonality &tonality);
 
     int findValue (const QString &name) const;
+    QString findName(int value) const;
 
     int indexFromValue(int value) const;
 

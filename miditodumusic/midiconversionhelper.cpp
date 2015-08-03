@@ -151,14 +151,14 @@ QString MidiConversionHelper::getMidiTimeSigStr() const
     return QString::number(num) + QString(" : ") + QString::number(denom);
 }
 
-int MidiConversionHelper::getMidiScale() const
+QString MidiConversionHelper::getMidiScale() const
 {
-    return midiScale;
+    return midiScaleBoxModel[midiScale];
 }
 
-int MidiConversionHelper::getMidiTonality() const
+QString MidiConversionHelper::getMidiTonality() const
 {
-    return tonalityBoxModel.indexFromValue(midiTonality);
+    return tonalityBoxModel.findName(midiTonality);
 }
 
 QString MidiConversionHelper::getMidiTitle() const

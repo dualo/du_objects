@@ -45,6 +45,20 @@ int DuTonalityModel::findValue(const QString &name) const
     return -1;
 }
 
+QString DuTonalityModel::findName(int value) const
+{
+    QListIterator<DuTonality> it(m_tonalities);
+
+    while (it.hasNext())
+    {
+        const DuTonality &tmpTonality = it.next();
+        if (tmpTonality.value() == value)
+            return tmpTonality.name();
+    }
+
+    return QString();
+}
+
 int DuTonalityModel::indexFromValue(int value) const
 {
     int count = m_tonalities.count();
