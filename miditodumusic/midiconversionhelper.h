@@ -166,12 +166,12 @@ private:
 
     QStringList trackNames;
 
-    QList<QPair<int, int>> selectedIndexes;
+    QList<QPair<int, int> > selectedIndexes;
 
     QList<DuMidiTrackPtr> selectedTracks;
     QList<DuInstrumentPtr> selectedInstruments;
 
-    QList<QPair<bool, int>> percuMappings;
+    QList<QPair<bool, int> > percuMappings;
 
     QStringList midiScaleBoxModel;
 
