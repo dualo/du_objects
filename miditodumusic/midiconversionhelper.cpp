@@ -29,17 +29,17 @@ MidiConversionHelper::MidiConversionHelper(QObject *parent) :
     midiScale(0),
     midiTonality(0),
     midiTitle(""),
-    selectedFile(DuMidiFilePtr()),
-    mapper(DuMidiKeyMapperPtr(new DuMidiKeyMapper)),
-    trackNames(QStringList()),
-    selectedIndexes(QList<QPair<int, int>>()),
-    selectedTracks(QList<DuMidiTrackPtr>()),
-    selectedInstruments(QList<DuInstrumentPtr>()),
-    percuMappings(QList<QPair<bool, int>>()),
-    midiScaleBoxModel(QStringList()),
-    timeSigBoxModel(DuTimeSignatureModel(this)),
-    scaleBoxModel(QStringList()),
-    tonalityBoxModel(DuTonalityModel(this))
+    selectedFile(),
+    mapper(new DuMidiKeyMapper),
+    trackNames(),
+    selectedIndexes(),
+    selectedTracks(),
+    selectedInstruments(),
+    percuMappings(),
+    midiScaleBoxModel(),
+    timeSigBoxModel(this),
+    scaleBoxModel(),
+    tonalityBoxModel(this)
 {
     midiScaleBoxModel.append(tr("Major"));
     midiScaleBoxModel.append(tr("Minor"));

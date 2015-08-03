@@ -37,6 +37,8 @@ class MidiConversionHelper : public QObject
 
     Q_PROPERTY(QStringList midiScales READ midiScales)
 
+    Q_PROPERTY(QStringList midiTracks READ getTrackNames)
+
 public:
     explicit MidiConversionHelper(QObject *parent = 0);
     ~MidiConversionHelper();
