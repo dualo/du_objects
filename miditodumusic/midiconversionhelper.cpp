@@ -287,7 +287,15 @@ void MidiConversionHelper::removeSelectionAt(int index)
 
 QPair<int, int> MidiConversionHelper::getIndexes(int index) const
 {
-    return selectedIndexes[index];
+    if (index < 0 || index >= selectedIndexes.size())
+    {
+        qDebug() << index;
+        return qMakePair<int, int>(-1, -1);
+    }
+    else
+    {
+        return selectedIndexes[index];
+    }
 }
 
 int MidiConversionHelper::findIndexes(int trackIndex, int loopIndex) const
