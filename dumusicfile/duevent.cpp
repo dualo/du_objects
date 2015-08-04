@@ -16,7 +16,7 @@ DuEvent::DuEvent(int time, int control, int canal, int note, int value) :
 
     addChild(KEY_EVENT_CANAL,
              new DuNumeric(canal, NUMERIC_DEFAULT_SIZE,
-                           0x07, 0x00));
+                           0xFF, 0x00));
 
     addChild(KEY_EVENT_KEYBOARD,
              new DuNumeric(note & 0x80, NUMERIC_DEFAULT_SIZE,
