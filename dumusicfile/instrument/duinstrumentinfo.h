@@ -8,7 +8,7 @@
 //TODO: add key for GM program change when possible
 
 #define KEY_INSTRINFO_NAME                  "Name"
-#define KEY_INSTRINFO_DREAMPROGRAMCHANGE    "MidiProgramChange"
+#define KEY_INSTRINFO_DREAMPROGRAMCHANGE    "DreamProgramChange"
 #define KEY_INSTRINFO_MIDICONTROLCHANGE0    "MidiControlChange0"
 #define KEY_INSTRINFO_KEYMAP                "KepMapping"
 #define KEY_INSTRINFO_OCTAVE                "Octave"

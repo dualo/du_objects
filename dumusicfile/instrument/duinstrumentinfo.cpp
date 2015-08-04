@@ -21,7 +21,7 @@ DuInstrumentInfo::DuInstrumentInfo() :
 
     addChild(KEY_INSTRINFO_KEYMAP,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x03, 0x00));
+                           0x04, 0x00));
 
     addChild(KEY_INSTRINFO_OCTAVE,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
