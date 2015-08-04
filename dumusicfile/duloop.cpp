@@ -480,14 +480,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel) const
         {
             channelEvent = event->toDuMidiChannelEvent(0, prevType,
                                                        isPercu, instrKeyMap);
-            if (channelEvent == NULL)
-            {
-                qCWarning(LOG_CAT_DU_OBJECT)
-                        << "DuLoop::toDuMidiTrack():\n"
-                        << "an event in this loop was not"
-                        << "properly converted to midi";
-            }
-            else
+            if (channelEvent != NULL)
             {
                 channelEvent->setTime((quint32)durationRef * (quint8)durationMod
                                       + tmpTime - prevTime, prevTime);
@@ -499,23 +492,26 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel) const
         {
             channelEvent = event->toDuMidiChannelEvent(prevTime, prevType,
                                                        isPercu, instrKeyMap);
-            if (channelEvent == NULL)
-            {
-                qCWarning(LOG_CAT_DU_OBJECT)
-                        << "DuLoop::toDuMidiTrack():\n"
-                        << "an event in this loop was not"
-                        << "properly converted to midi";
-            }
-            else
+            if (channelEvent != NULL)
             {
                 channelEvent->setChannel((quint8)midiChannel);
             }
         }
 
-        midiEvents->append(channelEvent);
+        if (channelEvent == NULL)
+        {
+            qCWarning(LOG_CAT_DU_OBJECT)
+                    << "DuLoop::toDuMidiTrack():\n"
+                    << "an event in this loop was not"
+                    << "properly converted to midi";
+        }
+        else
+        {
+            midiEvents->append(channelEvent);
 
-        prevTime = channelEvent->getTime();
-        prevType = channelEvent->getType();
+            prevTime = channelEvent->getTime();
+            prevType = channelEvent->getType();
+        }
     }
 
 
