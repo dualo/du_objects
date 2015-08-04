@@ -63,16 +63,16 @@ public:
     QString getTrackName(int index) const;
     const QStringList getTrackNames() const;
 
-    QList<QString> mapList() const;
+    QStringList mapList() const;
     void chooseMap();
 
     QPair<int, int> getIndexes(int index) const;
 
     const DuMidiTrackPtr getMidiTrack(int index) const;
-
     const DuInstrumentPtr getInstrument(int index) const;
 
     bool isPercu(int index) const;
+    int keymapNum(int index) const;
 
     int fetchKeyboard(int key, int index) const;
     int fetchPercuKey(int gmKey, int index) const;

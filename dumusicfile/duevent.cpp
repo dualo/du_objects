@@ -167,6 +167,8 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
         verif = event->setKeyboard(
                     helper.fetchKeyboard(key, loopIndex)) ? verif : false;
         verif = event->setNote(key) ? verif : false;
+
+        verif = event->setCanal((helper.keymapNum(loopIndex) << 4) & 0xF0) ? verif : false;
     }
     else
     {

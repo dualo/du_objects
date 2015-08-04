@@ -243,7 +243,7 @@ const QStringList MidiConversionHelper::getTrackNames() const
 }
 
 
-QList<QString> MidiConversionHelper::mapList() const
+QStringList MidiConversionHelper::mapList() const
 {
     return mapper->mapList();
 }
@@ -377,6 +377,18 @@ bool MidiConversionHelper::isPercu(int index) const
         return false;
 
     return percuMappings[index].first;
+}
+
+int MidiConversionHelper::keymapNum(int index) const
+{
+    if (index >= percuMappings.count())
+        return false;
+
+    if (!percuMappings[index].first)
+        return -1;
+
+    //Keymap 0 is for harmonic instruments
+    return percuMappings[index].second + 1;
 }
 
 
