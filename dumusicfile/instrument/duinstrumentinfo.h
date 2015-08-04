@@ -5,9 +5,10 @@
 #include "../../general/dustring.h"
 #include "../../general/dunumeric.h"
 
+//TODO: add key for GM program change when possible
 
 #define KEY_INSTRINFO_NAME                  "Name"
-#define KEY_INSTRINFO_MIDIPROGRAMCHANGE     "MidiProgramChange"
+#define KEY_INSTRINFO_DREAMPROGRAMCHANGE    "MidiProgramChange"
 #define KEY_INSTRINFO_MIDICONTROLCHANGE0    "MidiControlChange0"
 #define KEY_INSTRINFO_KEYMAP                "KepMapping"
 #define KEY_INSTRINFO_OCTAVE                "Octave"
@@ -41,8 +42,8 @@ public:
     QString getName() const;
     bool setName(const QString &value);
 
-    int getMidiProgramChange() const;
-    bool setMidiProgramChange(int value);
+    int getDreamProgramChange() const;
+    bool setDreamProgramChange(int value);
 
     int getMidiControlChange0() const;
     bool setMidiControlChange0(int value);

@@ -383,8 +383,9 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel) const
     DuMidiTrackPtr midiTrack(new DuMidiTrack);
     DuArrayPtr midiEvents(new DuArray);
 
+    //TODO: change Dream program change for GM program change when possible
     QString instrName = instrInfo->getName();
-    int instrPC = instrInfo->getMidiProgramChange();
+    int instrPC = instrInfo->getDreamProgramChange();
     int instrC0 = instrInfo->getMidiControlChange0();
 
     int instrType = instrInfo->getType();

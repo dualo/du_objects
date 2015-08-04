@@ -11,7 +11,7 @@ DuInstrumentInfo::DuInstrumentInfo() :
 {
     addChild(KEY_INSTRINFO_NAME, new DuString(NAME_CARACT));
 
-    addChild(KEY_INSTRINFO_MIDIPROGRAMCHANGE,
+    addChild(KEY_INSTRINFO_DREAMPROGRAMCHANGE,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
@@ -66,7 +66,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrI
 
     verif = instrInfo->setName(QString(QByteArray((char *)du_instrInfo.instr_name, NAME_CARACT))) ? verif : false;
 
-    verif = instrInfo->setMidiProgramChange(du_instrInfo.instr_midi_pc) ? verif : false;
+    verif = instrInfo->setDreamProgramChange(du_instrInfo.instr_midi_pc) ? verif : false;
     verif = instrInfo->setMidiControlChange0(du_instrInfo.instr_midi_C0) ? verif : false;
 
     verif = instrInfo->setKeyMap(du_instrInfo.instr_key_map) ? verif : false;
@@ -96,7 +96,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrI
 DuInstrumentInfoPtr DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
 {
     QJsonValue jsonName         = jsonInstrInfo[KEY_INSTRINFO_NAME];
-    QJsonValue jsonProgChange   = jsonInstrInfo[KEY_INSTRINFO_MIDIPROGRAMCHANGE];
+    QJsonValue jsonProgChange   = jsonInstrInfo[KEY_INSTRINFO_DREAMPROGRAMCHANGE];
     QJsonValue jsonCtrlChange   = jsonInstrInfo[KEY_INSTRINFO_MIDICONTROLCHANGE0];
     QJsonValue jsonKeyMap       = jsonInstrInfo[KEY_INSTRINFO_KEYMAP];
     QJsonValue jsonOctave       = jsonInstrInfo[KEY_INSTRINFO_OCTAVE];
@@ -127,7 +127,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
 
     verif = instrInfo->setName(jsonName.toString()) ? verif : false;
 
-    verif = instrInfo->setMidiProgramChange(jsonProgChange.toInt()) ? verif : false;
+    verif = instrInfo->setDreamProgramChange(jsonProgChange.toInt()) ? verif : false;
     verif = instrInfo->setMidiControlChange0(jsonCtrlChange.toInt()) ? verif : false;
 
     verif = instrInfo->setKeyMap(jsonKeyMap.toInt()) ? verif : false;
@@ -163,7 +163,7 @@ QByteArray DuInstrumentInfo::toDuMusicBinary() const
     QByteArray tmpClear(size(), (char)0x00);
     std::memcpy((char *)&(du_instrumentinfo), tmpClear.data(), size());
 
-    tmpNum = getMidiProgramChange();
+    tmpNum = getDreamProgramChange();
     if (tmpNum == -1)
         return QByteArray();
     du_instrumentinfo.instr_midi_pc = tmpNum;
@@ -264,10 +264,10 @@ bool DuInstrumentInfo::setName(const QString &value)
 }
 
 
-int DuInstrumentInfo::getMidiProgramChange() const
+int DuInstrumentInfo::getDreamProgramChange() const
 {
     const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_INSTRINFO_MIDIPROGRAMCHANGE);
+            getChildAs<DuNumeric>(KEY_INSTRINFO_DREAMPROGRAMCHANGE);
 
     if (tmp == NULL)
         return -1;
@@ -275,10 +275,10 @@ int DuInstrumentInfo::getMidiProgramChange() const
     return tmp->getNumeric();
 }
 
-bool DuInstrumentInfo::setMidiProgramChange(int value)
+bool DuInstrumentInfo::setDreamProgramChange(int value)
 {
     const DuNumericPtr &tmp =
-            getChildAs<DuNumeric>(KEY_INSTRINFO_MIDIPROGRAMCHANGE);
+            getChildAs<DuNumeric>(KEY_INSTRINFO_DREAMPROGRAMCHANGE);
 
     if (tmp == NULL)
         return false;
