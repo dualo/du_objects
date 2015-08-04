@@ -240,7 +240,7 @@ DuSongInfoPtr DuSongInfo::fromMidi(const MidiConversionHelper &helper)
 
 QByteArray DuSongInfo::toDuMusicBinary() const
 {
-    //TODO: restructure music_song to match du-objects
+    //NOTE: optimization possible if music_song matched du-objects
     music_song du_songinfo;
 
     QByteArray tmpArray;
@@ -354,7 +354,6 @@ QByteArray DuSongInfo::toDuMusicBinary() const
 
 int DuSongInfo::size() const
 {
-    //TODO: add defines for dummy sizes in music_parameters_mng.h
     return SONGINFO_SIZE;
 }
 

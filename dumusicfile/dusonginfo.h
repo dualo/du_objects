@@ -33,6 +33,8 @@
 #define SONGINFO_SIZE       8 + MUSIC_SONG_NAME_SIZE + 20 + NUM_LED_VALUE + FX_MIX_SIZE
 #define SONGINFO_OFFSET     4 + 8 * 16 + 10 + 3 + 15
 
+//NOTE: the 2 #define above could be replaced if dummy sizes were defined
+
 
 DU_OBJECT(DuSongInfo)
 

@@ -164,7 +164,7 @@ DuControllersPtr DuControllers::fromJson(const QJsonObject &jsonControllers)
 
 QByteArray DuControllers::toDuMusicBinary() const
 {
-    //TODO: restructure music_song to match du-objects
+    //NOTE: optimization possible if music_song matched du-objects
     music_song du_controllers;
 
     int tmpNum = 0;
