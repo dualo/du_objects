@@ -261,17 +261,16 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
 
 
     tmp = getControl();
+    quint8 midiType = (quint8)tmp + 0x08;
 
     if (tmp == -1)
         return DuMidiChannelEventPtr();
 
-    channelEvent->setRunningStatus(((quint8)tmp + 0x08) == prevType);
-    channelEvent->setType((quint8)tmp + 0x08);
+    channelEvent->setRunningStatus(midiType == prevType);
+    channelEvent->setType(midiType);
 
 
-    quint8 midiType = (quint8)tmp + 0x08;
     int keyboard = getKeyboard();
-
     tmp = getNote();
 
     if (tmp == -1)
