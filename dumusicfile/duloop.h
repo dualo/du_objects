@@ -29,7 +29,7 @@ public:
     static DuLoopPtr fromMidi(const MidiConversionHelper &helper, int loopIndex);
 
     QByteArray toDuMusicBinary() const;
-    DuMidiTrackPtr toDuMidiTrack(int durationRef) const;
+    DuMidiTrackPtr toDuMidiTrack(int durationRef, int channel) const;
 
     int size() const;
 

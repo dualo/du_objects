@@ -297,6 +297,16 @@ QList<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef) const
         return QList<DuMidiTrackPtr>();
     }
 
+    int channel = getChannel();
+    if (channel == -1)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuTrack::toDuMidiTrackArray():\n"
+                << "could not retrieve channel";
+
+        return QList<DuMidiTrackPtr>();
+    }
+
     QList<DuMidiTrackPtr> retList;
 
     for (int i = 0; i < MUSIC_MAXLAYER; i++)
@@ -310,7 +320,8 @@ QList<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef) const
             return QList<DuMidiTrackPtr>();
         }
 
-        const DuMidiTrackPtr &midiTrack = loop->toDuMidiTrack(durationRef);
+        const DuMidiTrackPtr &midiTrack =
+                loop->toDuMidiTrack(durationRef, channel);
 
         if (midiTrack != NULL)
             retList.append(midiTrack);
