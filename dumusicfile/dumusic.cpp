@@ -24,6 +24,10 @@ DuMusic::DuMusic() :
     addChild(KEY_MUSIC_REVERB, new DuReverb);
 
     addChild(KEY_MUSIC_TRACKS, new DuArray(MUSIC_MAXTRACK));
+
+    addChild(KEY_MUSIC_TRANSPOSE,
+             new DuNumeric(RECORD_TRANSPOSEDEFAULT, NUMERIC_DEFAULT_SIZE,
+                           RECORD_TRANSPOSEMAX, RECORD_TRANSPOSEDEFAULT));
 }
 
 DuMusic::~DuMusic()
@@ -169,6 +173,17 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
         }
     }
 
+
+    bool verif = music->setTranspose(du_music.local_song.s_transpose);
+
+    if (!verif)
+    {
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromDuMusicBinary():\n"
+                << "KEY_MUSIC_TRANSPOSE was not properly set";
+    }
+
+
     return music;
 }
 
@@ -217,10 +232,11 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
     QJsonValue jsonSongInfo     = jsonMusic[KEY_MUSIC_SONGINFO];
     QJsonValue jsonReverb       = jsonMusic[KEY_MUSIC_REVERB];
     QJsonValue jsonTracks       = jsonMusic[KEY_MUSIC_TRACKS];
+    QJsonValue jsonTranspose    = jsonMusic[KEY_MUSIC_TRANSPOSE];
 
     if (        !jsonHeader.isObject()      ||  !jsonControllers.isObject()
             ||  !jsonSongInfo.isObject()    ||  !jsonReverb.isObject()
-            ||  !jsonTracks.isArray())
+            ||  !jsonTracks.isArray()       ||  !jsonTranspose.isDouble())
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromJson():\n"
                                       << "failed to generate DuMusic\n"
@@ -313,6 +329,17 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
         }
     }
 
+
+    bool verif = music->setTranspose(jsonTranspose.toInt());
+
+    if (!verif)
+    {
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromJson():\n"
+                << "KEY_MUSIC_TRANSPOSE was not properly set";
+    }
+
+
     return music;
 }
 
@@ -329,18 +356,6 @@ DuMusicPtr DuMusic::fromMidi(const MidiConversionHelper &helper)
     }
 
     DuMusicPtr music(new DuMusic);
-
-//    const DuHeaderPtr &header = DuHeader::fromMidi(helper);
-//    if (header != NULL)
-//        music->setHeader(header);
-//    else
-//    {
-//        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromMidi():\n"
-//                                      << "failed to generate DuMusic\n"
-//                                      << "the DuHeader was not properly generated";
-
-//        return DuMusicPtr();
-//    }
 
     const DuSongInfoPtr &songInfo = DuSongInfo::fromMidi(helper);
     if (songInfo != NULL)
@@ -619,6 +634,11 @@ QByteArray DuMusic::toDuMusicBinary() const
     std::memcpy(du_music->local_buffer, tmpLocalBuffer.data(),
                 eventTotal * MUSIC_SAMPLE_SIZE);
 
+    int tmpNum = getTranspose();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_music->local_song.s_transpose = tmpNum;
+
 
     return QByteArray((char *)(du_music.data()), musicSize);
 }
@@ -890,4 +910,25 @@ bool DuMusic::appendTrack(const DuTrackPtr &track)
         return false;
 
     return tmp->append(track);
+}
+
+
+int DuMusic::getTranspose() const
+{
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_MUSIC_TRANSPOSE);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuMusic::setTranspose(int value)
+{
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_MUSIC_TRANSPOSE);
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
 }

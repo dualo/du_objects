@@ -24,10 +24,6 @@ DuHeader::DuHeader() :
 
     addChild(KEY_HEAD_SIZE, new DuNumeric(0));
     addChild(KEY_HEAD_METADATA, new DuNumeric(0));
-
-    addChild(KEY_HEAD_TRANSPOSE,
-             new DuNumeric(12, NUMERIC_DEFAULT_SIZE,
-                           23, 0));
 }
 
 DuHeader::~DuHeader()
@@ -59,8 +55,6 @@ DuHeaderPtr DuHeader::fromDuMusicBinary(const music_song &du_song)
 
     verif = header->setSize(du_song.s_size) ? verif : false;
     verif = header->setMetaData(du_song.s_metadata) ? verif : false;
-
-    verif = header->setTranspose(du_song.s_transpose) ? verif : false;
     
     if (!verif)
     {
@@ -85,15 +79,13 @@ DuHeaderPtr DuHeader::fromJson(const QJsonObject &jsonHeader)
     QJsonValue jsonLastUserId       = jsonHeader[KEY_HEAD_LASTMODIFUSERID];
     QJsonValue jsonSize             = jsonHeader[KEY_HEAD_SIZE];
     QJsonValue jsonMetaData         = jsonHeader[KEY_HEAD_METADATA];
-    QJsonValue jsonTranspose        = jsonHeader[KEY_HEAD_TRANSPOSE];
 
     if (        !jsonFileVersion.isDouble() ||  !jsonOrigSerialNum.isString()
             ||  !jsonOrigName.isString()    ||  !jsonOrigUser.isString()
             ||  !jsonOrigUserId.isString()  ||  !jsonLastSerialNum.isString()
             ||  !jsonLastName.isString()    ||  !jsonLastUser.isString()
             ||  !jsonLastUserId.isString()
-            ||  !jsonSize.isDouble()        ||  !jsonMetaData.isDouble()
-            ||  !jsonTranspose.isDouble())
+            ||  !jsonSize.isDouble()        ||  !jsonMetaData.isDouble())
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuHeader::fromJson():\n"
                     << "failed to generate DuHeader\n"
@@ -120,8 +112,6 @@ DuHeaderPtr DuHeader::fromJson(const QJsonObject &jsonHeader)
 
     verif = header->setSize(jsonSize.toInt()) ? verif : false;
     verif = header->setMetaData(jsonMetaData.toInt()) ? verif : false;
-
-    verif = header->setTranspose(jsonTranspose.toInt()) ? verif : false;
 
     if (!verif)
     {
@@ -227,11 +217,6 @@ QByteArray DuHeader::toDuMusicBinary() const
     if (tmpNum == -1)
         return QByteArray();
     du_header.s_metadata = tmpNum;
-
-    tmpNum = getTranspose();
-    if (tmpNum == -1)
-        return QByteArray();
-    du_header.s_transpose = tmpNum;
 
 
     return QByteArray((char *)&(du_header), size());
@@ -460,27 +445,6 @@ int DuHeader::getMetaData() const
 bool DuHeader::setMetaData(int value)
 {
     const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_HEAD_METADATA);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuHeader::getTranspose() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_HEAD_TRANSPOSE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuHeader::setTranspose(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_HEAD_TRANSPOSE);
 
     if (tmp == NULL)
         return false;

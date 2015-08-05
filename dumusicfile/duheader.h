@@ -23,8 +23,6 @@
 #define KEY_HEAD_SIZE               "Size"
 #define KEY_HEAD_METADATA           "MetaData"
 
-#define KEY_HEAD_TRANSPOSE          "Transpose"
-
 #define HEADER_NAME_SIZE            16
 #define HEADER_SIZE                 4 + 8 * HEADER_NAME_SIZE + 10 + 3
 
@@ -78,9 +76,6 @@ public:
 
     int getMetaData() const;
     bool setMetaData(int value);
-
-    int getTranspose() const;
-    bool setTranspose(int value);
 };
 
 #endif // DUHEADER_H

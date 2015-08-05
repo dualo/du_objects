@@ -14,6 +14,8 @@
 #define KEY_MUSIC_REVERB        "ReverbSettings"
 #define KEY_MUSIC_TRACKS        "Tracks"
 
+#define KEY_MUSIC_TRANSPOSE          "Transpose"
+
 
 class QIODevice;
 
@@ -71,6 +73,9 @@ public:
     void setTracks(const DuArrayPtr &array);
 
     bool appendTrack(const DuTrackPtr &track);
+
+    int getTranspose() const;
+    bool setTranspose(int value);
 
 private:
     int m_databaseId;
