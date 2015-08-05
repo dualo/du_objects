@@ -42,7 +42,7 @@ DuEvent::DuEvent() :
 
     addChild(KEY_EVENT_CANAL,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x07, 0x00));
+                           0xFF, 0x00));
 
     addChild(KEY_EVENT_KEYBOARD,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
@@ -241,7 +241,7 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
                                                     int instrKeyMap) const
 {
     //This case should not occur since it is already tested in DuLoop::toDuMidiTrack()
-    if (isPercu && instrKeyMap == -1)
+    if (isPercu && instrKeyMap <= 0)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuEvent::toDuMidiChannelEvent():\n"
@@ -257,7 +257,13 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
     tmp = getTime();
 
     if (tmp == -1)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuEvent::toDuMidiChannelEvent():\n"
+                << "invalid time:" << tmp;
+
         return DuMidiChannelEventPtr();
+    }
 
     channelEvent->setTime((quint32)tmp - prevTime, prevTime);
 
@@ -266,7 +272,13 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
     quint8 midiType = (quint8)tmp + 0x08;
 
     if (tmp == -1)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuEvent::toDuMidiChannelEvent():\n"
+                << "invalid control:" << tmp;
+
         return DuMidiChannelEventPtr();
+    }
 
     channelEvent->setRunningStatus(midiType == prevType);
     channelEvent->setType(midiType);
@@ -276,18 +288,38 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
     tmp = getNote();
 
     if (tmp == -1)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuEvent::toDuMidiChannelEvent():\n"
+                << "invalid note:" << tmp;
+
         return DuMidiChannelEventPtr();
+    }
 
     if (isPercu && midiType < DuMidiChannelEvent::KeyAftertouch)
     {
         if (keyboard == -1)
-            return DuMidiChannelEventPtr();
+        {
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuEvent::toDuMidiChannelEvent():\n"
+                    << "invalid keyboard:" << keyboard;
 
-        int midiKey =
-                MidiConversionHelper::percuKey(tmp, (quint8)keyboard, instrKeyMap);
+            return DuMidiChannelEventPtr();
+        }
+
+        //The argument instrKeyMap is the value of KEY_INSTRINFO_KEYMAP
+        //It is not equal to the index of the map in the instr_mapping.c arrays
+        int midiKey = MidiConversionHelper::percuKey(tmp, (quint8)keyboard,
+                                                     instrKeyMap - 1);
 
         if (midiKey == -1 || (quint8)midiKey > 0x7F)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuEvent::toDuMidiChannelEvent():\n"
+                    << "invalid percussion key:" << midiKey;
+
             return DuMidiChannelEventPtr();
+        }
 
         channelEvent->setKey(midiKey);
     }
@@ -300,7 +332,13 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
     tmp = getValue();
 
     if (tmp == -1)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuEvent::toDuMidiChannelEvent():\n"
+                << "invalid value:" << tmp;
+
         return DuMidiChannelEventPtr();
+    }
 
     channelEvent->setValue((quint8)tmp);
 
