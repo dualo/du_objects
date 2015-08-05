@@ -418,10 +418,11 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel) const
         }
 
         isPercu = true;
-        midiChannel = 0x0A;
+        midiChannel = 0x09;
 
-        //TODO: remove following line when GM program change is available
-        instrPC = 0x76;
+        //NOTE: GM for drum kit PC and C0
+        instrPC = 0;
+        instrC0 = 120;
     }
 
     quint32 prevTime = 0;
