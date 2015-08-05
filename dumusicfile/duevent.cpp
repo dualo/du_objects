@@ -307,10 +307,15 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
             return DuMidiChannelEventPtr();
         }
 
+        //The keyboard value is not the same as the keyboard index to be used
+        //when calling MidiConversionHelper::percuKey()
+
         //The argument instrKeyMap is the value of KEY_INSTRINFO_KEYMAP
         //It is not equal to the index of the map in the instr_mapping.c arrays
-        int midiKey = MidiConversionHelper::percuKey(tmp, (quint8)keyboard,
-                                                     instrKeyMap - 1);
+
+        quint8 keyboardIndex = (keyboard >> 7) & 0x01;
+        int midiKey = MidiConversionHelper::percuKey((quint8)tmp, keyboardIndex,
+                                                     (quint8)instrKeyMap - 1);
 
         if (midiKey == -1 || (quint8)midiKey > 0x7F)
         {

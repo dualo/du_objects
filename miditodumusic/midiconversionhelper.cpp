@@ -433,21 +433,22 @@ int MidiConversionHelper::fetchPercuKey(int gmKey, int index) const
 }
 
 
-int MidiConversionHelper::percuKey(quint8 duKey, quint8 keyboard, quint8 mapIndex)
+int MidiConversionHelper::percuKey(quint8 duKey, quint8 keyboardIndex,
+                                   quint8 mapIndex)
 {
-    if (duKey > 57 || keyboard > 1 || mapIndex > 3)
+    if (duKey > 57 || keyboardIndex > 1 || mapIndex > 3)
     {
         qCWarning(LOG_CAT_DU_OBJECT)
                 << "MidiConversionHelper::percuKey():\n"
                 << "invalid values:\n"
                 << "key =" << duKey << ";"
-                << "keyboard =" << keyboard << ";"
+                << "keyboardIndex =" << keyboardIndex << ";"
                 << "mapIndex =" << mapIndex;
 
         return -1;
     }
 
-    return keyboard_note_map[mapIndex][keyboard][duKey].note_gmref;
+    return keyboard_note_map[mapIndex][keyboardIndex][duKey].note_gmref;
 }
 
 

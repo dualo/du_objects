@@ -77,7 +77,7 @@ public:
     int fetchKeyboard(int key, int index) const;
     int fetchPercuKey(int gmKey, int index) const;
 
-    static int percuKey(quint8 duKey, quint8 keyboard, quint8 mapIndex);
+    static int percuKey(quint8 duKey, quint8 keyboardIndex, quint8 mapIndex);
 
     DuTimeSignatureModel *getTimeSigBoxModel();
 
