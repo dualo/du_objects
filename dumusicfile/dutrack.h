@@ -23,8 +23,7 @@ public:
 
     static DuTrackPtr fromDuMusicBinary(const music_track &du_track,
                                         const music_sample *du_sample_start,
-                                        uint16_t totalSample);
-    static DuTrackPtr fromDuMusicBinary(const music_track &du_track);
+                                        uint totalNbSamples);
     static DuTrackPtr fromJson(const QJsonObject &jsonTrack);
     static DuTrackPtr fromMidi(const MidiConversionHelper &helper, int trackIndex);
 

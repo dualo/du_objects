@@ -10,7 +10,7 @@ DU_OBJECT_IMPL(DuHeader)
 DuHeader::DuHeader() :
     DuContainer()
 {
-    addChild(KEY_HEAD_FILEVERSION, new DuNumeric(1));
+    addChild(KEY_HEAD_FILEVERSION, new DuNumeric(2));
 
     addChild(KEY_HEAD_ORIGINALSN, new DuString(HEADER_NAME_SIZE));
     addChild(KEY_HEAD_ORIGINALNAME, new DuString(HEADER_NAME_SIZE));
@@ -22,9 +22,12 @@ DuHeader::DuHeader() :
     addChild(KEY_HEAD_LASTMODIFUSER, new DuString(HEADER_NAME_SIZE));
     addChild(KEY_HEAD_LASTMODIFUSERID, new DuString(HEADER_NAME_SIZE));
 
-    addChild(KEY_HEAD_SONGID, new DuNumeric(0));
-    addChild(KEY_HEAD_SONGNAME, new DuString(MUSIC_SONG_NAME_SIZE));
-    addChild(KEY_HEAD_SONGVERSION, new DuNumeric(0));
+    addChild(KEY_HEAD_SIZE, new DuNumeric(0));
+    addChild(KEY_HEAD_METADATA, new DuNumeric(0));
+
+    addChild(KEY_HEAD_TRANSPOSE,
+             new DuNumeric(12, NUMERIC_DEFAULT_SIZE,
+                           23, 0));
 }
 
 DuHeader::~DuHeader()
@@ -54,10 +57,11 @@ DuHeaderPtr DuHeader::fromDuMusicBinary(const music_song &du_song)
     verif = header->setLastModifUser(QString(QByteArray((char *)du_song.s_modif_user, HEADER_NAME_SIZE))) ? verif : false;
     verif = header->setLastModifUserId(QString(QByteArray((char *)du_song.s_modif_userid, HEADER_NAME_SIZE))) ? verif : false;
 
-    verif = header->setSongId(du_song.s_id & 0x7FFFFFFF) ? verif : false;
-    verif = header->setSongName(QString(QByteArray((char *)du_song.s_name, MUSIC_SONG_NAME_SIZE))) ? verif : false;
-    verif = header->setSongVersion(du_song.s_version_song & 0x7FFFFFFF) ? verif : false;
+    verif = header->setSize(du_song.s_size) ? verif : false;
+    verif = header->setMetaData(du_song.s_metadata) ? verif : false;
 
+    verif = header->setTranspose(du_song.s_transpose) ? verif : false;
+    
     if (!verif)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "DuHeader::fromDuMusicBinary():\n"
@@ -79,16 +83,17 @@ DuHeaderPtr DuHeader::fromJson(const QJsonObject &jsonHeader)
     QJsonValue jsonLastName         = jsonHeader[KEY_HEAD_LASTMODIFNAME];
     QJsonValue jsonLastUser         = jsonHeader[KEY_HEAD_LASTMODIFUSER];
     QJsonValue jsonLastUserId       = jsonHeader[KEY_HEAD_LASTMODIFUSERID];
-    QJsonValue jsonSongId           = jsonHeader[KEY_HEAD_SONGID];
-    QJsonValue jsonSongName         = jsonHeader[KEY_HEAD_SONGNAME];
-    QJsonValue jsonSongVersion      = jsonHeader[KEY_HEAD_SONGVERSION];
+    QJsonValue jsonSize             = jsonHeader[KEY_HEAD_SIZE];
+    QJsonValue jsonMetaData         = jsonHeader[KEY_HEAD_METADATA];
+    QJsonValue jsonTranspose        = jsonHeader[KEY_HEAD_TRANSPOSE];
 
     if (        !jsonFileVersion.isDouble() ||  !jsonOrigSerialNum.isString()
             ||  !jsonOrigName.isString()    ||  !jsonOrigUser.isString()
             ||  !jsonOrigUserId.isString()  ||  !jsonLastSerialNum.isString()
             ||  !jsonLastName.isString()    ||  !jsonLastUser.isString()
-            ||  !jsonLastUserId.isString()  ||  !jsonSongId.isDouble()
-            ||  !jsonSongName.isString()    ||  !jsonSongVersion.isDouble())
+            ||  !jsonLastUserId.isString()
+            ||  !jsonSize.isDouble()        ||  !jsonMetaData.isDouble()
+            ||  !jsonTranspose.isDouble())
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuHeader::fromJson():\n"
                     << "failed to generate DuHeader\n"
@@ -113,9 +118,10 @@ DuHeaderPtr DuHeader::fromJson(const QJsonObject &jsonHeader)
     verif = header->setLastModifUser(jsonLastUser.toString()) ? verif : false;
     verif = header->setLastModifUserId(jsonLastUserId.toString()) ? verif : false;
 
-    verif = header->setSongId(jsonSongId.toInt()) ? verif : false;
-    verif = header->setSongName(jsonSongName.toString()) ? verif : false;
-    verif = header->setSongVersion(jsonSongVersion.toInt()) ? verif : false;
+    verif = header->setSize(jsonSize.toInt()) ? verif : false;
+    verif = header->setMetaData(jsonMetaData.toInt()) ? verif : false;
+
+    verif = header->setTranspose(jsonTranspose.toInt()) ? verif : false;
 
     if (!verif)
     {
@@ -127,37 +133,9 @@ DuHeaderPtr DuHeader::fromJson(const QJsonObject &jsonHeader)
 }
 
 
-DuHeaderPtr DuHeader::fromMidi(const MidiConversionHelper &helper)
-{
-    if (!helper.isValid())
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuHeader::fromMidi():\n"
-                                      << "failed to generate DuHeader\n"
-                                      << "invalid conversion helper";
-
-        return DuHeaderPtr();
-    }
-
-    DuHeaderPtr header(new DuHeader);
-    bool verif = true;
-
-    //TODO
-
-    verif = header->setSongName(helper.getTitle()) ? verif : false;
-
-    if (!verif)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuHeader::fromMidi():\n"
-                                     << "an attribute was not properly set";
-    }
-
-    return header;
-}
-
-
 QByteArray DuHeader::toDuMusicBinary() const
 {
-    //TODO: restructure music_song into music_header and music_info
+    //NOTE: optimization possible if music_song matched du-objects
     music_song du_header;
 
     QByteArray tmpArray;
@@ -171,16 +149,6 @@ QByteArray DuHeader::toDuMusicBinary() const
     if (tmpNum == -1)
         return QByteArray();
     du_header.s_version_music = tmpNum;
-
-    tmpNum = getSongId();
-    if (tmpNum == -1)
-        return QByteArray();
-    du_header.s_id = tmpNum;
-
-    tmpNum = getSongVersion();
-    if (tmpNum == -1)
-        return QByteArray();
-    du_header.s_version_song = tmpNum;
 
 
     tmpClear = QByteArray(HEADER_NAME_SIZE, char(0x00));
@@ -249,24 +217,29 @@ QByteArray DuHeader::toDuMusicBinary() const
 
     std::memcpy(du_header.s_modif_userid, tmpArray.data(), HEADER_NAME_SIZE);
 
-    tmpClear = QByteArray(MUSIC_SONG_NAME_SIZE, char(0x00));
 
-    tmpArray = tmpClear;
-    tmpStr = getSongName();
-    if (tmpStr.isNull())
+    tmpNum = getSize();
+    if (tmpNum == -1)
         return QByteArray();
-    tmpArray.prepend(tmpStr.toUtf8());
+    du_header.s_size = tmpNum;
 
-    std::memcpy(du_header.s_name, tmpArray.data(), MUSIC_SONG_NAME_SIZE);
+    tmpNum = getMetaData();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_header.s_metadata = tmpNum;
+
+    tmpNum = getTranspose();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_header.s_transpose = tmpNum;
 
 
-    return QByteArray((char *)&(du_header), MUSIC_SONG_SIZE);
+    return QByteArray((char *)&(du_header), size());
 }
 
 
 int DuHeader::size() const
 {
-    //TODO: add defines for dummy sizes in music_parameters_mng.h
     return HEADER_SIZE;
 }
 
@@ -454,9 +427,9 @@ bool DuHeader::setLastModifUserId(const QString value)
 }
 
 
-int DuHeader::getSongId() const
+int DuHeader::getSize() const
 {
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_HEAD_SONGID);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_HEAD_SIZE);
 
     if (tmp == NULL)
         return -1;
@@ -464,9 +437,9 @@ int DuHeader::getSongId() const
     return tmp->getNumeric();
 }
 
-bool DuHeader::setSongId(int value)
+bool DuHeader::setSize(int value)
 {
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_HEAD_SONGID);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_HEAD_SIZE);
 
     if (tmp == NULL)
         return false;
@@ -474,29 +447,9 @@ bool DuHeader::setSongId(int value)
     return tmp->setNumeric(value);
 }
 
-QString DuHeader::getSongName() const
+int DuHeader::getMetaData() const
 {
-    const DuStringConstPtr &tmp = getChildAs<DuString>(KEY_HEAD_SONGNAME);
-
-    if (tmp == NULL)
-        return QString();
-
-    return tmp->getString();
-}
-
-bool DuHeader::setSongName(const QString value)
-{
-    const DuStringPtr &tmp = getChildAs<DuString>(KEY_HEAD_SONGNAME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setString(value);
-}
-
-int DuHeader::getSongVersion() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_HEAD_SONGVERSION);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_HEAD_METADATA);
 
     if (tmp == NULL)
         return -1;
@@ -504,9 +457,30 @@ int DuHeader::getSongVersion() const
     return tmp->getNumeric();
 }
 
-bool DuHeader::setSongVersion(int value)
+bool DuHeader::setMetaData(int value)
 {
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_HEAD_SONGVERSION);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_HEAD_METADATA);
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
+}
+
+
+int DuHeader::getTranspose() const
+{
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_HEAD_TRANSPOSE);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuHeader::setTranspose(int value)
+{
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_HEAD_TRANSPOSE);
 
     if (tmp == NULL)
         return false;

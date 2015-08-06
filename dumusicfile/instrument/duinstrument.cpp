@@ -9,18 +9,18 @@ DU_OBJECT_IMPL(DuInstrument)
 DuInstrument::DuInstrument() :
     DuContainer()
 {
-    addChild(KEY_INSTR_INSTRUMENTINFO, new DuInstrumentInfo());
-    addChild(KEY_INSTR_PRESET, new DuPreset());
+    addChild(KEY_INSTR_INSTRUMENTINFO,          new DuInstrumentInfo);
+    addChild(KEY_INSTR_PRESET,                  new DuPreset);
 
-    addChild(KEY_INSTR_MIXERSETTINGS, new DuMixer());
-    addChild(KEY_INSTR_DISTORTIONSETTINGS, new DuDistortion());
-    addChild(KEY_INSTR_WAHSETTINGS, new DuWah());
-    addChild(KEY_INSTR_COMPRESSORSETTINGS, new DuCompressor());
-    addChild(KEY_INSTR_EQUALIZERSETTINGS, new DuEqualizer());
-    addChild(KEY_INSTR_DELAYSETTINGS, new DuDelay());
-    addChild(KEY_INSTR_CHORUSSETTINGS, new DuChorus());
-    addChild(KEY_INSTR_VIBRATOSETTINGS, new DuVibrato());
-    addChild(KEY_INSTR_ADSRSETTINGS, new DuAdsr());
+    addChild(KEY_INSTR_MIXERSETTINGS,           new DuMixer);
+    addChild(KEY_INSTR_DISTORTIONSETTINGS,      new DuDistortion);
+    addChild(KEY_INSTR_WAHSETTINGS,             new DuWah);
+    addChild(KEY_INSTR_COMPRESSORSETTINGS,      new DuCompressor);
+    addChild(KEY_INSTR_EQUALIZERSETTINGS,       new DuEqualizer);
+    addChild(KEY_INSTR_DELAYSETTINGS,           new DuDelay);
+    addChild(KEY_INSTR_CHORUSSETTINGS,          new DuChorus);
+    addChild(KEY_INSTR_VIBRATOSETTINGS,         new DuVibrato);
+    addChild(KEY_INSTR_ADSRSETTINGS,            new DuAdsr);
 }
 
 DuInstrument::~DuInstrument()

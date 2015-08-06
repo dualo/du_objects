@@ -9,6 +9,7 @@
 
 #define KEY_EVENT_TIME          "Time"
 #define KEY_EVENT_CONTROL       "Control"
+#define KEY_EVENT_CANAL         "Canal"
 #define KEY_EVENT_KEYBOARD      "Keyboard"
 #define KEY_EVENT_NOTE          "Note"
 #define KEY_EVENT_VALUE         "Value"
@@ -19,7 +20,7 @@ DU_OBJECT(DuEvent)
 class DuEvent : public DuContainer
 {
 public:
-    explicit DuEvent(int time, int control, int keyboard, int note, int value);
+    explicit DuEvent(int time, int control, int canal, int note, int value);
     explicit DuEvent();
     ~DuEvent();
 
@@ -31,7 +32,8 @@ public:
                                const MidiConversionHelper &helper, int loopIndex);
 
     QByteArray toDuMusicBinary() const;
-    DuMidiChannelEventPtr toDuMidiChannelEvent(quint32 prevTime, quint8 prevType) const;
+    DuMidiChannelEventPtr toDuMidiChannelEvent(quint32 prevTime, quint8 prevType,
+                                               bool isPercu, int instrKeyMap) const;
 
     int size() const;
 
@@ -40,6 +42,9 @@ public:
 
     int getControl() const;
     bool setControl(int value);
+
+    int getCanal() const;
+    bool setCanal(int value);
 
     int getKeyboard() const;
     bool setKeyboard(int value);

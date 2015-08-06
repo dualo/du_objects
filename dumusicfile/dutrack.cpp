@@ -33,72 +33,7 @@ DuObjectPtr DuTrack::clone() const
 
 DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
                                       const music_sample *du_sample_start,
-                                      uint16_t totalSample)
-{
-    const DuTrackPtr track(new DuTrack);
-    bool verif = true;
-
-    verif = track->setChannel(du_track.t_midichannel) ? verif : false;
-    verif = track->setCurrentLoop(du_track.t_currentloop) ? verif : false;
-
-    if (!verif)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
-                                     << "an attribute was not properly set";
-    }
-
-    if (totalSample > 0)
-    {
-        for (int i = 0; i < MUSIC_MAXLAYER; i++)
-        {
-            const music_loop &du_loop = du_track.t_loop[i];
-
-            if ((quint32)totalSample * MUSIC_SAMPLE_SIZE
-                    < (du_loop.l_adress + du_loop.l_numsample * MUSIC_SAMPLE_SIZE)
-                || RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE
-                    < du_loop.l_adress + du_loop.l_numsample * MUSIC_SAMPLE_SIZE)
-            {
-                qCCritical(LOG_CAT_DU_OBJECT)
-                        << "DuTrack::fromDuMusicBinary():\n"
-                        << "failed to generate DuTrack\n"
-                        << "invalid number of events\n"
-                        << "(du_sample size =" << (totalSample * MUSIC_SAMPLE_SIZE)
-                        << ", max size =" << (RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE)
-                        << ", du_loop.l_adress =" << du_loop.l_adress
-                        << ", du_loop.l_numsample =" << du_loop.l_numsample
-                        << ", sizeof(music_sample) =" << MUSIC_SAMPLE_SIZE << ")";
-
-                return DuTrackPtr();
-            }
-
-            const music_sample *du_sample_address = (music_sample*)
-                    ((long)du_sample_start + du_loop.l_adress);
-
-            const DuLoopPtr &loop =
-                    DuLoop::fromDuMusicBinary(du_loop, du_sample_address);
-            if (loop == NULL)
-            {
-                qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
-                                              << "failed to generate DuTrack\n"
-                                              << "a DuLoop was not properly generated";
-
-                return DuTrackPtr();
-            }
-            if (!track->appendLoop(loop))
-            {
-                qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
-                                              << "failed to generate DuTrack\n"
-                                              << "a DuLoop was not properly appended";
-
-                return DuTrackPtr();
-            }
-        }
-    }
-
-    return track;
-}
-
-DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track)
+                                      uint totalNbSamples)
 {
     const DuTrackPtr track(new DuTrack);
     bool verif = true;
@@ -114,8 +49,47 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track)
 
     for (int i = 0; i < MUSIC_MAXLAYER; i++)
     {
-        const DuLoopPtr &loop =
-                DuLoop::fromDuMusicBinary(du_track.t_loop[i]);
+        const music_loop &du_loop = du_track.t_loop[i];
+
+        DuLoopPtr loop;
+
+        if (du_loop.l_state == REC_EMPTY)
+        {
+            loop = DuLoopPtr(new DuLoop);
+        }
+        else
+        {
+            if (du_loop.l_adress % MUSIC_SAMPLE_SIZE != 0)
+            {
+                qCCritical(LOG_CAT_DU_OBJECT)
+                        << "DuTrack::fromDuMusicBinary():\n"
+                        << "failed to generate DuTrack\n"
+                        << "invalid loop address (not a multiple of MUSIC_SAMPLE_SIZE)\n"
+                        << "du_loop.l_adress =" << du_loop.l_adress << "\n"
+                        << "MUSIC_SAMPLE_SIZE =" << MUSIC_SAMPLE_SIZE;
+
+                return DuTrackPtr();
+            }
+
+            music_sample_p firstSampleIndex = du_loop.l_adress / MUSIC_SAMPLE_SIZE;
+            if (firstSampleIndex + du_loop.l_numsample > totalNbSamples)
+            {
+                qCCritical(LOG_CAT_DU_OBJECT)
+                        << "DuTrack::fromDuMusicBinary():\n"
+                        << "failed to generate DuTrack\n"
+                        << "invalid number of events\n"
+                        << "totalNbSamples =" << totalNbSamples << "\n"
+                        << "firstSampleIndex =" << firstSampleIndex << "\n"
+                        << "du_loop.l_numsample =" << du_loop.l_numsample;
+
+                return DuTrackPtr();
+            }
+
+            const music_sample *du_sample_address = &du_sample_start[firstSampleIndex];
+
+            loop = DuLoop::fromDuMusicBinary(du_loop, du_sample_address);
+        }
+
         if (loop == NULL)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
@@ -124,6 +98,7 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track)
 
             return DuTrackPtr();
         }
+
         if (!track->appendLoop(loop))
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
@@ -284,11 +259,16 @@ QByteArray DuTrack::toDuMusicBinary() const
     const DuArrayConstPtr &loops = getLoops();
     if (loops == NULL)
         return QByteArray();
+
+    int loopSize = loops->size();
+    if (loopSize == -1)
+        return QByteArray();
+
     const QByteArray &loopsArray = loops->toDuMusicBinary();
     if (loopsArray.isNull())
         return QByteArray();
 
-    std::memcpy(&(du_track.t_loop), loopsArray.data(), loops->size());
+    std::memcpy(&(du_track.t_loop), loopsArray.data(), loopSize);
 
 
     tmpNum = getChannel();
@@ -317,6 +297,16 @@ QList<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef) const
         return QList<DuMidiTrackPtr>();
     }
 
+    int channel = getChannel();
+    if (channel == -1)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuTrack::toDuMidiTrackArray():\n"
+                << "could not retrieve channel";
+
+        return QList<DuMidiTrackPtr>();
+    }
+
     QList<DuMidiTrackPtr> retList;
 
     for (int i = 0; i < MUSIC_MAXLAYER; i++)
@@ -330,7 +320,8 @@ QList<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef) const
             return QList<DuMidiTrackPtr>();
         }
 
-        const DuMidiTrackPtr &midiTrack = loop->toDuMidiTrack(durationRef);
+        const DuMidiTrackPtr &midiTrack =
+                loop->toDuMidiTrack(durationRef, channel);
 
         if (midiTrack != NULL)
             retList.append(midiTrack);

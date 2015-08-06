@@ -46,45 +46,6 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
         return DuLoopPtr(new DuLoop);
     }
 
-    DuLoopPtr loop = fromDuMusicBinary(du_loop);
-    if (loop == NULL)
-    {
-        //A Critical Message was already issued.
-        return DuLoopPtr();
-    }
-
-
-    for (int i = 0; i < du_loop.l_numsample; i++)
-    {
-        const DuEventPtr &event = DuEvent::fromDuMusicBinary(du_sample[i]);
-        if (event == NULL)
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuLoop::fromDuMusicBinary():\n"
-                        << "failed to generate DuLoop\n"
-                        << "a DuEvent was not properly generated";
-
-            return DuLoopPtr();
-        }
-        if (!loop->appendEvent(event))
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuLoop::fromDuMusicBinary():\n"
-                        << "failed to generate DuLoop\n"
-                        << "a DuEvent was not properly appended";
-
-            return DuLoopPtr();
-        }
-    }
-
-    return loop;
-}
-
-DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop)
-{
-    if (du_loop.l_state == 0)
-    {
-        return DuLoopPtr(new DuLoop);
-    }
-
     DuLoopPtr loop(new DuLoop);
     bool verif = true;
 
@@ -109,6 +70,27 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "DuLoop::fromDuMusicBinary():\n"
                    << "an attribute was not properly set";
+    }
+
+    for (int i = 0; i < du_loop.l_numsample; i++)
+    {
+        const DuEventPtr &event = DuEvent::fromDuMusicBinary(du_sample[i]);
+        if (event == NULL)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "DuLoop::fromDuMusicBinary():\n"
+                        << "failed to generate DuLoop\n"
+                        << "a DuEvent was not properly generated";
+
+            return DuLoopPtr();
+        }
+        if (!loop->appendEvent(event))
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "DuLoop::fromDuMusicBinary():\n"
+                        << "failed to generate DuLoop\n"
+                        << "a DuEvent was not properly appended";
+
+            return DuLoopPtr();
+        }
     }
 
     return loop;
@@ -195,9 +177,10 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
 {
     if (!helper.isValid())
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuLoop::fromMidi():\n"
-                                      << "failed to generate DuLoop\n"
-                                      << "invalid conversion helper";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuLoop::fromMidi():\n"
+                << "failed to generate DuLoop\n"
+                << "invalid conversion helper";
 
         return DuLoopPtr();
     }
@@ -210,9 +193,10 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
         loop->setInstrument(instrument);
     else
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuLoop::fromMidi():\n"
-                                      << "failed to generate DuLoop\n"
-                                      << "the DuInstrument was not properly generated";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuLoop::fromMidi():\n"
+                << "failed to generate DuLoop\n"
+                << "DuInstrument is NULL";
 
         return DuLoopPtr();
     }
@@ -223,16 +207,18 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
 
     if (!verif)
     {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuLoop::fromMidi():\n"
-                                     << "an attribute was not properly set";
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << "DuLoop::fromMidi():\n"
+                << "an attribute was not properly set";
     }
 
     const DuMidiTrackPtr &midiTrack = helper.getMidiTrack(loopIndex);
     if (midiTrack == NULL)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuLoop::fromMidi():\n"
-                                      << "failed to generate DuLoop\n"
-                                      << "the DuMidiTrack was not valid";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuLoop::fromMidi():\n"
+                << "failed to generate DuLoop\n"
+                << "DuMidiTrack is NULL";
 
         return DuLoopPtr();
     }
@@ -240,9 +226,10 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
     const DuArrayPtr &midiEvents = midiTrack->getEvents();
     if (midiEvents == NULL)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuLoop::fromMidi():\n"
-                                      << "failed to generate DuLoop\n"
-                                      << "the DuInstrument was not properly generated";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuLoop::fromMidi():\n"
+                << "failed to generate DuLoop\n"
+                << "midi event list was NULL";
 
         return DuLoopPtr();
     }
@@ -250,9 +237,10 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
     int count = midiEvents->count();
     if (count == -1)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuLoop::fromMidi():\n"
-                                      << "failed to generate DuLoop\n"
-                                      << "invalid event list";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuLoop::fromMidi():\n"
+                << "failed to generate DuLoop\n"
+                << "invalid event list";
 
         return DuLoopPtr();
     }
@@ -262,9 +250,10 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
         const DuObjectPtr &tmpObject = midiEvents->at(i);
         if (tmpObject == NULL)
         {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuLoop::fromMidi():\n"
-                                          << "failed to generate DuLoop\n"
-                                          << "invalid du object at" << i;
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuLoop::fromMidi():\n"
+                    << "failed to generate DuLoop\n"
+                    << "invalid du-object at" << i;
 
             return DuLoopPtr();
         }
@@ -273,9 +262,10 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
                 tmpObject.dynamicCast<DuMidiBasicEvent>();
         if (midiEvent == NULL)
         {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuLoop::fromMidi():\n"
-                                          << "failed to generate DuLoop\n"
-                                          << "invalid midi event at" << i;
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuLoop::fromMidi():\n"
+                    << "failed to generate DuLoop\n"
+                    << "invalid midi event at" << i;
 
             return DuLoopPtr();
         }
@@ -291,19 +281,16 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
                         DuEvent::fromMidi(channelEvent, helper, loopIndex);
                 if (event == NULL)
                 {
-                    qCCritical(LOG_CAT_DU_OBJECT)
+                    qCWarning(LOG_CAT_DU_OBJECT)
                             << "DuLoop::fromMidi():\n"
-                            << "failed to generate DuLoop\n"
-                            << "a DuEvent was not properly generated";
-
-                    return DuLoopPtr();
+                            << "DuEvent" << i << "not properly generated";
                 }
-                if (!loop->appendEvent(event))
+                else if (!loop->appendEvent(event))
                 {
                     qCCritical(LOG_CAT_DU_OBJECT)
                             << "DuLoop::fromMidi():\n"
                             << "failed to generate DuLoop\n"
-                            << "a DuEvent was not properly appended";
+                            << "DuEvent" << i << "not properly appended";
 
                     return DuLoopPtr();
                 }
@@ -360,23 +347,13 @@ QByteArray DuLoop::toDuMusicBinary() const
     return QByteArray((char *)&(du_loop), size());
 }
 
-DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
+DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel) const
 {
     if (getState() == REC_EMPTY)
     {
         qCWarning(LOG_CAT_DU_OBJECT)
                 << "DuLoop::toDuMidiTrack():\n"
-                << "this loop is empty";
-
-        return DuMidiTrackPtr();
-    }
-
-    int channel = getMidiOutChannel();
-    if (channel == -1)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT)
-                << "DuLoop::toDuMidiTrack():\n"
-                << "this loop doesn't have a midi out channel";
+                << "empty";
 
         return DuMidiTrackPtr();
     }
@@ -386,7 +363,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuLoop::toDuMidiTrack():\n"
-                << "this loop doesn't have a duration modifier";
+                << "incorrect duration modifier";
 
         return DuMidiTrackPtr();
     }
@@ -396,7 +373,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuLoop::toDuMidiTrack():\n"
-                << "this loop doesn't have an instrument";
+                << "DuInstrument is NULL";
 
         return DuMidiTrackPtr();
     }
@@ -406,7 +383,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuLoop::toDuMidiTrack():\n"
-                << "this loop's instrument doesn't have info";
+                << "DuInstrumentInfo is NULL";
 
         return DuMidiTrackPtr();
     }
@@ -414,9 +391,39 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
     DuMidiTrackPtr midiTrack(new DuMidiTrack);
     DuArrayPtr midiEvents(new DuArray);
 
+    //TODO: change Dream program change for GM program change when possible, current code produces unwanted PCs
     QString instrName = instrInfo->getName();
-    int instrPC = instrInfo->getMidiProgramChange();
+    int instrPC = instrInfo->getDreamProgramChange();
     int instrC0 = instrInfo->getMidiControlChange0();
+
+    int instrType = instrInfo->getType();
+    bool isPercu = false;
+
+    int instrKeyMap = instrInfo->getKeyMap();
+
+    int midiChannel = channel;
+
+    //NOTE: second part of test useless if exported du-music uses du-touch parameters v2
+    if (instrType == INSTR_PERCU || instrKeyMap > 0)
+    {
+        if (instrKeyMap <= -1)
+        {
+            //NOTE: maybe a qCCritical and return DuMidiTrackPtr() would be better
+
+            qCWarning(LOG_CAT_DU_OBJECT)
+                    << "DuLoop::toDuMidiTrack():\n"
+                    << "invalid mapping for percussive instrument";
+
+            instrKeyMap = 1;
+        }
+
+        isPercu = true;
+        midiChannel = 0x09;
+
+        //NOTE: GM for drum kit PC and C0
+        instrPC = 0;
+        instrC0 = 120;
+    }
 
     quint32 prevTime = 0;
     quint8 prevType = 0;
@@ -435,7 +442,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
 
         pcEvent->setRunningStatus(false);
         pcEvent->setType(DuMidiChannelEvent::ProgramChange);
-        pcEvent->setChannel((quint8)channel);
+        pcEvent->setChannel((quint8)midiChannel);
         pcEvent->setValue((quint8)instrPC);
 
         midiEvents->append(pcEvent);
@@ -448,7 +455,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
 
         c0Event->setRunningStatus(false);
         c0Event->setType(DuMidiChannelEvent::ControlChange);
-        c0Event->setChannel((quint8)channel);
+        c0Event->setChannel((quint8)midiChannel);
         c0Event->setKey(0x00);
         c0Event->setValue((quint8)instrC0);
 
@@ -462,7 +469,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuLoop::toDuMidiTrack():\n"
-                << "this loop's event list was NULL";
+                << "DuEvent list is NULL";
 
         return DuMidiTrackPtr();
     }
@@ -476,7 +483,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
         {
             qCCritical(LOG_CAT_DU_OBJECT)
                     << "DuLoop::toDuMidiTrack():\n"
-                    << "an event in this loop was NULL";
+                    << "DuEvent" << i << "is NULL";
 
             return DuMidiTrackPtr();
         }
@@ -486,42 +493,40 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef) const
 
         if (tmpTime < prevTime)
         {
-            channelEvent = event->toDuMidiChannelEvent(0, prevType);
-            if (channelEvent == NULL)
+            channelEvent = event->toDuMidiChannelEvent(0, prevType,
+                                                       isPercu, instrKeyMap);
+            if (channelEvent != NULL)
             {
-                qCCritical(LOG_CAT_DU_OBJECT)
-                        << "DuLoop::toDuMidiTrack():\n"
-                        << "an event in this loop was not"
-                        << "properly converted to midi";
-
-                return DuMidiTrackPtr();
+                channelEvent->setTime((quint32)durationRef * (quint8)durationMod
+                                      + tmpTime - prevTime, prevTime);
+                channelEvent->setChannel((quint8)midiChannel);
             }
-
-            channelEvent->setTime((quint32)durationRef * (quint8)durationMod
-                                  + tmpTime - prevTime, prevTime);
-            channelEvent->setChannel((quint8)channel);
         }
 
         else
         {
-            channelEvent = event->toDuMidiChannelEvent(prevTime, prevType);
-            if (channelEvent == NULL)
+            channelEvent = event->toDuMidiChannelEvent(prevTime, prevType,
+                                                       isPercu, instrKeyMap);
+            if (channelEvent != NULL)
             {
-                qCCritical(LOG_CAT_DU_OBJECT)
-                        << "DuLoop::toDuMidiTrack():\n"
-                        << "an event in this loop was not"
-                        << "properly converted to midi";
-
-                return DuMidiTrackPtr();
+                channelEvent->setChannel((quint8)midiChannel);
             }
-
-            channelEvent->setChannel((quint8)channel);
         }
 
-        midiEvents->append(channelEvent);
+        if (channelEvent == NULL)
+        {
+            qCWarning(LOG_CAT_DU_OBJECT)
+                    << "DuLoop::toDuMidiTrack():\n"
+                    << "DuEvent" << i << "was not"
+                    << "properly converted to midi";
+        }
+        else
+        {
+            midiEvents->append(channelEvent);
 
-        prevTime = channelEvent->getTime();
-        prevType = channelEvent->getType();
+            prevTime = channelEvent->getTime();
+            prevType = channelEvent->getType();
+        }
     }
 
 

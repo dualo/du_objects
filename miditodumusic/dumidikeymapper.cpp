@@ -77,38 +77,67 @@ int DuMidiKeyMapper::fetchKeyboard(quint8 octave, quint8 key)
 {
     if (!m_maps.contains(m_scale))
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMidiKeyMapper::fetchKeyboard():\n"
-                    << "operation aborted\n"
-                    << "the scale could not be found";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMidiKeyMapper::fetchKeyboard():\n"
+                << "operation aborted\n"
+                << "invalid scale";
+
         return -1;
     }
 
     QJsonValue chosenScaleValue = m_maps.value(m_scale);
     if (!chosenScaleValue.isArray())
     {
-        //TODO: message
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMidiKeyMapper::fetchKeyboard():\n"
+                << "operation aborted\n"
+                << "invalid scale key map";
+
         return -1;
     }
 
     QJsonArray chosenScale = chosenScaleValue.toArray();
+    int count = chosenScale.count();
+    if (m_tonality >= count)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMidiKeyMapper::fetchKeyboard():\n"
+                << "operation aborted\n"
+                << "invalid tonality";
+
+        return -1;
+    }
+
     QJsonValue chosenMapValue = chosenScale.at(m_tonality);
     if (!chosenMapValue.isArray())
     {
-        //TODO: message
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMidiKeyMapper::fetchKeyboard():\n"
+                << "operation aborted\n"
+                << "invalid tonality key map";
+
         return -1;
     }
 
     QJsonArray chosenMap = chosenMapValue.toArray();
     if (chosenMap.count() != 12)
     {
-        //TODO: message
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMidiKeyMapper::fetchKeyboard():\n"
+                << "operation aborted\n"
+                << "invalid tonality key map";
+
         return -1;
     }
 
     QJsonValue chosenKeyboardValue = chosenMap.at(key % 12);
     if (!chosenKeyboardValue.isDouble())
     {
-        //TODO: message
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMidiKeyMapper::fetchKeyboard():\n"
+                << "operation aborted\n"
+                << "invalid map value";
+
         return -1;
     }
 
@@ -120,5 +149,7 @@ int DuMidiKeyMapper::fetchKeyboard(quint8 octave, quint8 key)
     if (parity != 0)
         chosenKeyboard ^= 0x08;
 
-    return chosenKeyboard;
+    // Return result in a form that can be directly added to a DuEvent note
+    //(8th bit coding whether the note is played on the left or the right keyboard)
+    return ((chosenKeyboard << 8) & 0x80);
 }
