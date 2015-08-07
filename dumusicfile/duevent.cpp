@@ -130,6 +130,7 @@ DuEventPtr DuEvent::fromJson(const QJsonObject &jsonEvent)
 }
 
 DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
+                             int instrOctave,
                              const MidiConversionHelper &helper,
                              int loopIndex)
 {
@@ -160,35 +161,57 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
     verif = event->setControl(channelEvent->getType() - 0x08) ? verif : false;
     verif = event->setValue(channelEvent->getValue()) ? verif : false;
 
-    int key = channelEvent->getKey();
-
-    if (!helper.isPercu(loopIndex))
+    int tmpKey = channelEvent->getKey();
+    if (tmpKey == -1)
     {
-        verif = event->setKeyboard(
-                    helper.fetchKeyboard(key, loopIndex)) ? verif : false;
-        verif = event->setNote(key) ? verif : false;
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << "DuEvent::fromMidi():\n"
+                << "invalid midi key:" << tmpKey;
 
-        verif = event->setCanal((helper.keymapNum(loopIndex) << 4) & 0xF0) ? verif : false;
+        return DuEventPtr();
+    }
+
+    int keyboard = 0;
+    int key = tmpKey;
+
+    if (helper.isPercu(loopIndex))
+    {
+        key = helper.fetchPercuKey(tmpKey, loopIndex);
+        if (key == -1)
+        {
+            qCWarning(LOG_CAT_DU_OBJECT)
+                    << "DuEvent::fromMidi():\n"
+                    << "key not found in this mapping";
+
+            return DuEventPtr();
+        }
     }
     else
     {
-        int tmpKey = helper.fetchPercuKey(key, loopIndex);
-        if (tmpKey == -1)
+        //KEY_MUSIC_TRANSPOSE set to default when importing from Midi
+        key = tmpKey - 12 * instrOctave;
+        if (key < 0)
         {
-            qCWarning(LOG_CAT_DU_OBJECT) << "DuEvent::fromMidi():\n"
-                                         << "key not found in this mapping";
+            qCWarning(LOG_CAT_DU_OBJECT)
+                    << "DuEvent::fromMidi():\n"
+                    << "invalid midi key:" << tmpKey;
 
             return DuEventPtr();
         }
 
-        verif = event->setKeyboard(0) ? verif : false;
-        verif = event->setNote(tmpKey) ? verif : false;
+        keyboard = helper.fetchKeyboard(key, loopIndex);
+
+        verif = event->setCanal((helper.keymapNum(loopIndex) << 4) & 0xF0) ? verif : false;
     }
+
+    verif = event->setKeyboard(keyboard) ? verif : false;
+    verif = event->setNote(key) ? verif : false;
 
     if (!verif)
     {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuEvent::fromMidi():\n"
-                                     << "an attribute was not properly set";
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << "DuEvent::fromMidi():\n"
+                << "an attribute was not properly set";
     }
 
     return event;
@@ -237,6 +260,8 @@ QByteArray DuEvent::toDuMusicBinary() const
 
 DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
                                                     quint8 prevType,
+                                                    int instrOctave,
+                                                    int transpose,
                                                     bool isPercu,
                                                     int instrKeyMap) const
 {
@@ -314,7 +339,7 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
         //It is not equal to the index of the map in the instr_mapping.c arrays
 
         quint8 keyboardIndex = (keyboard >> 7) & 0x01;
-        int midiKey = MidiConversionHelper::percuKey((quint8)tmp, keyboardIndex,
+        int midiKey = MidiConversionHelper::percuKey((quint8)tmp,keyboardIndex,
                                                      (quint8)instrKeyMap - 1);
 
         if (midiKey == -1 || (quint8)midiKey > 0x7F)
@@ -330,6 +355,18 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
     }
     else
     {
+        int midiKey = tmp + 12 * instrOctave + transpose - RECORD_TRANSPOSEMAX;
+        if (midiKey > 0x7F)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuEvent::toDuMidiChannelEvent():\n"
+                    << "invalid harmonic key:" << tmp <<"\n"
+                    << "(instrument octave =" << instrOctave << "\n"
+                    << "transpose =" << transpose - RECORD_TRANSPOSEMAX << ")";
+
+            return DuMidiChannelEventPtr();
+        }
+
         channelEvent->setKey((quint8)tmp);
     }
 

@@ -27,7 +27,7 @@ DuMusic::DuMusic() :
 
     addChild(KEY_MUSIC_TRANSPOSE,
              new DuNumeric(RECORD_TRANSPOSEDEFAULT, NUMERIC_DEFAULT_SIZE,
-                           RECORD_TRANSPOSEMAX, RECORD_TRANSPOSEDEFAULT));
+                           2 * RECORD_TRANSPOSEDEFAULT, 0));
 }
 
 DuMusic::~DuMusic()
@@ -646,22 +646,34 @@ QByteArray DuMusic::toDuMusicBinary() const
 
 QByteArray DuMusic::toMidiBinary() const
 {
-    const DuHeaderConstPtr &header = getHeader();
-    if (header == NULL)
-        return QByteArray();
-
     const DuSongInfoConstPtr &songInfo = getSongInfo();
     if (songInfo == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+               << "DuMusic::toMidiBinary():\n"
+               << "KEY_MUSIC_SONGINFO is NULL";
+
         return QByteArray();
+    }
 
     const DuArrayConstPtr &tracks = getTracks();
-
     if (tracks == NULL)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::toMidiBinary():\n"
-                    << "could not retrieve track array";
+        qCCritical(LOG_CAT_DU_OBJECT)
+               << "DuMusic::toMidiBinary():\n"
+               << "KEY_MUSIC_TRACKS is NULL";
 
         return QByteArray();
+    }
+
+    int transpose = getTranspose();
+    if (transpose == -1)
+    {
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << "DuMusic::toMidiBinary():\n"
+                << "incorrect KEY_MUSIC_TRANSPOSE value:" << transpose;
+
+        transpose = RECORD_TRANSPOSEDEFAULT;
     }
 
 
@@ -674,8 +686,9 @@ QByteArray DuMusic::toMidiBinary() const
     int durationRef = songInfo->getReferenceLoopDuration();
     if (durationRef == -1)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::toMidiBinary():\n"
-                    << "this du-music doesn't have a reference loop duration";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::toMidiBinary():\n"
+                << "invalid reference loop duration";
 
         return QByteArray();
     }
@@ -684,8 +697,9 @@ QByteArray DuMusic::toMidiBinary() const
     if (songName.isEmpty() || tempo == -1  ||  timeSig == -1
             ||  tonality == -1  || scale == -1)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::toMidiBinary():\n"
-                    << "incorrect song data";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::toMidiBinary():\n"
+                << "invalid song data";
 
         return QByteArray();
     }
@@ -733,10 +747,23 @@ QByteArray DuMusic::toMidiBinary() const
     {
         const DuTrackConstPtr &track = tracks->at(i).dynamicCast<const DuTrack>();
         if (track == NULL)
-            return QByteArray();
+        {
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuMusic::toMidiBinary():\n"
+                    << "DuTrack" << i << "is NULL";
 
-        if (!midiFile->appendTracks(track->toDuMidiTrackArray(durationRef)))
             return QByteArray();
+        }
+
+        if (!midiFile->appendTracks(track->toDuMidiTrackArray(durationRef,
+                                                              transpose)))
+        {
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuMusic::toMidiBinary():\n"
+                    << "DuTrack" << i << "was not successfully converted/appended";
+
+            return QByteArray();
+        }
     }
 
     return midiFile->toMidiBinary();
@@ -751,7 +778,7 @@ int DuMusic::size() const
     const DuArrayConstPtr &tracks = getChildAs<DuArray>(KEY_MUSIC_TRACKS);
     if (tracks == NULL)
     {
-        qCDebug(LOG_CAT_DU_OBJECT) << "tracks null";
+        qCCritical(LOG_CAT_DU_OBJECT) << "KEY_MUSIC_TRACKS is NULL";
         return -1;
     }
 
@@ -761,14 +788,14 @@ int DuMusic::size() const
         const DuTrackConstPtr &track = tracks->at(i).dynamicCast<const DuTrack>();
         if (track == NULL)
         {
-            qCDebug(LOG_CAT_DU_OBJECT) << "track" << i << "null";
+            qCCritical(LOG_CAT_DU_OBJECT) << "track" << i << "is NULL";
             return -1;
         }
 
         tmpSize = track->eventsSize();
         if (tmpSize == -1)
         {
-            qCDebug(LOG_CAT_DU_OBJECT) << "track" << i << "size null";
+            qCCritical(LOG_CAT_DU_OBJECT) << "track" << i << "size null";
             return -1;
         }
 

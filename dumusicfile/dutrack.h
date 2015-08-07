@@ -28,7 +28,7 @@ public:
     static DuTrackPtr fromMidi(const MidiConversionHelper &helper, int trackIndex);
 
     QByteArray toDuMusicBinary() const;
-    QList<DuMidiTrackPtr> toDuMidiTrackArray(int durationRef) const;
+    QList<DuMidiTrackPtr> toDuMidiTrackArray(int durationRef, int transpose) const;
 
     int size() const;
 

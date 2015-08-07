@@ -289,7 +289,6 @@ QPair<int, int> MidiConversionHelper::getIndexes(int index) const
 {
     if (index < 0 || index >= selectedIndexes.size())
     {
-        qDebug() << index;
         return qMakePair<int, int>(-1, -1);
     }
     else
@@ -397,16 +396,7 @@ int MidiConversionHelper::fetchKeyboard(int key, int index) const
     if (index >= selectedInstruments.count())
         return -1;
 
-    const DuInstrumentPtr &instrument = selectedInstruments[index];
-    if (instrument == NULL)
-        return -1;
-
-    const DuInstrumentInfoConstPtr &instrInfo =
-            instrument->getInstrumentInfo();
-    if (instrInfo == NULL)
-        return -1;
-
-    return mapper->fetchKeyboard(instrInfo->getOctave(), key);
+    return mapper->fetchKeyboard(key);
 }
 
 

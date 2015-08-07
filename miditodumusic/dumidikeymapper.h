@@ -45,7 +45,7 @@ public:
     QStringList mapList() const;
     void chooseMap(QString scale, quint8 tonality);
 
-    int fetchKeyboard(quint8 octave, quint8 key);
+    int fetchKeyboard(quint8 key);
 
 private:
     QJsonObject m_maps;

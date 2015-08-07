@@ -185,32 +185,6 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
         return DuLoopPtr();
     }
 
-    DuLoopPtr loop(new DuLoop);
-    bool verif = true;
-
-    const DuInstrumentPtr &instrument = helper.getInstrument(loopIndex);
-    if (instrument != NULL)
-        loop->setInstrument(instrument);
-    else
-    {
-        qCCritical(LOG_CAT_DU_OBJECT)
-                << "DuLoop::fromMidi():\n"
-                << "failed to generate DuLoop\n"
-                << "DuInstrument is NULL";
-
-        return DuLoopPtr();
-    }
-
-    verif = loop->setState(REC_STOP) ? verif : false;
-    verif = loop->setDurationModifier(1) ? verif : false;
-    verif = loop->setMidiOutChannel(helper.getMidiChannel(loopIndex)) ? verif : false;
-
-    if (!verif)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT)
-                << "DuLoop::fromMidi():\n"
-                << "an attribute was not properly set";
-    }
 
     const DuMidiTrackPtr &midiTrack = helper.getMidiTrack(loopIndex);
     if (midiTrack == NULL)
@@ -243,6 +217,57 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
                 << "invalid event list";
 
         return DuLoopPtr();
+    }
+
+
+    const DuInstrumentPtr &instrument = helper.getInstrument(loopIndex);
+    if (instrument == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuLoop::fromMidi():\n"
+                << "failed to generate DuLoop\n"
+                << "DuInstrument is NULL";
+
+        return DuLoopPtr();
+    }
+
+    const DuInstrumentInfoConstPtr &instrInfo = instrument->getInstrumentInfo();
+    if (instrInfo == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuLoop::fromMidi():\n"
+                << "failed to generate DuLoop\n"
+                << "DuInstrumentInfo is NULL";
+
+        return DuLoopPtr();
+    }
+
+    int instrOctave = instrInfo->getOctave();
+    if (instrOctave == -1)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuLoop::fromMidi():\n"
+                << "failed to generate DuLoop\n"
+                << "invalid instrument octave:" << instrOctave;
+
+        return DuLoopPtr();
+    }
+
+
+    DuLoopPtr loop(new DuLoop);
+    bool verif = true;
+
+    loop->setInstrument(instrument);
+
+    verif = loop->setState(REC_STOP) ? verif : false;
+    verif = loop->setDurationModifier(1) ? verif : false;
+    verif = loop->setMidiOutChannel(helper.getMidiChannel(loopIndex)) ? verif : false;
+
+    if (!verif)
+    {
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << "DuLoop::fromMidi():\n"
+                << "an attribute was not properly set";
     }
 
     for (int i = 0; i < count; i++)
@@ -278,7 +303,8 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
             if (channelEvent->getType() != DuMidiChannelEvent::ProgramChange)
             {
                 const DuEventPtr &event =
-                        DuEvent::fromMidi(channelEvent, helper, loopIndex);
+                        DuEvent::fromMidi(channelEvent, instrOctave,
+                                          helper, loopIndex);
                 if (event == NULL)
                 {
                     qCWarning(LOG_CAT_DU_OBJECT)
@@ -347,7 +373,8 @@ QByteArray DuLoop::toDuMusicBinary() const
     return QByteArray((char *)&(du_loop), size());
 }
 
-DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel) const
+DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
+                                     int transpose) const
 {
     if (getState() == REC_EMPTY)
     {
@@ -391,8 +418,19 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel) const
     DuMidiTrackPtr midiTrack(new DuMidiTrack);
     DuArrayPtr midiEvents(new DuArray);
 
-    //TODO: change Dream program change for GM program change when possible, current code produces unwanted PCs
+    int instrOctave = instrInfo->getOctave();
+    if (instrOctave == -1)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuLoop::toDuMidiTrack():\n"
+                << "invalid instrument octave";
+
+        return DuMidiTrackPtr();
+    }
+
     QString instrName = instrInfo->getName();
+
+    //TODO: change Dream program change for GM program change when possible, current code produces incorrect PCs
     int instrPC = instrInfo->getDreamProgramChange();
     int instrC0 = instrInfo->getMidiControlChange0();
 
@@ -420,7 +458,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel) const
         isPercu = true;
         midiChannel = 0x09;
 
-        //NOTE: GM for drum kit PC and C0
+        //GM for drum kit PC and C0
         instrPC = 0;
         instrC0 = 120;
     }
@@ -494,6 +532,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel) const
         if (tmpTime < prevTime)
         {
             channelEvent = event->toDuMidiChannelEvent(0, prevType,
+                                                       instrOctave, transpose,
                                                        isPercu, instrKeyMap);
             if (channelEvent != NULL)
             {
@@ -506,6 +545,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel) const
         else
         {
             channelEvent = event->toDuMidiChannelEvent(prevTime, prevType,
+                                                       instrOctave, transpose,
                                                        isPercu, instrKeyMap);
             if (channelEvent != NULL)
             {

@@ -286,13 +286,15 @@ QByteArray DuTrack::toDuMusicBinary() const
 }
 
 
-QList<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef) const
+QList<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef,
+                                                  int transpose) const
 {
     const DuArrayConstPtr &loops = getLoops();
     if (loops == NULL)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::toDuMidiTrackArray():\n"
-                    << "could not retrieve loop array";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuTrack::toDuMidiTrackArray():\n"
+                << "KEY_TRACK_LOOPS is NULL";
 
         return QList<DuMidiTrackPtr>();
     }
@@ -302,7 +304,7 @@ QList<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef) const
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuTrack::toDuMidiTrackArray():\n"
-                << "could not retrieve channel";
+                << "invalid channel";
 
         return QList<DuMidiTrackPtr>();
     }
@@ -314,14 +316,15 @@ QList<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef) const
         const DuLoopConstPtr &loop = loops->at(i).dynamicCast<const DuLoop>();
         if (loop == NULL)
         {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::toDuMidiTrackArray():\n"
-                        << "a loop was NULL";
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuTrack::toDuMidiTrackArray():\n"
+                    << "a loop was NULL";
 
             return QList<DuMidiTrackPtr>();
         }
 
         const DuMidiTrackPtr &midiTrack =
-                loop->toDuMidiTrack(durationRef, channel);
+                loop->toDuMidiTrack(durationRef, channel, transpose);
 
         if (midiTrack != NULL)
             retList.append(midiTrack);

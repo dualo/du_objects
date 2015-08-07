@@ -73,7 +73,7 @@ void DuMidiKeyMapper::chooseMap(QString scale, quint8 tonality)
 }
 
 
-int DuMidiKeyMapper::fetchKeyboard(quint8 octave, quint8 key)
+int DuMidiKeyMapper::fetchKeyboard(quint8 key)
 {
     if (!m_maps.contains(m_scale))
     {
@@ -144,12 +144,12 @@ int DuMidiKeyMapper::fetchKeyboard(quint8 octave, quint8 key)
     int chosenKeyboard = chosenKeyboardValue.toInt();
 
     // The first possible instrument octave is the second octave in MIDI.
-    int parity = (key / 12 - octave + 1) % 2;
+    int parity = (key / 12 + 1) % 2;
 
     if (parity != 0)
-        chosenKeyboard ^= 0x08;
+        chosenKeyboard ^= 0x01;
 
-    // Return result in a form that can be directly added to a DuEvent note
+    //Return result in a form that can be directly added to a DuEvent note
     //(8th bit coding whether the note is played on the left or the right keyboard)
     return ((chosenKeyboard << 8) & 0x80);
 }
