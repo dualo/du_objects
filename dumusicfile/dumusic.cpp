@@ -44,84 +44,33 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
 {
     if (!upgrade(du_music))
     {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
-                                     << "failed to generate DuMusic\n"
-                                     << "upgrade failed";
-    }
-
-    if (fileSize - MUSIC_SONG_SIZE !=
-            du_music.local_song.s_totalsample * MUSIC_SAMPLE_SIZE)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
-                    << "failed to generate DuMusic\n"
-                    << "invalid total event size :"
-                    << fileSize - MUSIC_SONG_SIZE << "!=" << du_music.local_song.s_totalsample * MUSIC_SAMPLE_SIZE;
-
-        return DuMusicPtr();
-    }
-
-    DuMusicPtr music(new DuMusic);
-
-    const DuHeaderPtr &header =
-            DuHeader::fromDuMusicBinary(du_music.local_song);
-    if (header != NULL)
-        music->setHeader(header);
-    else
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
-                    << "failed to generate DuMusic\n"
-                    << "the DuHeader was not properly generated";
-
-        return DuMusicPtr();
-    }
-
-    const DuControllersPtr &controllers =
-            DuControllers::fromDuMusicBinary(du_music.local_song);
-    if (controllers != NULL)
-        music->setControllers(controllers);
-    else
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
-                    << "failed to generate DuMusic\n"
-                    << "the DuControllers was not properly generated";
-
-        return DuMusicPtr();
-    }
-
-    const DuSongInfoPtr &songInfo =
-            DuSongInfo::fromDuMusicBinary(du_music.local_song);
-    if (songInfo != NULL)
-        music->setSongInfo(songInfo);
-    else
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
-                    << "failed to generate DuMusic\n"
-                    << "the DuSongInfo was not properly generated";
-
-        return DuMusicPtr();
-    }
-
-    const DuReverbPtr &reverb =
-            DuReverb::fromDuMusicBinary(du_music.local_song.s_reverb);
-    if (reverb != NULL)
-        music->setReverb(reverb);
-    else
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
-                    << "failed to generate DuMusic\n"
-                    << "the DuReverb was not properly generated";
-
-        return DuMusicPtr();
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromDuMusicBinary():\n"
+                << "failed to generate DuMusic\n"
+                << "upgrade failed";
     }
 
 
     uint fileSampleSize = fileSize - MUSIC_SONG_SIZE;
 
+    if (fileSampleSize != du_music.local_song.s_totalsample * MUSIC_SAMPLE_SIZE)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromDuMusicBinary():\n"
+                << "failed to generate DuMusic\n"
+                << "invalid total event size :"
+                << fileSampleSize << "!="
+                << du_music.local_song.s_totalsample * MUSIC_SAMPLE_SIZE;
+
+        return DuMusicPtr();
+    }
+
     if (fileSampleSize % MUSIC_SAMPLE_SIZE != 0)
     {
         qCWarning(LOG_CAT_DU_OBJECT)
                 << "DuMusic::fromDuMusicBinary():\n"
-                << "file size (without header) is not a multiple of MUSIC_SAMPLE_SIZE\n"
+                << "file size (without header) is"
+                << "not a multiple of MUSIC_SAMPLE_SIZE\n"
                 << "fileSampleSize =" << fileSampleSize << "\n"
                 << "MUSIC_SAMPLE_SIZE =" << MUSIC_SAMPLE_SIZE;
     }
@@ -132,7 +81,8 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
     {
         qCWarning(LOG_CAT_DU_OBJECT)
                 << "DuMusic::fromDuMusicBinary():\n"
-                << "Nb samples calculated from file size different from s_totalsample value in header\n"
+                << "Nb samples calculated from file size"
+                << "different from s_totalsample value in header\n"
                 << "s_totalsample =" << du_music.local_song.s_totalsample << "\n"
                 << "nbSamples =" << nbSamples;
     }
@@ -149,6 +99,65 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
     }
 
 
+    DuMusicPtr music(new DuMusic);
+
+    const DuHeaderPtr &header =
+            DuHeader::fromDuMusicBinary(du_music.local_song);
+    if (header != NULL)
+        music->setHeader(header);
+    else
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromDuMusicBinary():\n"
+                << "failed to generate DuMusic\n"
+                << "the DuHeader was not properly generated";
+
+        return DuMusicPtr();
+    }
+
+    const DuControllersPtr &controllers =
+            DuControllers::fromDuMusicBinary(du_music.local_song);
+    if (controllers != NULL)
+        music->setControllers(controllers);
+    else
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromDuMusicBinary():\n"
+                << "failed to generate DuMusic\n"
+                << "the DuControllers was not properly generated";
+
+        return DuMusicPtr();
+    }
+
+    const DuSongInfoPtr &songInfo =
+            DuSongInfo::fromDuMusicBinary(du_music.local_song);
+    if (songInfo != NULL)
+        music->setSongInfo(songInfo);
+    else
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromDuMusicBinary():\n"
+                << "failed to generate DuMusic\n"
+                << "the DuSongInfo was not properly generated";
+
+        return DuMusicPtr();
+    }
+
+    const DuReverbPtr &reverb =
+            DuReverb::fromDuMusicBinary(du_music.local_song.s_reverb);
+    if (reverb != NULL)
+        music->setReverb(reverb);
+    else
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromDuMusicBinary():\n"
+                << "failed to generate DuMusic\n"
+                << "the DuReverb was not properly generated";
+
+        return DuMusicPtr();
+    }
+
+
     for (int i = 0; i < MUSIC_MAXTRACK; i++)
     {
         const DuTrackPtr &track =
@@ -157,17 +166,19 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
                                            nbSamples);
         if (track == NULL)
         {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
-                                          << "failed to generate DuMusic\n"
-                                          << "a DuTrack was not properly generated";
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuMusic::fromDuMusicBinary():\n"
+                    << "failed to generate DuMusic\n"
+                    << "a DuTrack was not properly generated";
 
             return DuMusicPtr();
         }
         if (!music->appendTrack(track))
         {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromDuMusicBinary():\n"
-                                          << "failed to generate DuMusic\n"
-                                          << "a DuTrack was not properly appended";
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuMusic::fromDuMusicBinary():\n"
+                    << "failed to generate DuMusic\n"
+                    << "a DuTrack was not properly appended";
 
             return DuMusicPtr();
         }
@@ -191,12 +202,15 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
 DuMusicPtr DuMusic::fromBinary(const QByteArray &data)
 {
     int dataSize = data.size() ;
-    if (dataSize - MUSIC_SONG_SIZE < 0
-            || dataSize - MUSIC_SONG_SIZE > RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE)
+    int totalSampleSize = dataSize - MUSIC_SONG_SIZE;
+
+    if (totalSampleSize < 0
+            || totalSampleSize > RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromBinary():\n"
-                                      << "failed to generate DuMusic\n"
-                                      << "this file is not a valid dumusic file";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromBinary():\n"
+                << "failed to generate DuMusic\n"
+                << "this file is not a valid dumusic file";
 
         return DuMusicPtr();
     }
@@ -214,9 +228,10 @@ DuMusicPtr DuMusic::fromBinary(QIODevice *input)
 
     if (array.isEmpty())
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromBinary():\n"
-                                      << "failed to generate DuMusic\n"
-                                      << "selected file could not be read";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromBinary():\n"
+                << "failed to generate DuMusic\n"
+                << "selected file could not be read";
 
         return DuMusicPtr();
     }
@@ -238,9 +253,10 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
             ||  !jsonSongInfo.isObject()    ||  !jsonReverb.isObject()
             ||  !jsonTracks.isArray()       ||  !jsonTranspose.isDouble())
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromJson():\n"
-                                      << "failed to generate DuMusic\n"
-                                      << "a json key did not contain the proper type";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromJson():\n"
+                << "failed to generate DuMusic\n"
+                << "a json key did not contain the proper type";
 
         return DuMusicPtr();
     }
@@ -253,9 +269,10 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
         music->setHeader(header);
     else
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromJson():\n"
-                                      << "failed to generate DuMusic\n"
-                                      << "the DuHeader was not properly generated";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromJson():\n"
+                << "failed to generate DuMusic\n"
+                << "the DuHeader was not properly generated";
 
         return DuMusicPtr();
     }
@@ -266,9 +283,10 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
         music->setControllers(controllers);
     else
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromJson():\n"
-                    << "failed to generate DuMusic\n"
-                    << "the DuControllers was not properly generated";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromJson():\n"
+                << "failed to generate DuMusic\n"
+                << "the DuControllers was not properly generated";
 
         return DuMusicPtr();
     }
@@ -278,9 +296,10 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
         music->setSongInfo(songInfo);
     else
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromJson():\n"
-                                      << "failed to generate DuMusic\n"
-                                      << "the DuSongInfo was not properly generated";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromJson():\n"
+                << "failed to generate DuMusic\n"
+                << "the DuSongInfo was not properly generated";
 
         return DuMusicPtr();
     }
@@ -290,9 +309,10 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
         music->setReverb(reverb);
     else
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromJson():\n"
-                    << "failed to generate DuMusic\n"
-                    << "the DuReverb was not properly generated";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromJson():\n"
+                << "failed to generate DuMusic\n"
+                << "the DuReverb was not properly generated";
 
         return DuMusicPtr();
     }
@@ -310,20 +330,23 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
 
     for (int i = 0; i < jsonTrackArray.count(); i++)
     {
-        const DuTrackPtr &track = DuTrack::fromJson(jsonTrackArray[i].toObject());
+        const DuTrackPtr &track =
+                DuTrack::fromJson(jsonTrackArray[i].toObject());
         if (track == NULL)
         {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromJson():\n"
-                                          << "failed to generate DuMusic\n"
-                                          << "a DuTrack was not properly generated";
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuMusic::fromJson():\n"
+                    << "failed to generate DuMusic\n"
+                    << "a DuTrack was not properly generated";
 
             return DuMusicPtr();
         }
         if (!music->appendTrack(track))
         {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromJson():\n"
-                                          << "failed to generate DuMusic\n"
-                                          << "a DuTrack was not properly appended";
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuMusic::fromJson():\n"
+                    << "failed to generate DuMusic\n"
+                    << "a DuTrack was not properly appended";
 
             return DuMusicPtr();
         }
@@ -348,9 +371,10 @@ DuMusicPtr DuMusic::fromMidi(const MidiConversionHelper &helper)
 {
     if (!helper.isValid())
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromMidi():\n"
-                                      << "failed to generate DuMusic\n"
-                                      << "invalid conversion helper";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromMidi():\n"
+                << "failed to generate DuMusic\n"
+                << "invalid conversion helper";
 
         return DuMusicPtr();
     }
@@ -362,9 +386,10 @@ DuMusicPtr DuMusic::fromMidi(const MidiConversionHelper &helper)
         music->setSongInfo(songInfo);
     else
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromMidi():\n"
-                                      << "failed to generate DuMusic\n"
-                                      << "the DuSongInfo was not properly generated";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromMidi():\n"
+                << "failed to generate DuMusic\n"
+                << "the DuSongInfo was not properly generated";
 
         return DuMusicPtr();
     }
@@ -374,17 +399,19 @@ DuMusicPtr DuMusic::fromMidi(const MidiConversionHelper &helper)
         const DuTrackPtr &track = DuTrack::fromMidi(helper, i);
         if (track == NULL)
         {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromMidi():\n"
-                                          << "failed to generate DuMusic\n"
-                                          << "a DuTrack was not properly generated";
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuMusic::fromMidi():\n"
+                    << "failed to generate DuMusic\n"
+                    << "a DuTrack was not properly generated";
 
             return DuMusicPtr();
         }
         if (!music->appendTrack(track))
         {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromMidi():\n"
-                                          << "failed to generate DuMusic\n"
-                                          << "a DuTrack was not properly appended";
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuMusic::fromMidi():\n"
+                    << "failed to generate DuMusic\n"
+                    << "a DuTrack was not properly appended";
 
             return DuMusicPtr();
         }
@@ -445,26 +472,32 @@ bool DuMusic::upgrade(s_total_buffer &du_music)
 
                 if (loop.l_adress % MUSIC_SAMPLE_SIZE != 0)
                 {
-                    qCCritical(LOG_CAT_DU_OBJECT) << "Fucked up du-music:\n"
-                                                  << "l_adress is not a multiple of MUSIC_SAMPLE_SIZE\n"
-                                                  << "l_adress =" << loop.l_adress << "\n"
-                                                  << "MUSIC_SAMPLE_SIZE =" << MUSIC_SAMPLE_SIZE;
+                    qCCritical(LOG_CAT_DU_OBJECT)
+                            << "Fucked up du-music:\n"
+                            << "l_adress is not a multiple of MUSIC_SAMPLE_SIZE\n"
+                            << "l_adress =" << loop.l_adress << "\n"
+                            << "MUSIC_SAMPLE_SIZE =" << MUSIC_SAMPLE_SIZE;
+
                     return false;
                 }
 
-                music_sample_p firstSampleIndex = loop.l_adress / MUSIC_SAMPLE_SIZE;
-                if ((firstSampleIndex) + loop.l_numsample > RECORD_SAMPLEBUFFERSIZE)
+                music_sample_p firstSampleIndex =
+                        loop.l_adress / MUSIC_SAMPLE_SIZE;
+                if (firstSampleIndex + loop.l_numsample > RECORD_SAMPLEBUFFERSIZE)
                 {
-                    qCCritical(LOG_CAT_DU_OBJECT) << "Fucked up du-music:\n"
-                                                  << "sample adresses point outside sample array\n"
-                                                  << "firstSampleIndex =" << firstSampleIndex << "\n"
-                                                  << "l_numsample =" << loop.l_numsample << "\n"
-                                                  << "RECORD_SAMPLEBUFFERSIZE =" << RECORD_SAMPLEBUFFERSIZE;
+                    qCCritical(LOG_CAT_DU_OBJECT)
+                            << "Fucked up du-music:\n"
+                            << "sample adresses point outside sample array\n"
+                            << "firstSampleIndex =" << firstSampleIndex << "\n"
+                            << "l_numsample =" << loop.l_numsample << "\n"
+                            << "RECORD_SAMPLEBUFFERSIZE ="
+                            << RECORD_SAMPLEBUFFERSIZE;
+
                     return false;
                 }
 
                 // PRESETS
-                preset_instr& preset = loop.l_instr.i_preset;
+                preset_instr &preset = loop.l_instr.i_preset;
 
                 preset.s_arpegiator_type = 0;
                 preset.s_arpegiator_beat = 0;
@@ -509,15 +542,20 @@ bool DuMusic::upgrade(s_total_buffer &du_music)
                     instr.instr_type = INSTR_HARMONIC;
 
                 // SAMPLES
-                music_sample *played_buffer = &du_music.local_buffer[firstSampleIndex];
+                music_sample *played_buffer =
+                        &du_music.local_buffer[firstSampleIndex];
                 for (k = 0; k < loop.l_numsample; k++)
                 {
-                    played_buffer[k].canal = played_buffer[k].canal & 0xF7; // remove canals 8 -> 15 not used (and initialized anymore)
-                    if (loop.l_instr.i_instrument.instr_type == INSTR_HARMONIC) // harmonic instrument -> remove octave from sample
+                    // remove canals 8 -> 15 not used (and initialized anymore)
+                    played_buffer[k].canal = played_buffer[k].canal & 0xF7;
+                    // harmonic instrument -> remove octave from sample
+                    if (loop.l_instr.i_instrument.instr_type == INSTR_HARMONIC)
                     {
-                        if (played_buffer[k].control == 0 || played_buffer[k].control == 1)
+                        if (played_buffer[k].control == 0
+                                || played_buffer[k].control == 1)
                         {
-                            played_buffer[k].note -= (12 * preset.s_instr_octave) + (song.s_transpose - RECORD_TRANSPOSEMAX);
+                            played_buffer[k].note -= (12 * preset.s_instr_octave)
+                                    + (song.s_transpose - RECORD_TRANSPOSEMAX);
                         }
                     }
                 }
@@ -580,8 +618,8 @@ QByteArray DuMusic::toDuMusicBinary() const
     if (tracksArray.isNull())
         return QByteArray();
 
-    tmpLocalSong =
-            headerArray + controllersArray + songInfoArray + reverbArray + tracksArray;
+    tmpLocalSong = headerArray + controllersArray
+            + songInfoArray + reverbArray + tracksArray;
 
     std::memcpy(&(du_music->local_song), tmpLocalSong.data(), MUSIC_SONG_SIZE);
 
@@ -593,7 +631,8 @@ QByteArray DuMusic::toDuMusicBinary() const
     int trackCount = tracks->count();
     for (int i = 0; i < trackCount; i++)
     {
-        const DuTrackConstPtr &track = tracks->at(i).dynamicCast<const DuTrack>();
+        const DuTrackConstPtr &track =
+                tracks->at(i).dynamicCast<const DuTrack>();
         if (track == NULL)
             return QByteArray();
 
@@ -604,7 +643,8 @@ QByteArray DuMusic::toDuMusicBinary() const
         int loopCount = loops->count();
         for (int j = 0; j < loopCount; j++)
         {
-            const DuLoopConstPtr &loop = loops->at(j).dynamicCast<const DuLoop>();
+            const DuLoopConstPtr &loop =
+                    loops->at(j).dynamicCast<const DuLoop>();
             if (loop == NULL)
                 return QByteArray();
 
@@ -745,7 +785,8 @@ QByteArray DuMusic::toMidiBinary() const
 
     for (int i = 0; i < MUSIC_MAXTRACK; i++)
     {
-        const DuTrackConstPtr &track = tracks->at(i).dynamicCast<const DuTrack>();
+        const DuTrackConstPtr &track =
+                tracks->at(i).dynamicCast<const DuTrack>();
         if (track == NULL)
         {
             qCCritical(LOG_CAT_DU_OBJECT)
@@ -760,7 +801,8 @@ QByteArray DuMusic::toMidiBinary() const
         {
             qCCritical(LOG_CAT_DU_OBJECT)
                     << "DuMusic::toMidiBinary():\n"
-                    << "DuTrack" << i << "was not successfully converted/appended";
+                    << "DuTrack" << i
+                    << "was not successfully converted/appended";
 
             return QByteArray();
         }
@@ -785,7 +827,8 @@ int DuMusic::size() const
     int count = tracks->count();
     for (int i = 0; i < count; i++)
     {
-        const DuTrackConstPtr &track = tracks->at(i).dynamicCast<const DuTrack>();
+        const DuTrackConstPtr &track =
+                tracks->at(i).dynamicCast<const DuTrack>();
         if (track == NULL)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "track" << i << "is NULL";
@@ -833,7 +876,8 @@ void DuMusic::setLists(const QStringList &lists)
 
 QString DuMusic::getSongName() const
 {
-    const DuSongInfoConstPtr &songInfo = getChildAs<DuSongInfo>(KEY_MUSIC_SONGINFO);
+    const DuSongInfoConstPtr &songInfo =
+            getChildAs<DuSongInfo>(KEY_MUSIC_SONGINFO);
 
     if (songInfo == NULL)
     {
@@ -845,7 +889,8 @@ QString DuMusic::getSongName() const
 
 bool DuMusic::setSongName(const QString &value)
 {
-    const DuSongInfoPtr &songInfo = getChildAs<DuSongInfo>(KEY_MUSIC_SONGINFO);
+    const DuSongInfoPtr &songInfo =
+            getChildAs<DuSongInfo>(KEY_MUSIC_SONGINFO);
 
     if (songInfo == NULL)
     {
@@ -857,7 +902,8 @@ bool DuMusic::setSongName(const QString &value)
 
 int DuMusic::getFileVersion() const
 {
-    const DuHeaderConstPtr &header = getChildAs<DuHeader>(KEY_MUSIC_HEADER);
+    const DuHeaderConstPtr &header =
+            getChildAs<DuHeader>(KEY_MUSIC_HEADER);
 
     if (header == NULL)
     {
@@ -869,7 +915,8 @@ int DuMusic::getFileVersion() const
 
 bool DuMusic::setFileVersion(int value)
 {
-    const DuHeaderPtr &header = getChildAs<DuHeader>(KEY_MUSIC_HEADER);
+    const DuHeaderPtr &header =
+            getChildAs<DuHeader>(KEY_MUSIC_HEADER);
 
     if (header == NULL)
     {
@@ -942,7 +989,8 @@ bool DuMusic::appendTrack(const DuTrackPtr &track)
 
 int DuMusic::getTranspose() const
 {
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_MUSIC_TRANSPOSE);
+    const DuNumericConstPtr &tmp =
+            getChildAs<DuNumeric>(KEY_MUSIC_TRANSPOSE);
 
     if (tmp == NULL)
         return -1;
@@ -952,7 +1000,8 @@ int DuMusic::getTranspose() const
 
 bool DuMusic::setTranspose(int value)
 {
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_MUSIC_TRANSPOSE);
+    const DuNumericPtr &tmp =
+            getChildAs<DuNumeric>(KEY_MUSIC_TRANSPOSE);
 
     if (tmp == NULL)
         return false;
