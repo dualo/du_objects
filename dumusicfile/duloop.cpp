@@ -253,6 +253,20 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
         return DuLoopPtr();
     }
 
+    int instrKeyMap = instrInfo->getKeyMap();
+    if (instrKeyMap == -1)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuLoop::fromMidi():\n"
+                << "failed to generate DuLoop\n"
+                << "invalid instrument key map:" << instrKeyMap;
+
+        return DuLoopPtr();
+    }
+
+    //NOTE: tests can be more precise with du-touch parameters v2 and du-sounds
+    bool isPercu =  instrKeyMap >= 1 && instrKeyMap <= 4;
+
 
     DuLoopPtr loop(new DuLoop);
     bool verif = true;
@@ -303,8 +317,8 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
             if (channelEvent->getType() != DuMidiChannelEvent::ProgramChange)
             {
                 const DuEventPtr &event =
-                        DuEvent::fromMidi(channelEvent, instrOctave,
-                                          helper, loopIndex);
+                        DuEvent::fromMidi(channelEvent, instrOctave, instrKeyMap,
+                                          isPercu, helper);
                 if (event == NULL)
                 {
                     qCWarning(LOG_CAT_DU_OBJECT)
@@ -415,34 +429,49 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
         return DuMidiTrackPtr();
     }
 
-    DuMidiTrackPtr midiTrack(new DuMidiTrack);
-    DuArrayPtr midiEvents(new DuArray);
 
     int instrOctave = instrInfo->getOctave();
     if (instrOctave == -1)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuLoop::toDuMidiTrack():\n"
-                << "invalid instrument octave";
+                << "invalid instrument octave:" << instrOctave;
+
+        return DuMidiTrackPtr();
+    }
+
+    int instrKeyMap = instrInfo->getKeyMap();
+    if (instrKeyMap == -1)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuLoop::toDuMidiTrack():\n"
+                << "invalid instrument key map:" << instrKeyMap;
+
+        return DuMidiTrackPtr();
+    }
+
+    int instrType = instrInfo->getType();
+    if (instrType == -1)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuLoop::toDuMidiTrack():\n"
+                << "invalid instrument type:" << instrType;
 
         return DuMidiTrackPtr();
     }
 
     QString instrName = instrInfo->getName();
 
-    //TODO: change Dream program change for GM program change when possible, current code produces incorrect PCs
+    //TODO: change Dream program change for GM program change when possible
+    //current code produces incorrect PCs
     int instrPC = instrInfo->getDreamProgramChange();
     int instrC0 = instrInfo->getMidiControlChange0();
 
-    int instrType = instrInfo->getType();
     bool isPercu = false;
-
-    int instrKeyMap = instrInfo->getKeyMap();
 
     int midiChannel = channel;
 
-    //NOTE: second part of test useless if exported du-music uses du-touch parameters v2
-    if (instrType == INSTR_PERCU || instrKeyMap > 0)
+    if (instrType == INSTR_PERCU)
     {
         if (instrKeyMap <= -1)
         {
@@ -462,6 +491,10 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
         instrPC = 0;
         instrC0 = 120;
     }
+
+
+    DuMidiTrackPtr midiTrack(new DuMidiTrack);
+    DuArrayPtr midiEvents(new DuArray);
 
     quint32 prevTime = 0;
     quint8 prevType = 0;

@@ -29,9 +29,8 @@ public:
     static DuEventPtr fromDuMusicBinary(const music_sample &du_sample);
     static DuEventPtr fromJson(const QJsonObject &jsonEvent);
     static DuEventPtr fromMidi(const DuMidiChannelEventPtr &channelEvent,
-                               int instrOctave,
-                               const MidiConversionHelper &helper,
-                               int loopIndex);
+                               int instrOctave, int instrKeyMap, bool isPercu,
+                               const MidiConversionHelper &helper);
 
     QByteArray toDuMusicBinary() const;
     DuMidiChannelEventPtr toDuMidiChannelEvent(quint32 prevTime, quint8 prevType,

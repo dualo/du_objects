@@ -133,9 +133,8 @@ DuEventPtr DuEvent::fromJson(const QJsonObject &jsonEvent)
 }
 
 DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
-                             int instrOctave,
-                             const MidiConversionHelper &helper,
-                             int loopIndex)
+                             int instrOctave, int instrKeyMap, bool isPercu,
+                             const MidiConversionHelper &helper)
 {
     //This case should not occur
     //Already tested in DuMusic::fromMidi();
@@ -180,9 +179,13 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
     int keyboard = 0;
     int key = tmpKey;
 
-    if (helper.isPercu(loopIndex))
+    if (isPercu)
     {
-        key = helper.fetchPercuKey(tmpKey, loopIndex);
+        //Percussion map index starts from 0 in instr_mapping.c arrays
+        //In du-musics, it starts from 1 (0 being for harmonic instruments)
+        quint8 percuIndex = instrKeyMap - 1;
+
+        key = MidiConversionHelper::percuFromMidi(tmpKey, percuIndex);
         if (key == -1)
         {
             qCWarning(LOG_CAT_DU_OBJECT)
@@ -191,6 +194,8 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
 
             return DuEventPtr();
         }
+
+        verif = event->setCanal((percuIndex << 4) & 0xF0) ? verif : false;
     }
     else
     {
@@ -205,10 +210,7 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
             return DuEventPtr();
         }
 
-        keyboard = helper.fetchKeyboard(key, loopIndex);
-
-        verif = event->setCanal((helper.keymapNum(loopIndex) << 4) & 0xF0)
-                ? verif : false;
+        keyboard = helper.keyboardFromMidi(key);
     }
 
     verif = event->setKeyboard(keyboard) ? verif : false;
@@ -343,12 +345,12 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
         //The keyboard value is not the same as the keyboard index to be used
         //when calling MidiConversionHelper::percuKey()
 
-        //The argument instrKeyMap is the value of KEY_INSTRINFO_KEYMAP
-        //It is not equal to the index of the map in the instr_mapping.c arrays
+        //Percussion instrKeyMap starts from 1 in du-musics
+        //Percussion map index starts from 0 in instr_mapping.c arrays
 
         quint8 keyboardIndex = (keyboard >> 7) & 0x01;
-        int midiKey = MidiConversionHelper::percuKey((quint8)tmp,keyboardIndex,
-                                                     (quint8)instrKeyMap - 1);
+        int midiKey = MidiConversionHelper::percuToMidi((quint8)tmp,keyboardIndex,
+                                                        (quint8)instrKeyMap - 1);
 
         if (midiKey == -1 || (quint8)midiKey > 0x7F)
         {
