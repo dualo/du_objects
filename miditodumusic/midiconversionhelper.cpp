@@ -35,7 +35,6 @@ MidiConversionHelper::MidiConversionHelper(QObject *parent) :
     selectedIndexes(),
     selectedTracks(),
     selectedInstruments(),
-    percuMappings(),
     midiScaleBoxModel(),
     timeSigBoxModel(this),
     scaleBoxModel(),
@@ -262,8 +261,6 @@ void MidiConversionHelper::addSelection(int trackNum, int loopNum)
     selectedIndexes.append(QPair<int, int>(trackNum, loopNum));
     selectedTracks.append(DuMidiTrackPtr());
     selectedInstruments.append(DuInstrumentPtr());
-
-    percuMappings.append(QPair<bool, int>(false, -1));
 }
 
 void MidiConversionHelper::removeSelectionAt(int index)
@@ -273,28 +270,21 @@ void MidiConversionHelper::removeSelectionAt(int index)
     if (index >= count)
         return;
 
-    if (count != selectedTracks.count() || count != selectedInstruments.count()
-            || count != percuMappings.count())
+    if (count != selectedTracks.count() || count != selectedInstruments.count())
         return;
 
     selectedIndexes.removeAt(index);
     selectedTracks.removeAt(index);
     selectedInstruments.removeAt(index);
-
-    percuMappings.removeAt(index);
 }
 
 
 QPair<int, int> MidiConversionHelper::getIndexes(int index) const
 {
     if (index < 0 || index >= selectedIndexes.size())
-    {
         return qMakePair<int, int>(-1, -1);
-    }
-    else
-    {
-        return selectedIndexes[index];
-    }
+
+    return selectedIndexes[index];
 }
 
 int MidiConversionHelper::findIndexes(int trackIndex, int loopIndex) const
@@ -349,33 +339,6 @@ void MidiConversionHelper::setSelectedInstr(int index,
         return;
 
     selectedInstruments[index] = instrument;
-}
-
-
-QPair<bool, int> MidiConversionHelper::getPercuMapping(int index) const
-{
-    if (index >= percuMappings.count())
-        return QPair<bool, int>(true, 0xFF);
-
-    return percuMappings[index];
-}
-
-
-void MidiConversionHelper::setPercuMapping(int index, const QPair<bool, int> &mapping)
-{
-    if (index >= percuMappings.count())
-        return;
-
-    percuMappings[index] = mapping;
-}
-
-
-bool MidiConversionHelper::isPercu(int index) const
-{
-    if (index >= percuMappings.count())
-        return false;
-
-    return percuMappings[index].first;
 }
 
 

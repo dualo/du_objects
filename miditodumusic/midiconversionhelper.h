@@ -71,8 +71,6 @@ public:
     const DuMidiTrackPtr getMidiTrack(int index) const;
     const DuInstrumentPtr getInstrument(int index) const;
 
-    bool isPercu(int index) const;
-
     int keyboardFromMidi(int key) const;
     static int percuFromMidi(int gmKey, int mapIndex);
     static int percuToMidi(quint8 duKey, quint8 keyboardIndex, quint8 mapIndex);
@@ -105,10 +103,6 @@ public slots:
     void setSelectedTrack(int index, const DuMidiTrackPtr &midiTrack);
 
     void setSelectedInstr(int index, const DuInstrumentPtr &instrument);
-
-    QPair<bool, int> getPercuMapping(int index) const;
-
-    void setPercuMapping(int index, const QPair<bool, int> &mapping);
 
     bool importMidiFile(const DuMidiFilePtr &midiFile);
     bool populateMapper(const QJsonObject &jsonMaps);
@@ -168,8 +162,6 @@ private:
 
     QList<DuMidiTrackPtr> selectedTracks;
     QList<DuInstrumentPtr> selectedInstruments;
-
-    QList<QPair<bool, int> > percuMappings;
 
     QStringList midiScaleBoxModel;
 
