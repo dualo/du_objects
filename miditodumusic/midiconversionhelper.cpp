@@ -378,53 +378,32 @@ bool MidiConversionHelper::isPercu(int index) const
     return percuMappings[index].first;
 }
 
-int MidiConversionHelper::keymapNum(int index) const
+
+int MidiConversionHelper::keyboardFromMidi(int key) const
 {
-    if (index >= percuMappings.count())
-        return false;
-
-    if (!percuMappings[index].first)
-        return -1;
-
-    //Keymap 0 is for harmonic instruments
-    return percuMappings[index].second + 1;
-}
-
-
-int MidiConversionHelper::fetchKeyboard(int key, int index) const
-{
-    if (index >= selectedInstruments.count())
-        return -1;
-
     return mapper->fetchKeyboard(key);
 }
 
 
-int MidiConversionHelper::fetchPercuKey(int gmKey, int index) const
+int MidiConversionHelper::percuFromMidi(int gmKey, int mapIndex)
 {
-    if (!isPercu(index))
-        return gmKey;
-
-    int percuMap = percuMappings[index].second;
-
     s_note tmpNote;
     int tmpKey = 0xFF;
 
     for (int i = 0; i < 58; i++)
     {
-        tmpNote = keyboard_note_map[percuMap][0][i];
+        tmpNote = keyboard_note_map[mapIndex][0][i];
         tmpKey = tmpNote.note_gmref;
 
         if (tmpKey == gmKey)
-            return i;
+            return tmpNote.note_key;
     }
 
     return -1;
 }
 
-
-int MidiConversionHelper::percuKey(quint8 duKey, quint8 keyboardIndex,
-                                   quint8 mapIndex)
+int MidiConversionHelper::percuToMidi(quint8 duKey, quint8 keyboardIndex,
+                                      quint8 mapIndex)
 {
     if (duKey > 57 + 35 || keyboardIndex > 1 || mapIndex > 3)
     {

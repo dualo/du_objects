@@ -72,12 +72,10 @@ public:
     const DuInstrumentPtr getInstrument(int index) const;
 
     bool isPercu(int index) const;
-    int keymapNum(int index) const;
 
-    int fetchKeyboard(int key, int index) const;
-    int fetchPercuKey(int gmKey, int index) const;
-
-    static int percuKey(quint8 duKey, quint8 keyboardIndex, quint8 mapIndex);
+    int keyboardFromMidi(int key) const;
+    static int percuFromMidi(int gmKey, int mapIndex);
+    static int percuToMidi(quint8 duKey, quint8 keyboardIndex, quint8 mapIndex);
 
     DuTimeSignatureModel *getTimeSigBoxModel();
 
