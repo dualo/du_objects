@@ -133,7 +133,7 @@ DuEventPtr DuEvent::fromJson(const QJsonObject &jsonEvent)
 }
 
 DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
-                             int instrOctave, int instrKeyMap, bool isPercu,
+                             int presetOctave, int instrKeyMap, bool isPercu,
                              const MidiConversionHelper &helper)
 {
     //This case should not occur
@@ -200,7 +200,7 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
     else
     {
         //KEY_MUSIC_TRANSPOSE set to default when importing from Midi
-        key = tmpKey - 12 * (instrOctave - 1);
+        key = tmpKey - 12 * presetOctave;
         if (key < 0)
         {
             qCWarning(LOG_CAT_DU_OBJECT)
@@ -269,7 +269,7 @@ QByteArray DuEvent::toDuMusicBinary() const
 
 DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
                                                     quint8 prevType,
-                                                    int instrOctave,
+                                                    int presetOctave,
                                                     int transpose,
                                                     bool isPercu,
                                                     int instrKeyMap) const
@@ -365,13 +365,13 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
     }
     else
     {
-        int midiKey = tmp + 12 * instrOctave + transpose - RECORD_TRANSPOSEMAX;
+        int midiKey = tmp + 12 * presetOctave + transpose - RECORD_TRANSPOSEMAX;
         if (midiKey > 0x7F)
         {
             qCCritical(LOG_CAT_DU_OBJECT)
                     << "DuEvent::toDuMidiChannelEvent():\n"
-                    << "invalid harmonic key:" << tmp <<"\n"
-                    << "(instrument octave =" << instrOctave << "\n"
+                    << "invalid harmonic key:" << tmp << "\n"
+                    << "(instrument preset octave =" << presetOctave << "\n"
                     << "transpose =" << transpose - RECORD_TRANSPOSEMAX << ")";
 
             return DuMidiChannelEventPtr();

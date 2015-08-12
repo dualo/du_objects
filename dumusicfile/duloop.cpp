@@ -242,16 +242,28 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
         return DuLoopPtr();
     }
 
-    int instrOctave = instrInfo->getOctave();
-    if (instrOctave == -1)
+    const DuPresetConstPtr &instrPreset = instrument->getPreset();
+    if (instrPreset == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuLoop::fromMidi():\n"
                 << "failed to generate DuLoop\n"
-                << "invalid instrument octave:" << instrOctave;
+                << "DuPreset is NULL";
 
         return DuLoopPtr();
     }
+
+    const DuExpressionConstPtr &presetExpr = instrPreset->getExpression();
+    if (presetExpr == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuLoop::fromMidi():\n"
+                << "failed to generate DuLoop\n"
+                << "DuExpression is NULL";
+
+        return DuLoopPtr();
+    }
+
 
     int instrKeyMap = instrInfo->getKeyMap();
     if (instrKeyMap == -1)
@@ -260,6 +272,17 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
                 << "DuLoop::fromMidi():\n"
                 << "failed to generate DuLoop\n"
                 << "invalid instrument key map:" << instrKeyMap;
+
+        return DuLoopPtr();
+    }
+
+    int presetOctave = instrInfo->getOctave();
+    if (presetOctave == -1)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuLoop::fromMidi():\n"
+                << "failed to generate DuLoop\n"
+                << "invalid instrument preset octave:" << presetOctave;
 
         return DuLoopPtr();
     }
@@ -317,7 +340,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
             if (channelEvent->getType() != DuMidiChannelEvent::ProgramChange)
             {
                 const DuEventPtr &event =
-                        DuEvent::fromMidi(channelEvent, instrOctave, instrKeyMap,
+                        DuEvent::fromMidi(channelEvent, presetOctave, instrKeyMap,
                                           isPercu, helper);
                 if (event == NULL)
                 {
@@ -409,7 +432,8 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
         return DuMidiTrackPtr();
     }
 
-    const DuInstrumentConstPtr instrument = getInstrument();
+
+    const DuInstrumentConstPtr &instrument = getInstrument();
     if (instrument == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
@@ -419,7 +443,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
         return DuMidiTrackPtr();
     }
 
-    const DuInstrumentInfoConstPtr instrInfo = instrument->getInstrumentInfo();
+    const DuInstrumentInfoConstPtr &instrInfo = instrument->getInstrumentInfo();
     if (instrInfo == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
@@ -429,16 +453,26 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
         return DuMidiTrackPtr();
     }
 
-
-    int instrOctave = instrInfo->getOctave();
-    if (instrOctave == -1)
+    const DuPresetConstPtr &instrPreset = instrument->getPreset();
+    if (instrPreset == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuLoop::toDuMidiTrack():\n"
-                << "invalid instrument octave:" << instrOctave;
+                << "DuPreset is NULL";
 
         return DuMidiTrackPtr();
     }
+
+    const DuExpressionConstPtr &presetExpr = instrPreset->getExpression();
+    if (presetExpr == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuLoop::toDuMidiTrack():\n"
+                << "DuExpression is NULL";
+
+        return DuMidiTrackPtr();
+    }
+
 
     int instrKeyMap = instrInfo->getKeyMap();
     if (instrKeyMap == -1)
@@ -459,6 +493,17 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
 
         return DuMidiTrackPtr();
     }
+
+    int presetOctave = presetExpr->getOctave();
+    if (presetOctave == -1)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuLoop::toDuMidiTrack():\n"
+                << "invalid instrument preset octave:" << presetOctave;
+
+        return DuMidiTrackPtr();
+    }
+
 
     QString instrName = instrInfo->getName();
 
@@ -565,7 +610,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
         if (tmpTime < prevTime)
         {
             channelEvent = event->toDuMidiChannelEvent(0, prevType,
-                                                       instrOctave, transpose,
+                                                       presetOctave, transpose,
                                                        isPercu, instrKeyMap);
             if (channelEvent != NULL)
             {
@@ -578,7 +623,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
         else
         {
             channelEvent = event->toDuMidiChannelEvent(prevTime, prevType,
-                                                       instrOctave, transpose,
+                                                       presetOctave, transpose,
                                                        isPercu, instrKeyMap);
             if (channelEvent != NULL)
             {
