@@ -11,8 +11,8 @@ DuTrack::DuTrack() :
     DuContainer()
 {
     addChild(KEY_TRACK_CHANNEL,
-             new DuNumeric(1, NUMERIC_DEFAULT_SIZE,
-                           MUSIC_MAXTRACK, 1));
+             new DuNumeric(0, NUMERIC_DEFAULT_SIZE,
+                           MUSIC_MAXTRACK, 0));
 
     addChild(KEY_TRACK_CURRENTLOOP,
              new DuNumeric(0, NUMERIC_DEFAULT_SIZE,

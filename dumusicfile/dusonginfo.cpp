@@ -44,7 +44,7 @@ DuSongInfo::DuSongInfo() :
 
     addChild(KEY_SONG_SCALE,
              new DuNumeric(MAJOR_LED_MODE, NUMERIC_DEFAULT_SIZE,
-                           NUM_LED_MODE, NONE_LED_MODE));
+                           NUM_LED_MODE - 1, NONE_LED_MODE));
 
     addChild(KEY_SONG_TONALITY,
              new DuNumeric(1, NUMERIC_DEFAULT_SIZE,
@@ -52,7 +52,7 @@ DuSongInfo::DuSongInfo() :
 
     addChild(KEY_SONG_TIMESIGNATURE,
              new DuNumeric(TIME_4_4, NUMERIC_DEFAULT_SIZE,
-                           NUM_TIMESIGNATURE, TIME_OFF));
+                           NUM_TIMESIGNATURE - 1, TIME_OFF));
 
     addChild(KEY_SONG_REVERBPRESET,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,

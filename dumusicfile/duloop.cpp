@@ -13,7 +13,7 @@ DuLoop::DuLoop() :
 {
     addChild(KEY_LOOP_STATE,
              new DuNumeric(REC_EMPTY, NUMERIC_DEFAULT_SIZE,
-                           REC_PAUSE, REC_EMPTY));
+                           REC_STATE_NUM - 1, REC_EMPTY));
 
     addChild(KEY_LOOP_DURATIONMODIFIER,
              new DuNumeric(MUSIC_LOOPMOD_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,

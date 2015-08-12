@@ -37,7 +37,7 @@ DuEvent::DuEvent() :
     addChild(KEY_EVENT_TIME, new DuNumeric(0));
 
     addChild(KEY_EVENT_CONTROL,
-             new DuNumeric(0, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x06, 0x00));
 
     addChild(KEY_EVENT_CANAL,

@@ -43,12 +43,11 @@ MidiConversionHelper::MidiConversionHelper(QObject *parent) :
     midiScaleBoxModel.append(tr("Major"));
     midiScaleBoxModel.append(tr("Minor"));
 
-    timeSigBoxModel.addTimeSignature(DuTimeSignature(TIME_OFF, tr("None")));
+    timeSigBoxModel.addTimeSignature(DuTimeSignature(TIME_OFF, tr("Off")));
     timeSigBoxModel.addTimeSignature(DuTimeSignature(TIME_2_4, tr("2 : 4")));
     timeSigBoxModel.addTimeSignature(DuTimeSignature(TIME_3_4, tr("3 : 4")));
     timeSigBoxModel.addTimeSignature(DuTimeSignature(TIME_4_4, tr("4 : 4")));
     timeSigBoxModel.addTimeSignature(DuTimeSignature(TIME_5_4, tr("5 : 4")));
-    timeSigBoxModel.addTimeSignature(DuTimeSignature(NUM_TIMESIGNATURE, tr("Other")));
 
     tonalityBoxModel.addTonality(DuTonality(0,  tr("C")));
     tonalityBoxModel.addTonality(DuTonality(1,  tr("C#")));
