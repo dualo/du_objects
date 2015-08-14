@@ -1,11 +1,12 @@
 #ifndef DUDEVICELIST_H
 #define DUDEVICELIST_H
 
-#include "dudevice.h"
 #include "dulist.h"
 
 #define KEY_DEVICE_LIST_SERIAL_NUMBER "SerialNumber"
 
+
+DU_OBJECT(DuDevice)
 
 DU_OBJECT(DuDeviceList)
 

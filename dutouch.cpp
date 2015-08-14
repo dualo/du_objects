@@ -1,5 +1,8 @@
 #include "dutouch.h"
 
+#include "general/dudate.h"
+#include "general/duversion.h"
+
 
 DU_OBJECT_IMPL(DuTouch)
 

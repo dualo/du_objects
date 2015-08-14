@@ -2,10 +2,6 @@
 #define DUHEADER_H
 
 #include "../general/ducontainer.h"
-#include "../general/dustring.h"
-#include "../general/dunumeric.h"
-
-#include "../miditodumusic/midiconversionhelper.h"
 
 
 #define KEY_HEAD_FILEVERSION        "FileVersion"

@@ -1,7 +1,6 @@
 #ifndef DUPROFILE_H
 #define DUPROFILE_H
 
-#include "general/duarray.h"
 #include "general/ducontainer.h"
 
 #define KEY_PROFILE_FIRSTNAME     "Firstname"
@@ -15,6 +14,8 @@
 #define KEY_PROFILE_DUTOUCH_LIST  "DuTouchList"
 #define KEY_PROFILE_FRIENDS       "Friends"
 
+
+DU_OBJECT(DuArray)
 
 DU_OBJECT(DuProfile)
 

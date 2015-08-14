@@ -1,11 +1,7 @@
 #ifndef DUMUSIC_H
 #define DUMUSIC_H
 
-#include "duheader.h"
-#include "dusonginfo.h"
-#include "dutrack.h"
-#include "instrument/ducontrollers.h"
-#include "instrument/effects/dureverb.h"
+#include "../general/ducontainer.h"
 
 
 #define KEY_MUSIC_HEADER        "FileHeader"
@@ -15,7 +11,15 @@
 #define KEY_MUSIC_TRACKS        "Tracks"
 
 
+class MidiConversionHelper;
 class QIODevice;
+
+DU_OBJECT(DuArray)
+DU_OBJECT(DuControllers)
+DU_OBJECT(DuHeader)
+DU_OBJECT(DuReverb)
+DU_OBJECT(DuSongInfo)
+DU_OBJECT(DuTrack)
 
 DU_OBJECT(DuMusic)
 

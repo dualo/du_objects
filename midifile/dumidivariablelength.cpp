@@ -1,5 +1,7 @@
 #include "dumidivariablelength.h"
 
+#include <QJsonValue>
+
 
 
 DU_OBJECT_IMPL(DuMidiVariableLength)

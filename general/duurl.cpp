@@ -1,5 +1,7 @@
 #include "duurl.h"
 
+#include <QJsonValue>
+
 
 
 DU_OBJECT_IMPL(DuUrl)

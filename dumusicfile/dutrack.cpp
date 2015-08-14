@@ -1,9 +1,16 @@
 #include "dutrack.h"
 
+#include "duloop.h"
+
 #include <cstring>
 
 #include <QJsonArray>
 #include <QJsonObject>
+
+#include "../general/duarray.h"
+#include "../general/dunumeric.h"
+
+#include "../miditodumusic/midiconversionhelper.h"
 
 DU_OBJECT_IMPL(DuTrack)
 

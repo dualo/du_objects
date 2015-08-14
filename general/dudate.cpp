@@ -1,5 +1,7 @@
 #include "dudate.h"
 
+#include <QJsonValue>
+
 
 
 DU_OBJECT_IMPL(DuDate)

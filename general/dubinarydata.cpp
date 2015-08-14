@@ -1,5 +1,7 @@
 #include "dubinarydata.h"
 
+#include <QJsonValue>
+
 
 
 DU_OBJECT_IMPL(DuBinaryData)

@@ -1,11 +1,8 @@
 #ifndef DUTIMESIGNATUREMODEL_H
 #define DUTIMESIGNATUREMODEL_H
 
-#include <QObject>
 #include <QString>
 #include <QAbstractListModel>
-#include <QModelIndex>
-#include <QVariant>
 
 
 class DuTimeSignature

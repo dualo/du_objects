@@ -1,17 +1,15 @@
 #ifndef MIDICONVERSIONHELPER_H
 #define MIDICONVERSIONHELPER_H
 
-#include "../midifile/dumidifile.h"
-#include "../dumusicfile/instrument/duinstrument.h"
-
+#include <QObject>
+#include "../general/duobject.h"
 #include "dutimesignaturemodel.h"
 #include "dutonalitymodel.h"
 
-#include "dumidikeymapper.h"
-
-#include <QStringList>
-#include <QPair>
-
+DU_OBJECT(DuInstrument)
+DU_OBJECT(DuMidiFile)
+DU_OBJECT(DuMidiKeyMapper)
+DU_OBJECT(DuMidiTrack)
 
 class MidiConversionHelper : public QObject
 {

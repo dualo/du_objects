@@ -4,6 +4,8 @@
 
 #include <QJsonObject>
 
+#include "../../general/dunumeric.h"
+
 
 DU_OBJECT_IMPL(DuExpression)
 

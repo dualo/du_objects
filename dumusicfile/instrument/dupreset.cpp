@@ -1,5 +1,9 @@
 #include "dupreset.h"
 
+#include "ducontrollers.h"
+#include "dueffectset.h"
+#include "duexpression.h"
+
 #include <cstring>
 
 #include <QJsonObject>

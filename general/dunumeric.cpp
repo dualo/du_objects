@@ -1,5 +1,6 @@
 #include "dunumeric.h"
 
+#include <QJsonValue>
 #include <climits>
 
 

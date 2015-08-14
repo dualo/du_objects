@@ -1,5 +1,10 @@
 #include "dumidibasicevent.h"
 
+#include "dumidistatus.h"
+#include "dumidivariablelength.h"
+
+#include <QJsonValue>
+
 
 
 DU_OBJECT_IMPL(DuMidiBasicEvent)

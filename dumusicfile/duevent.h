@@ -2,9 +2,6 @@
 #define DUEVENT_H
 
 #include "../general/ducontainer.h"
-#include "../general/dunumeric.h"
-
-#include "../miditodumusic/midiconversionhelper.h"
 
 
 #define KEY_EVENT_TIME          "Time"
@@ -14,6 +11,9 @@
 #define KEY_EVENT_NOTE          "Note"
 #define KEY_EVENT_VALUE         "Value"
 
+
+class MidiConversionHelper;
+DU_OBJECT(DuMidiChannelEvent)
 
 DU_OBJECT(DuEvent)
 

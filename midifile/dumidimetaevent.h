@@ -2,7 +2,6 @@
 #define DUMIDIMETAEVENT_H
 
 #include "dumidibasicevent.h"
-#include "../general/dubinarydata.h"
 
 
 #define KEY_MIDIMETAEVENT_TYPE      "Type"

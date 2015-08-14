@@ -1,5 +1,12 @@
 #include "dumidifile.h"
 
+#include "dumiditrack.h"
+
+#include "../general/duarray.h"
+#include "../general/dunumeric.h"
+
+#include <QJsonValue>
+
 
 
 DU_OBJECT_IMPL(DuMidiFile)

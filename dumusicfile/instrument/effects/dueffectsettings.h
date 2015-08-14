@@ -2,8 +2,6 @@
 #define DUEFFECTSETTINGS_H
 
 #include "../../../general/ducontainer.h"
-#include "../../../general/dunumeric.h"
-#include "../../../general/dustring.h"
 
 
 #define DEFAULT_EFFECTNAME      "off"

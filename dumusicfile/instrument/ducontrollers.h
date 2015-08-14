@@ -2,7 +2,6 @@
 #define DUCONTROLLERS_H
 
 #include "../../general/ducontainer.h"
-#include "../../general/dunumeric.h"
 
 
 #define KEY_CONTROLS_DIRECTIONGYROP         "DirectionGyroP"

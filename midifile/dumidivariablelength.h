@@ -2,8 +2,6 @@
 #define DUMIDIVARIABLELENGTH_H
 
 #include "../general/duvalue.h"
-#include <QDataStream>
-#include <QByteArray>
 
 
 #define ONE_BYTE_MAX_UINT_VALUE 0x7F

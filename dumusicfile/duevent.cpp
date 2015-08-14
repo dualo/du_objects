@@ -2,6 +2,12 @@
 
 #include <QJsonObject>
 
+#include "../general/dunumeric.h"
+
+#include "../miditodumusic/midiconversionhelper.h"
+
+#include "../midifile/dumidichannelevent.h"
+
 
 DU_OBJECT_IMPL(DuEvent)
 

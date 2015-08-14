@@ -1,5 +1,10 @@
 #include "dumidichannelevent.h"
 
+#include "dumidistatus.h"
+#include "dumidivariablelength.h"
+
+#include "../general/dunumeric.h"
+
 
 
 DU_OBJECT_IMPL(DuMidiChannelEvent)

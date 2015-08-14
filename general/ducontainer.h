@@ -3,8 +3,6 @@
 
 #include "duobject.h"
 #include <QMap>
-#include <QStringList>
-#include <QHttpMultiPart>
 
 
 #define DU_KEY_ACCESSORS(key, type) \

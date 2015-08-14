@@ -1,17 +1,7 @@
 #ifndef DUINSTRUMENT_H
 #define DUINSTRUMENT_H
 
-#include "duinstrumentinfo.h"
-#include "dupreset.h"
-#include "effects/dumixer.h"
-#include "effects/dudistortion.h"
-#include "effects/duwah.h"
-#include "effects/ducompressor.h"
-#include "effects/duequalizer.h"
-#include "effects/dudelay.h"
-#include "effects/duchorus.h"
-#include "effects/duvibrato.h"
-#include "effects/duadsr.h"
+#include "../../general/ducontainer.h"
 
 
 #define KEY_INSTR_INSTRUMENTINFO        "InstrumentInfo"
@@ -26,6 +16,18 @@
 #define KEY_INSTR_VIBRATOSETTINGS       "VibratoSettings"
 #define KEY_INSTR_ADSRSETTINGS          "AttackDecaySustainReleaseSettings"
 
+
+DU_OBJECT(DuInstrumentInfo)
+DU_OBJECT(DuPreset)
+DU_OBJECT(DuMixer)
+DU_OBJECT(DuDistortion)
+DU_OBJECT(DuWah)
+DU_OBJECT(DuCompressor)
+DU_OBJECT(DuEqualizer)
+DU_OBJECT(DuDelay)
+DU_OBJECT(DuChorus)
+DU_OBJECT(DuVibrato)
+DU_OBJECT(DuAdsr)
 
 DU_OBJECT(DuInstrument)
 

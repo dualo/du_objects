@@ -2,6 +2,8 @@
 
 #include <QJsonObject>
 
+#include "../../../general/dunumeric.h"
+
 DU_OBJECT_IMPL(DuMixer)
 
 DuMixer::DuMixer() :

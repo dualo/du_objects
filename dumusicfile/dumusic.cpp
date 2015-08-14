@@ -1,12 +1,27 @@
 #include "dumusic.h"
 
+#include "duheader.h"
+#include "duloop.h"
+#include "dusonginfo.h"
+#include "dutrack.h"
+
+#include "instrument/ducontrollers.h"
+
+#include "instrument/effects/dureverb.h"
+
+#include "../general/duarray.h"
+
+#include "../midifile/dumidifile.h"
+#include "../midifile/dumidimetaevent.h"
+#include "../midifile/dumiditrack.h"
+
+#include "../miditodumusic/midiconversionhelper.h"
+
 #include <cstring>
 
 #include <QIODevice>
 #include <QJsonArray>
 #include <QJsonObject>
-
-#include "../midifile/dumidifile.h"
 
 
 DU_OBJECT_IMPL(DuMusic)

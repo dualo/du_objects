@@ -2,7 +2,6 @@
 #define DUOBJECT_H
 
 #include <QHttpPart>
-#include <QJsonValue>
 #include <QSharedPointer>
 #include <QLoggingCategory>
 

@@ -4,6 +4,9 @@
 
 #include <QJsonObject>
 
+#include "../../../general/dunumeric.h"
+#include "../../../general/dustring.h"
+
 DU_OBJECT_IMPL(DuDistortion)
 
 DuDistortion::DuDistortion() :

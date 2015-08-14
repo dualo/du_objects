@@ -1,5 +1,14 @@
 #include "dumiditrack.h"
 
+#include "dumidibasicevent.h"
+#include "dumidichannelevent.h"
+#include "dumidimetaevent.h"
+#include "dumidisysexevent.h"
+
+#include "../general/duarray.h"
+
+#include <QJsonValue>
+
 
 
 DU_OBJECT_IMPL(DuMidiTrack)

@@ -1,10 +1,7 @@
 #ifndef DUMIDITRACK_H
 #define DUMIDITRACK_H
 
-#include "../general/duarray.h"
-#include "dumidichannelevent.h"
-#include "dumidimetaevent.h"
-#include "dumidisysexevent.h"
+#include "../general/ducontainer.h"
 
 
 #define MIDI_TRACK_ID_VALUE             "MTrk"
@@ -13,6 +10,9 @@
 
 #define KEY_MIDITRACK_EVENTS            "Events"
 
+
+DU_OBJECT(DuArray)
+DU_OBJECT(DuMidiBasicEvent)
 
 DU_OBJECT(DuMidiTrack)
 

@@ -1,8 +1,7 @@
 #ifndef DUMIDIFILE_H
 #define DUMIDIFILE_H
 
-#include "dumiditrack.h"
-#include <QIODevice>
+#include "../general/ducontainer.h"
 
 
 #define MIDI_HEADER_ID_VALUE            "MThd"
@@ -15,6 +14,9 @@
 #define KEY_MIDIFILE_DIVISION           "Division"
 #define KEY_MIDIFILE_TRACKS             "Tracks"
 
+
+DU_OBJECT(DuArray)
+DU_OBJECT(DuMidiTrack)
 
 DU_OBJECT(DuMidiFile)
 

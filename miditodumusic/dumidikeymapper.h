@@ -4,7 +4,6 @@
 #include "../general/duobject.h"
 
 #include <QJsonObject>
-#include <QStringList>
 
 
 #define SCALE_NONE                  "None"

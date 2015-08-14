@@ -1,8 +1,21 @@
 #include "duinstrument.h"
 
+#include "duinstrumentinfo.h"
+#include "dupreset.h"
+
 #include <cstring>
 
 #include <QJsonObject>
+
+#include "effects/duadsr.h"
+#include "effects/duchorus.h"
+#include "effects/ducompressor.h"
+#include "effects/dudelay.h"
+#include "effects/dudistortion.h"
+#include "effects/duequalizer.h"
+#include "effects/dumixer.h"
+#include "effects/duvibrato.h"
+#include "effects/duwah.h"
 
 DU_OBJECT_IMPL(DuInstrument)
 

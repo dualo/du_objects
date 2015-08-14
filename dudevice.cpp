@@ -1,5 +1,10 @@
 #include "dudevice.h"
 
+#include "general/dudate.h"
+#include "general/dunumeric.h"
+#include "general/dustring.h"
+#include "general/duversion.h"
+
 
 DU_OBJECT_IMPL(DuDevice)
 

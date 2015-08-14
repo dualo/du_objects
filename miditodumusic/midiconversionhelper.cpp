@@ -1,5 +1,7 @@
 #include "midiconversionhelper.h"
 
+#include "dumidikeymapper.h"
+
 //#pragma pack(push, 4)
 #include "../du-touch/parameters/instr_mapping.c"
 //#pragma pack(pop)
@@ -12,6 +14,16 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QJsonDocument>
+
+#include "../general/duarray.h"
+
+#include "../midifile/dumidichannelevent.h"
+#include "../midifile/dumidifile.h"
+#include "../midifile/dumidimetaevent.h"
+#include "../midifile/dumiditrack.h"
+
+#include "../dumusicfile/instrument/duinstrument.h"
+#include "../dumusicfile/instrument/duinstrumentinfo.h"
 
 
 MidiConversionHelper::MidiConversionHelper(QObject *parent) :

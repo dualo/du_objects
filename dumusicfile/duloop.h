@@ -1,9 +1,7 @@
 #ifndef DULOOP_H
 #define DULOOP_H
 
-#include "../general/duarray.h"
-#include "instrument/duinstrument.h"
-#include "duevent.h"
+#include "../general/ducontainer.h"
 
 
 #define KEY_LOOP_STATE              "State"
@@ -12,6 +10,12 @@
 #define KEY_LOOP_INSTRUMENT         "Instrument"
 #define KEY_LOOP_EVENTS             "Events"
 
+
+class MidiConversionHelper;
+DU_OBJECT(DuArray)
+DU_OBJECT(DuEvent)
+DU_OBJECT(DuInstrument)
+DU_OBJECT(DuMidiTrack)
 
 DU_OBJECT(DuLoop)
 

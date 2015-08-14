@@ -1,9 +1,23 @@
 #include "duloop.h"
 
+#include "duevent.h"
+
 #include <cstring>
 
 #include <QJsonArray>
 #include <QJsonObject>
+
+#include "../general/duarray.h"
+#include "../general/dunumeric.h"
+
+#include "../dumusicfile/instrument/duinstrument.h"
+#include "../dumusicfile/instrument/duinstrumentinfo.h"
+
+#include "../miditodumusic/midiconversionhelper.h"
+
+#include "../midifile/dumidichannelevent.h"
+#include "../midifile/dumidimetaevent.h"
+#include "../midifile/dumiditrack.h"
 
 
 DU_OBJECT_IMPL(DuLoop)

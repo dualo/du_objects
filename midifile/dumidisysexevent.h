@@ -2,7 +2,6 @@
 #define DUMIDISYSEXEVENT_H
 
 #include "dumidibasicevent.h"
-#include "../general/dubinarydata.h"
 
 
 #define KEY_MIDISYSEXEVENT_LENGTH      "Length"

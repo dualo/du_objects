@@ -22,8 +22,10 @@
 
 #include "../general/duarray.h"
 #include "../general/dubinarydata.h"
+#include "../general/dunumeric.h"
 
 #include <QFile>
+
 
 DU_OBJECT_IMPL(DuSound)
 

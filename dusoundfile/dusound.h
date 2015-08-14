@@ -4,11 +4,11 @@
 #include "../general/ducontainer.h"
 
 
-DU_OBJECT_FORWARD(DuInstrumentInfo)
-DU_OBJECT_FORWARD(DuSoundHeader)
-DU_OBJECT_FORWARD(DuArray)
-DU_OBJECT_FORWARD(DuMixer)
-DU_OBJECT_FORWARD(DuNumeric)
+DU_OBJECT(DuInstrumentInfo)
+DU_OBJECT(DuSoundHeader)
+DU_OBJECT(DuArray)
+DU_OBJECT(DuMixer)
+DU_OBJECT(DuNumeric)
 
 DU_OBJECT(DuSound)
 

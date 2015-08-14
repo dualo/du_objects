@@ -2,7 +2,6 @@
 #define DUEFFECTSET_H
 
 #include "../../general/ducontainer.h"
-#include "../../general/dunumeric.h"
 
 
 #define KEY_EFFECTSET_ADSR_ONOFF               "AdsrOnOff"

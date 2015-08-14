@@ -1,11 +1,8 @@
 #ifndef DUTONALITYMODEL_H
 #define DUTONALITYMODEL_H
 
-#include <QObject>
 #include <QString>
 #include <QAbstractListModel>
-#include <QModelIndex>
-#include <QVariant>
 
 
 class DuTonality
