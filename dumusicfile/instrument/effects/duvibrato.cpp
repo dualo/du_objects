@@ -100,6 +100,7 @@ QByteArray DuVibrato::toDuMusicBinary() const
     QString tmpStr;
     int tmpNum = 0;
 
+    std::memcpy((char*)&du_vibrato, QByteArray(size(), 0), size());
 
     tmpNum = getDepth();
     if (tmpNum == -1)
