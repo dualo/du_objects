@@ -102,10 +102,10 @@ bool DuString::setString(const QString &value)
                    << "maximum size" << size
                    << "and was truncated before being set";
 
-        setValue(value.left(size));
+        setValue(value.left(size).toUtf8());
         return false;
     }
 
-    setValue(value);
+    setValue(value.toUtf8());
     return true;
 }
