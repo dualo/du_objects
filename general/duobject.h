@@ -33,11 +33,6 @@ Q_DECLARE_LOGGING_CATEGORY(LOG_CAT_DU_OBJECT)
         return obj->debugPrint(dbg); \
     }
 
-#define DU_OBJECT_FORWARD(name) \
-    class name; \
-    typedef QSharedPointer<name> name ## Ptr; \
-    typedef QSharedPointer<const name> name ## ConstPtr;
-
 
 DU_OBJECT(DuObject)
 
