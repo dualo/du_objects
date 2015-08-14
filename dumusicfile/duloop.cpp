@@ -396,10 +396,10 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel) const
     int instrPC = instrInfo->getDreamProgramChange();
     int instrC0 = instrInfo->getMidiControlChange0();
 
-    int instrType = instrInfo->getType();
+    int instrType = instrInfo->getInstrType();
     bool isPercu = false;
 
-    int instrKeyMap = instrInfo->getKeyMap();
+    int instrKeyMap = instrInfo->getKeyMapping();
 
     int midiChannel = channel;
 

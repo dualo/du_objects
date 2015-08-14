@@ -2,24 +2,6 @@
 #define DUINSTRUMENTINFO_H
 
 #include "../../general/ducontainer.h"
-#include "../../general/dustring.h"
-#include "../../general/dunumeric.h"
-
-//TODO: add key for GM program change when possible
-
-#define KEY_INSTRINFO_NAME                  "Name"
-#define KEY_INSTRINFO_DREAMPROGRAMCHANGE    "DreamProgramChange"
-#define KEY_INSTRINFO_MIDICONTROLCHANGE0    "MidiControlChange0"
-#define KEY_INSTRINFO_KEYMAP                "KepMapping"
-#define KEY_INSTRINFO_OCTAVE                "Octave"
-#define KEY_INSTRINFO_ID                    "ID"
-#define KEY_INSTRINFO_ACTIVENOTEOFF         "ActiveNoteOff"
-#define KEY_INSTRINFO_CATEGORY              "Category"
-#define KEY_INSTRINFO_RELVOLUME             "RelativeVolume"
-#define KEY_INSTRINFO_TYPE                  "Type"
-#define KEY_INSTRINFO_USERID                "UserID"
-
-//TODO: add parameters for du-sounds when possible
 
 
 DU_OBJECT(DuInstrumentInfo)
@@ -27,6 +9,12 @@ DU_OBJECT(DuInstrumentInfo)
 class DuInstrumentInfo : public DuContainer
 {
 public:
+    enum DreamFormat {
+        NO_FORMAT = 0,
+        SDK_3000 = 1,
+        SDK_5000 = 2
+    };
+
     explicit DuInstrumentInfo();
     ~DuInstrumentInfo();
 
@@ -39,38 +27,32 @@ public:
 
     int size() const;
 
-    QString getName() const;
-    bool setName(const QString &value);
+    DU_KEY_ACCESSORS(Name,               QString)
 
-    int getDreamProgramChange() const;
-    bool setDreamProgramChange(int value);
+    DU_KEY_ACCESSORS(DreamProgramChange, int)
+    DU_KEY_ACCESSORS(MidiControlChange0, int)
+    DU_KEY_ACCESSORS(KeyMapping,         int)
+    DU_KEY_ACCESSORS(Octave,             int)
 
-    int getMidiControlChange0() const;
-    bool setMidiControlChange0(int value);
+    DU_KEY_ACCESSORS(UserID,             int)
+    DU_KEY_ACCESSORS(ID,                 int)
+    DU_KEY_ACCESSORS(SampleAddress,      int)
 
-    int getKeyMap() const;
-    bool setKeyMap(int value);
+    DU_KEY_ACCESSORS(ActiveNoteOff,      int)
 
-    int getOctave() const;
-    bool setOctave(int value);
+    DU_KEY_ACCESSORS(Category,           QString)
 
-    int getID() const;
-    bool setID(int value);
+    DU_KEY_ACCESSORS(RelativeVolume,     int)
 
-    int getActiveNoteOff() const;
-    bool setActiveNoteOff(int value);
+    DU_KEY_ACCESSORS(DreamFormatId,      DreamFormat)
+    DU_KEY_ACCESSORS(NbLayer,            int)
 
-    QString getCategory() const;
-    bool setCategory(const QString &value);
+    DU_KEY_ACCESSORS(IPSize,             int)
+    DU_KEY_ACCESSORS(SPSize,             int)
+    DU_KEY_ACCESSORS(SampleSize,         int)
 
-    int getRelativeVolume() const;
-    bool setRelativeVolume(int value);
-
-    int getType() const;
-    bool setType(int value);
-
-    QString getUserID() const;
-    bool setUserID(const QString &value);
+    DU_KEY_ACCESSORS(InstrType,          INSTRUMENT_TYPE)
+    DU_KEY_ACCESSORS(InstrVersion,       int)
 };
 
 #endif // DUINSTRUMENTINFO_H
