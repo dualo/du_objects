@@ -43,6 +43,8 @@ public:
 
     DuArrayPtr getTracks();
     DuArrayConstPtr getTracks() const;
+    DuMidiTrackConstPtr getTrackAt(int index) const;
+
     void setTracks(const DuArrayPtr &array);
     bool appendTrack(const DuMidiTrackPtr &track);
     bool appendTracks(const QList<DuMidiTrackPtr> &tracks);

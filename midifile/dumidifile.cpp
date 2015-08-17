@@ -187,6 +187,54 @@ DuArrayConstPtr DuMidiFile::getTracks() const
     return getChildAs<DuArray>(KEY_MIDIFILE_TRACKS);
 }
 
+DuMidiTrackConstPtr DuMidiFile::getTrackAt(int index) const
+{
+    const DuArrayConstPtr &tracks = getTracks();
+    if (tracks == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMidiTrack::getTrackAt():\n"
+                << "couldn't retrieve track\n"
+                << "track array is NULL";
+
+        return DuMidiTrackConstPtr();
+    }
+
+    if (tracks->count() <= index)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMidiTrack::getTrackAt():\n"
+                << "couldn't retrieve track\n"
+                << "index" << index << "out of range";
+
+        return DuMidiTrackConstPtr();
+    }
+
+    const DuObjectConstPtr &tmpObject = tracks->at(index);
+    if (tmpObject == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMidiTrack::getTrackAt():\n"
+                << "couldn't retrieve track at:" << index << "\n"
+                << "track object is NULL";
+
+        return DuMidiTrackConstPtr();
+    }
+
+    const DuMidiTrackConstPtr &track = tmpObject.dynamicCast<const DuMidiTrack>();
+    if (track == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMidiTrack::getTrackAt():\n"
+                << "object at:" << index
+                << "is not a DuMidiTrack";
+
+        return DuMidiTrackConstPtr();
+    }
+
+    return track;
+}
+
 void DuMidiFile::setTracks(const DuArrayPtr &array)
 {
     addChild(KEY_MIDIFILE_TRACKS, array);

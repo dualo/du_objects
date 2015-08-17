@@ -112,6 +112,8 @@ public slots:
     void importMidiFromFile();
     void importMapsFromFile();
 
+    void newImport();
+
 signals:
     void validChanged();
 

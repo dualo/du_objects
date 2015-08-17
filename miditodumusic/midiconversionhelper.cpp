@@ -327,7 +327,7 @@ void MidiConversionHelper::setSelectedTrack(int tabIndex, int midiTrackIndex)
     if (tabIndex >= selectedTracks.count())
         return;
 
-    selectedTracks[tabIndex] = getMidiTrack(midiTrackIndex);
+    selectedTracks[tabIndex] = selectedFile->getTrackAt(midiTrackIndex);
 }
 
 
@@ -353,7 +353,8 @@ void MidiConversionHelper::setSelectedInstr(int tabIndex, int instrumentIndex)
     if (tabIndex >= selectedInstruments.count())
         return;
 
-    selectedInstruments[tabIndex] = getInstrument(instrumentIndex);
+    //TODO
+//    selectedInstruments[tabIndex] = ;
 }
 
 
@@ -440,6 +441,22 @@ QStringList MidiConversionHelper::scales() const
 QStringList MidiConversionHelper::midiScales() const
 {
     return midiScaleBoxModel;
+}
+
+
+bool MidiConversionHelper::importMidiFile(const DuMidiFilePtr &midiFile)
+{
+    if (midiFile->getFormat() != 1)
+    {
+        setMidiValid(false);
+        return false;
+    }
+
+    selectedFile = midiFile;
+    trackNames.clear();
+
+    setMidiValid(filterMetaEvents() ? (duration != 0) : false);
+    return midiValid;
 }
 
 
@@ -543,20 +560,14 @@ void MidiConversionHelper::importMapsFromFile()
     populateMapper(jsonMaps);
 }
 
-
-bool MidiConversionHelper::importMidiFile(const DuMidiFilePtr &midiFile)
+void MidiConversionHelper::newImport()
 {
-    if (midiFile->getFormat() != 1)
-    {
-        setMidiValid(false);
-        return false;
-    }
+    selectedIndexes.clear();
+    selectedTracks.clear();
+    selectedInstruments.clear();
 
-    selectedFile = midiFile;
-    trackNames.clear();
-
-    setMidiValid(filterMetaEvents() ? (duration != 0) : false);
-    return midiValid;
+    importMapsFromFile();
+    importMidiFromFile();
 }
 
 
@@ -581,12 +592,13 @@ bool MidiConversionHelper::filterMetaEvents()
     if (midiTracks == NULL)
         return false;
 
-    if (midiTracks->count() == -1)
+    int trackCount = midiTracks->count();
+    if (trackCount == -1)
         return false;
 
     int i = 0;
 
-    while (i < midiTracks->count())
+    while (i < trackCount)
     {
         bool instrumentFound = false;
         bool progChangeFound = false;
@@ -601,16 +613,16 @@ bool MidiConversionHelper::filterMetaEvents()
         if (midiEvents == NULL)
             return false;
 
-        if (midiEvents->count() == -1)
+        int eventCount = midiEvents->count();
+        if (eventCount == -1)
             return false;
 
 
         //The last event in a midi track should always be an EndOfTrack meta event
-        //We will need the information provided by these events later so we won't
-        //remove them now.
+        //We will use it later so we are not removing it now
 
         int j = 0;
-        while (j < midiEvents->count() - 1)
+        while (j < eventCount - 1)
         {
             const DuMidiBasicEventPtr &midiEvent =
                     midiEvents->at(j).dynamicCast<DuMidiBasicEvent>();
@@ -632,17 +644,17 @@ bool MidiConversionHelper::filterMetaEvents()
             const DuMidiMetaEventPtr &metaEvent =
                     midiEvent.dynamicCast<DuMidiMetaEvent>();
 
-            if (metaEvent == NULL)          //Event is ChannelEvent or SysExEvent
+            if (metaEvent == NULL)          //ChannelEvent or SysExEvent
             {
                 const DuMidiChannelEventPtr &channelEvent =
                         midiEvent.dynamicCast<DuMidiChannelEvent>();
 
-                if (channelEvent == NULL)   //Event is SysExEvent
+                if (channelEvent == NULL)   //SysExEvent
                 {
                     midiEvents->removeAt(j);
                 }
 
-                else                        //Event is ChannelEvent
+                else                        //ChannelEvent
                 {
                     if (channelEvent->getType() == DuMidiChannelEvent::ProgramChange)
                     {
@@ -755,32 +767,33 @@ bool MidiConversionHelper::filterMetaEvents()
                 trackName.prepend(QString("Track ") + QString::number(i));
             trackNames.append(trackName);
             i++;
-        }
 
-        const DuMidiBasicEventPtr &midiEvent =
-                midiEvents->at(j).dynamicCast<DuMidiBasicEvent>();
-        if (midiEvent == NULL)
-            return false;
 
-        const DuMidiMetaEventPtr &metaEvent =
-                midiEvent.dynamicCast<DuMidiMetaEvent>();
-        if (metaEvent == NULL)
-            return false;
+            const DuMidiBasicEventPtr &midiEvent =
+                    midiEvents->at(j).dynamicCast<DuMidiBasicEvent>();
+            if (midiEvent == NULL)
+                return false;
 
-        if (metaEvent->getType() != DuMidiMetaEvent::EndOfTrack)
-            return false;
-        int trackDuration = metaEvent->getTime();
+            const DuMidiMetaEventPtr &metaEvent =
+                    midiEvent.dynamicCast<DuMidiMetaEvent>();
+            if (metaEvent == NULL)
+                return false;
 
-        midiEvents->removeAt(j);
+            if (metaEvent->getType() != DuMidiMetaEvent::EndOfTrack)
+                return false;
+            int trackDuration = metaEvent->getTime();
 
-        if (trackDuration != -1)
-        {
-            quint64 tmp = trackDuration;
-            tmp *= DUMUSIC_DIVISION;
-            tmp /= midiDivision;
+            midiEvents->removeAt(j);
 
-            if ((quint32)tmp > (quint32)duration)
-                setDuration(tmp);
+            if (trackDuration != -1)
+            {
+                quint64 tmp = trackDuration;
+                tmp *= DUMUSIC_DIVISION;
+                tmp /= midiDivision;
+
+                if ((quint32)tmp > (quint32)duration)
+                    setDuration(tmp);
+            }
         }
     }
 
