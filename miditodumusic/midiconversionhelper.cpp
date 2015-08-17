@@ -322,6 +322,14 @@ void MidiConversionHelper::setSelectedTrack(int index,
     selectedTracks[index] = midiTrack;
 }
 
+void MidiConversionHelper::setSelectedTrack(int tabIndex, int midiTrackIndex)
+{
+    if (tabIndex >= selectedTracks.count())
+        return;
+
+    selectedTracks[tabIndex] = getMidiTrack(midiTrackIndex);
+}
+
 
 const DuInstrumentPtr MidiConversionHelper::getInstrument(int index) const
 {
@@ -338,6 +346,14 @@ void MidiConversionHelper::setSelectedInstr(int index,
         return;
 
     selectedInstruments[index] = instrument;
+}
+
+void MidiConversionHelper::setSelectedInstr(int tabIndex, int instrumentIndex)
+{
+    if (tabIndex >= selectedInstruments.count())
+        return;
+
+    selectedInstruments[tabIndex] = getInstrument(instrumentIndex);
 }
 
 
