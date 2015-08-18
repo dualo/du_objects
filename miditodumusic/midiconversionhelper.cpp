@@ -592,13 +592,12 @@ bool MidiConversionHelper::filterMetaEvents()
     if (midiTracks == NULL)
         return false;
 
-    int trackCount = midiTracks->count();
-    if (trackCount == -1)
+    if (midiTracks->count() == -1)
         return false;
 
     int i = 0;
 
-    while (i < trackCount)
+    while (i < midiTracks->count())
     {
         bool instrumentFound = false;
         bool progChangeFound = false;
@@ -613,8 +612,7 @@ bool MidiConversionHelper::filterMetaEvents()
         if (midiEvents == NULL)
             return false;
 
-        int eventCount = midiEvents->count();
-        if (eventCount == -1)
+        if (midiEvents->count() == -1)
             return false;
 
 
@@ -622,7 +620,7 @@ bool MidiConversionHelper::filterMetaEvents()
         //We will use it later so we are not removing it now
 
         int j = 0;
-        while (j < eventCount - 1)
+        while (j < midiEvents->count() - 1)
         {
             const DuMidiBasicEventPtr &midiEvent =
                     midiEvents->at(j).dynamicCast<DuMidiBasicEvent>();
