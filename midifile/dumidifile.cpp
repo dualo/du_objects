@@ -262,7 +262,7 @@ bool DuMidiFile::appendTracks(const QList<DuMidiTrackPtr> &tracks)
     //Qt doesn't convert DuMidiTrackPtr to DuObjectPtr in a QList
     foreach (const DuMidiTrackPtr &track, tracks)
     {
-        ret = ret && tmp->append(track);
+        ret = tmp->append(track) ? ret : false;
     }
 
     return ret;
