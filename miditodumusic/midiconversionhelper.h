@@ -101,10 +101,10 @@ public slots:
     int findIndexes(int trackIndex, int loopIndex) const;
 
     void setSelectedTrack(int index, const DuMidiTrackPtr &midiTrack);
-    void setSelectedTrack(int tabIndex, int midiTrackIndex);
+    void setSelectedTrack(int index, int midiTrackIndex);
 
     void setSelectedInstr(int index, const DuInstrumentPtr &instrument);
-    void setSelectedInstr(int tabIndex, int instrumentIndex);
+    void setSelectedInstr(int index, int instrumentIndex);
 
     bool importMidiFile(const DuMidiFilePtr &midiFile);
     bool populateMapper(const QJsonObject &jsonMaps);

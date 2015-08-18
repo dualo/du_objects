@@ -322,12 +322,12 @@ void MidiConversionHelper::setSelectedTrack(int index,
     selectedTracks[index] = midiTrack;
 }
 
-void MidiConversionHelper::setSelectedTrack(int tabIndex, int midiTrackIndex)
+void MidiConversionHelper::setSelectedTrack(int index, int midiTrackIndex)
 {
-    if (tabIndex >= selectedTracks.count())
+    if (index >= selectedTracks.count())
         return;
 
-    selectedTracks[tabIndex] = selectedFile->getTrackAt(midiTrackIndex);
+    selectedTracks[index] = selectedFile->getTrackAt(midiTrackIndex);
 }
 
 
@@ -348,13 +348,13 @@ void MidiConversionHelper::setSelectedInstr(int index,
     selectedInstruments[index] = instrument;
 }
 
-void MidiConversionHelper::setSelectedInstr(int tabIndex, int instrumentIndex)
+void MidiConversionHelper::setSelectedInstr(int index, int instrumentIndex)
 {
-    if (tabIndex >= selectedInstruments.count())
+    if (index >= selectedInstruments.count())
         return;
 
     //TODO
-//    selectedInstruments[tabIndex] = ;
+//    selectedInstruments[index] = ;
 }
 
 
@@ -843,7 +843,7 @@ void MidiConversionHelper::setMidiTimeSig(int value)
     if (denom == 4 && num < 6 && num != 1)
         setTimeSig(num - 1);
     else
-        setTimeSig(NUM_TIMESIGNATURE);
+        setTimeSig(TIME_OFF);
 }
 
 void MidiConversionHelper::setMidiScale(int value)
