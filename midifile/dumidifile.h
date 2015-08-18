@@ -43,7 +43,7 @@ public:
 
     DuArrayPtr getTracks();
     DuArrayConstPtr getTracks() const;
-    DuMidiTrackConstPtr getTrackAt(int index) const;
+    DuMidiTrackPtr getTrackAt(int index);
 
     void setTracks(const DuArrayPtr &array);
     bool appendTrack(const DuMidiTrackPtr &track);
