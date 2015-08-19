@@ -28,7 +28,7 @@ DuSoundHeaderPtr DuSoundHeader::fromBinary(const s_instr_header &data)
 
     verif = header->setSize(data.full_size)              ? verif : false;
     verif = header->setMappingAddress(data.mapping_addr) ? verif : false;
-    verif = header->setMetadataAddress(data.meta)        ? verif : false;
+    verif = header->setMetadataAddress(data.meta_addr)   ? verif : false;
 
     if (!verif)
     {
@@ -63,7 +63,7 @@ QByteArray DuSoundHeader::toDuMusicBinary() const
     tmpInt = getMetadataAddress();
     if (tmpInt == -1)
         return QByteArray();
-    soundHeader.meta = tmpInt;
+    soundHeader.meta_addr = tmpInt;
 
     return QByteArray((char*)&soundHeader, size());
 }

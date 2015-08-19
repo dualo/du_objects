@@ -498,7 +498,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
     }
 
 
-    if (soundHeader.meta != 0)
+    if (soundHeader.meta_addr != 0)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "There are metadata in this du-sound, but we don't handle them yet.\n"
                                      << "They will be lost.";
