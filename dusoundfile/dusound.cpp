@@ -125,6 +125,8 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
         return DuSoundPtr();
     }
 
+    uint32_t sampleOffset = m3Infos->getSampleAddress();
+
     bool verif = true;
 
     verif = sound->setPresetNum(soundStruct->s_presetnum)       ? verif : false;
@@ -406,7 +408,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
             }
         }
 
-        DuDreamSampleParamPtr dreamSPObject = DuDreamSampleParam::fromBinary(dreamSP);
+        DuDreamSampleParamPtr dreamSPObject = DuDreamSampleParam::fromBinary(dreamSP, sampleOffset);
         if (dreamSPObject != NULL)
         {
             dreamSPArray->append(dreamSPObject);

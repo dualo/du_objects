@@ -97,7 +97,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrI
 
     verif = instrInfo->setUserID(du_instrInfo.instr_user_id) ? verif : false;
     verif = instrInfo->setID(du_instrInfo.instr_id) ? verif : false;
-    verif = instrInfo->setSampleAddress(du_instrInfo.sample_address) ? verif : false;
+    verif = instrInfo->setSampleAddress(du_instrInfo.sample_address >= 0x10000 ? ((du_instrInfo.sample_address - 0x10000) * 2) : 0) ? verif : false;
 
     verif = instrInfo->setActiveNoteOff(du_instrInfo.instr_noteoff) ? verif : false;
 

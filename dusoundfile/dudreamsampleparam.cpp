@@ -72,7 +72,7 @@ int DuDreamSampleParam::size() const
     return INSTR_DREAM_SP_SIZE;
 }
 
-DuDreamSampleParamPtr DuDreamSampleParam::fromBinary(const dream_sp &data)
+DuDreamSampleParamPtr DuDreamSampleParam::fromBinary(const dream_sp &data, uint32_t sampleOffset)
 {
     DuDreamSampleParamPtr dreamSP(new DuDreamSampleParam);
     bool verif = true;
@@ -130,7 +130,7 @@ DuDreamSampleParamPtr DuDreamSampleParam::fromBinary(const dream_sp &data)
     reorderedWavAddress |= (0x0000FF00 & data.wav_address) << 16;
     reorderedWavAddress |= (0x00FF0000 & data.wav_address) >> 8;
     reorderedWavAddress |= (0xFF000000 & data.wav_address) >> 8;
-    verif = dreamSP->setWavAddress(reorderedWavAddress * 2) ? verif : false;
+    verif = dreamSP->setWavAddress(reorderedWavAddress * 2 - sampleOffset) ? verif : false;
 
     verif = dreamSP->setVolumeMixer1(data.volume_mixer1) ? verif : false;
 

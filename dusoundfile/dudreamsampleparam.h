@@ -23,7 +23,7 @@ public:
     virtual int size() const;
     virtual QByteArray toDuMusicBinary() const;
 
-    static DuDreamSampleParamPtr fromBinary(const dream_sp& data);
+    static DuDreamSampleParamPtr fromBinary(const dream_sp& data, uint32_t sampleOffset);
 
     DU_KEY_ACCESSORS(Address1,        int)
     DU_KEY_ACCESSORS(LoopType,        SampleType)
