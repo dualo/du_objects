@@ -7,6 +7,51 @@
 #include <QHttpMultiPart>
 
 
+#define DU_KEY_ACCESSORS(key, type) \
+    type get ## key() const; \
+    bool set ## key(const type &value); \
+    static const QString Key ## key;
+
+#define DU_KEY_ACCESSORS_IMPL(className, key, dutype, type, defaultReturn) \
+    type className::get ## key() const \
+    { \
+        const Du ## dutype ## ConstPtr &tmp = getChildAs<Du ## dutype>(#key); \
+         \
+        if (tmp == NULL) \
+            return defaultReturn; \
+         \
+        return (type)tmp->get ## dutype(); \
+    } \
+    \
+    bool className::set ## key(const type &value) \
+    { \
+        const Du ## dutype ## Ptr &tmp = getChildAs<Du ## dutype>(#key); \
+         \
+        if (tmp == NULL) \
+            return false; \
+         \
+        return tmp->set ## dutype(value); \
+    } \
+    const QString className::Key ## key = #key;
+
+#define DU_KEY_ACCESSORS_OBJECT(key, dutype) \
+    dutype ## ConstPtr get ## key() const; \
+    void set ## key(const dutype ## Ptr &value); \
+    static const QString Key ## key;
+
+#define DU_KEY_ACCESSORS_OBJECT_IMPL(className, key, dutype) \
+    dutype ## ConstPtr className::get ## key() const \
+    { \
+        return getChildAs<dutype>(#key); \
+    } \
+    \
+    void className::set ## key(const dutype ## Ptr &value) \
+    { \
+        addChild(#key, value); \
+    } \
+    const QString className::Key ## key = #key;
+
+
 DU_OBJECT(DuContainer)
 
 class DuContainer : public DuObject
