@@ -7,20 +7,11 @@
 #include "../miditodumusic/midiconversionhelper.h"
 
 
-#define KEY_EVENT_TIME          "Time"
-#define KEY_EVENT_CONTROL       "Control"
-#define KEY_EVENT_CANAL         "Canal"
-#define KEY_EVENT_KEYBOARD      "Keyboard"
-#define KEY_EVENT_NOTE          "Note"
-#define KEY_EVENT_VALUE         "Value"
-
-
 DU_OBJECT(DuEvent)
 
 class DuEvent : public DuContainer
 {
 public:
-    explicit DuEvent(int time, int control, int canal, int note, int value);
     explicit DuEvent();
     ~DuEvent();
 
@@ -39,23 +30,12 @@ public:
 
     int size() const;
 
-    int getTime() const;
-    bool setTime(int value);
-
-    int getControl() const;
-    bool setControl(int value);
-
-    int getCanal() const;
-    bool setCanal(int value);
-
-    int getKeyboard() const;
-    bool setKeyboard(int value);
-
-    int getNote() const;
-    bool setNote(int value);
-
-    int getValue() const;
-    bool setValue(int value);
+    DU_KEY_ACCESSORS(Time,      int)
+    DU_KEY_ACCESSORS(Control,   int)
+    DU_KEY_ACCESSORS(Canal,     int)
+    DU_KEY_ACCESSORS(Keyboard,  int)
+    DU_KEY_ACCESSORS(Note,      int)
+    DU_KEY_ACCESSORS(Value,     int)
 };
 
 #endif // DUEVENT_H
