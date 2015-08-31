@@ -53,7 +53,8 @@ HEADERS += \
     $$PWD/dulist.h \
     $$PWD/dudevicelist.h \
     $$PWD/duprofile.h \
-    $$PWD/dusoundfile/dusound.h
+    $$PWD/dusoundfile/dusound.h \
+    $$PWD/miditodumusic/duscalemodel.h
 
 SOURCES += \
     $$PWD/du-touch/parameters/instr_mapping.c \
@@ -107,7 +108,8 @@ SOURCES += \
     $$PWD/dulist.cpp \
     $$PWD/dudevicelist.cpp \
     $$PWD/duprofile.cpp \
-    $$PWD/dusoundfile/dusound.cpp
+    $$PWD/dusoundfile/dusound.cpp \
+    $$PWD/miditodumusic/duscalemodel.cpp
     
 DISTFILES += \
     $$PWD/miditodumusic/defaultmaps.json
