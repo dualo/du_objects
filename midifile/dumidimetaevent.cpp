@@ -333,7 +333,7 @@ int DuMidiMetaEvent::getTonality() const
     qint8 sf = keySigArray[0];
     quint8 mi = keySigArray[1];
 
-    return ((sf + 6 * (2 + sf % 2) - 3 * mi) % 12);
+    return ((sf + 6 * (2 + sf % 2) - 3 * mi + 1) % 12);
 }
 
 int DuMidiMetaEvent::getScale() const
