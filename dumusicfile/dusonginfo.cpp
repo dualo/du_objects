@@ -222,7 +222,7 @@ DuSongInfoPtr DuSongInfo::fromMidi(const MidiConversionHelper &helper)
 //    verif = songInfo->setClickVolume() ? verif : false;
 //    verif = songInfo->setOffset(jsonOffset.toInt()) ? verif : false;
 
-    verif = songInfo->setScale(helper.getScale()) ? verif : false;
+    verif = songInfo->setScale(helper.getDutouchScale()) ? verif : false;
     verif = songInfo->setTonality(helper.getTonality()) ? verif : false;
     verif = songInfo->setTimeSignature(helper.getTimeSig()) ? verif : false;
 
