@@ -30,14 +30,14 @@ MidiConversionHelper::MidiConversionHelper(QObject *parent) :
     midiTonality(0),
     midiTitle(""),
     selectedFile(),
-    mapper(new DuMidiKeyMapper),
+    mapper(new DuMidiKeyMapper(this)),
     trackNames(),
     selectedIndexes(),
     selectedTracks(),
     selectedInstruments(),
     midiScaleBoxModel(),
     timeSigBoxModel(this),
-    scaleBoxModel(),
+    scaleBoxModel(this),
     tonalityBoxModel(this)
 {
     midiScaleBoxModel.append(tr("Major"));
@@ -49,22 +49,36 @@ MidiConversionHelper::MidiConversionHelper(QObject *parent) :
     timeSigBoxModel.addTimeSignature(DuTimeSignature(TIME_4_4, tr("4 : 4")));
     timeSigBoxModel.addTimeSignature(DuTimeSignature(TIME_5_4, tr("5 : 4")));
 
-    tonalityBoxModel.addTonality(DuTonality(0,  tr("C")));
-    tonalityBoxModel.addTonality(DuTonality(1,  tr("C#")));
-    tonalityBoxModel.addTonality(DuTonality(2,  tr("D")));
-    tonalityBoxModel.addTonality(DuTonality(3,  tr("D#")));
-    tonalityBoxModel.addTonality(DuTonality(4,  tr("E")));
-    tonalityBoxModel.addTonality(DuTonality(5,  tr("F")));
-    tonalityBoxModel.addTonality(DuTonality(6,  tr("F#")));
-    tonalityBoxModel.addTonality(DuTonality(7,  tr("G")));
-    tonalityBoxModel.addTonality(DuTonality(8,  tr("G#")));
-    tonalityBoxModel.addTonality(DuTonality(9,  tr("A")));
-    tonalityBoxModel.addTonality(DuTonality(10, tr("A#")));
-    tonalityBoxModel.addTonality(DuTonality(11, tr("B")));
+//    tonalityBoxModel.addTonality(DuTonality(0,  tr("C")));
+//    tonalityBoxModel.addTonality(DuTonality(1,  tr("C#")));
+//    tonalityBoxModel.addTonality(DuTonality(2,  tr("D")));
+//    tonalityBoxModel.addTonality(DuTonality(3,  tr("D#")));
+//    tonalityBoxModel.addTonality(DuTonality(4,  tr("E")));
+//    tonalityBoxModel.addTonality(DuTonality(5,  tr("F")));
+//    tonalityBoxModel.addTonality(DuTonality(6,  tr("F#")));
+//    tonalityBoxModel.addTonality(DuTonality(7,  tr("G")));
+//    tonalityBoxModel.addTonality(DuTonality(8,  tr("G#")));
+//    tonalityBoxModel.addTonality(DuTonality(9,  tr("A")));
+//    tonalityBoxModel.addTonality(DuTonality(10, tr("A#")));
+//    tonalityBoxModel.addTonality(DuTonality(11, tr("B")));
+
+    tonalityBoxModel.addTonality(DuTonality(0 , tr("B")));
+    tonalityBoxModel.addTonality(DuTonality(1,  tr("C")));
+    tonalityBoxModel.addTonality(DuTonality(2,  tr("C#")));
+    tonalityBoxModel.addTonality(DuTonality(3,  tr("D")));
+    tonalityBoxModel.addTonality(DuTonality(4,  tr("D#")));
+    tonalityBoxModel.addTonality(DuTonality(5,  tr("E")));
+    tonalityBoxModel.addTonality(DuTonality(6,  tr("F")));
+    tonalityBoxModel.addTonality(DuTonality(7,  tr("F#")));
+    tonalityBoxModel.addTonality(DuTonality(8,  tr("G")));
+    tonalityBoxModel.addTonality(DuTonality(9,  tr("G#")));
+    tonalityBoxModel.addTonality(DuTonality(10, tr("A")));
+    tonalityBoxModel.addTonality(DuTonality(11, tr("A#")));
 }
 
 MidiConversionHelper::~MidiConversionHelper()
 {
+    delete mapper;
 }
 
 
@@ -104,10 +118,10 @@ void MidiConversionHelper::setTimeSig(int value)
 
 int MidiConversionHelper::getScale() const
 {
-    return findScale(scale);
+    return scaleBoxModel.indexFromId(scale);
 }
 
-void MidiConversionHelper::setScale(const QString value)
+void MidiConversionHelper::setScale(const QString &value)
 {
     scale = value;
     emit scaleChanged();
@@ -410,17 +424,14 @@ DuTimeSignatureModel *MidiConversionHelper::getTimeSigBoxModel()
     return &timeSigBoxModel;
 }
 
-int MidiConversionHelper::findScale(const QString &key) const
+QString MidiConversionHelper::findScale(const QString &key) const
 {
-    int count = scaleBoxModel.count();
+    return scaleBoxModel.findId(key);
+}
 
-    for (int i = 0; i < count; i++)
-    {
-        if (scaleBoxModel[i] == key)
-            return i;
-    }
-
-    return -1;
+DuScaleModel *MidiConversionHelper::getScaleBoxModel()
+{
+    return &scaleBoxModel;
 }
 
 int MidiConversionHelper::findTonality(const QString &key)
@@ -433,10 +444,12 @@ DuTonalityModel *MidiConversionHelper::getTonalityBoxModel()
     return &tonalityBoxModel;
 }
 
-QStringList MidiConversionHelper::scales() const
+
+int MidiConversionHelper::getDutouchScale() const
 {
-    return scaleBoxModel;
+    return mapper->dutouchScale(scale);
 }
+
 
 QStringList MidiConversionHelper::midiScales() const
 {
@@ -464,7 +477,17 @@ bool MidiConversionHelper::populateMapper(const QJsonObject &jsonMaps)
 {
     mapper->importMaps(jsonMaps);
 
-    scaleBoxModel = mapper->mapList();
+    QStringList mapList = mapper->mapList();
+    scaleBoxModel.addScale(DuScale(SCALE_NONE, tr(SCALE_NONE)));
+
+    int count = mapList.count();
+
+    for (int i = 0; i < count; i++)
+    {
+        const QString &map = mapList[i];
+        scaleBoxModel.addScale(getScaleIds(map));
+    }
+
     emit scaleChanged();
 
     setMapsValid(true);
@@ -799,6 +822,14 @@ bool MidiConversionHelper::filterMetaEvents()
         setMidiTitle(tr("No Title"));
 
     return true;
+}
+
+
+DuScale MidiConversionHelper::getScaleIds(const QString &scale) const
+{
+    QPair<QString, QString> &scaleIds = mapper->scaleIds(scale);
+
+    return DuScale(scaleIds.first, scaleIds.second);
 }
 
 

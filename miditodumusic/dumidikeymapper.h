@@ -1,11 +1,13 @@
 #ifndef DUMIDIKEYMAPPER_H
 #define DUMIDIKEYMAPPER_H
 
-#include "../general/duobject.h"
-
+#include <QObject>
 #include <QJsonObject>
 #include <QStringList>
+#include <QPair>
 
+
+//TODO: update following list each time the scales in defaultmaps.json change
 
 #define SCALE_NONE                  "None"
 #define SCALE_BARTOK                "Bartok"
@@ -23,17 +25,14 @@
 #define SCALE_UKRAINIAN_DORIAN      "Ukrainian dorian"
 
 
-DU_OBJECT(DuMidiKeyMapper)
-
-class DuMidiKeyMapper : public DuObject
+class DuMidiKeyMapper : public QObject
 {
+    Q_OBJECT
+
 public:
-    explicit DuMidiKeyMapper();
+    explicit DuMidiKeyMapper(QObject *parent = 0);
     ~DuMidiKeyMapper();
 
-    DuObjectPtr clone() const;
-
-    QByteArray toDuMusicBinary() const;
     QJsonValue toJson() const;
 
     QDebug debugPrint(QDebug dbg) const;
@@ -44,6 +43,9 @@ public:
 
     QStringList mapList() const;
     void chooseMap(QString scale, quint8 tonality);
+
+    QPair<QString, QString> scaleIds(const QString &scale) const;
+    int dutouchScale(const QString &scale) const;
 
     int fetchKeyboard(quint8 key);
 

@@ -4,13 +4,14 @@
 #include "../midifile/dumidifile.h"
 #include "../dumusicfile/instrument/duinstrument.h"
 
-#include "dutimesignaturemodel.h"
-#include "dutonalitymodel.h"
-
 #include "dumidikeymapper.h"
 
 #include <QStringList>
 #include <QPair>
+
+#include "dutimesignaturemodel.h"
+#include "duscalemodel.h"
+#include "dutonalitymodel.h"
 
 
 class MidiConversionHelper : public QObject
@@ -26,8 +27,6 @@ class MidiConversionHelper : public QObject
     Q_PROPERTY(int scale READ getScale NOTIFY scaleChanged)
     Q_PROPERTY(int tonality READ getTonality NOTIFY tonalityChanged)
     Q_PROPERTY(QString title READ getTitle NOTIFY titleChanged)
-
-    Q_PROPERTY(QStringList scales READ scales NOTIFY validChanged)
 
     Q_PROPERTY(int midiTempo READ getMidiTempo NOTIFY validChanged)
     Q_PROPERTY(QString midiTimeSig READ getMidiTimeSigStr NOTIFY validChanged)
@@ -76,23 +75,23 @@ public:
     static int percuToMidi(quint8 duKey, quint8 keyboardIndex, quint8 mapIndex);
 
     DuTimeSignatureModel *getTimeSigBoxModel();
-
+    DuScaleModel *getScaleBoxModel();
     DuTonalityModel *getTonalityBoxModel();
 
-    QStringList scales() const;
+    int getDutouchScale() const;
 
     QStringList midiScales() const;
 
 public slots:
     void setTempo(int value);
     void setTimeSig(int value);
-    void setScale(const QString value);
+    void setScale(const QString &value);
     void setTonality(int value);
 
     void setTitle(const QString &value);
 
     int findTimeSig(const QString &key);
-    int findScale(const QString &key) const;
+    QString findScale(const QString &key) const;
     int findTonality(const QString &key);
 
     void addSelection(int trackNum, int loopNum);
@@ -128,6 +127,8 @@ signals:
 private:
     bool filterMetaEvents();
 
+    DuScale getScaleIds(const QString &scale) const;
+
     void setMidiValid(bool value);
     void setMapsValid(bool value);
 
@@ -158,7 +159,7 @@ private:
     QString midiTitle;
 
     DuMidiFilePtr selectedFile;
-    DuMidiKeyMapperPtr mapper;
+    DuMidiKeyMapper *mapper;
 
     QStringList trackNames;
 
@@ -170,7 +171,7 @@ private:
     QStringList midiScaleBoxModel;
 
     DuTimeSignatureModel timeSigBoxModel;
-    QStringList scaleBoxModel;
+    DuScaleModel scaleBoxModel;
     DuTonalityModel tonalityBoxModel;
 };
 
