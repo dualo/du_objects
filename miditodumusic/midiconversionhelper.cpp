@@ -827,7 +827,7 @@ bool MidiConversionHelper::filterMetaEvents()
 
 DuScale MidiConversionHelper::getScaleIds(const QString &scale) const
 {
-    QPair<QString, QString> &scaleIds = mapper->scaleIds(scale);
+    const QPair<QString, QString> &scaleIds = mapper->scaleIds(scale);
 
     return DuScale(scaleIds.first, scaleIds.second);
 }
