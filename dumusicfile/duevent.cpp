@@ -186,7 +186,7 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
             return DuEventPtr();
         }
 
-        keyboard = helper.keyboardFromMidi(key);
+        keyboard = helper.getKeyboardFromMidi(key);
     }
 
     verif = event->setKeyboard(keyboard) ? verif : false;

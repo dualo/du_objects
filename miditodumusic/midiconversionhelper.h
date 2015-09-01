@@ -70,7 +70,7 @@ public:
     const DuMidiTrackPtr getMidiTrack(int index) const;
     const DuInstrumentPtr getInstrument(int index) const;
 
-    int keyboardFromMidi(int key) const;
+    int getKeyboardFromMidi(int key) const;
     static int percuFromMidi(int gmKey, int mapIndex);
     static int percuToMidi(quint8 duKey, quint8 keyboardIndex, quint8 mapIndex);
 
