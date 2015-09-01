@@ -232,7 +232,7 @@ QByteArray DuEvent::toDuMusicBinary() const
     tmpNum = getNote();
     if (tmpNum == -1)
         return QByteArray();
-    du_sample.note = (quint8)tmpKbrd | (quint8)tmpNum;
+    du_sample.note = (quint8)tmpKbrd + (quint8)tmpNum;
 
     tmpNum = getValue();
     if (tmpNum == -1)

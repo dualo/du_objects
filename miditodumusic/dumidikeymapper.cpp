@@ -210,9 +210,9 @@ int DuMidiKeyMapper::keyboardFromMidi(quint8 key)
     int parity = (key / 12 + 1) % 2;
 
     if (parity != 0)
-        chosenKeyboard ^= 0x01;
+        chosenKeyboard = (chosenKeyboard + 1) % 2;
 
     //Return result in a form that can be directly added to a DuEvent note
     //(8th bit coding whether the note is played on the left or the right keyboard)
-    return ((chosenKeyboard << 8) & 0x80);
+    return 0x80 * chosenKeyboard;
 }
