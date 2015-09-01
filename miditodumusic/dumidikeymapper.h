@@ -47,7 +47,7 @@ public:
     QPair<QString, QString> scaleIds(const QString &scale) const;
     int dutouchScale(const QString &scale) const;
 
-    int fetchKeyboard(quint8 key);
+    int keyboardFromMidi(quint8 key);
 
 private:
     QJsonObject m_maps;

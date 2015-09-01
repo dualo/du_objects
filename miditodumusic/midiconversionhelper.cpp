@@ -374,7 +374,7 @@ void MidiConversionHelper::setSelectedInstr(int index, int instrumentIndex)
 
 int MidiConversionHelper::keyboardFromMidi(int key) const
 {
-    return mapper->fetchKeyboard(key);
+    return mapper->keyboardFromMidi(key);
 }
 
 

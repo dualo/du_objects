@@ -136,7 +136,7 @@ int DuMidiKeyMapper::dutouchScale(const QString &scale) const
 }
 
 
-int DuMidiKeyMapper::fetchKeyboard(quint8 key)
+int DuMidiKeyMapper::keyboardFromMidi(quint8 key)
 {
     if (!m_maps.contains(m_scale))
     {
