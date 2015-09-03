@@ -347,3 +347,28 @@ int DuExpression::size() const
 {
     return EXPRESSION_SIZE;
 }
+
+
+DU_KEY_ACCESSORS_IMPL(DuExpression, Volume,                Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, Panning,               Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, Octave,                Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, SendToReverb,          Numeric, int, -1)
+
+DU_KEY_ACCESSORS_IMPL(DuExpression, PortamentoOnOff,       Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, PortamentoControl,     Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, PortamentoTime,        Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, Expression,            Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, PitchBendSensitivity,  Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, Disposition,           Numeric, int, -1)
+
+DU_KEY_ACCESSORS_IMPL(DuExpression, AdsrPreset,            Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, CompressorPreset,      Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, DelayPreset,           Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, DistortionPreset,      Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, EqualizerPreset,       Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, ChorusPreset,          Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, VibratoPreset,         Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, WahPreset,             Numeric, int, -1)
+
+DU_KEY_ACCESSORS_IMPL(DuExpression, ArpeggiatorType,       Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, ArpeggiatorBeat,       Numeric, int, -1)
