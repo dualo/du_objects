@@ -315,8 +315,6 @@ QByteArray DuSound::toBinary() const
 {
     QByteArray data;
 
-    int tmpInt;
-
     // HEADER
     const DuSoundHeaderConstPtr &header = getHeader();
     if (header == NULL)
