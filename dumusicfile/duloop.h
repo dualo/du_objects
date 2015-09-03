@@ -8,6 +8,7 @@
 
 #define KEY_LOOP_STATE              "State"
 #define KEY_LOOP_DURATIONMODIFIER   "DurationModifier"
+#define KEY_LOOP_SCOREDISPLAY       "ScoreDisplay"
 #define KEY_LOOP_MIDIOUTCHANNEL     "MidiOutChannel"
 #define KEY_LOOP_INSTRUMENT         "Instrument"
 #define KEY_LOOP_EVENTS             "Events"
@@ -38,6 +39,9 @@ public:
 
     int getDurationModifier() const;
     bool setDurationModifier(int value);
+
+    int getScoreDisplay() const;
+    bool setScoreDisplay(int value);
 
     int getMidiOutChannel() const;
     bool setMidiOutChannel(int value);

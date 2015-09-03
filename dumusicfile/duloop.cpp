@@ -19,6 +19,10 @@ DuLoop::DuLoop() :
              new DuNumeric(MUSIC_LOOPMOD_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            MUSIC_LOOPMOD_MAXVALUE, MUSIC_LOOPMOD_MINVALUE));
 
+    addChild(KEY_LOOP_SCOREDISPLAY,
+             new DuNumeric(LEARN_OFF, NUMERIC_DEFAULT_SIZE,
+                           NUM_LEARNMODE - 1, LEARN_OFF));
+
     addChild(KEY_LOOP_MIDIOUTCHANNEL,
              new DuNumeric(0, NUMERIC_DEFAULT_SIZE,
                            15, 0));
@@ -55,21 +59,24 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
         loop->setInstrument(instrument);
     else
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuLoop::fromDuMusicBinary():\n"
-                    << "failed to generate DuLoop\n"
-                    << "the DuInstrument was not properly generated";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuLoop::fromDuMusicBinary():\n"
+                << "failed to generate DuLoop\n"
+                << "the DuInstrument was not properly generated";
 
         return DuLoopPtr();
     }
 
     verif = loop->setState(du_loop.l_state) ? verif : false;
     verif = loop->setDurationModifier(du_loop.l_loopmod) ? verif : false;
+    verif = loop->setScoreDisplay(du_loop.l_learn) ? verif : false;
     verif = loop->setMidiOutChannel(du_loop.l_midioutchannel) ? verif : false;
 
     if (!verif)
     {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuLoop::fromDuMusicBinary():\n"
-                   << "an attribute was not properly set";
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << "DuLoop::fromDuMusicBinary():\n"
+                << "an attribute was not properly set";
     }
 
     for (int i = 0; i < du_loop.l_numsample; i++)
@@ -77,17 +84,19 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
         const DuEventPtr &event = DuEvent::fromDuMusicBinary(du_sample[i]);
         if (event == NULL)
         {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuLoop::fromDuMusicBinary():\n"
-                        << "failed to generate DuLoop\n"
-                        << "a DuEvent was not properly generated";
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuLoop::fromDuMusicBinary():\n"
+                    << "failed to generate DuLoop\n"
+                    << "a DuEvent was not properly generated";
 
             return DuLoopPtr();
         }
         if (!loop->appendEvent(event))
         {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuLoop::fromDuMusicBinary():\n"
-                        << "failed to generate DuLoop\n"
-                        << "a DuEvent was not properly appended";
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuLoop::fromDuMusicBinary():\n"
+                    << "failed to generate DuLoop\n"
+                    << "a DuEvent was not properly appended";
 
             return DuLoopPtr();
         }
@@ -101,11 +110,13 @@ DuLoopPtr DuLoop::fromJson(const QJsonObject &jsonLoop)
 {
     QJsonValue jsonState        = jsonLoop[KEY_LOOP_STATE];
     QJsonValue jsonDurationMod  = jsonLoop[KEY_LOOP_DURATIONMODIFIER];
+    QJsonValue jsonScoreDisp    = jsonLoop[KEY_LOOP_SCOREDISPLAY];
     QJsonValue jsonOutChannel   = jsonLoop[KEY_LOOP_MIDIOUTCHANNEL];
     QJsonValue jsonInstrument   = jsonLoop[KEY_LOOP_INSTRUMENT];
     QJsonValue jsonEvents       = jsonLoop[KEY_LOOP_EVENTS];
 
     if (        !jsonState.isDouble()       ||  !jsonDurationMod.isDouble()
+            ||  !jsonScoreDisp.isDouble()
             ||  !jsonOutChannel.isDouble()  ||  !jsonInstrument.isObject()
             ||  !jsonEvents.isArray())
     {
@@ -122,6 +133,7 @@ DuLoopPtr DuLoop::fromJson(const QJsonObject &jsonLoop)
 
     verif = loop->setState(jsonState.toInt()) ? verif : false;
     verif = loop->setDurationModifier(jsonDurationMod.toInt()) ? verif : false;
+    verif = loop->setScoreDisplay(jsonScoreDisp) ? verif : false;
     verif = loop->setMidiOutChannel(jsonOutChannel.toInt()) ? verif : false;
 
     if (!verif)
@@ -298,6 +310,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
 
     verif = loop->setState(REC_STOP) ? verif : false;
     verif = loop->setDurationModifier(1) ? verif : false;
+    verif = loop->setScoreDisplay(LEARN_OFF) ? verif : false;
     verif = loop->setMidiOutChannel(helper.getMidiChannel(loopIndex)) ? verif : false;
 
     if (!verif)
@@ -395,6 +408,11 @@ QByteArray DuLoop::toDuMusicBinary() const
     if (tmpNum == -1)
         return QByteArray();
     du_loop.l_loopmod = tmpNum;
+
+    tmpNum = getScoreDisplay();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_loop.l_learn = tmpNum;
 
     tmpNum = getMidiOutChannel();
     if (tmpNum == -1)
@@ -699,6 +717,26 @@ int DuLoop::getDurationModifier() const
 bool DuLoop::setDurationModifier(int value)
 {
     const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_LOOP_DURATIONMODIFIER);
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
+}
+
+int DuLoop::getScoreDisplay() const
+{
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_LOOP_SCOREDISPLAY);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuLoop::setScoreDisplay(int value)
+{
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_LOOP_SCOREDISPLAY);
 
     if (tmp == NULL)
         return false;
