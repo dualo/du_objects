@@ -133,7 +133,7 @@ DuLoopPtr DuLoop::fromJson(const QJsonObject &jsonLoop)
 
     verif = loop->setState(jsonState.toInt()) ? verif : false;
     verif = loop->setDurationModifier(jsonDurationMod.toInt()) ? verif : false;
-    verif = loop->setScoreDisplay(jsonScoreDisp) ? verif : false;
+    verif = loop->setScoreDisplay(jsonScoreDisp.toInt()) ? verif : false;
     verif = loop->setMidiOutChannel(jsonOutChannel.toInt()) ? verif : false;
 
     if (!verif)
