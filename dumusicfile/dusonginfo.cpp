@@ -642,7 +642,7 @@ QByteArray DuSongInfo::getLeds() const
     if (tmp == NULL)
         return QByteArray();
 
-    return tmp->getData();
+    return tmp->getBinaryData();
 }
 
 bool DuSongInfo::setLeds(const QByteArray &value)
@@ -652,5 +652,5 @@ bool DuSongInfo::setLeds(const QByteArray &value)
     if (tmp == NULL)
         return false;
 
-    return tmp->setData(value);
+    return tmp->setBinaryData(value);
 }

@@ -173,7 +173,7 @@ const QByteArray DuMidiMetaEvent::getData() const
     if (tmp == NULL)
         return QByteArray();
 
-    return tmp->getData();
+    return tmp->getBinaryData();
 }
 
 void DuMidiMetaEvent::setData(const QByteArray &value)
@@ -189,7 +189,7 @@ void DuMidiMetaEvent::setData(const QByteArray &value)
         return;
 
     length->setAbsolute(value.size());
-    data->setData(value);
+    data->setBinaryData(value);
 }
 
 void DuMidiMetaEvent::setData(QDataStream &stream)
