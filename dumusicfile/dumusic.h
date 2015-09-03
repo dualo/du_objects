@@ -14,7 +14,10 @@
 #define KEY_MUSIC_REVERB        "ReverbSettings"
 #define KEY_MUSIC_TRACKS        "Tracks"
 
-#define KEY_MUSIC_TRANSPOSE          "Transpose"
+#define KEY_MUSIC_TRANSPOSE     "Transpose"
+
+#define KEY_MUSIC_PLAYHEAD      "Playhead"
+#define KEY_MUSIC_STATE         "State"
 
 
 class QIODevice;
@@ -76,6 +79,12 @@ public:
 
     int getTranspose() const;
     bool setTranspose(int value);
+
+    int getPlayhead() const;
+    bool setPlayhead(int value);
+
+    int getState() const;
+    bool setState(int value);
 
 private:
     int m_databaseId;

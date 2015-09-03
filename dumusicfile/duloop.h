@@ -10,6 +10,9 @@
 #define KEY_LOOP_DURATIONMODIFIER   "DurationModifier"
 #define KEY_LOOP_SCOREDISPLAY       "ScoreDisplay"
 #define KEY_LOOP_MIDIOUTCHANNEL     "MidiOutChannel"
+
+#define KEY_LOOP_SAVELOOPTIMER      "SaveLoopTimer"
+
 #define KEY_LOOP_INSTRUMENT         "Instrument"
 #define KEY_LOOP_EVENTS             "Events"
 
@@ -45,6 +48,9 @@ public:
 
     int getMidiOutChannel() const;
     bool setMidiOutChannel(int value);
+
+    int getSaveLoopTimer() const;
+    bool setSaveLoopTimer(int value);
 
     DuInstrumentConstPtr getInstrument() const;
     void setInstrument(const DuInstrumentPtr &instrument);

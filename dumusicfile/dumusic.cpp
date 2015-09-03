@@ -23,11 +23,22 @@ DuMusic::DuMusic() :
 
     addChild(KEY_MUSIC_REVERB, new DuReverb);
 
+
     addChild(KEY_MUSIC_TRACKS, new DuArray(MUSIC_MAXTRACK));
+
 
     addChild(KEY_MUSIC_TRANSPOSE,
              new DuNumeric(RECORD_TRANSPOSEDEFAULT, NUMERIC_DEFAULT_SIZE,
                            2 * RECORD_TRANSPOSEDEFAULT, 0));
+
+
+    addChild(KEY_MUSIC_PLAYHEAD,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0xFF, 0x00));
+
+    addChild(KEY_MUSIC_STATE,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0xFF, 0x00));
 }
 
 DuMusic::~DuMusic()
@@ -185,7 +196,12 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
     }
 
 
-    bool verif = music->setTranspose(du_music.local_song.s_transpose);
+    bool verif = true;
+
+    verif = music->setTranspose(du_music.local_song.s_transpose) ? verif : false;
+
+    verif = music->setPlayhead(du_music.local_song.s_playhead) ? verif : false;
+    verif = music->setState(du_music.local_song.s_state) ? verif : false;
 
     if (!verif)
     {
@@ -248,10 +264,14 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
     QJsonValue jsonReverb       = jsonMusic[KEY_MUSIC_REVERB];
     QJsonValue jsonTracks       = jsonMusic[KEY_MUSIC_TRACKS];
     QJsonValue jsonTranspose    = jsonMusic[KEY_MUSIC_TRANSPOSE];
+    QJsonValue jsonPlayhead     = jsonMusic[KEY_MUSIC_PLAYHEAD];
+    QJsonValue jsonState        = jsonMusic[KEY_MUSIC_STATE];
 
     if (        !jsonHeader.isObject()      ||  !jsonControllers.isObject()
             ||  !jsonSongInfo.isObject()    ||  !jsonReverb.isObject()
-            ||  !jsonTracks.isArray()       ||  !jsonTranspose.isDouble())
+            ||  !jsonTracks.isArray()
+            ||  !jsonTranspose.isDouble()
+            ||  !jsonPlayhead.isDouble()    ||  !jsonState.isDouble())
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuMusic::fromJson():\n"
@@ -353,7 +373,12 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
     }
 
 
-    bool verif = music->setTranspose(jsonTranspose.toInt());
+    bool verif = true;
+
+    verif = music->setTranspose(jsonTranspose.toInt()) ? verif : false;
+
+    verif = music->setPlayhead(jsonPlayhead.toInt()) ? verif : false;
+    verif = music->setState(jsonState.toInt()) ? verif : false;
 
     if (!verif)
     {
@@ -674,10 +699,22 @@ QByteArray DuMusic::toDuMusicBinary() const
     std::memcpy(du_music->local_buffer, tmpLocalBuffer.data(),
                 eventTotal * MUSIC_SAMPLE_SIZE);
 
+
     int tmpNum = getTranspose();
     if (tmpNum == -1)
         return QByteArray();
     du_music->local_song.s_transpose = tmpNum;
+
+
+    tmpNum = getPlayhead();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_music->local_song.s_playhead = tmpNum;
+
+    tmpNum = getState();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_music->local_song.s_state = tmpNum;
 
 
     return QByteArray((char *)(du_music.data()), musicSize);
@@ -1002,6 +1039,51 @@ bool DuMusic::setTranspose(int value)
 {
     const DuNumericPtr &tmp =
             getChildAs<DuNumeric>(KEY_MUSIC_TRANSPOSE);
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
+}
+
+
+int DuMusic::getPlayhead() const
+{
+    const DuNumericConstPtr &tmp =
+            getChildAs<DuNumeric>(KEY_MUSIC_PLAYHEAD);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuMusic::setPlayhead(int value)
+{
+    const DuNumericPtr &tmp =
+            getChildAs<DuNumeric>(KEY_MUSIC_PLAYHEAD);
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
+}
+
+int DuMusic::getState() const
+{
+    const DuNumericConstPtr &tmp =
+            getChildAs<DuNumeric>(KEY_MUSIC_STATE);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuMusic::setState(int value)
+{
+    const DuNumericPtr &tmp =
+            getChildAs<DuNumeric>(KEY_MUSIC_STATE);
 
     if (tmp == NULL)
         return false;

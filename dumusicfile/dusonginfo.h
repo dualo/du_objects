@@ -31,6 +31,8 @@
 
 #define KEY_SONG_LEDS                   "LEDs"
 
+#define KEY_SONG_QUANTIFICATION         "Quantification"
+
 #define SONGINFO_SIZE       8 + MUSIC_SONG_NAME_SIZE + 20 + NUM_LED_VALUE + FX_MIX_SIZE
 #define SONGINFO_OFFSET     4 + 8 * 16 + 10 + 3 + 15
 
@@ -102,6 +104,9 @@ public:
 
     QByteArray getLeds() const;
     bool setLeds(const QByteArray &value);
+
+    int getQuantification() const;
+    bool setQuantification(int value);
 };
 
 #endif // DUSONGINFO_H

@@ -64,6 +64,10 @@ DuSongInfo::DuSongInfo() :
 
     addChild(KEY_SONG_LEDS,
              new DuBinaryData(NUM_LED_VALUE));
+
+
+    addChild(KEY_SONG_QUANTIFICATION,
+             new DuNumeric(0x00));
 }
 
 DuSongInfo::~DuSongInfo()
@@ -113,6 +117,8 @@ DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
 
     verif = songInfo->setReverbPreset(du_song.s_reverb_preset) ? verif : false;
 
+    verif = songInfo->setQuantification(du_song.s_quantification) ? verif : false;
+
     if (!verif)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "DuSongInfo::fromDuMusicBinary():\n"
@@ -141,6 +147,7 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
     QJsonValue jsonTimeSignature    = jsonSongInfo[KEY_SONG_TIMESIGNATURE];
     QJsonValue jsonReverbPreset     = jsonSongInfo[KEY_SONG_REVERBPRESET];
     QJsonValue jsonLeds             = jsonSongInfo[KEY_SONG_LEDS];
+    QJsonValue jsonQuantif          = jsonSongInfo[KEY_SONG_QUANTIFICATION];
 
     if (        !jsonSongId.isDouble()      ||  !jsonSongName.isString()
             ||  !jsonSongVersion.isDouble()
@@ -150,7 +157,8 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
             ||  !jsonClickVolume.isDouble() ||  !jsonOffset.isDouble()
             ||  !jsonMixer.isObject()       ||  !jsonScale.isDouble()
             ||  !jsonTonality.isDouble()    ||  !jsonTimeSignature.isDouble()
-            ||  !jsonLeds.isString()        ||  !jsonReverbPreset.isDouble())
+            ||  !jsonLeds.isString()        ||  !jsonReverbPreset.isDouble()
+            ||  !jsonQuantif.isDouble())
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuSongInfo::fromJson():\n"
@@ -185,10 +193,13 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
 
     verif = songInfo->setReverbPreset(jsonReverbPreset.toInt()) ? verif : false;
 
+    verif = songInfo->setQuantification(jsonQuantif.toInt()) ? verif : false;
+
     if (!verif)
     {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuSongInfo::fromJson():\n"
-                                     << "an attribute was not properly set";
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << "DuSongInfo::fromJson():\n"
+                << "an attribute was not properly set";
     }
 
     const DuMixerPtr &mixer = DuMixer::fromJson(jsonMixer.toObject());
@@ -210,9 +221,10 @@ DuSongInfoPtr DuSongInfo::fromMidi(const MidiConversionHelper &helper)
 {
     if (!helper.isValid())
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusic::fromMidi():\n"
-                                      << "failed to generate DuMusic\n"
-                                      << "invalid conversion helper";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromMidi():\n"
+                << "failed to generate DuMusic\n"
+                << "invalid conversion helper";
 
         return DuSongInfoPtr();
     }
@@ -236,6 +248,8 @@ DuSongInfoPtr DuSongInfo::fromMidi(const MidiConversionHelper &helper)
     verif = songInfo->setTimeSignature(helper.getTimeSig()) ? verif : false;
 
 //    verif = songInfo->setLeds() ? verif : false;
+
+    verif = songInfo->setQuantification(0) ? verif : false;
 
     if (!verif)
     {
@@ -349,8 +363,12 @@ QByteArray DuSongInfo::toDuMusicBinary() const
     du_songinfo.s_reverb_preset = tmpNum;
 
 
-    du_songinfo.s_currenttrack = 0x00;
-    du_songinfo.s_quantification = 0x00;
+    tmpNum = getQuantification();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_songinfo.s_quantification = tmpNum;
+
+
     du_songinfo.s_totalsample = 0x00;
 
 
@@ -689,4 +707,25 @@ bool DuSongInfo::setLeds(const QByteArray &value)
         return false;
 
     return tmp->setBinaryData(value);
+}
+
+
+int DuSongInfo::getQuantification() const
+{
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_QUANTIFICATION);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuSongInfo::setQuantification(int value)
+{
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_QUANTIFICATION);
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
 }
