@@ -4,11 +4,9 @@
 #include "../general/ducontainer.h"
 
 
-DU_OBJECT(DuInstrumentInfo)
 DU_OBJECT(DuSoundHeader)
+DU_OBJECT(DuSoundInfo)
 DU_OBJECT(DuArray)
-DU_OBJECT(DuMixer)
-DU_OBJECT(DuNumeric)
 
 DU_OBJECT(DuSound)
 
@@ -52,24 +50,7 @@ public:
 
     DU_KEY_ACCESSORS_OBJECT(Header,                 DuSoundHeader)
 
-    DU_KEY_ACCESSORS_OBJECT(InstrumentInfo,         DuInstrumentInfo)
-
-    DU_KEY_ACCESSORS(PresetNum,       int) // editable
-    DU_KEY_ACCESSORS(DisplayLed,      int)
-
-    DU_KEY_ACCESSORS_OBJECT(PresetArray,            DuArray)
-
-    DU_KEY_ACCESSORS_OBJECT(Mixer,                  DuMixer)
-    DU_KEY_ACCESSORS_OBJECT(DistortionArray,        DuArray)
-    DU_KEY_ACCESSORS_OBJECT(WahArray,               DuArray)
-    DU_KEY_ACCESSORS_OBJECT(CompressorArray,        DuArray)
-    DU_KEY_ACCESSORS_OBJECT(EqualizerArray,         DuArray)
-    DU_KEY_ACCESSORS_OBJECT(DelayArray,             DuArray)
-    DU_KEY_ACCESSORS_OBJECT(ChorusArray,            DuArray)
-    DU_KEY_ACCESSORS_OBJECT(VibratoArray,           DuArray)
-    DU_KEY_ACCESSORS_OBJECT(AdsrArray,              DuArray)
-
-    DU_KEY_ACCESSORS_OBJECT(LedArray,               DuArray)
+    DU_KEY_ACCESSORS_OBJECT(Info,                   DuSoundInfo)
 
     DU_KEY_ACCESSORS_OBJECT(NbSamplesPerLayerArray, DuArray)
 

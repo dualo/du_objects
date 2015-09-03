@@ -4,26 +4,15 @@
 #include "dudreamsampleparam.h"
 #include "dunote.h"
 #include "dusoundheader.h"
-
-#include <cstring>
+#include "dusoundinfo.h"
 
 #include "../dumusicfile/instrument/duinstrumentinfo.h"
-#include "../dumusicfile/instrument/dupreset.h"
-
-#include "../dumusicfile/instrument/effects/duadsr.h"
-#include "../dumusicfile/instrument/effects/duchorus.h"
-#include "../dumusicfile/instrument/effects/ducompressor.h"
-#include "../dumusicfile/instrument/effects/dudelay.h"
-#include "../dumusicfile/instrument/effects/dudistortion.h"
-#include "../dumusicfile/instrument/effects/duequalizer.h"
-#include "../dumusicfile/instrument/effects/dumixer.h"
-#include "../dumusicfile/instrument/effects/duvibrato.h"
-#include "../dumusicfile/instrument/effects/duwah.h"
 
 #include "../general/duarray.h"
 #include "../general/dubinarydata.h"
 #include "../general/dunumeric.h"
 
+#include <cstring>
 #include <QFile>
 
 
@@ -35,24 +24,7 @@ DuSound::DuSound() :
 {
     addChild(KeyHeader,                new DuSoundHeader);
 
-    addChild(KeyInstrumentInfo,        new DuInstrumentInfo);
-
-    addChild(KeyPresetNum,             new DuNumeric(0, NUMERIC_DEFAULT_SIZE, FX_NUM_PRESET_INTR, 0));
-    addChild(KeyDisplayLed,            new DuNumeric(0xFF, NUMERIC_DEFAULT_SIZE, 0xFF, 0));
-
-    addChild(KeyPresetArray,           new DuArray(FX_NUM_PRESET_INTR));
-
-    addChild(KeyMixer,                 new DuMixer);
-    addChild(KeyDistortionArray,       new DuArray(FX_NUM_FX_INTR));
-    addChild(KeyWahArray,              new DuArray(FX_NUM_FX_INTR));
-    addChild(KeyCompressorArray,       new DuArray(FX_NUM_FX_INTR));
-    addChild(KeyEqualizerArray,        new DuArray(FX_NUM_FX_INTR));
-    addChild(KeyDelayArray,            new DuArray(FX_NUM_FX_INTR));
-    addChild(KeyChorusArray,           new DuArray(FX_NUM_FX_INTR));
-    addChild(KeyVibratoArray,          new DuArray(FX_NUM_FX_INTR));
-    addChild(KeyAdsrArray,             new DuArray(FX_NUM_FX_INTR));
-
-    addChild(KeyLedArray,              new DuArray(NUM_LED_VALUE));
+    addChild(KeyInfo,                  new DuSoundInfo);
 
     addChild(KeyDreamInstrParamArray,  new DuArray);
     addChild(KeyDreamSampleParamArray, new DuArray);
@@ -88,12 +60,12 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
         return DuSoundPtr();
     }
 
-    QScopedPointer<struct_instr> soundStruct(new struct_instr);
-    std::memcpy((char*)soundStruct.data(), &data.data()[INSTR_HEADER_SIZE], INSTRU_STRUCT_SIZE);
+    struct_instr soundStruct;
+    std::memcpy((char*)&soundStruct, &data.data()[INSTR_HEADER_SIZE], INSTRU_STRUCT_SIZE);
 
     DuSoundPtr sound(new DuSound);
 
-    if (soundStruct->s_instrument.instr_midi_pc == 0xFF)
+    if (soundStruct.s_instrument.instr_midi_pc == 0xFF)
     {
         // du-sound empty
         return sound;
@@ -112,223 +84,29 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
         return DuSoundPtr();
     }
 
-    DuInstrumentInfoPtr m3Infos = DuInstrumentInfo::fromDuMusicBinary(soundStruct->s_instrument);
-    if (m3Infos != NULL)
+    DuSoundInfoPtr info = DuSoundInfo::fromBinary(soundStruct);
+    if (info != NULL)
     {
-        sound->setInstrumentInfo(m3Infos);
+        sound->setInfo(info);
     }
     else
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
-                                      << "M3 infos were not properly generated";
+                                      << "Info was not properly generated";
+
+        return DuSoundPtr();
+    }
+
+    DuInstrumentInfoConstPtr m3Infos = info->getInstrumentInfo();
+    if (m3Infos == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
+                                      << "Can't get InstrumentInfo from Info";
 
         return DuSoundPtr();
     }
 
     uint32_t sampleOffset = m3Infos->getSampleAddress();
-
-    bool verif = true;
-
-    verif = sound->setPresetNum(soundStruct->s_presetnum)       ? verif : false;
-    verif = sound->setDisplayLed(soundStruct->s_displayled)     ? verif : false;
-
-    if (!verif)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "An attribute was not properly set";
-    }
-
-    DuArrayPtr presetArray(new DuArray);
-    for (int i = 0; i < FX_NUM_PRESET_INTR; ++i)
-    {
-        DuPresetPtr preset = DuPreset::fromDuMusicBinary(soundStruct->s_preset[i]);
-        if (preset != NULL)
-        {
-            presetArray->append(preset);
-        }
-        else
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
-                                          << "Preset" << i << "was not properly generated";
-
-            return DuSoundPtr();
-        }
-    }
-    sound->setPresetArray(presetArray);
-
-    DuMixerPtr mixer = DuMixer::fromDuMusicBinary(soundStruct->s_mix);
-    if (mixer != NULL)
-    {
-        sound->setMixer(mixer);
-    }
-    else
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
-                                      << "Mixer was not properly generated";
-
-        return DuSoundPtr();
-    }
-
-    DuArrayPtr distoArray(new DuArray);
-    for (int i = 0; i < FX_NUM_FX_INTR; ++i)
-    {
-        DuDistortionPtr disto = DuDistortion::fromDuMusicBinary(soundStruct->s_distortion[i]);
-        if (disto != NULL)
-        {
-            distoArray->append(disto);
-        }
-        else
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
-                                          << "Distortion" << i << "was not properly generated";
-
-            return DuSoundPtr();
-        }
-    }
-    sound->setDistortionArray(distoArray);
-
-    DuArrayPtr wahArray(new DuArray);
-    for (int i = 0; i < FX_NUM_FX_INTR; ++i)
-    {
-        DuWahPtr wah = DuWah::fromDuMusicBinary(soundStruct->s_wah[i]);
-        if (wah != NULL)
-        {
-            wahArray->append(wah);
-        }
-        else
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
-                                          << "Wah" << i << "was not properly generated";
-
-            return DuSoundPtr();
-        }
-    }
-    sound->setWahArray(wahArray);
-
-    DuArrayPtr compressorArray(new DuArray);
-    for (int i = 0; i < FX_NUM_FX_INTR; ++i)
-    {
-        DuCompressorPtr compressor = DuCompressor::fromDuMusicBinary(soundStruct->s_compressor[i]);
-        if (compressor != NULL)
-        {
-            compressorArray->append(compressor);
-        }
-        else
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
-                                          << "Compressor" << i << "was not properly generated";
-
-            return DuSoundPtr();
-        }
-    }
-    sound->setCompressorArray(compressorArray);
-
-    DuArrayPtr equalizerArray(new DuArray);
-    for (int i = 0; i < FX_NUM_FX_INTR; ++i)
-    {
-        DuEqualizerPtr equalizer = DuEqualizer::fromDuMusicBinary(soundStruct->s_equalizer[i]);
-        if (equalizer != NULL)
-        {
-            equalizerArray->append(equalizer);
-        }
-        else
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
-                                          << "Equalizer" << i << "was not properly generated";
-
-            return DuSoundPtr();
-        }
-    }
-    sound->setEqualizerArray(equalizerArray);
-
-    DuArrayPtr delayArray(new DuArray);
-    for (int i = 0; i < FX_NUM_FX_INTR; ++i)
-    {
-        DuDelayPtr delay = DuDelay::fromDuMusicBinary(soundStruct->s_delay[i]);
-        if (delay != NULL)
-        {
-            delayArray->append(delay);
-        }
-        else
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
-                                          << "Delay" << i << "was not properly generated";
-
-            return DuSoundPtr();
-        }
-    }
-    sound->setDelayArray(delayArray);
-
-    DuArrayPtr chorusArray(new DuArray);
-    for (int i = 0; i < FX_NUM_FX_INTR; ++i)
-    {
-        DuChorusPtr chorus = DuChorus::fromDuMusicBinary(soundStruct->s_chorus[i]);
-        if (chorus != NULL)
-        {
-            chorusArray->append(chorus);
-        }
-        else
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
-                                          << "Chorus" << i << "was not properly generated";
-
-            return DuSoundPtr();
-        }
-    }
-    sound->setChorusArray(chorusArray);
-
-    DuArrayPtr vibratoArray(new DuArray);
-    for (int i = 0; i < FX_NUM_FX_INTR; ++i)
-    {
-        DuVibratoPtr vibrato = DuVibrato::fromDuMusicBinary(soundStruct->s_vibrato[i]);
-        if (vibrato != NULL)
-        {
-            vibratoArray->append(vibrato);
-        }
-        else
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
-                                          << "Vibrato" << i << "was not properly generated";
-
-            return DuSoundPtr();
-        }
-    }
-    sound->setVibratoArray(vibratoArray);
-
-    DuArrayPtr adsrArray(new DuArray);
-    for (int i = 0; i < FX_NUM_FX_INTR; ++i)
-    {
-        DuAdsrPtr adsr = DuAdsr::fromDuMusicBinary(soundStruct->s_adsr[i]);
-        if (adsr != NULL)
-        {
-            adsrArray->append(adsr);
-        }
-        else
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
-                                          << "ADSR" << i << "was not properly generated";
-
-            return DuSoundPtr();
-        }
-    }
-    sound->setAdsrArray(adsrArray);
-
-    DuArrayPtr ledsArray(new DuArray);
-    for (int i = 0; i < NUM_LED_VALUE; ++i)
-    {
-        DuNumericPtr leds(new DuNumeric(soundStruct->s_leds[i], NUMERIC_DEFAULT_SIZE, 0xFF, 0x000, 0));
-        if (leds != NULL)
-        {
-            ledsArray->append(leds);
-        }
-        else
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
-                                          << "Leds" << i << "was not properly generated";
-
-            return DuSoundPtr();
-        }
-    }
-    sound->setLedArray(ledsArray);
 
     int nbLayers = m3Infos->getNbLayer();
 
@@ -546,79 +324,11 @@ QByteArray DuSound::toBinary() const
     data += header->toDuMusicBinary();
 
     // SOUND STRUCT
-    QScopedPointer<struct_instr> soundStruct(new struct_instr);
-
-    const DuInstrumentInfoConstPtr &m3infos = getInstrumentInfo();
-    if (m3infos == NULL)
+    const DuSoundInfoConstPtr &info = getInfo();
+    if (info == NULL)
         return QByteArray();
-    std::memcpy((char*)&(soundStruct->s_instrument), m3infos->toDuMusicBinary().data(), m3infos->size());
 
-    tmpInt = getPresetNum();
-    if (tmpInt == -1)
-        return QByteArray();
-    soundStruct->s_presetnum = tmpInt;
-
-    tmpInt = getDisplayLed();
-    if (tmpInt == -1)
-        return QByteArray();
-    soundStruct->s_displayled = tmpInt;
-
-    const DuArrayConstPtr &presetArray = getPresetArray();
-    if (presetArray == NULL)
-        return QByteArray();
-    std::memcpy((char*)&(soundStruct->s_preset), presetArray->toDuMusicBinary().data(), presetArray->size());
-
-    const DuMixerConstPtr &mixer = getMixer();
-    if (mixer == NULL)
-        return QByteArray();
-    std::memcpy((char*)&(soundStruct->s_mix), mixer->toDuMusicBinary().data(), mixer->size());
-
-    const DuArrayConstPtr &distortionArray = getDistortionArray();
-    if (distortionArray == NULL)
-        return QByteArray();
-    std::memcpy((char*)&(soundStruct->s_distortion), distortionArray->toDuMusicBinary().data(), distortionArray->size());
-
-    const DuArrayConstPtr &wahArray = getWahArray();
-    if (wahArray == NULL)
-        return QByteArray();
-    std::memcpy((char*)&(soundStruct->s_wah), wahArray->toDuMusicBinary().data(), wahArray->size());
-
-    const DuArrayConstPtr &compressorArray = getCompressorArray();
-    if (compressorArray == NULL)
-        return QByteArray();
-    std::memcpy((char*)&(soundStruct->s_compressor), compressorArray->toDuMusicBinary().data(), compressorArray->size());
-
-    const DuArrayConstPtr &equalizerArray = getEqualizerArray();
-    if (equalizerArray == NULL)
-        return QByteArray();
-    std::memcpy((char*)&(soundStruct->s_equalizer), equalizerArray->toDuMusicBinary().data(), equalizerArray->size());
-
-    const DuArrayConstPtr &delayArray = getDelayArray();
-    if (delayArray == NULL)
-        return QByteArray();
-    std::memcpy((char*)&(soundStruct->s_delay), delayArray->toDuMusicBinary().data(), delayArray->size());
-
-    const DuArrayConstPtr &chorusArray = getChorusArray();
-    if (chorusArray == NULL)
-        return QByteArray();
-    std::memcpy((char*)&(soundStruct->s_chorus), chorusArray->toDuMusicBinary().data(), chorusArray->size());
-
-    const DuArrayConstPtr &vibratoArray = getVibratoArray();
-    if (vibratoArray == NULL)
-        return QByteArray();
-    std::memcpy((char*)&(soundStruct->s_vibrato), vibratoArray->toDuMusicBinary().data(), vibratoArray->size());
-
-    const DuArrayConstPtr &adsrArray = getAdsrArray();
-    if (adsrArray == NULL)
-        return QByteArray();
-    std::memcpy((char*)&(soundStruct->s_adsr), adsrArray->toDuMusicBinary().data(), adsrArray->size());
-
-    const DuArrayConstPtr &ledsArray = getLedArray();
-    if (ledsArray == NULL)
-        return QByteArray();
-    std::memcpy((char*)&(soundStruct->s_leds), ledsArray->toDuMusicBinary().data(), ledsArray->size());
-
-    data += QByteArray((char*)soundStruct.data(), INSTRU_STRUCT_SIZE);
+    data += info->toBinary();
     data += QByteArray(INTR_STRUCT_ALIGN, 0);
 
     const DuArrayConstPtr &nbSamplesPerLayerArray = getNbSamplesPerLayerArray();
@@ -671,168 +381,151 @@ void DuSound::setLists(const QStringList &lists)
 
 QString DuSound::name() const
 {
-    const DuInstrumentInfoConstPtr& instrInfo = getInstrumentInfo();
+    const DuSoundInfoConstPtr& info = getInfo();
 
-    if (instrInfo == NULL)
+    if (info == NULL)
     {
         return QString();
     }
 
-    return instrInfo->getName();
+    return info->name();
 }
 
 bool DuSound::setName(const QString &name)
 {
-    const DuInstrumentInfoPtr &instrInfo = getChildAs<DuInstrumentInfo>(KeyInstrumentInfo);
+    const DuSoundInfoPtr &info = getChildAs<DuSoundInfo>(KeyInfo);
 
-    if (instrInfo == NULL)
+    if (info == NULL)
     {
         return false;
     }
 
-    return instrInfo->setName(name);
+    return info->setName(name);
 }
 
 int DuSound::dreamProgramChange() const
 {
-    const DuInstrumentInfoConstPtr& instrInfo = getInstrumentInfo();
+    const DuSoundInfoConstPtr& info = getInfo();
 
-    if (instrInfo == NULL)
+    if (info == NULL)
     {
         return -1;
     }
 
-    return instrInfo->getDreamProgramChange();
+    return info->dreamProgramChange();
 }
 
 bool DuSound::setDreamProgramChange(int value)
 {
-    const DuInstrumentInfoPtr &instrInfo = getChildAs<DuInstrumentInfo>(KeyInstrumentInfo);
+    const DuSoundInfoPtr &info = getChildAs<DuSoundInfo>(KeyInfo);
 
-    if (instrInfo == NULL)
+    if (info == NULL)
     {
         return false;
     }
 
-    return instrInfo->setDreamProgramChange(value);
+    return info->setDreamProgramChange(value);
 }
 
 int DuSound::octave() const
 {
-    const DuInstrumentInfoConstPtr& instrInfo = getInstrumentInfo();
+    const DuSoundInfoConstPtr& info = getInfo();
 
-    if (instrInfo == NULL)
+    if (info == NULL)
     {
         return -1;
     }
 
-    return instrInfo->getOctave();
+    return info->octave();
 }
 
 bool DuSound::setOctave(int value)
 {
-    const DuInstrumentInfoPtr &instrInfo = getChildAs<DuInstrumentInfo>(KeyInstrumentInfo);
+    const DuSoundInfoPtr &info = getChildAs<DuSoundInfo>(KeyInfo);
 
-    if (instrInfo == NULL)
+    if (info == NULL)
     {
         return false;
     }
 
-    return instrInfo->setOctave(value);
+    return info->setOctave(value);
 }
 
 int DuSound::activeNoteOff() const
 {
-    const DuInstrumentInfoConstPtr& instrInfo = getInstrumentInfo();
+    const DuSoundInfoConstPtr& info = getInfo();
 
-    if (instrInfo == NULL)
+    if (info == NULL)
     {
         return -1;
     }
 
-    return instrInfo->getActiveNoteOff();
+    return info->activeNoteOff();
 }
 
 bool DuSound::setActiveNoteOff(int value)
 {
-    const DuInstrumentInfoPtr &instrInfo = getChildAs<DuInstrumentInfo>(KeyInstrumentInfo);
+    const DuSoundInfoPtr &info = getChildAs<DuSoundInfo>(KeyInfo);
 
-    if (instrInfo == NULL)
+    if (info == NULL)
     {
         return false;
     }
 
-    return instrInfo->setActiveNoteOff(value);
+    return info->setActiveNoteOff(value);
 }
 
 QString DuSound::category() const
 {
-    const DuInstrumentInfoConstPtr& instrInfo = getInstrumentInfo();
+    const DuSoundInfoConstPtr& info = getInfo();
 
-    if (instrInfo == NULL)
+    if (info == NULL)
     {
         return QString();
     }
 
-    return instrInfo->getCategory();
+    return info->category();
 }
 
 bool DuSound::setCategory(const QString &value)
 {
-    const DuInstrumentInfoPtr &instrInfo = getChildAs<DuInstrumentInfo>(KeyInstrumentInfo);
+    const DuSoundInfoPtr &info = getChildAs<DuSoundInfo>(KeyInfo);
 
-    if (instrInfo == NULL)
+    if (info == NULL)
     {
         return false;
     }
 
-    return instrInfo->setCategory(value);
+    return info->setCategory(value);
 }
 
 int DuSound::relativeVolume() const
 {
-    const DuInstrumentInfoConstPtr& instrInfo = getInstrumentInfo();
+    const DuSoundInfoConstPtr& info = getInfo();
 
-    if (instrInfo == NULL)
+    if (info == NULL)
     {
         return -1;
     }
 
-    return instrInfo->getRelativeVolume();
+    return info->relativeVolume();
 }
 
 bool DuSound::setRelativeVolume(int value)
 {
-    const DuInstrumentInfoPtr &instrInfo = getChildAs<DuInstrumentInfo>(KeyInstrumentInfo);
+    const DuSoundInfoPtr &info = getChildAs<DuSoundInfo>(KeyInfo);
 
-    if (instrInfo == NULL)
+    if (info == NULL)
     {
         return false;
     }
 
-    return instrInfo->setRelativeVolume(value);
+    return info->setRelativeVolume(value);
 }
 
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, Header,                 DuSoundHeader)
 
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, InstrumentInfo,         DuInstrumentInfo)
-
-DU_KEY_ACCESSORS_IMPL(DuSound, PresetNum,       Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuSound, DisplayLed,      Numeric, int, -1)
-
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, PresetArray,            DuArray)
-
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, Mixer,                  DuMixer)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, DistortionArray,        DuArray)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, WahArray,               DuArray)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, CompressorArray,        DuArray)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, EqualizerArray,         DuArray)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, DelayArray,             DuArray)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, ChorusArray,            DuArray)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, VibratoArray,           DuArray)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, AdsrArray,              DuArray)
-
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, LedArray,               DuArray)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, Info,                   DuSoundInfo)
 
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, NbSamplesPerLayerArray, DuArray)
 
