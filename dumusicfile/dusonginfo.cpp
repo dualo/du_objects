@@ -23,6 +23,10 @@ DuSongInfo::DuSongInfo() :
     addChild(KEY_SONG_REFERENCELOOPDURATION,
              new DuNumeric(0));
 
+    addChild(KEY_SONG_CURRENTTRACK,
+             new DuNumeric(0, NUMERIC_DEFAULT_SIZE,
+                           MUSIC_MAXTRACK, 0));
+
     addChild(KEY_SONG_VOLUME,
              new DuNumeric(MUSIC_VOL_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            MUSIC_VOL_MAXVALUE, MUSIC_VOL_MINVALUE));
@@ -94,6 +98,7 @@ DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
 
     verif = songInfo->setReferenceTrack(du_song.s_reftrack) ? verif : false;
     verif = songInfo->setReferenceLoopDuration(du_song.s_looptimer) ? verif : false;
+    verif = songInfo->setCurrentTrack(du_song.s_currenttrack) ? verif : false;
 
     verif = songInfo->setVolume(du_song.s_volume) ? verif : false;
     verif = songInfo->setTempo(du_song.s_tempo) ? verif : false;
@@ -125,6 +130,7 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
     QJsonValue jsonSongVersion      = jsonSongInfo[KEY_SONG_SONGVERSION];
     QJsonValue jsonRefTrack         = jsonSongInfo[KEY_SONG_REFERENCETRACK];
     QJsonValue jsonRefDuration      = jsonSongInfo[KEY_SONG_REFERENCELOOPDURATION];
+    QJsonValue jsonCurrentTrack     = jsonSongInfo[KEY_SONG_CURRENTTRACK];
     QJsonValue jsonVolume           = jsonSongInfo[KEY_SONG_VOLUME];
     QJsonValue jsonTempo            = jsonSongInfo[KEY_SONG_TEMPO];
     QJsonValue jsonClickVolume      = jsonSongInfo[KEY_SONG_CLICKVOLUME];
@@ -139,6 +145,7 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
     if (        !jsonSongId.isDouble()      ||  !jsonSongName.isString()
             ||  !jsonSongVersion.isDouble()
             ||  !jsonRefTrack.isDouble()    ||  !jsonRefDuration.isDouble()
+            ||  !jsonCurrentTrack.isDouble()
             ||  !jsonVolume.isDouble()      ||  !jsonTempo.isDouble()
             ||  !jsonClickVolume.isDouble() ||  !jsonOffset.isDouble()
             ||  !jsonMixer.isObject()       ||  !jsonScale.isDouble()
@@ -163,6 +170,7 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
 
     verif = songInfo->setReferenceTrack(jsonRefTrack.toInt()) ? verif : false;
     verif = songInfo->setReferenceLoopDuration(jsonRefDuration.toInt()) ? verif : false;
+    verif = songInfo->setCurrentTrack(jsonCurrentTrack.toInt()) ? verif : false;
 
     verif = songInfo->setVolume(jsonVolume.toInt()) ? verif : false;
     verif = songInfo->setTempo(jsonTempo.toInt()) ? verif : false;
@@ -216,6 +224,7 @@ DuSongInfoPtr DuSongInfo::fromMidi(const MidiConversionHelper &helper)
 
     verif = songInfo->setReferenceTrack(helper.getIndexes(0).first) ? verif : false;
     verif = songInfo->setReferenceLoopDuration(helper.getDuration()) ? verif : false;
+    verif = songInfo->setCurrentTrack(helper.getIndexes(0).first) ? verif : false;
 
 //    verif = songInfo->setVolume() ? verif : false;
     verif = songInfo->setTempo(helper.getTempo()) ? verif : false;
@@ -292,6 +301,12 @@ QByteArray DuSongInfo::toDuMusicBinary() const
     if (tmpNum == -1)
         return QByteArray();
     du_songinfo.s_looptimer = tmpNum;
+
+    tmpNum = getCurrentTrack();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_songinfo.s_currenttrack = tmpNum;
+
 
     tmpNum = getVolume();
     if (tmpNum == -1)
@@ -453,6 +468,27 @@ int DuSongInfo::getReferenceLoopDuration() const
 bool DuSongInfo::setReferenceLoopDuration(int value)
 {
     const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_REFERENCELOOPDURATION);
+
+    if (tmp == NULL)
+        return false;
+
+    return tmp->setNumeric(value);
+}
+
+int DuSongInfo::getCurrentTrack() const
+{
+    const DuNumericConstPtr &tmp =
+            getChildAs<DuNumeric>(KEY_SONG_CURRENTTRACK);
+
+    if (tmp == NULL)
+        return -1;
+
+    return tmp->getNumeric();
+}
+
+bool DuSongInfo::setCurrentTrack(int value)
+{
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_CURRENTTRACK);
 
     if (tmp == NULL)
         return false;

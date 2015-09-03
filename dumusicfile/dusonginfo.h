@@ -14,6 +14,7 @@
 
 #define KEY_SONG_REFERENCETRACK         "ReferenceTrack"
 #define KEY_SONG_REFERENCELOOPDURATION  "ReferenceLoopDuration"
+#define KEY_SONG_CURRENTTRACK           "CurrentTrack"
 
 #define KEY_SONG_VOLUME                 "Volume"
 #define KEY_SONG_TEMPO                  "Tempo"
@@ -68,6 +69,9 @@ public:
 
     int getReferenceLoopDuration() const;
     bool setReferenceLoopDuration(int value);
+
+    int getCurrentTrack() const;
+    bool setCurrentTrack(int value);
 
     int getVolume() const;
     bool setVolume(int value);
