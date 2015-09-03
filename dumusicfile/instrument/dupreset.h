@@ -10,8 +10,6 @@
 
 
 #define PARAMS_NUMERIC_SIZE     2
-#define DIRECTIONGYRO_MINVALUE  -1
-#define DIRECTIONGYRO_MAXVALUE  1
 
 
 DU_OBJECT(DuControllers)

@@ -12,52 +12,85 @@ DU_OBJECT_IMPL(DuExpression)
 DuExpression::DuExpression() :
     DuContainer()
 {
-    addChild(KEY_EXPR_VOLUME,
+    addChild(KeyVolume,
              new DuNumeric(MAIN_VOLUME_DEFAULT, NUMERIC_DEFAULT_SIZE,
                            MAIN_VOLUME_MAX, MAIN_VOLUME_MIN));
 
-    addChild(KEY_EXPR_PANNING,
+    addChild(KeyPanning,
              new DuNumeric(MAIN_PANNING_DEFAULT, NUMERIC_DEFAULT_SIZE,
                            MAIN_PANNING_MAX, MAIN_PANNING_MIN));
 
-    addChild(KEY_EXPR_SENDTOREVERB,
+    addChild(KeySendToReverb,
              new DuNumeric(MAIN_SENDTOREV_DEFAULT, NUMERIC_DEFAULT_SIZE,
                            MAIN_SENDTOREV_MAX, MAIN_SENDTOREV_MIN));
 
-    addChild(KEY_EXPR_OCTAVE,
+    addChild(KeyOctave,
              new DuNumeric(MAIN_OCTAVE_DEFAULT, NUMERIC_DEFAULT_SIZE,
                            MAIN_OCTAVE_MAX, MAIN_OCTAVE_MIN));
 
-    addChild(KEY_EXPR_PORTAMENTOONOFF,
+    addChild(KeyPortamentoOnOff,
              new DuNumeric(MAIN_PORT_ONOFF_DEFAULT, NUMERIC_DEFAULT_SIZE,
                            MAIN_PORT_ONOFF_MAX, MAIN_PORT_ONOFF_MIN));
 
-    addChild(KEY_EXPR_PORTAMENTOCONTROL,
+    addChild(KeyPortamentoControl,
              new DuNumeric(MAIN_PORT_CTRL_DEFAULT, NUMERIC_DEFAULT_SIZE,
                            MAIN_PORT_CTRL_MAX, MAIN_PORT_CTRL_MIN));
 
-    addChild(KEY_EXPR_PORTAMENTOTIME,
+    addChild(KeyPortamentoTime,
              new DuNumeric(MAIN_PORT_TIME_DEFAULT, NUMERIC_DEFAULT_SIZE,
                            MAIN_PORT_TIME_MAX, MAIN_PORT_TIME_MIN));
 
-    addChild(KEY_EXPR_EXPRESSION,
+    addChild(KeyExpression,
              new DuNumeric(MAIN_EXPRESSION_DEFAULT, NUMERIC_DEFAULT_SIZE,
                            MAIN_EXPRESSION_MAX, MAIN_EXPRESSION_MIN));
 
-    addChild(KEY_EXPR_PITCHBENDSENSITIVITY,
+    addChild(KeyPitchBendSensitivity,
              new DuNumeric(MAIN_PB_SENS_DEFAULT, NUMERIC_DEFAULT_SIZE,
                            MAIN_PB_SENS_MAX, MAIN_PB_SENS_MIN));
 
-    addChild(KEY_EXPR_DISPOSITION,
+    addChild(KeyDisposition,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
 
-    addChild(KEY_EXPR_ARPEGIATORTYPE,
+    addChild(KeyAdsrPreset,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
-    addChild(KEY_EXPR_ARPEGIATORBEAT,
+    addChild(KeyCompressorPreset,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0x7F, 0x00));
+
+    addChild(KeyDelayPreset,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0x7F, 0x00));
+
+    addChild(KeyDistortionPreset,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0x7F, 0x00));
+
+    addChild(KeyEqualizerPreset,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0x7F, 0x00));
+
+    addChild(KeyChorusPreset,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0x7F, 0x00));
+
+    addChild(KeyVibratoPreset,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0x7F, 0x00));
+
+    addChild(KeyWahPreset,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0x7F, 0x00));
+
+
+    addChild(KeyArpeggiatorType,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0x7F, 0x00));
+
+    addChild(KeyArpeggiatorBeat,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 }
@@ -90,6 +123,15 @@ DuExpressionPtr DuExpression::fromDuMusicBinary(const preset_instr &du_preset)
     verif = expression->setPitchBendSensitivity(du_preset.s_pitch_bend_sensitivity) ? verif : false;
     verif = expression->setDisposition(du_preset.s_disposition) ? verif : false;
 
+    verif = expression->setAdsrPreset(du_preset.s_adsr_preset) ? verif : false;
+    verif = expression->setCompressorPreset(du_preset.s_compressor_preset) ? verif : false;
+    verif = expression->setDelayPreset(du_preset.s_delay_preset) ? verif : false;
+    verif = expression->setDistortionPreset(du_preset.s_distortion_preset) ? verif : false;
+    verif = expression->setEqualizerPreset(du_preset.s_eq_preset) ? verif : false;
+    verif = expression->setChorusPreset(du_preset.s_chorus_preset) ? verif : false;
+    verif = expression->setVibratoPreset(du_preset.s_vibrato_preset) ? verif : false;
+    verif = expression->setWahPreset(du_preset.s_wah_preset) ? verif : false;
+
     verif = expression->setArpeggiatorType(du_preset.s_arpegiator_type) ? verif : false;
     verif = expression->setArpeggiatorBeat(du_preset.s_arpegiator_beat) ? verif : false;
 
@@ -105,25 +147,39 @@ DuExpressionPtr DuExpression::fromDuMusicBinary(const preset_instr &du_preset)
 
 DuExpressionPtr DuExpression::fromJson(const QJsonObject &jsonExpression)
 {
-    QJsonValue jsonVolume       = jsonExpression[KEY_EXPR_VOLUME];
-    QJsonValue jsonPanning      = jsonExpression[KEY_EXPR_PANNING];
-    QJsonValue jsonToReverb     = jsonExpression[KEY_EXPR_SENDTOREVERB];
-    QJsonValue jsonOctave       = jsonExpression[KEY_EXPR_OCTAVE];
-    QJsonValue jsonPortaOnOff   = jsonExpression[KEY_EXPR_PORTAMENTOONOFF];
-    QJsonValue jsonPortaCtrl    = jsonExpression[KEY_EXPR_PORTAMENTOCONTROL];
-    QJsonValue jsonPortaTime    = jsonExpression[KEY_EXPR_PORTAMENTOTIME];
-    QJsonValue jsonExpr         = jsonExpression[KEY_EXPR_EXPRESSION];
-    QJsonValue jsonPitchBend    = jsonExpression[KEY_EXPR_PITCHBENDSENSITIVITY];
-    QJsonValue jsonDisposition  = jsonExpression[KEY_EXPR_DISPOSITION];
+    QJsonValue jsonVolume       = jsonExpression[KeyVolume];
+    QJsonValue jsonPanning      = jsonExpression[KeyPanning];
+    QJsonValue jsonToReverb     = jsonExpression[KeySendToReverb];
+    QJsonValue jsonOctave       = jsonExpression[KeyOctave];
+    QJsonValue jsonPortaOnOff   = jsonExpression[KeyPortamentoOnOff];
+    QJsonValue jsonPortaCtrl    = jsonExpression[KeyPortamentoControl];
+    QJsonValue jsonPortaTime    = jsonExpression[KeyPortamentoTime];
+    QJsonValue jsonExpr         = jsonExpression[KeyExpression];
+    QJsonValue jsonPitchBend    = jsonExpression[KeyPitchBendSensitivity];
+    QJsonValue jsonDisposition  = jsonExpression[KeyDisposition];
 
-    QJsonValue jsonArpeggiatorType      = jsonExpression[KEY_EXPR_ARPEGIATORTYPE];
-    QJsonValue jsonArpeggiatorBeat      = jsonExpression[KEY_EXPR_ARPEGIATORBEAT];
+    QJsonValue jsonAdsrPreset   = jsonExpression[KeyAdsrPreset];
+    QJsonValue jsonComprPreset  = jsonExpression[KeyCompressorPreset];
+    QJsonValue jsonDelayPreset  = jsonExpression[KeyDelayPreset];
+    QJsonValue jsonDistoPreset  = jsonExpression[KeyDistortionPreset];
+    QJsonValue jsonEqualPreset  = jsonExpression[KeyEqualizerPreset];
+    QJsonValue jsonChorusPreset = jsonExpression[KeyChorusPreset];
+    QJsonValue jsonVibraPreset  = jsonExpression[KeyVibratoPreset];
+    QJsonValue jsonWahPreset    = jsonExpression[KeyWahPreset];
+
+    QJsonValue jsonArpeggiatorType      = jsonExpression[KeyArpeggiatorType];
+    QJsonValue jsonArpeggiatorBeat      = jsonExpression[KeyArpeggiatorBeat];
 
     if (        !jsonVolume.isDouble()      ||  !jsonPanning.isDouble()
-            ||  !jsonExpr.isDouble()  ||  !jsonOctave.isDouble()
+            ||  !jsonExpr.isDouble()        ||  !jsonOctave.isDouble()
             ||  !jsonToReverb.isDouble()    ||  !jsonPortaOnOff.isDouble()
             ||  !jsonPortaCtrl.isDouble()   ||  !jsonPortaTime.isDouble()
             ||  !jsonPitchBend.isDouble()   ||  !jsonDisposition.isDouble()
+
+            ||  !jsonAdsrPreset.isDouble()  ||  !jsonComprPreset.isDouble()
+            ||  !jsonDelayPreset.isDouble() ||  !jsonDistoPreset.isDouble()
+            ||  !jsonEqualPreset.isDouble() ||  !jsonChorusPreset.isDouble()
+            ||  !jsonVibraPreset.isDouble() ||  !jsonWahPreset.isDouble()
 
             || !jsonArpeggiatorType.isDouble()  || !jsonArpeggiatorBeat.isDouble())
     {
@@ -149,6 +205,15 @@ DuExpressionPtr DuExpression::fromJson(const QJsonObject &jsonExpression)
     verif = expression->setExpression(jsonExpr.toInt()) ? verif : false;
     verif = expression->setPitchBendSensitivity(jsonPitchBend.toInt()) ? verif : false;
     verif = expression->setDisposition(jsonDisposition.toInt()) ? verif : false;
+
+    verif = expression->setAdsrPreset(jsonAdsrPreset.toInt()) ? verif : false;
+    verif = expression->setCompressorPreset(jsonComprPreset.toInt()) ? verif : false;
+    verif = expression->setDelayPreset(jsonDelayPreset.toInt()) ? verif : false;
+    verif = expression->setDistortionPreset(jsonDistoPreset.toInt()) ? verif : false;
+    verif = expression->setEqualizerPreset(jsonEqualPreset.toInt()) ? verif : false;
+    verif = expression->setChorusPreset(jsonChorusPreset.toInt()) ? verif : false;
+    verif = expression->setVibratoPreset(jsonVibraPreset.toInt()) ? verif : false;
+    verif = expression->setWahPreset(jsonWahPreset.toInt()) ? verif : false;
 
     verif = expression->setArpeggiatorType(jsonArpeggiatorType.toInt()) ? verif : false;
     verif = expression->setArpeggiatorBeat(jsonArpeggiatorBeat.toInt()) ? verif : false;
@@ -224,6 +289,47 @@ QByteArray DuExpression::toDuMusicBinary() const
     du_expression.s_disposition = tmpNum;
 
 
+    tmpNum = getAdsrPreset();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_expression.s_adsr_preset = tmpNum;
+
+    tmpNum = getCompressorPreset();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_expression.s_compressor_preset = tmpNum;
+
+    tmpNum = getDelayPreset();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_expression.s_delay_preset = tmpNum;
+
+    tmpNum = getDistortionPreset();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_expression.s_distortion_preset = tmpNum;
+
+    tmpNum = getEqualizerPreset();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_expression.s_eq_preset = tmpNum;
+
+    tmpNum = getChorusPreset();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_expression.s_chorus_preset = tmpNum;
+
+    tmpNum = getVibratoPreset();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_expression.s_vibrato_preset = tmpNum;
+
+    tmpNum = getWahPreset();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_expression.s_wah_preset = tmpNum;
+
+
     tmpNum = getArpeggiatorType();
     if (tmpNum == -1)
         return QByteArray();
@@ -245,245 +351,26 @@ int DuExpression::size() const
 }
 
 
-int DuExpression::getVolume() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_VOLUME);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuExpression::setVolume(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_VOLUME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuExpression::getPanning() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_PANNING);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuExpression::setPanning(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_PANNING);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuExpression::getSendToReverb() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_SENDTOREVERB);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuExpression::setSendToReverb(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_SENDTOREVERB);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuExpression::getOctave() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_OCTAVE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuExpression::setOctave(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_OCTAVE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuExpression::getPortamentoOnOff() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_PORTAMENTOONOFF);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuExpression::setPortamentoOnOff(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_PORTAMENTOONOFF);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuExpression::getPortamentoControl() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_PORTAMENTOCONTROL);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuExpression::setPortamentoControl(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_PORTAMENTOCONTROL);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuExpression::getPortamentoTime() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_PORTAMENTOTIME);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuExpression::setPortamentoTime(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_PORTAMENTOTIME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuExpression::getExpression() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_EXPRESSION);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuExpression::setExpression(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_EXPRESSION);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuExpression::getPitchBendSensitivity() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_PITCHBENDSENSITIVITY);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuExpression::setPitchBendSensitivity(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_PITCHBENDSENSITIVITY);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuExpression::getDisposition() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_DISPOSITION);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuExpression::setDisposition(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_DISPOSITION);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuExpression::getArpeggiatorType() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_ARPEGIATORTYPE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuExpression::setArpeggiatorType(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_ARPEGIATORTYPE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuExpression::getArpeggiatorBeat() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_ARPEGIATORBEAT);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuExpression::setArpeggiatorBeat(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EXPR_ARPEGIATORBEAT);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
+DU_KEY_ACCESSORS_IMPL(DuExpression, Volume,                Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, Panning,               Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, Octave,                Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, SendToReverb,          Numeric, int, -1)
+
+DU_KEY_ACCESSORS_IMPL(DuExpression, PortamentoOnOff,       Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, PortamentoControl,     Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, PortamentoTime,        Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, Expression,            Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, PitchBendSensitivity,  Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, Disposition,           Numeric, int, -1)
+
+DU_KEY_ACCESSORS_IMPL(DuExpression, AdsrPreset,            Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, CompressorPreset,      Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, DelayPreset,           Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, DistortionPreset,      Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, EqualizerPreset,       Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, ChorusPreset,          Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, VibratoPreset,         Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, WahPreset,             Numeric, int, -1)
+
+DU_KEY_ACCESSORS_IMPL(DuExpression, ArpeggiatorType,       Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpression, ArpeggiatorBeat,       Numeric, int, -1)

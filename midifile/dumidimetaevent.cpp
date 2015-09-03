@@ -179,7 +179,7 @@ const QByteArray DuMidiMetaEvent::getData() const
     if (tmp == NULL)
         return QByteArray();
 
-    return tmp->getData();
+    return tmp->getBinaryData();
 }
 
 void DuMidiMetaEvent::setData(const QByteArray &value)
@@ -195,7 +195,7 @@ void DuMidiMetaEvent::setData(const QByteArray &value)
         return;
 
     length->setAbsolute(value.size());
-    data->setData(value);
+    data->setBinaryData(value);
 }
 
 void DuMidiMetaEvent::setData(QDataStream &stream)
@@ -339,7 +339,7 @@ int DuMidiMetaEvent::getTonality() const
     qint8 sf = keySigArray[0];
     quint8 mi = keySigArray[1];
 
-    return ((sf + 6 * (2 + sf % 2) - 3 * mi) % 12);
+    return ((sf + 6 * (2 + sf % 2) - 3 * mi + 1) % 12);
 }
 
 int DuMidiMetaEvent::getScale() const

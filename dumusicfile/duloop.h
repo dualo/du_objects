@@ -6,6 +6,7 @@
 
 #define KEY_LOOP_STATE              "State"
 #define KEY_LOOP_DURATIONMODIFIER   "DurationModifier"
+#define KEY_LOOP_SCOREDISPLAY       "ScoreDisplay"
 #define KEY_LOOP_MIDIOUTCHANNEL     "MidiOutChannel"
 #define KEY_LOOP_INSTRUMENT         "Instrument"
 #define KEY_LOOP_EVENTS             "Events"
@@ -33,7 +34,7 @@ public:
     static DuLoopPtr fromMidi(const MidiConversionHelper &helper, int loopIndex);
 
     QByteArray toDuMusicBinary() const;
-    DuMidiTrackPtr toDuMidiTrack(int durationRef, int channel) const;
+    DuMidiTrackPtr toDuMidiTrack(int durationRef, int channel, int transpose) const;
 
     int size() const;
 
@@ -42,6 +43,9 @@ public:
 
     int getDurationModifier() const;
     bool setDurationModifier(int value);
+
+    int getScoreDisplay() const;
+    bool setScoreDisplay(int value);
 
     int getMidiOutChannel() const;
     bool setMidiOutChannel(int value);

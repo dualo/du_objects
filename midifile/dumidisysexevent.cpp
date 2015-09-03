@@ -137,7 +137,7 @@ const QByteArray DuMidiSysExEvent::getData() const
     if (tmp == NULL)
         return QByteArray();
 
-    return tmp->getData();
+    return tmp->getBinaryData();
 }
 
 void DuMidiSysExEvent::setData(const QByteArray &value)
@@ -153,7 +153,7 @@ void DuMidiSysExEvent::setData(const QByteArray &value)
         return;
 
     length->setAbsolute(value.size());
-    data->setData(value);
+    data->setBinaryData(value);
 }
 
 void DuMidiSysExEvent::setData(QDataStream &stream)

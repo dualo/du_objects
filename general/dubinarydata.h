@@ -21,6 +21,9 @@ public:
 
     int size() const;
 
+    const QByteArray getBinaryData() const;
+    bool setBinaryData(const QByteArray &value);
+
     const QByteArray getData() const;
     bool setData(const QByteArray &value);
 

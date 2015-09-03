@@ -4,28 +4,7 @@
 #include "../../general/ducontainer.h"
 
 
-#define KEY_EFFECTSET_ADSR_ONOFF               "AdsrOnOff"
-#define KEY_EFFECTSET_COMPR_ONOFF              "CompressorOnOff"
-#define KEY_EFFECTSET_DELAY_ONOFF              "DelayOnOff"
-#define KEY_EFFECTSET_DISTO_ONOFF              "DistortionOnOff"
-#define KEY_EFFECTSET_EQUAL_ONOFF              "EqualizerOnOff"
-#define KEY_EFFECTSET_CHORUS_ONOFF             "ChorusOnOff"
-#define KEY_EFFECTSET_VIB_ONOFF                "VibratoOnOff"
-#define KEY_EFFECTSET_WAH_ONOFF                "WahOnOff"
-
-#define KEY_EFFECTSET_PITCH                    "Pitch"
-
-#define KEY_EFFECTSET_AUTOPITCHRATE            "AutopitchRate"
-#define KEY_EFFECTSET_AUTOPITCHRANGE           "AutopitchRange"
-#define KEY_EFFECTSET_TREMOLORATE              "TremoloRate"
-#define KEY_EFFECTSET_TREMOLORANGE             "TremoloRange"
-#define KEY_EFFECTSET_AUTOPANRATE              "AutopanRate"
-#define KEY_EFFECTSET_AUTOPANRANGE             "AutopanRange"
-#define KEY_EFFECTSET_AUTOWAHRATE              "AutowahRate"
-#define KEY_EFFECTSET_AUTOWAHRANGE             "AutowahRange"
-
-
-#define EFFECTSET_SIZE              8 + 16 + 9 + 59
+#define EFFECTSET_SIZE              8 + 11 + 5 + 9 + 59
 #define EFFECTSET_PRESET_OFFSET     36
 
 
@@ -46,56 +25,28 @@ public:
 
     int size() const;
 
-    int getAdsrOnOff() const;
-    bool setAdsrOnOff(int value);
+    DU_KEY_ACCESSORS(AdsrOnOff,         int)
+    DU_KEY_ACCESSORS(CompressorOnOff,   int)
+    DU_KEY_ACCESSORS(DelayOnOff,        int)
+    DU_KEY_ACCESSORS(DistortionOnOff,   int)
+    DU_KEY_ACCESSORS(EqualizerOnOff,    int)
+    DU_KEY_ACCESSORS(ChorusOnOff,       int)
+    DU_KEY_ACCESSORS(VibratoOnOff,      int)
+    DU_KEY_ACCESSORS(WahOnOff,          int)
 
-    int getCompressorOnOff() const;
-    bool setCompressorOnOff(int value);
+    DU_KEY_ACCESSORS(MultinoteAct,      int)
+    DU_KEY_ACCESSORS(Multinote,         QByteArray)
 
-    int getDelayOnOff() const;
-    bool setDelayOnOff(int value);
+    DU_KEY_ACCESSORS(Pitch,             int)
 
-    int getDistortionOnOff() const;
-    bool setDistortionOnOff(int value);
-
-    int getEqualizerOnOff() const;
-    bool setEqualizerOnOff(int value);
-
-    int getChorusOnOff() const;
-    bool setChorusOnOff(int value);
-
-    int getVibratoOnOff() const;
-    bool setVibratoOnOff(int value);
-
-    int getWahOnOff() const;
-    bool setWahOnOff(int value);
-
-    int getPitch() const;
-    bool setPitch(int value);
-
-    int getAutopitchRate() const;
-    bool setAutopitchRate(int value);
-
-    int getAutopitchRange() const;
-    bool setAutopitchRange(int value);
-
-    int getTremoloRate() const;
-    bool setTremoloRate(int value);
-
-    int getTremoloRange() const;
-    bool setTremoloRange(int value);
-
-    int getAutopanRate() const;
-    bool setAutopanRate(int value);
-
-    int getAutopanRange() const;
-    bool setAutopanRange(int value);
-
-    int getAutowahRate() const;
-    bool setAutowahRate(int value);
-
-    int getAutowahRange() const;
-    bool setAutowahRange(int value);
+    DU_KEY_ACCESSORS(AutopitchRate,     int)
+    DU_KEY_ACCESSORS(AutopitchRange,    int)
+    DU_KEY_ACCESSORS(TremoloRate,       int)
+    DU_KEY_ACCESSORS(TremoloRange,      int)
+    DU_KEY_ACCESSORS(AutopanRate,       int)
+    DU_KEY_ACCESSORS(AutopanRange,      int)
+    DU_KEY_ACCESSORS(AutowahRate,       int)
+    DU_KEY_ACCESSORS(AutowahRange,      int)
 };
 
 #endif // DUEFFECTSET_H

@@ -4,6 +4,7 @@
 
 #include <QJsonObject>
 
+#include "../../general/dubinarydata.h"
 #include "../../general/dunumeric.h"
 
 
@@ -12,76 +13,84 @@ DU_OBJECT_IMPL(DuEffectSet)
 DuEffectSet::DuEffectSet() :
     DuContainer()
 {
-    addChild(KEY_EFFECTSET_ADSR_ONOFF,
+    addChild(KeyAdsrOnOff,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x01, 0x00));
 
-    addChild(KEY_EFFECTSET_COMPR_ONOFF,
+    addChild(KeyCompressorOnOff,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x01, 0x00));
 
-    addChild(KEY_EFFECTSET_DELAY_ONOFF,
+    addChild(KeyDelayOnOff,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x01, 0x00));
 
-    addChild(KEY_EFFECTSET_DISTO_ONOFF,
+    addChild(KeyDistortionOnOff,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x01, 0x00));
 
-    addChild(KEY_EFFECTSET_EQUAL_ONOFF,
+    addChild(KeyEqualizerOnOff,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x01, 0x00));
 
-    addChild(KEY_EFFECTSET_CHORUS_ONOFF,
+    addChild(KeyChorusOnOff,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x01, 0x00));
 
-    addChild(KEY_EFFECTSET_VIB_ONOFF,
+    addChild(KeyVibratoOnOff,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x01, 0x00));
 
-    addChild(KEY_EFFECTSET_WAH_ONOFF,
+    addChild(KeyWahOnOff,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x01, 0x00));
 
 
-    addChild(KEY_EFFECTSET_PITCH,
+    addChild(KeyMultinoteAct,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0x7F, 0x00));
+
+    addChild(KeyMultinote,
+             new DuBinaryData(4));
+
+
+    addChild(KeyPitch,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
 
-    addChild(KEY_EFFECTSET_AUTOPITCHRATE,
+    addChild(KeyAutopitchRate,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
-    addChild(KEY_EFFECTSET_AUTOPITCHRANGE,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
-
-
-    addChild(KEY_EFFECTSET_TREMOLORATE,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
-
-    addChild(KEY_EFFECTSET_TREMOLORANGE,
+    addChild(KeyAutopitchRange,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
 
-    addChild(KEY_EFFECTSET_AUTOPANRATE,
+    addChild(KeyTremoloRate,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
-    addChild(KEY_EFFECTSET_AUTOPANRANGE,
+    addChild(KeyTremoloRange,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
 
-    addChild(KEY_EFFECTSET_AUTOWAHRATE,
+    addChild(KeyAutopanRate,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
-    addChild(KEY_EFFECTSET_AUTOWAHRANGE,
+    addChild(KeyAutopanRange,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0x7F, 0x00));
+
+
+    addChild(KeyAutowahRate,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0x7F, 0x00));
+
+    addChild(KeyAutowahRange,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 }
@@ -111,6 +120,9 @@ DuEffectSetPtr DuEffectSet::fromDuMusicBinary(const preset_instr &du_preset)
     verif = effectSet->setVibratoOnOff(du_preset.s_vibrato_onoff) ? verif : false;
     verif = effectSet->setWahOnOff(du_preset.s_wah_onoff) ? verif : false;
 
+    verif = effectSet->setMultinoteAct(du_preset.s_multinote_act) ? verif : false;
+    verif = effectSet->setMultinote(QByteArray((char *)du_preset.s_multinote, 4)) ? verif : false;
+
     verif = effectSet->setPitch(du_preset.s_pitch) ? verif : false;
 
     verif = effectSet->setAutopitchRate(du_preset.s_autopitch_rate) ? verif : false;
@@ -134,30 +146,35 @@ DuEffectSetPtr DuEffectSet::fromDuMusicBinary(const preset_instr &du_preset)
 
 DuEffectSetPtr DuEffectSet::fromJson(const QJsonObject &jsonEffectSet)
 {
-    QJsonValue jsonAdsrOnOff            = jsonEffectSet[KEY_EFFECTSET_ADSR_ONOFF];
-    QJsonValue jsonComprOnOff           = jsonEffectSet[KEY_EFFECTSET_COMPR_ONOFF];
-    QJsonValue jsonDelayOnOff           = jsonEffectSet[KEY_EFFECTSET_DELAY_ONOFF];
-    QJsonValue jsonDistoOnOff           = jsonEffectSet[KEY_EFFECTSET_DISTO_ONOFF];
-    QJsonValue jsonEqualOnOff           = jsonEffectSet[KEY_EFFECTSET_EQUAL_ONOFF];
-    QJsonValue jsonChorusOnOff          = jsonEffectSet[KEY_EFFECTSET_CHORUS_ONOFF];
-    QJsonValue jsonVibOnOff             = jsonEffectSet[KEY_EFFECTSET_VIB_ONOFF];
-    QJsonValue jsonWahOnOff             = jsonEffectSet[KEY_EFFECTSET_WAH_ONOFF];
+    QJsonValue jsonAdsrOnOff            = jsonEffectSet[KeyAdsrOnOff];
+    QJsonValue jsonComprOnOff           = jsonEffectSet[KeyCompressorOnOff];
+    QJsonValue jsonDelayOnOff           = jsonEffectSet[KeyDelayOnOff];
+    QJsonValue jsonDistoOnOff           = jsonEffectSet[KeyDistortionOnOff];
+    QJsonValue jsonEqualOnOff           = jsonEffectSet[KeyEqualizerOnOff];
+    QJsonValue jsonChorusOnOff          = jsonEffectSet[KeyChorusOnOff];
+    QJsonValue jsonVibOnOff             = jsonEffectSet[KeyVibratoOnOff];
+    QJsonValue jsonWahOnOff             = jsonEffectSet[KeyWahOnOff];
 
-    QJsonValue jsonPitch                = jsonEffectSet[KEY_EFFECTSET_PITCH];
+    QJsonValue jsonMultinoteAct         = jsonEffectSet[KeyMultinoteAct];
+    QJsonValue jsonMultinote            = jsonEffectSet[KeyMultinote];
 
-    QJsonValue jsonAutopitchRate        = jsonEffectSet[KEY_EFFECTSET_AUTOPITCHRATE];
-    QJsonValue jsonAutopitchRange       = jsonEffectSet[KEY_EFFECTSET_AUTOPITCHRANGE];
-    QJsonValue jsonTremoloRate          = jsonEffectSet[KEY_EFFECTSET_TREMOLORATE];
-    QJsonValue jsonTremoloRange         = jsonEffectSet[KEY_EFFECTSET_TREMOLORANGE];
-    QJsonValue jsonAutopanRate          = jsonEffectSet[KEY_EFFECTSET_AUTOPANRATE];
-    QJsonValue jsonAutopanRange         = jsonEffectSet[KEY_EFFECTSET_AUTOPANRANGE];
-    QJsonValue jsonAutowahRate          = jsonEffectSet[KEY_EFFECTSET_AUTOWAHRATE];
-    QJsonValue jsonAutowahRange         = jsonEffectSet[KEY_EFFECTSET_AUTOWAHRANGE];
+    QJsonValue jsonPitch                = jsonEffectSet[KeyPitch];
+
+    QJsonValue jsonAutopitchRate        = jsonEffectSet[KeyAutopitchRate];
+    QJsonValue jsonAutopitchRange       = jsonEffectSet[KeyAutopitchRange];
+    QJsonValue jsonTremoloRate          = jsonEffectSet[KeyTremoloRate];
+    QJsonValue jsonTremoloRange         = jsonEffectSet[KeyTremoloRange];
+    QJsonValue jsonAutopanRate          = jsonEffectSet[KeyAutopanRate];
+    QJsonValue jsonAutopanRange         = jsonEffectSet[KeyAutopanRange];
+    QJsonValue jsonAutowahRate          = jsonEffectSet[KeyAutowahRate];
+    QJsonValue jsonAutowahRange         = jsonEffectSet[KeyAutowahRange];
 
     if (        !jsonAdsrOnOff.isDouble()       ||  !jsonComprOnOff.isDouble()
             ||  !jsonDelayOnOff.isDouble()      ||  !jsonDistoOnOff.isDouble()
             ||  !jsonEqualOnOff.isDouble()      ||  !jsonChorusOnOff.isDouble()
             ||  !jsonVibOnOff.isDouble()        ||  !jsonWahOnOff.isDouble()
+
+            ||  !jsonMultinoteAct.isDouble()    ||  !jsonMultinote.isString()
 
             ||  !jsonPitch.isDouble()
 
@@ -185,6 +202,9 @@ DuEffectSetPtr DuEffectSet::fromJson(const QJsonObject &jsonEffectSet)
     verif = effectSet->setChorusOnOff(jsonChorusOnOff.toInt()) ? verif : false;
     verif = effectSet->setVibratoOnOff(jsonVibOnOff.toInt()) ? verif : false;
     verif = effectSet->setWahOnOff(jsonWahOnOff.toInt()) ? verif : false;
+
+    verif = effectSet->setMultinoteAct(jsonMultinoteAct.toInt()) ? verif : false;
+    verif = effectSet->setMultinote(jsonMultinote.toString().toUtf8()) ? verif : false;
 
     verif = effectSet->setPitch(jsonPitch.toInt()) ? verif : false;
 
@@ -258,6 +278,17 @@ QByteArray DuEffectSet::toDuMusicBinary() const
     du_effectset.s_wah_onoff = tmpNum;
 
 
+    tmpNum = getMultinoteAct();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_effectset.s_multinote_act = tmpNum;
+
+    const QByteArray &tmpArray = getMultinote();
+    if (tmpArray.isNull())
+        return QByteArray();
+    std::memcpy(du_effectset.s_multinote, tmpArray.data(), 4);
+
+
     tmpNum = getPitch();
     if (tmpNum == -1)
         return QByteArray();
@@ -315,347 +346,25 @@ int DuEffectSet::size() const
 }
 
 
-int DuEffectSet::getAdsrOnOff() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_ADSR_ONOFF);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEffectSet::setAdsrOnOff(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_ADSR_ONOFF);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuEffectSet::getCompressorOnOff() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_COMPR_ONOFF);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEffectSet::setCompressorOnOff(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_COMPR_ONOFF);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuEffectSet::getDelayOnOff() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_DELAY_ONOFF);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEffectSet::setDelayOnOff(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_DELAY_ONOFF);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuEffectSet::getDistortionOnOff() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_DISTO_ONOFF);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEffectSet::setDistortionOnOff(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_DISTO_ONOFF);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuEffectSet::getEqualizerOnOff() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_EQUAL_ONOFF);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEffectSet::setEqualizerOnOff(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_EQUAL_ONOFF);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuEffectSet::getChorusOnOff() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_CHORUS_ONOFF);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEffectSet::setChorusOnOff(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_CHORUS_ONOFF);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuEffectSet::getVibratoOnOff() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_VIB_ONOFF);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEffectSet::setVibratoOnOff(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_VIB_ONOFF);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuEffectSet::getWahOnOff() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_WAH_ONOFF);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEffectSet::setWahOnOff(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_WAH_ONOFF);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuEffectSet::getPitch() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_PITCH);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEffectSet::setPitch(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_PITCH);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuEffectSet::getAutopitchRate() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_AUTOPITCHRATE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEffectSet::setAutopitchRate(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_AUTOPITCHRATE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuEffectSet::getAutopitchRange() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_AUTOPITCHRANGE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEffectSet::setAutopitchRange(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_AUTOPITCHRANGE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuEffectSet::getTremoloRate() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_TREMOLORATE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEffectSet::setTremoloRate(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_TREMOLORATE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuEffectSet::getTremoloRange() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_TREMOLORANGE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEffectSet::setTremoloRange(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_TREMOLORANGE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuEffectSet::getAutopanRate() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_AUTOPANRATE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEffectSet::setAutopanRate(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_AUTOPANRATE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuEffectSet::getAutopanRange() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_AUTOPANRANGE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEffectSet::setAutopanRange(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_AUTOPANRANGE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuEffectSet::getAutowahRate() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_AUTOWAHRATE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEffectSet::setAutowahRate(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_AUTOWAHRATE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuEffectSet::getAutowahRange() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_AUTOWAHRANGE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEffectSet::setAutowahRange(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EFFECTSET_AUTOWAHRANGE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, AdsrOnOff,         Numeric,      int,        -1)
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, CompressorOnOff,   Numeric,      int,        -1)
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, DelayOnOff,        Numeric,      int,        -1)
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, DistortionOnOff,   Numeric,      int,        -1)
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, EqualizerOnOff,    Numeric,      int,        -1)
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, ChorusOnOff,       Numeric,      int,        -1)
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, VibratoOnOff,      Numeric,      int,        -1)
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, WahOnOff,          Numeric,      int,        -1)
+
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, MultinoteAct,      Numeric,      int,        -1)
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, Multinote,         BinaryData,   QByteArray, QByteArray())
+
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, Pitch,             Numeric,      int,        -1)
+
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, AutopitchRate,     Numeric,      int,        -1)
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, AutopitchRange,    Numeric,      int,        -1)
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, TremoloRate,       Numeric,      int,        -1)
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, TremoloRange,      Numeric,      int,        -1)
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, AutopanRate,       Numeric,      int,        -1)
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, AutopanRange,      Numeric,      int,        -1)
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, AutowahRate,       Numeric,      int,        -1)
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, AutowahRange,      Numeric,      int,        -1)

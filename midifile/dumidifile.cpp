@@ -194,6 +194,54 @@ DuArrayConstPtr DuMidiFile::getTracks() const
     return getChildAs<DuArray>(KEY_MIDIFILE_TRACKS);
 }
 
+DuMidiTrackPtr DuMidiFile::getTrackAt(int index)
+{
+    const DuArrayPtr &tracks = getTracks();
+    if (tracks == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMidiTrack::getTrackAt():\n"
+                << "couldn't retrieve track\n"
+                << "track array is NULL";
+
+        return DuMidiTrackPtr();
+    }
+
+    if (tracks->count() <= index)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMidiTrack::getTrackAt():\n"
+                << "couldn't retrieve track\n"
+                << "index" << index << "out of range";
+
+        return DuMidiTrackPtr();
+    }
+
+    const DuObjectPtr &tmpObject = tracks->at(index);
+    if (tmpObject == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMidiTrack::getTrackAt():\n"
+                << "couldn't retrieve track at:" << index << "\n"
+                << "track object is NULL";
+
+        return DuMidiTrackPtr();
+    }
+
+    const DuMidiTrackPtr &track = tmpObject.dynamicCast<DuMidiTrack>();
+    if (track == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMidiTrack::getTrackAt():\n"
+                << "object at:" << index
+                << "is not a DuMidiTrack";
+
+        return DuMidiTrackPtr();
+    }
+
+    return track;
+}
+
 void DuMidiFile::setTracks(const DuArrayPtr &array)
 {
     addChild(KEY_MIDIFILE_TRACKS, array);
@@ -221,7 +269,7 @@ bool DuMidiFile::appendTracks(const QList<DuMidiTrackPtr> &tracks)
     //Qt doesn't convert DuMidiTrackPtr to DuObjectPtr in a QList
     foreach (const DuMidiTrackPtr &track, tracks)
     {
-        ret = ret && tmp->append(track);
+        ret = tmp->append(track) ? ret : false;
     }
 
     return ret;

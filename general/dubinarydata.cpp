@@ -25,33 +25,33 @@ DuObjectPtr DuBinaryData::clone() const
 
 QByteArray DuBinaryData::toDuMusicBinary() const
 {
-    return getData();
+    return getBinaryData();
 }
 
 QByteArray DuBinaryData::toMidiBinary() const
 {
-    return getData();
+    return getBinaryData();
 }
 
 QJsonValue DuBinaryData::toJson() const
 {
-    return QJsonValue(getData().data());
+    return QJsonValue(getBinaryData().data());
 }
 
 
 int DuBinaryData::size() const
 {
-    return getData().size();
+    return getBinaryData().size();
 }
 
 
-const QByteArray DuBinaryData::getData() const
+const QByteArray DuBinaryData::getBinaryData() const
 {
     return getValue().toByteArray();
 }
 
 
-bool DuBinaryData::setData(const QByteArray &value)
+bool DuBinaryData::setBinaryData(const QByteArray &value)
 {
     int size = getMaxSize();
     if (size != -1 && value.size() > size)
@@ -69,6 +69,16 @@ bool DuBinaryData::setData(const QByteArray &value)
     return true;
 }
 
+const QByteArray DuBinaryData::getData() const
+{
+    return getBinaryData();
+}
+
+bool DuBinaryData::setData(const QByteArray &value)
+{
+    return setBinaryData(value);
+}
+
 void DuBinaryData::setData(QDataStream &stream)
 {
     QByteArray array;
@@ -76,21 +86,21 @@ void DuBinaryData::setData(QDataStream &stream)
     array.resize(tmp);
 
     stream.readRawData(array.data(), tmp);
-    setData(array);
+    setBinaryData(array);
 }
 
 void DuBinaryData::resize(int size)
 {
     QByteArray tmp = data();
     tmp.resize(size);
-    setData(tmp);
+    setBinaryData(tmp);
 }
 
 
 void DuBinaryData::append(char c)
 {
     QByteArray tmp = data().append(c);
-    setData(tmp);
+    setBinaryData(tmp);
 }
 
 

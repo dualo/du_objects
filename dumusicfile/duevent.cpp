@@ -11,54 +11,30 @@
 
 DU_OBJECT_IMPL(DuEvent)
 
-DuEvent::DuEvent(int time, int control, int canal, int note, int value) :
-    DuContainer()
-{
-    addChild(KEY_EVENT_TIME, new DuNumeric(time));
-
-    addChild(KEY_EVENT_CONTROL,
-             new DuNumeric(control, NUMERIC_DEFAULT_SIZE,
-                           6, 0, 0));
-
-    addChild(KEY_EVENT_CANAL,
-             new DuNumeric(canal, NUMERIC_DEFAULT_SIZE,
-                           0xFF, 0x00));
-
-    addChild(KEY_EVENT_KEYBOARD,
-             new DuNumeric(note & 0x80, NUMERIC_DEFAULT_SIZE,
-                           0x80, 0x00, 0x00));
-
-    addChild(KEY_EVENT_NOTE,
-             new DuNumeric(note & 0x7F, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00, 0x40));
-
-    addChild(KEY_EVENT_VALUE,
-             new DuNumeric(value, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00, 0x40));
-}
 
 DuEvent::DuEvent() :
     DuContainer()
 {
-    addChild(KEY_EVENT_TIME, new DuNumeric(0));
+    addChild(KeyTime,
+             new DuNumeric(0));
 
-    addChild(KEY_EVENT_CONTROL,
-             new DuNumeric(0, NUMERIC_DEFAULT_SIZE,
-                           6, 0));
+    addChild(KeyControl,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0x06, 0x00));
 
-    addChild(KEY_EVENT_CANAL,
+    addChild(KeyCanal,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0xFF, 0x00));
 
-    addChild(KEY_EVENT_KEYBOARD,
+    addChild(KeyKeyboard,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x80, 0x00));
 
-    addChild(KEY_EVENT_NOTE,
+    addChild(KeyNote,
              new DuNumeric(0x40, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
-    addChild(KEY_EVENT_VALUE,
+    addChild(KeyValue,
              new DuNumeric(0x40, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 }
@@ -87,8 +63,9 @@ DuEventPtr DuEvent::fromDuMusicBinary(const music_sample &du_sample)
 
     if (!verif)
     {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuEvent::fromDuMusicBinary():\n"
-                   << "an attribute was not properly set";
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << "DuEvent::fromDuMusicBinary():\n"
+                << "an attribute was not properly set";
     }
 
     return event;
@@ -97,20 +74,21 @@ DuEventPtr DuEvent::fromDuMusicBinary(const music_sample &du_sample)
 
 DuEventPtr DuEvent::fromJson(const QJsonObject &jsonEvent)
 {
-    QJsonValue jsonTime     = jsonEvent[KEY_EVENT_TIME];
-    QJsonValue jsonCtrl     = jsonEvent[KEY_EVENT_CONTROL];
-    QJsonValue jsonCanal    = jsonEvent[KEY_EVENT_CANAL];
-    QJsonValue jsonKbrd     = jsonEvent[KEY_EVENT_KEYBOARD];
-    QJsonValue jsonNote     = jsonEvent[KEY_EVENT_NOTE];
-    QJsonValue jsonVal      = jsonEvent[KEY_EVENT_VALUE];
+    QJsonValue jsonTime     = jsonEvent[KeyTime];
+    QJsonValue jsonCtrl     = jsonEvent[KeyControl];
+    QJsonValue jsonCanal    = jsonEvent[KeyCanal];
+    QJsonValue jsonKbrd     = jsonEvent[KeyKeyboard];
+    QJsonValue jsonNote     = jsonEvent[KeyNote];
+    QJsonValue jsonVal      = jsonEvent[KeyValue];
 
     if (        !jsonTime.isDouble()    ||  !jsonCtrl.isDouble()
             ||  !jsonCanal.isDouble()   ||  !jsonKbrd.isDouble()
             ||  !jsonNote.isDouble()    ||  !jsonVal.isDouble())
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuEvent::fromJson():\n"
-                    << "failed to generate DuEvent\n"
-                    << "a json key did not contain the proper type";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuEvent::fromJson():\n"
+                << "failed to generate DuEvent\n"
+                << "a json key did not contain the proper type";
 
         return DuEventPtr();
     }
@@ -128,23 +106,26 @@ DuEventPtr DuEvent::fromJson(const QJsonObject &jsonEvent)
 
     if (!verif)
     {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuEvent::fromJson():\n"
-                   << "an attribute was not properly set";
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << "DuEvent::fromJson():\n"
+                << "an attribute was not properly set";
     }
 
     return event;
 }
 
 DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
-                             const MidiConversionHelper &helper,
-                             int loopIndex)
+                             int presetOctave, int instrKeyMap, bool isPercu,
+                             const MidiConversionHelper &helper)
 {
-    //This case should not occur since it is already tested in DuMusic::fromMidi();
+    //This case should not occur
+    //Already tested in DuMusic::fromMidi();
     if (!helper.isValid())
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuEvent::fromMidi():\n"
-                                      << "failed to generate DuEvent\n"
-                                      << "invalid conversion helper";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuEvent::fromMidi():\n"
+                << "failed to generate DuEvent\n"
+                << "invalid conversion helper";
 
         return DuEventPtr();
     }
@@ -152,9 +133,10 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
     //This case should not occur since it is already tested in DuLoop::fromMidi()
     if (channelEvent->getType() == DuMidiChannelEvent::ProgramChange)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuEvent::fromMidi():\n"
-                                      << "failed to generate DuEvent\n"
-                                      << "invalid channel event type";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuEvent::fromMidi():\n"
+                << "failed to generate DuEvent\n"
+                << "invalid channel event type";
 
         return DuEventPtr();
     }
@@ -166,35 +148,61 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
     verif = event->setControl(channelEvent->getType() - 0x08) ? verif : false;
     verif = event->setValue(channelEvent->getValue()) ? verif : false;
 
-    int key = channelEvent->getKey();
-
-    if (!helper.isPercu(loopIndex))
+    int tmpKey = channelEvent->getKey();
+    if (tmpKey == -1)
     {
-        verif = event->setKeyboard(
-                    helper.fetchKeyboard(key, loopIndex)) ? verif : false;
-        verif = event->setNote(key) ? verif : false;
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << "DuEvent::fromMidi():\n"
+                << "invalid midi key:" << tmpKey;
 
-        verif = event->setCanal((helper.keymapNum(loopIndex) << 4) & 0xF0) ? verif : false;
+        return DuEventPtr();
     }
-    else
+
+    int keyboard = 0;
+    int key = tmpKey;
+
+    if (isPercu)
     {
-        int tmpKey = helper.fetchPercuKey(key, loopIndex);
-        if (tmpKey == -1)
+        //Percussion map index starts from 0 in instr_mapping.c arrays
+        //In du-musics, it starts from 1 (0 being for harmonic instruments)
+        quint8 percuIndex = instrKeyMap - 1;
+
+        key = MidiConversionHelper::percuFromMidi(tmpKey, percuIndex);
+        if (key == -1)
         {
-            qCWarning(LOG_CAT_DU_OBJECT) << "DuEvent::fromMidi():\n"
-                                         << "key not found in this mapping";
+            qCWarning(LOG_CAT_DU_OBJECT)
+                    << "DuEvent::fromMidi():\n"
+                    << "key not found in this mapping";
 
             return DuEventPtr();
         }
 
-        verif = event->setKeyboard(0) ? verif : false;
-        verif = event->setNote(tmpKey) ? verif : false;
+        verif = event->setCanal((percuIndex << 4) & 0xF0) ? verif : false;
     }
+    else
+    {
+        //KEY_MUSIC_TRANSPOSE set to default when importing from Midi
+        key = tmpKey - 12 * presetOctave;
+        if (key < 0)
+        {
+            qCWarning(LOG_CAT_DU_OBJECT)
+                    << "DuEvent::fromMidi():\n"
+                    << "invalid midi key:" << tmpKey;
+
+            return DuEventPtr();
+        }
+
+        keyboard = helper.getKeyboardFromMidi(key);
+    }
+
+    verif = event->setKeyboard(keyboard) ? verif : false;
+    verif = event->setNote(key) ? verif : false;
 
     if (!verif)
     {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuEvent::fromMidi():\n"
-                                     << "an attribute was not properly set";
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << "DuEvent::fromMidi():\n"
+                << "an attribute was not properly set";
     }
 
     return event;
@@ -230,7 +238,7 @@ QByteArray DuEvent::toDuMusicBinary() const
     tmpNum = getNote();
     if (tmpNum == -1)
         return QByteArray();
-    du_sample.note = (quint8)tmpKbrd | (quint8)tmpNum;
+    du_sample.note = (quint8)tmpKbrd + (quint8)tmpNum;
 
     tmpNum = getValue();
     if (tmpNum == -1)
@@ -243,10 +251,13 @@ QByteArray DuEvent::toDuMusicBinary() const
 
 DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
                                                     quint8 prevType,
+                                                    int presetOctave,
+                                                    int transpose,
                                                     bool isPercu,
                                                     int instrKeyMap) const
 {
-    //This case should not occur since it is already tested in DuLoop::toDuMidiTrack()
+    //This case should not occur
+    //Already tested in DuLoop::toDuMidiTrack()
     if (isPercu && instrKeyMap <= 0)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
@@ -302,42 +313,61 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
         return DuMidiChannelEventPtr();
     }
 
-    if (isPercu && midiType < DuMidiChannelEvent::KeyAftertouch)
+    int midiKey = 0;
+
+    if (midiType < DuMidiChannelEvent::KeyAftertouch)
     {
-        if (keyboard == -1)
+        if (isPercu)
         {
-            qCCritical(LOG_CAT_DU_OBJECT)
-                    << "DuEvent::toDuMidiChannelEvent():\n"
-                    << "invalid keyboard:" << keyboard;
+            if (keyboard == -1)
+            {
+                qCCritical(LOG_CAT_DU_OBJECT)
+                        << "DuEvent::toDuMidiChannelEvent():\n"
+                        << "invalid keyboard:" << keyboard;
 
-            return DuMidiChannelEventPtr();
+                return DuMidiChannelEventPtr();
+            }
+
+            //The keyboard value is not the same as the keyboard index to be used
+            //when calling MidiConversionHelper::percuKey()
+
+            //Percussion instrKeyMap starts from 1 in du-musics
+            //Percussion map index starts from 0 in instr_mapping.c arrays
+
+            quint8 keyboardIndex = (keyboard >> 7) & 0x01;
+            midiKey = MidiConversionHelper::percuToMidi((quint8)tmp,keyboardIndex,
+                                                        (quint8)instrKeyMap - 1);
+
+            if (midiKey == -1 || (quint8)midiKey > 0x7F)
+            {
+                qCCritical(LOG_CAT_DU_OBJECT)
+                        << "DuEvent::toDuMidiChannelEvent():\n"
+                        << "invalid percussion key:" << midiKey;
+
+                return DuMidiChannelEventPtr();
+            }
         }
-
-        //The keyboard value is not the same as the keyboard index to be used
-        //when calling MidiConversionHelper::percuKey()
-
-        //The argument instrKeyMap is the value of KEY_INSTRINFO_KEYMAP
-        //It is not equal to the index of the map in the instr_mapping.c arrays
-
-        quint8 keyboardIndex = (keyboard >> 7) & 0x01;
-        int midiKey = MidiConversionHelper::percuKey((quint8)tmp, keyboardIndex,
-                                                     (quint8)instrKeyMap - 1);
-
-        if (midiKey == -1 || (quint8)midiKey > 0x7F)
+        else
         {
-            qCCritical(LOG_CAT_DU_OBJECT)
-                    << "DuEvent::toDuMidiChannelEvent():\n"
-                    << "invalid percussion key:" << midiKey;
+            midiKey = tmp + 12 * presetOctave + transpose - RECORD_TRANSPOSEMAX;
+            if (midiKey > 0x7F)
+            {
+                qCCritical(LOG_CAT_DU_OBJECT)
+                        << "DuEvent::toDuMidiChannelEvent():\n"
+                        << "invalid harmonic key:" << midiKey << "\n"
+                        << "(instrument preset octave =" << presetOctave << "\n"
+                        << "transpose =" << transpose - RECORD_TRANSPOSEMAX << ")";
 
-            return DuMidiChannelEventPtr();
+                return DuMidiChannelEventPtr();
+            }
         }
-
-        channelEvent->setKey(midiKey);
     }
     else
     {
-        channelEvent->setKey((quint8)tmp);
+        midiKey = tmp;
     }
+
+    channelEvent->setKey((quint8)midiKey);
 
 
     tmp = getValue();
@@ -364,127 +394,9 @@ int DuEvent::size() const
 }
 
 
-int DuEvent::getTime() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_TIME);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEvent::setTime(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_TIME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuEvent::getControl() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_CONTROL);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEvent::setControl(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_CONTROL);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuEvent::getCanal() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_CANAL);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEvent::setCanal(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_CANAL);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuEvent::getKeyboard() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_KEYBOARD);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEvent::setKeyboard(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_KEYBOARD);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuEvent::getNote() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_NOTE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEvent::setNote(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_NOTE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuEvent::getValue() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_VALUE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEvent::setValue(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_EVENT_VALUE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
+DU_KEY_ACCESSORS_IMPL(DuEvent, Time,     Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuEvent, Control,  Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuEvent, Canal,    Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuEvent, Keyboard, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuEvent, Note,     Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuEvent, Value,    Numeric, int, -1)

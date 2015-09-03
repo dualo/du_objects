@@ -52,7 +52,7 @@ DuSongInfo::DuSongInfo() :
 
     addChild(KEY_SONG_SCALE,
              new DuNumeric(MAJOR_LED_MODE, NUMERIC_DEFAULT_SIZE,
-                           NUM_LED_MODE, NONE_LED_MODE));
+                           NUM_LED_MODE - 1, NONE_LED_MODE));
 
     addChild(KEY_SONG_TONALITY,
              new DuNumeric(1, NUMERIC_DEFAULT_SIZE,
@@ -60,7 +60,7 @@ DuSongInfo::DuSongInfo() :
 
     addChild(KEY_SONG_TIMESIGNATURE,
              new DuNumeric(TIME_4_4, NUMERIC_DEFAULT_SIZE,
-                           NUM_TIMESIGNATURE, TIME_OFF));
+                           NUM_TIMESIGNATURE - 1, TIME_OFF));
 
     addChild(KEY_SONG_REVERBPRESET,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
@@ -230,7 +230,7 @@ DuSongInfoPtr DuSongInfo::fromMidi(const MidiConversionHelper &helper)
 //    verif = songInfo->setClickVolume() ? verif : false;
 //    verif = songInfo->setOffset(jsonOffset.toInt()) ? verif : false;
 
-    verif = songInfo->setScale(helper.getScale()) ? verif : false;
+    verif = songInfo->setScale(helper.getDutouchScale()) ? verif : false;
     verif = songInfo->setTonality(helper.getTonality()) ? verif : false;
     verif = songInfo->setTimeSignature(helper.getTimeSig()) ? verif : false;
 
@@ -650,7 +650,7 @@ QByteArray DuSongInfo::getLeds() const
     if (tmp == NULL)
         return QByteArray();
 
-    return tmp->getData();
+    return tmp->getBinaryData();
 }
 
 bool DuSongInfo::setLeds(const QByteArray &value)
@@ -660,5 +660,5 @@ bool DuSongInfo::setLeds(const QByteArray &value)
     if (tmp == NULL)
         return false;
 
-    return tmp->setData(value);
+    return tmp->setBinaryData(value);
 }
