@@ -32,7 +32,6 @@ DuMidiChannelEventPtr DuMidiChannelEvent::fromMidiBinary(QDataStream &stream,
     DuMidiChannelEventPtr channelEvent(new DuMidiChannelEvent);
 
     quint8 type = prevStatus / 16;
-    //quint8 channel = prevStatus % 16;
 
     switch(type)
     {
