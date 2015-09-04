@@ -383,7 +383,7 @@ int MidiConversionHelper::percuFromMidi(int gmKey, int mapIndex)
     s_note tmpNote;
     int tmpKey = 0xFF;
 
-    for (int i = 0; i < 58; i++)
+    for (int i = 0; i < NUM_BUTTON_KEYBOARD; i++)
     {
         tmpNote = keyboard_note_map[mapIndex][0][i];
         tmpKey = tmpNote.note_gmref;
