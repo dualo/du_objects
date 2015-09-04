@@ -195,7 +195,7 @@ DuLoopPtr DuLoop::fromJson(const QJsonObject &jsonLoop)
 }
 
 
-DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
+DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int midiTrackIndex)
 {
     if (!helper.isValid())
     {
@@ -208,7 +208,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
     }
 
 
-    const DuMidiTrackPtr &midiTrack = helper.getMidiTrack(loopIndex);
+    const DuMidiTrackPtr &midiTrack = helper.getMidiTrack(midiTrackIndex);
     if (midiTrack == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
@@ -242,7 +242,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
     }
 
 
-    const DuInstrumentPtr &instrument = helper.getInstrument(loopIndex);
+    const DuInstrumentPtr &instrument = helper.getInstrument(midiTrackIndex);
     if (instrument == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
@@ -298,7 +298,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
         return DuLoopPtr();
     }
 
-    int presetOctave = instrInfo->getOctave();
+    int presetOctave = presetExpr->getOctave();
     if (presetOctave == -1)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
@@ -321,7 +321,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
     verif = loop->setState(REC_STOP) ? verif : false;
     verif = loop->setDurationModifier(1) ? verif : false;
     verif = loop->setScoreDisplay(LEARN_OFF) ? verif : false;
-    verif = loop->setMidiOutChannel(helper.getMidiChannel(loopIndex)) ? verif : false;
+    verif = loop->setMidiOutChannel(helper.getMidiChannel(midiTrackIndex)) ? verif : false;
 
 //    verif = loop->setSaveLoopTimer();
 
@@ -553,7 +553,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
 
     if (instrType == INSTR_PERCU)
     {
-        if (instrKeyMap <= -1)
+        if (instrKeyMap <= 0)
         {
             //NOTE: maybe a qCCritical and return DuMidiTrackPtr() would be better
 
@@ -651,7 +651,6 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
             {
                 channelEvent->setTime((quint32)durationRef * (quint8)durationMod
                                       + tmpTime - prevTime, prevTime);
-                channelEvent->setChannel((quint8)midiChannel);
             }
         }
 
@@ -660,10 +659,6 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
             channelEvent = event->toDuMidiChannelEvent(prevTime, prevType,
                                                        presetOctave, transpose,
                                                        isPercu, instrKeyMap);
-            if (channelEvent != NULL)
-            {
-                channelEvent->setChannel((quint8)midiChannel);
-            }
         }
 
         if (channelEvent == NULL)
@@ -675,6 +670,8 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
         }
         else
         {
+            channelEvent->setChannel((quint8)midiChannel);
+
             midiEvents->append(channelEvent);
 
             prevTime = channelEvent->getTime();

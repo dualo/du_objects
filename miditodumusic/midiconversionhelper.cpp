@@ -398,7 +398,10 @@ int MidiConversionHelper::percuFromMidi(int gmKey, int mapIndex)
 int MidiConversionHelper::percuToMidi(quint8 duKey, quint8 keyboardIndex,
                                       quint8 mapIndex)
 {
-    if (duKey > 57 + 35 || keyboardIndex > 1 || mapIndex > 3)
+    quint32 mapIndexRef = (NUM_KEY_MAP - 1) / 2 - 1;
+    quint32 keyIndexRef = NUM_BUTTON_KEYBOARD + 35 - 1;
+
+    if (duKey > keyIndexRef || keyboardIndex > 1 || mapIndex > mapIndexRef)
     {
         qCWarning(LOG_CAT_DU_OBJECT)
                 << "MidiConversionHelper::percuKey():\n"
