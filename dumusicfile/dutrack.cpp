@@ -192,7 +192,7 @@ DuTrackPtr DuTrack::fromMidi(const MidiConversionHelper &helper, int trackIndex)
     const DuTrackPtr track(new DuTrack);
     bool verif = true;
 
-    verif = track->setChannel(7 - trackIndex) ? verif : false;
+    verif = track->setChannel(MUSIC_MAXTRACK - trackIndex) ? verif : false;
 //    verif = track->setCurrentLoop(0) ? verif : false;
 
     if (!verif)
