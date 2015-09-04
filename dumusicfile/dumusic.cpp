@@ -419,6 +419,8 @@ DuMusicPtr DuMusic::fromMidi(const MidiConversionHelper &helper)
         return DuMusicPtr();
     }
 
+    //TODO: generate DuHeader (maybe)
+
     for (int i = 0; i < MUSIC_MAXTRACK; i++)
     {
         const DuTrackPtr &track = DuTrack::fromMidi(helper, i);
