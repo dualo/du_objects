@@ -280,7 +280,6 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
 
 
     tmp = getControl();
-    quint8 midiType = (quint8)tmp + 0x08;
 
     if (tmp == -1)
     {
@@ -290,6 +289,8 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
 
         return DuMidiChannelEventPtr();
     }
+
+    quint8 midiType = (quint8)tmp + 0x08;
 
     channelEvent->setRunningStatus(midiType == prevType);
     channelEvent->setType(midiType);
