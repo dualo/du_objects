@@ -16,6 +16,8 @@ public:
 
     QByteArray toMidiBinary() const;
 
+    int size() const;
+
     QDebug debugPrint(QDebug dbg) const;
 
     bool getRunningStatus() const;

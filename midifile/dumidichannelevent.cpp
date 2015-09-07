@@ -166,9 +166,17 @@ int DuMidiChannelEvent::size() const
     if (time == NULL)
         return -1;
 
-    size += time->getAbsolute() + 1;
+    const DuMidiStatusConstPtr &status =
+            getChildAs<DuMidiStatus>(KEY_MIDIEVENT_STATUS);
+
+    if (status == NULL)
+        return -1;
+
+    //Delta time size + 1 status byte or 0 if running status active
+    size += time->size() + status->size();
 
 
+    //Adding arguments size
     quint8 type = getType();
     switch (type)
     {
