@@ -280,7 +280,7 @@ QByteArray DuEffectSet::toDuMusicBinary() const
         return QByteArray();
     du_effectset.s_multinote_act = tmpNum;
 
-    QByteArray &tmpArray = getMultinote();
+    const QByteArray &tmpArray = getMultinote();
     if (tmpArray.isNull())
         return QByteArray();
     std::memcpy(du_effectset.s_multinote, tmpArray.data(), 4);
