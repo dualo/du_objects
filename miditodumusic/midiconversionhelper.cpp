@@ -810,7 +810,7 @@ bool MidiConversionHelper::filterMetaEvents()
             }
         }
 
-        if (midiEvents->count() == 0)
+        if (j == 0)
             midiTracks->removeAt(i);
 
         else
