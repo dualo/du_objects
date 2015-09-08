@@ -664,6 +664,9 @@ bool MidiConversionHelper::filterMetaEvents()
             tmp *= DUMUSIC_DIVISION;
             tmp /= midiDivision;
 
+            //This prevents having events with a timestamp equal to the loop reference duration
+            tmp += 1;
+
             if ((quint32)tmp > (quint32)duration)
                 setDuration(tmp);
         }
@@ -810,6 +813,7 @@ bool MidiConversionHelper::filterMetaEvents()
             }
         }
 
+        //When all events are removed, j is still 0
         if (j == 0)
             midiTracks->removeAt(i);
 
