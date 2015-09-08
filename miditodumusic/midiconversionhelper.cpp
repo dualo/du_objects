@@ -642,10 +642,38 @@ bool MidiConversionHelper::filterMetaEvents()
 
 
         //The last event in a midi track should always be an EndOfTrack meta event
-        //We will use it later so we are not removing it now
+
+        const DuMidiBasicEventPtr &midiEvent =
+                midiEvents->at(midiEvents->count() - 1).dynamicCast<DuMidiBasicEvent>();
+        if (midiEvent == NULL)
+            return false;
+
+        const DuMidiMetaEventPtr &metaEvent =
+                midiEvent.dynamicCast<DuMidiMetaEvent>();
+        if (metaEvent == NULL)
+            return false;
+
+        if (metaEvent->getType() != DuMidiMetaEvent::EndOfTrack)
+            return false;
+
+        int trackDuration = metaEvent->getTime();
+
+        if (trackDuration != -1)
+        {
+            quint64 tmp = trackDuration;
+            tmp *= DUMUSIC_DIVISION;
+            tmp /= midiDivision;
+
+            if ((quint32)tmp > (quint32)duration)
+                setDuration(tmp);
+        }
+
+        //Removing EndOfTrack event
+        midiEvents->removeAt(midiEvents->count() - 1);
+
 
         int j = 0;
-        while (j < midiEvents->count() - 1)
+        while (j < midiEvents->count())
         {
             const DuMidiBasicEventPtr &midiEvent =
                     midiEvents->at(j).dynamicCast<DuMidiBasicEvent>();
@@ -655,6 +683,7 @@ bool MidiConversionHelper::filterMetaEvents()
             //Adjusting timestamp for .dumusic time division
 
             int time = midiEvent->getTime();
+
             if (time != -1)
             {
                 quint64 tmp = time;
@@ -667,17 +696,17 @@ bool MidiConversionHelper::filterMetaEvents()
             const DuMidiMetaEventPtr &metaEvent =
                     midiEvent.dynamicCast<DuMidiMetaEvent>();
 
-            if (metaEvent == NULL)          //ChannelEvent or SysExEvent
+            if (metaEvent == NULL)          //Event is ChannelEvent or SysExEvent
             {
                 const DuMidiChannelEventPtr &channelEvent =
                         midiEvent.dynamicCast<DuMidiChannelEvent>();
 
-                if (channelEvent == NULL)   //SysExEvent
+                if (channelEvent == NULL)   //Event is SysExEvent
                 {
                     midiEvents->removeAt(j);
                 }
 
-                else                        //ChannelEvent
+                else                        //Event is ChannelEvent
                 {
                     if (channelEvent->getType() == DuMidiChannelEvent::ProgramChange)
                     {
@@ -781,7 +810,7 @@ bool MidiConversionHelper::filterMetaEvents()
             }
         }
 
-        if (midiEvents->count() == 1)
+        if (midiEvents->count() == 0)
             midiTracks->removeAt(i);
 
         else
@@ -790,33 +819,6 @@ bool MidiConversionHelper::filterMetaEvents()
                 trackName.prepend(QString("Track ") + QString::number(i));
             trackNames.append(trackName);
             i++;
-
-
-            const DuMidiBasicEventPtr &midiEvent =
-                    midiEvents->at(j).dynamicCast<DuMidiBasicEvent>();
-            if (midiEvent == NULL)
-                return false;
-
-            const DuMidiMetaEventPtr &metaEvent =
-                    midiEvent.dynamicCast<DuMidiMetaEvent>();
-            if (metaEvent == NULL)
-                return false;
-
-            if (metaEvent->getType() != DuMidiMetaEvent::EndOfTrack)
-                return false;
-            int trackDuration = metaEvent->getTime();
-
-            midiEvents->removeAt(j);
-
-            if (trackDuration != -1)
-            {
-                quint64 tmp = trackDuration;
-                tmp *= DUMUSIC_DIVISION;
-                tmp /= midiDivision;
-
-                if ((quint32)tmp > (quint32)duration)
-                    setDuration(tmp);
-            }
         }
     }
 
