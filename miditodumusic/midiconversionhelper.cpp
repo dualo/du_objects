@@ -49,31 +49,30 @@ MidiConversionHelper::MidiConversionHelper(QObject *parent) :
     timeSigBoxModel.addTimeSignature(DuTimeSignature(TIME_4_4, tr("4 : 4")));
     timeSigBoxModel.addTimeSignature(DuTimeSignature(TIME_5_4, tr("5 : 4")));
 
-//    tonalityBoxModel.addTonality(DuTonality(0,  tr("C")));
-//    tonalityBoxModel.addTonality(DuTonality(1,  tr("C#")));
-//    tonalityBoxModel.addTonality(DuTonality(2,  tr("D")));
-//    tonalityBoxModel.addTonality(DuTonality(3,  tr("D#")));
-//    tonalityBoxModel.addTonality(DuTonality(4,  tr("E")));
-//    tonalityBoxModel.addTonality(DuTonality(5,  tr("F")));
-//    tonalityBoxModel.addTonality(DuTonality(6,  tr("F#")));
-//    tonalityBoxModel.addTonality(DuTonality(7,  tr("G")));
-//    tonalityBoxModel.addTonality(DuTonality(8,  tr("G#")));
-//    tonalityBoxModel.addTonality(DuTonality(9,  tr("A")));
-//    tonalityBoxModel.addTonality(DuTonality(10, tr("A#")));
-//    tonalityBoxModel.addTonality(DuTonality(11, tr("B")));
-
-    tonalityBoxModel.addTonality(DuTonality(0 , tr("B")));
-    tonalityBoxModel.addTonality(DuTonality(1,  tr("C")));
-    tonalityBoxModel.addTonality(DuTonality(2,  tr("C#")));
-    tonalityBoxModel.addTonality(DuTonality(3,  tr("D")));
-    tonalityBoxModel.addTonality(DuTonality(4,  tr("D#")));
-    tonalityBoxModel.addTonality(DuTonality(5,  tr("E")));
-    tonalityBoxModel.addTonality(DuTonality(6,  tr("F")));
-    tonalityBoxModel.addTonality(DuTonality(7,  tr("F#")));
-    tonalityBoxModel.addTonality(DuTonality(8,  tr("G")));
-    tonalityBoxModel.addTonality(DuTonality(9,  tr("G#")));
-    tonalityBoxModel.addTonality(DuTonality(10, tr("A")));
-    tonalityBoxModel.addTonality(DuTonality(11, tr("A#")));
+    tonalityBoxModel.addTonality(DuTonality(0,      12,     tr("Cb")));
+    tonalityBoxModel.addTonality(DuTonality(1,      1,      tr("C")));
+    tonalityBoxModel.addTonality(DuTonality(2,      2,      tr("C#")));
+    tonalityBoxModel.addTonality(DuTonality(3,      15,     tr("Ebb")));
+    tonalityBoxModel.addTonality(DuTonality(4,      16,     tr("Eb")));
+    tonalityBoxModel.addTonality(DuTonality(5,      5,      tr("E")));
+    tonalityBoxModel.addTonality(DuTonality(6,      18,     tr("E#")));
+    tonalityBoxModel.addTonality(DuTonality(7,      19,     tr("Gb")));
+    tonalityBoxModel.addTonality(DuTonality(8,      8,      tr("G")));
+    tonalityBoxModel.addTonality(DuTonality(9,      9,      tr("G#")));
+    tonalityBoxModel.addTonality(DuTonality(10,     22,     tr("Bbb")));
+    tonalityBoxModel.addTonality(DuTonality(11,     23,     tr("Bb")));
+    tonalityBoxModel.addTonality(DuTonality(12,     0,      tr("B")));
+    tonalityBoxModel.addTonality(DuTonality(13,     13,     tr("B#")));
+    tonalityBoxModel.addTonality(DuTonality(14,     14,     tr("Db")));
+    tonalityBoxModel.addTonality(DuTonality(15,     3,      tr("D")));
+    tonalityBoxModel.addTonality(DuTonality(16,     4,      tr("D#")));
+    tonalityBoxModel.addTonality(DuTonality(17,     17,     tr("Fb")));
+    tonalityBoxModel.addTonality(DuTonality(18,     6,      tr("F")));
+    tonalityBoxModel.addTonality(DuTonality(19,     7,      tr("F#")));
+    tonalityBoxModel.addTonality(DuTonality(20,     20,     tr("F##")));
+    tonalityBoxModel.addTonality(DuTonality(21,     21,     tr("Ab")));
+    tonalityBoxModel.addTonality(DuTonality(22,     10,     tr("A")));
+    tonalityBoxModel.addTonality(DuTonality(23,     11,     tr("A#")));
 }
 
 MidiConversionHelper::~MidiConversionHelper()
@@ -895,7 +894,7 @@ void MidiConversionHelper::setMidiScale(int value)
 void MidiConversionHelper::setMidiTonality(int value)
 {
     midiTonality = value;
-    setTonality(value);
+    setTonality(tonalityBoxModel.findValue(value));
 }
 
 void MidiConversionHelper::setMidiTitle(const QString &value)

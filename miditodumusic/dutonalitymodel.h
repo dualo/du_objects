@@ -11,13 +11,15 @@
 class DuTonality
 {
 public:
-    DuTonality(int value, const QString &name);
+    DuTonality(int value, int midiRef, const QString &name);
 
     int value() const;
+    int midiRef() const;
     QString name() const;
 
 private:
     int m_value;
+    int m_midiRef;
     QString m_name;
 };
 
@@ -37,7 +39,8 @@ public:
     void addTonality(const DuTonality &tonality);
 
     int findValue (const QString &name) const;
-    QString findName(int value) const;
+    int findValue (int midiRef) const;
+    QString findName(int midiRef) const;
 
     int indexFromValue(int value) const;
 
