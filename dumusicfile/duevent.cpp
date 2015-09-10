@@ -135,6 +135,14 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
         return DuEventPtr();
     }
 
+    //Converting event in case of note off written as note on with velocity 0
+    if (channelEvent->getType() == DuMidiChannelEvent::NoteOn
+            && channelEvent->getValue() == 0)
+    {
+        channelEvent->setType(DuMidiChannelEvent::NoteOff);
+        channelEvent->setValue(0x40);
+    }
+
     DuEventPtr event(new DuEvent);
     bool verif = true;
 
