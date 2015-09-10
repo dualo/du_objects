@@ -195,6 +195,17 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
         }
     }
 
+    if (music->size() > MUSIC_SONG_SIZE + RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromDuMusicBinary():\n"
+                << "du-music size above max possible size"
+                << music->size()
+                << MUSIC_SONG_SIZE + RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE;
+
+        return DuMusicPtr();
+    }
+
 
     bool verif = true;
 
