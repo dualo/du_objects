@@ -283,7 +283,7 @@ QByteArray DuSoundInfo::toBinary() const
     const DuInstrumentInfoConstPtr &m3infos = getInstrumentInfo();
     if (m3infos == NULL)
         return QByteArray();
-    std::memcpy((char*)&(soundStruct.s_instrument), m3infos->toDuMusicBinary().data(), m3infos->size());
+    std::memcpy((char*)&(soundStruct.s_instrument), m3infos->toDuMusicBinary().constData(), m3infos->size());
 
     tmpInt = getPresetNum();
     if (tmpInt == -1)
@@ -298,57 +298,57 @@ QByteArray DuSoundInfo::toBinary() const
     const DuArrayConstPtr &presetArray = getPresetArray();
     if (presetArray == NULL)
         return QByteArray();
-    std::memcpy((char*)&(soundStruct.s_preset), presetArray->toDuMusicBinary().data(), presetArray->size());
+    std::memcpy((char*)&(soundStruct.s_preset), presetArray->toDuMusicBinary().constData(), presetArray->size());
 
     const DuMixerConstPtr &mixer = getMixer();
     if (mixer == NULL)
         return QByteArray();
-    std::memcpy((char*)&(soundStruct.s_mix), mixer->toDuMusicBinary().data(), mixer->size());
+    std::memcpy((char*)&(soundStruct.s_mix), mixer->toDuMusicBinary().constData(), mixer->size());
 
     const DuArrayConstPtr &distortionArray = getDistortionArray();
     if (distortionArray == NULL)
         return QByteArray();
-    std::memcpy((char*)&(soundStruct.s_distortion), distortionArray->toDuMusicBinary().data(), distortionArray->size());
+    std::memcpy((char*)&(soundStruct.s_distortion), distortionArray->toDuMusicBinary().constData(), distortionArray->size());
 
     const DuArrayConstPtr &wahArray = getWahArray();
     if (wahArray == NULL)
         return QByteArray();
-    std::memcpy((char*)&(soundStruct.s_wah), wahArray->toDuMusicBinary().data(), wahArray->size());
+    std::memcpy((char*)&(soundStruct.s_wah), wahArray->toDuMusicBinary().constData(), wahArray->size());
 
     const DuArrayConstPtr &compressorArray = getCompressorArray();
     if (compressorArray == NULL)
         return QByteArray();
-    std::memcpy((char*)&(soundStruct.s_compressor), compressorArray->toDuMusicBinary().data(), compressorArray->size());
+    std::memcpy((char*)&(soundStruct.s_compressor), compressorArray->toDuMusicBinary().constData(), compressorArray->size());
 
     const DuArrayConstPtr &equalizerArray = getEqualizerArray();
     if (equalizerArray == NULL)
         return QByteArray();
-    std::memcpy((char*)&(soundStruct.s_equalizer), equalizerArray->toDuMusicBinary().data(), equalizerArray->size());
+    std::memcpy((char*)&(soundStruct.s_equalizer), equalizerArray->toDuMusicBinary().constData(), equalizerArray->size());
 
     const DuArrayConstPtr &delayArray = getDelayArray();
     if (delayArray == NULL)
         return QByteArray();
-    std::memcpy((char*)&(soundStruct.s_delay), delayArray->toDuMusicBinary().data(), delayArray->size());
+    std::memcpy((char*)&(soundStruct.s_delay), delayArray->toDuMusicBinary().constData(), delayArray->size());
 
     const DuArrayConstPtr &chorusArray = getChorusArray();
     if (chorusArray == NULL)
         return QByteArray();
-    std::memcpy((char*)&(soundStruct.s_chorus), chorusArray->toDuMusicBinary().data(), chorusArray->size());
+    std::memcpy((char*)&(soundStruct.s_chorus), chorusArray->toDuMusicBinary().constData(), chorusArray->size());
 
     const DuArrayConstPtr &vibratoArray = getVibratoArray();
     if (vibratoArray == NULL)
         return QByteArray();
-    std::memcpy((char*)&(soundStruct.s_vibrato), vibratoArray->toDuMusicBinary().data(), vibratoArray->size());
+    std::memcpy((char*)&(soundStruct.s_vibrato), vibratoArray->toDuMusicBinary().constData(), vibratoArray->size());
 
     const DuArrayConstPtr &adsrArray = getAdsrArray();
     if (adsrArray == NULL)
         return QByteArray();
-    std::memcpy((char*)&(soundStruct.s_adsr), adsrArray->toDuMusicBinary().data(), adsrArray->size());
+    std::memcpy((char*)&(soundStruct.s_adsr), adsrArray->toDuMusicBinary().constData(), adsrArray->size());
 
     const DuArrayConstPtr &ledsArray = getLedArray();
     if (ledsArray == NULL)
         return QByteArray();
-    std::memcpy((char*)&(soundStruct.s_leds), ledsArray->toDuMusicBinary().data(), ledsArray->size());
+    std::memcpy((char*)&(soundStruct.s_leds), ledsArray->toDuMusicBinary().constData(), ledsArray->size());
 
     return QByteArray((char*)&soundStruct, size());
 }
