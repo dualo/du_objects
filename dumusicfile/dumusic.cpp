@@ -384,6 +384,18 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
     }
 
 
+    if (music->size() > MUSIC_SONG_SIZE + RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromJson():\n"
+                << "du-music size above max possible size"
+                << music->size()
+                << MUSIC_SONG_SIZE + RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE;
+
+        return DuMusicPtr();
+    }
+
+
     bool verif = true;
 
     verif = music->setTranspose(jsonTranspose.toInt()) ? verif : false;
@@ -453,6 +465,17 @@ DuMusicPtr DuMusic::fromMidi(const MidiConversionHelper &helper)
 
             return DuMusicPtr();
         }
+    }
+
+    if (music->size() > MUSIC_SONG_SIZE + RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromMidiBinary():\n"
+                << "du-music size above max possible size"
+                << music->size()
+                << MUSIC_SONG_SIZE + RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE;
+
+        return DuMusicPtr();
     }
 
     return music;
