@@ -43,10 +43,9 @@ QByteArray DuArray::toDuMusicBinary() const
         return QByteArray("");
     }
 
-    QListIterator<DuObjectPtr> i(array);
-    while (i.hasNext())
+    foreach (const DuObjectPtr& obj, array)
     {
-        QByteArray tmpArray = i.next()->toDuMusicBinary();
+        QByteArray tmpArray = obj->toDuMusicBinary();
 
         if (tmpArray.isNull())
         {
@@ -73,10 +72,9 @@ QByteArray DuArray::toMidiBinary() const
         return QByteArray("");
     }
 
-    QListIterator<DuObjectPtr> i(array);
-    while (i.hasNext())
+    foreach (const DuObjectPtr& obj, array)
     {
-        QByteArray tmpArray = i.next()->toMidiBinary();
+        QByteArray tmpArray = obj->toMidiBinary();
 
         if (tmpArray.isNull())
         {
@@ -102,10 +100,9 @@ QJsonValue DuArray::toJson() const
         return QJsonValue(QJsonArray());
     }
 
-    QListIterator<DuObjectPtr> i(array);
-    while (i.hasNext())
+    foreach (const DuObjectPtr& obj, array)
     {
-        QJsonValue tmpValue = i.next()->toJson();
+        QJsonValue tmpValue = obj->toJson();
 
         if (tmpValue.isUndefined())
         {
@@ -126,10 +123,9 @@ int DuArray::size() const
 {
     int size = 0;
 
-    QListIterator<DuObjectPtr> i(array);
-    while (i.hasNext())
+    foreach (const DuObjectPtr& obj, array)
     {
-        int tmpSize = i.next()->size();
+        int tmpSize = obj->size();
 
         if (tmpSize == -1)
         {
@@ -149,7 +145,7 @@ QDebug DuArray::debugPrint(QDebug dbg) const
 {
     dbg.nospace() << "DuArray(";
 
-    QListIterator<DuObjectPtr> i(array);
+    QVectorIterator<DuObjectPtr> i(array);
     while (i.hasNext()) {
         dbg.nospace() << i.next();
 
@@ -297,7 +293,7 @@ DuObjectPtr DuArray::operator[](int index)
 }
 
 
-const QList<DuObjectPtr> &DuArray::getArray() const
+const QVector<DuObjectPtr> &DuArray::getArray() const
 {
     return array;
 }

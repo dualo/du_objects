@@ -50,10 +50,10 @@ public:
     DuObjectPtr operator[](int index);
 
 protected:
-    const QList<DuObjectPtr> &getArray() const;
+    const QVector<DuObjectPtr> &getArray() const;
 
 private:
-    QList<DuObjectPtr> array;
+    QVector<DuObjectPtr> array;
     int maxSize;
 };
 
