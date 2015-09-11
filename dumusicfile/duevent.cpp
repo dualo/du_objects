@@ -157,12 +157,22 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
         return DuEventPtr();
     }
 
+    int tmpValue = channelEvent->getValue();
+    if (tmpValue == -1)
+    {
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << "DuEvent::fromMidi():\n"
+                << "invalid midi key value:" << tmpValue;
+
+        return DuEventPtr();
+    }
+
     //Converting event in case of note off written as note on with velocity 0
     if (midiType == DuMidiChannelEvent::NoteOn
             && channelEvent->getValue() == 0)
     {
-        channelEvent->setType(DuMidiChannelEvent::NoteOff);
-        channelEvent->setValue(0x40);
+        midiType = DuMidiChannelEvent::NoteOff;
+        tmpValue = 0x40;
     }
 
     int keyboard = 0;
@@ -212,7 +222,7 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
 
     verif = event->setTime(channelEvent->getTime()) ? verif : false;
     verif = event->setControl(midiType - 0x08) ? verif : false;
-    verif = event->setValue(channelEvent->getValue()) ? verif : false;
+    verif = event->setValue(tmpValue) ? verif : false;
 
     if (!verif)
     {
