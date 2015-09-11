@@ -287,12 +287,6 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
 
     qCDebug(LOG_CAT_DU_OBJECT) << "du-sound" << m3Infos->getName() << "has been successfully parsed";
 
-    QFile file("/Users/nkniebilher/Documents/du-sounds/3L_after.dusound");
-    file.open(QIODevice::WriteOnly);
-    QDataStream out(&file);
-    QByteArray binaryData = sound->toBinary();
-    out.writeRawData(binaryData.data(), binaryData.size());
-
     return sound;
 }
 
