@@ -8,11 +8,11 @@
 
 
 class MidiConversionHelper;
-DU_OBJECT(DuArray)
-DU_OBJECT(DuLoop)
-DU_OBJECT(DuMidiTrack)
+DU_OBJECT(DuArray);
+DU_OBJECT(DuLoop);
+DU_OBJECT(DuMidiTrack);
 
-DU_OBJECT(DuTrack)
+DU_OBJECT(DuTrack);
 
 class DuTrack : public DuContainer
 {

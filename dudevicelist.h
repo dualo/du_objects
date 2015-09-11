@@ -4,9 +4,9 @@
 #include "dulist.h"
 
 
-DU_OBJECT(DuDevice)
+DU_OBJECT(DuDevice);
 
-DU_OBJECT(DuDeviceList)
+DU_OBJECT(DuDeviceList);
 
 class DuDeviceList : public DuList
 {

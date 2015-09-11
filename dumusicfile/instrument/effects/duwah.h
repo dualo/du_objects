@@ -4,7 +4,7 @@
 #include "dueffectsettings.h"
 
 
-DU_OBJECT(DuWah)
+DU_OBJECT(DuWah);
 
 class DuWah : public DuEffectSettings
 {

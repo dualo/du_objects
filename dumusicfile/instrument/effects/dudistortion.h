@@ -4,7 +4,7 @@
 #include "dueffectsettings.h"
 
 
-DU_OBJECT(DuDistortion)
+DU_OBJECT(DuDistortion);
 
 class DuDistortion : public DuEffectSettings
 {

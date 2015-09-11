@@ -4,7 +4,7 @@
 #include "../general/ducontainer.h"
 
 
-DU_OBJECT(DuDreamInstrParam)
+DU_OBJECT(DuDreamInstrParam);
 
 class DuDreamInstrParam : public DuContainer
 {

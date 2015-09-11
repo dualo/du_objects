@@ -4,7 +4,7 @@
 #include "dueffectsettings.h"
 
 
-DU_OBJECT(DuCompressor)
+DU_OBJECT(DuCompressor);
 
 class DuCompressor : public DuEffectSettings
 {

@@ -4,7 +4,7 @@
 #include "dueffectsettings.h"
 
 
-DU_OBJECT(DuMixer)
+DU_OBJECT(DuMixer);
 
 class DuMixer : public DuEffectSettings
 {

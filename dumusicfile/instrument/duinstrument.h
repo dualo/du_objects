@@ -4,19 +4,19 @@
 #include "../../general/ducontainer.h"
 
 
-DU_OBJECT(DuInstrumentInfo)
-DU_OBJECT(DuPreset)
-DU_OBJECT(DuMixer)
-DU_OBJECT(DuDistortion)
-DU_OBJECT(DuWah)
-DU_OBJECT(DuCompressor)
-DU_OBJECT(DuEqualizer)
-DU_OBJECT(DuDelay)
-DU_OBJECT(DuChorus)
-DU_OBJECT(DuVibrato)
-DU_OBJECT(DuAdsr)
+DU_OBJECT(DuInstrumentInfo);
+DU_OBJECT(DuPreset);
+DU_OBJECT(DuMixer);
+DU_OBJECT(DuDistortion);
+DU_OBJECT(DuWah);
+DU_OBJECT(DuCompressor);
+DU_OBJECT(DuEqualizer);
+DU_OBJECT(DuDelay);
+DU_OBJECT(DuChorus);
+DU_OBJECT(DuVibrato);
+DU_OBJECT(DuAdsr);
 
-DU_OBJECT(DuInstrument)
+DU_OBJECT(DuInstrument);
 
 class DuInstrument : public DuContainer
 {

@@ -7,14 +7,14 @@
 class MidiConversionHelper;
 class QIODevice;
 
-DU_OBJECT(DuArray)
-DU_OBJECT(DuControllers)
-DU_OBJECT(DuHeader)
-DU_OBJECT(DuReverb)
-DU_OBJECT(DuSongInfo)
-DU_OBJECT(DuTrack)
+DU_OBJECT(DuArray);
+DU_OBJECT(DuControllers);
+DU_OBJECT(DuHeader);
+DU_OBJECT(DuReverb);
+DU_OBJECT(DuSongInfo);
+DU_OBJECT(DuTrack);
 
-DU_OBJECT(DuMusic)
+DU_OBJECT(DuMusic);
 
 class DuMusic : public DuContainer
 {

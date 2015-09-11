@@ -17,7 +17,7 @@ Q_DECLARE_LOGGING_CATEGORY(LOG_CAT_DU_OBJECT)
     typedef QSharedPointer<name> name ## Ptr; \
     typedef QSharedPointer<const name> name ## ConstPtr; \
     QDebug operator<<(QDebug dbg, const name ## ConstPtr& obj); \
-    QDebug operator<<(QDebug dbg, const name ## Ptr& obj);
+    QDebug operator<<(QDebug dbg, const name ## Ptr& obj)
 
 #define DU_OBJECT_IMPL(name) \
     QDebug operator<<(QDebug dbg, const name ## ConstPtr& obj) \
@@ -34,7 +34,7 @@ Q_DECLARE_LOGGING_CATEGORY(LOG_CAT_DU_OBJECT)
     }
 
 
-DU_OBJECT(DuObject)
+DU_OBJECT(DuObject);
 
 class DuObject
 {

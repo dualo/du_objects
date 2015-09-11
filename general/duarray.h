@@ -5,7 +5,7 @@
 #include <QList>
 
 
-DU_OBJECT(DuArray)
+DU_OBJECT(DuArray);
 
 class DuArray : public DuObject
 {

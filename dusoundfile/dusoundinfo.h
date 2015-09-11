@@ -4,11 +4,11 @@
 #include "../general/ducontainer.h"
 
 
-DU_OBJECT(DuMixer)
-DU_OBJECT(DuArray)
-DU_OBJECT(DuInstrumentInfo)
+DU_OBJECT(DuMixer);
+DU_OBJECT(DuArray);
+DU_OBJECT(DuInstrumentInfo);
 
-DU_OBJECT(DuSoundInfo)
+DU_OBJECT(DuSoundInfo);
 
 class DuSoundInfo : public DuContainer
 {

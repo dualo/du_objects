@@ -9,9 +9,9 @@
 #include "dutonalitymodel.h"
 
 class DuMidiKeyMapper;
-DU_OBJECT(DuInstrument)
-DU_OBJECT(DuMidiFile)
-DU_OBJECT(DuMidiTrack)
+DU_OBJECT(DuInstrument);
+DU_OBJECT(DuMidiFile);
+DU_OBJECT(DuMidiTrack);
 
 class MidiConversionHelper : public QObject
 {

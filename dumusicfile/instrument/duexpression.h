@@ -8,7 +8,7 @@
 #define EXPRESSION_PRESET_OFFSET    0
 
 
-DU_OBJECT(DuExpression)
+DU_OBJECT(DuExpression);
 
 class DuExpression : public DuContainer
 {

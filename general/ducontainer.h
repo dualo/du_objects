@@ -57,7 +57,7 @@
     const QString className::Key ## key = QStringLiteral(#key);
 
 
-DU_OBJECT(DuContainer)
+DU_OBJECT(DuContainer);
 
 class DuContainer : public DuObject
 {

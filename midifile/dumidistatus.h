@@ -4,7 +4,7 @@
 #include "../general/dunumeric.h"
 
 
-DU_OBJECT(DuMidiStatus)
+DU_OBJECT(DuMidiStatus);
 
 class DuMidiStatus : public DuNumeric
 {

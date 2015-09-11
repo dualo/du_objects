@@ -8,7 +8,7 @@
 #define KEY_MIDISYSEXEVENT_DATA     QStringLiteral("Data")
 
 
-DU_OBJECT(DuMidiSysExEvent)
+DU_OBJECT(DuMidiSysExEvent);
 
 class DuMidiSysExEvent : public DuMidiBasicEvent
 {

@@ -5,12 +5,12 @@
 
 
 class MidiConversionHelper;
-DU_OBJECT(DuArray)
-DU_OBJECT(DuEvent)
-DU_OBJECT(DuInstrument)
-DU_OBJECT(DuMidiTrack)
+DU_OBJECT(DuArray);
+DU_OBJECT(DuEvent);
+DU_OBJECT(DuInstrument);
+DU_OBJECT(DuMidiTrack);
 
-DU_OBJECT(DuLoop)
+DU_OBJECT(DuLoop);
 
 class DuLoop : public DuContainer
 {

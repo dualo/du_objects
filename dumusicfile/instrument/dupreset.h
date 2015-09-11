@@ -7,11 +7,11 @@
 #define PARAMS_NUMERIC_SIZE     2
 
 
-DU_OBJECT(DuControllers)
-DU_OBJECT(DuEffectSet)
-DU_OBJECT(DuExpression)
+DU_OBJECT(DuControllers);
+DU_OBJECT(DuEffectSet);
+DU_OBJECT(DuExpression);
 
-DU_OBJECT(DuPreset)
+DU_OBJECT(DuPreset);
 
 class DuPreset : public DuContainer
 {

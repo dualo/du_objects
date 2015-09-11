@@ -11,10 +11,10 @@
 #define KEY_MIDITRACK_EVENTS    QStringLiteral("Events")
 
 
-DU_OBJECT(DuArray)
-DU_OBJECT(DuMidiBasicEvent)
+DU_OBJECT(DuArray);
+DU_OBJECT(DuMidiBasicEvent);
 
-DU_OBJECT(DuMidiTrack)
+DU_OBJECT(DuMidiTrack);
 
 class DuMidiTrack : public DuContainer
 {

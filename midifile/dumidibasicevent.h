@@ -8,7 +8,7 @@
 #define KEY_MIDIEVENT_STATUS    QStringLiteral("Status")
 
 
-DU_OBJECT(DuMidiBasicEvent)
+DU_OBJECT(DuMidiBasicEvent);
 
 class DuMidiBasicEvent : public DuContainer
 {

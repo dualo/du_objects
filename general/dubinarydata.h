@@ -5,7 +5,7 @@
 #include <QDataStream>
 
 
-DU_OBJECT(DuBinaryData)
+DU_OBJECT(DuBinaryData);
 
 class DuBinaryData : public DuValue
 {

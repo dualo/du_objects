@@ -4,7 +4,7 @@
 #include "../../general/ducontainer.h"
 
 
-DU_OBJECT(DuInstrumentInfo)
+DU_OBJECT(DuInstrumentInfo);
 
 class DuInstrumentInfo : public DuContainer
 {

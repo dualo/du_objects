@@ -4,7 +4,7 @@
 #include "../general/ducontainer.h"
 
 
-DU_OBJECT(DuSoundHeader)
+DU_OBJECT(DuSoundHeader);
 
 class DuSoundHeader : public DuContainer
 {

@@ -8,7 +8,7 @@
 #define HEADER_SIZE                 4 + 8 * HEADER_NAME_SIZE + 10 + 3
 
 
-DU_OBJECT(DuHeader)
+DU_OBJECT(DuHeader);
 
 class DuHeader : public DuContainer
 {

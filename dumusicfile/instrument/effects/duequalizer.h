@@ -4,7 +4,7 @@
 #include "dueffectsettings.h"
 
 
-DU_OBJECT(DuEqualizer)
+DU_OBJECT(DuEqualizer);
 
 class DuEqualizer : public DuEffectSettings
 {

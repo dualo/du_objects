@@ -11,7 +11,7 @@
 #define MICROSECS_PER_MIN           60000000
 
 
-DU_OBJECT(DuMidiMetaEvent)
+DU_OBJECT(DuMidiMetaEvent);
 
 class DuMidiMetaEvent : public DuMidiBasicEvent
 {

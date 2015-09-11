@@ -5,9 +5,9 @@
 
 
 class MidiConversionHelper;
-DU_OBJECT(DuMidiChannelEvent)
+DU_OBJECT(DuMidiChannelEvent);
 
-DU_OBJECT(DuEvent)
+DU_OBJECT(DuEvent);
 
 class DuEvent : public DuContainer
 {

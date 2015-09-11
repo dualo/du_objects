@@ -14,7 +14,7 @@
 #define CONTROLS_NUMERIC_SIZE           2
 
 
-DU_OBJECT(DuControllers)
+DU_OBJECT(DuControllers);
 
 class DuControllers : public DuContainer
 {

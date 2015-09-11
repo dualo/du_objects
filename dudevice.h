@@ -4,9 +4,9 @@
 #include "general/ducontainer.h"
 
 
-DU_OBJECT(DuVersion)
+DU_OBJECT(DuVersion);
 
-DU_OBJECT(DuDevice)
+DU_OBJECT(DuDevice);
 
 class DuDevice : public DuContainer
 {

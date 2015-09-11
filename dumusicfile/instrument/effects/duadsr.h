@@ -4,7 +4,7 @@
 #include "dueffectsettings.h"
 
 
-DU_OBJECT(DuAdsr)
+DU_OBJECT(DuAdsr);
 
 class DuAdsr : public DuEffectSettings
 {

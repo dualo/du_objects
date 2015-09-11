@@ -11,9 +11,9 @@
 
 
 class MidiConversionHelper;
-DU_OBJECT(DuMixer)
+DU_OBJECT(DuMixer);
 
-DU_OBJECT(DuSongInfo)
+DU_OBJECT(DuSongInfo);
 
 class DuSongInfo : public DuContainer
 {

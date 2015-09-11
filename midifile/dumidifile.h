@@ -15,10 +15,10 @@
 #define KEY_MIDIFILE_TRACKS     QStringLiteral("Tracks")
 
 
-DU_OBJECT(DuArray)
-DU_OBJECT(DuMidiTrack)
+DU_OBJECT(DuArray);
+DU_OBJECT(DuMidiTrack);
 
-DU_OBJECT(DuMidiFile)
+DU_OBJECT(DuMidiFile);
 
 class DuMidiFile : public DuContainer
 {

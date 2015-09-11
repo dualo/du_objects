@@ -4,7 +4,7 @@
 #include "dueffectsettings.h"
 
 
-DU_OBJECT(DuVibrato)
+DU_OBJECT(DuVibrato);
 
 class DuVibrato : public DuEffectSettings
 {

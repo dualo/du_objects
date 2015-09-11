@@ -8,7 +8,7 @@
 #define KEY_MIDICHANNELEVENT_VALUE  QStringLiteral("Value")
 
 
-DU_OBJECT(DuMidiChannelEvent)
+DU_OBJECT(DuMidiChannelEvent);
 
 class DuMidiChannelEvent : public DuMidiBasicEvent
 {

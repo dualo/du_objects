@@ -4,9 +4,9 @@
 #include "general/ducontainer.h"
 
 
-DU_OBJECT(DuArray)
+DU_OBJECT(DuArray);
 
-DU_OBJECT(DuProfile)
+DU_OBJECT(DuProfile);
 
 class DuProfile : public DuContainer
 {

@@ -8,7 +8,7 @@
 #define EFFECTSET_PRESET_OFFSET     36
 
 
-DU_OBJECT(DuEffectSet)
+DU_OBJECT(DuEffectSet);
 
 class DuEffectSet : public DuContainer
 {

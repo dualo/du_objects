@@ -4,7 +4,7 @@
 #include "../general/ducontainer.h"
 
 
-DU_OBJECT(DuNote)
+DU_OBJECT(DuNote);
 
 class DuNote : public DuContainer
 {

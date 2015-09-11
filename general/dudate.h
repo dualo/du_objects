@@ -6,7 +6,7 @@
 #include <QDateTime>
 
 
-DU_OBJECT(DuDate)
+DU_OBJECT(DuDate);
 
 class DuDate : public DuValue
 {
