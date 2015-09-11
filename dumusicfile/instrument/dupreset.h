@@ -6,11 +6,6 @@
 #include "dueffectset.h"
 
 
-#define KEY_PRESET_EXPRESSION           "ExpressionSettings"
-#define KEY_PRESET_CONTROLLERS          "ControllerParameters"
-#define KEY_PRESET_EFFECTSET            "EffectChainSettings"
-
-
 #define PARAMS_NUMERIC_SIZE     2
 
 
@@ -31,14 +26,9 @@ public:
 
     int size() const;
 
-    DuExpressionConstPtr getExpression() const;
-    void setExpression(const DuExpressionPtr &expression);
-
-    DuControllersConstPtr getControllers() const;
-    void setControllers(const DuControllersPtr &controllers);
-
-    DuEffectSetConstPtr getEffectSet() const;
-    void setEffectSet(const DuEffectSetPtr &effectSet);
+    DU_KEY_ACCESSORS_OBJECT(Expression,  DuExpression)
+    DU_KEY_ACCESSORS_OBJECT(Controllers, DuControllers)
+    DU_KEY_ACCESSORS_OBJECT(EffectSet,   DuEffectSet)
 };
 
 #endif // DUPRESET_H

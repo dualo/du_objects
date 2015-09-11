@@ -42,7 +42,8 @@ QUrl DuUrl::getUrl() const
     return getValue().toUrl();
 }
 
-void DuUrl::setUrl(const QUrl &url)
+bool DuUrl::setUrl(const QUrl &url)
 {
     setValue(url);
+    return true;
 }

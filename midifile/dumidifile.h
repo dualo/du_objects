@@ -5,15 +5,15 @@
 #include <QIODevice>
 
 
-#define MIDI_HEADER_ID_VALUE            "MThd"
-#define MIDI_HEADER_ID_SIZE             4
-#define MIDI_HEADER_CHUNK_SIZE          0x06
+#define MIDI_HEADER_ID_VALUE    "MThd"
+#define MIDI_HEADER_ID_SIZE     4
+#define MIDI_HEADER_CHUNK_SIZE  0x06
 
-#define DUMUSIC_DIVISION                0x0040
+#define DUMUSIC_DIVISION        0x0040
 
-#define KEY_MIDIFILE_FORMAT             "Format"
-#define KEY_MIDIFILE_DIVISION           "Division"
-#define KEY_MIDIFILE_TRACKS             "Tracks"
+#define KEY_MIDIFILE_FORMAT     QStringLiteral("Format")
+#define KEY_MIDIFILE_DIVISION   QStringLiteral("Division")
+#define KEY_MIDIFILE_TRACKS     QStringLiteral("Tracks")
 
 
 DU_OBJECT(DuMidiFile)
@@ -47,7 +47,7 @@ public:
 
     void setTracks(const DuArrayPtr &array);
     bool appendTrack(const DuMidiTrackPtr &track);
-    bool appendTracks(const QList<DuMidiTrackPtr> &tracks);
+    bool appendTracks(const QVector<DuMidiTrackPtr> &tracks);
 };
 
 #endif // DUMIDIFILE_H

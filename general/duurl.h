@@ -19,7 +19,7 @@ public:
     QDebug debugPrint(QDebug dbg) const;
 
     QUrl getUrl() const;
-    void setUrl(const QUrl &url);
+    bool setUrl(const QUrl &url);
 };
 
 #endif // DUURL_H

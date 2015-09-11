@@ -4,19 +4,6 @@
 #include "dueffectsettings.h"
 
 
-#define KEY_CHORUS_MODE                     "Mode"
-#define KEY_CHORUS_EFFECTLEVEL              "EffectLevel"
-#define KEY_CHORUS_DELAYTIME                "DelayTime"
-#define KEY_CHORUS_FEEDBACK                 "Feedback"
-#define KEY_CHORUS_INPUTHIGHPASSFILTER      "InputHighPassFilterFrequency"
-#define KEY_CHORUS_HDAMP                    "HDAmp"
-#define KEY_CHORUS_MODULATIONDEPTH          "ModulationDepth"
-#define KEY_CHORUS_MODULATIONRATE           "ModulationRate"
-#define KEY_CHORUS_TREMOLOSHAPE             "TremoloModulationShape"
-#define KEY_CHORUS_ROTARYSPEED              "RotarySpeed"
-#define KEY_CHORUS_EFFECTNAME               "EffectName"
-
-
 DU_OBJECT(DuChorus)
 
 class DuChorus : public DuEffectSettings
@@ -34,38 +21,18 @@ public:
 
     int size() const;
 
-    int getMode() const;
-    bool setMode(int value);
 
-    int getEffectLevel() const;
-    bool setEffectLevel(int value);
-
-    int getDelayTime() const;
-    bool setDelayTime(int value);
-
-    int getFeedback() const;
-    bool setFeedback(int value);
-
-    int getInputHighPassFilterFrequency() const;
-    bool setInputHighPassFilterFrequency(int value);
-
-    int getHDAmp() const;
-    bool setHDAmp(int value);
-
-    int getModulationDepth() const;
-    bool setModulationDepth(int value);
-
-    int getModulationRate() const;
-    bool setModulationRate(int value);
-
-    int getTremoloShape() const;
-    bool setTremoloShape(int value);
-
-    int getRotarySpeed() const;
-    bool setRotarySpeed(int value);
-
-    QString getEffectName() const;
-    bool setEffectName(const QString &value);
+    DU_KEY_ACCESSORS(Mode,                         int)
+    DU_KEY_ACCESSORS(EffectLevel,                  int)
+    DU_KEY_ACCESSORS(DelayTime,                    int)
+    DU_KEY_ACCESSORS(Feedback,                     int)
+    DU_KEY_ACCESSORS(InputHighPassFilterFrequency, int)
+    DU_KEY_ACCESSORS(HDAmp,                        int)
+    DU_KEY_ACCESSORS(ModulationDepth,              int)
+    DU_KEY_ACCESSORS(ModulationRate,               int)
+    DU_KEY_ACCESSORS(TremoloShape,                 int)
+    DU_KEY_ACCESSORS(RotarySpeed,                  int)
+    DU_KEY_ACCESSORS(EffectName,                   QString)
 };
 
 #endif // DUCHORUS_H

@@ -9,20 +9,20 @@ DU_OBJECT_IMPL(DuVibrato)
 DuVibrato::DuVibrato() :
     DuEffectSettings()
 {
-    addChild(KEY_VIB_DEPTH,
+    addChild(KeyDepth,
              new DuNumeric(FX_VIB_DEPTH_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_VIB_DEPTH_MAXVALUE, FX_VIB_DEPTH_MINVALUE));
 
-    addChild(KEY_VIB_DELAY,
+    addChild(KeyDelay,
              new DuNumeric(FX_VIB_DELAY_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_VIB_DELAY_MAXVALUE, FX_VIB_DELAY_MINVALUE));
 
-    addChild(KEY_VIB_RATE,
+    addChild(KeyRate,
              new DuNumeric(FX_VIB_RATE_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_VIB_RATE_MAXVALUE, FX_VIB_RATE_MINVALUE));
 
-    addChild(KEY_VIB_EFFECTNAME,
-             new DuString(QString(DEFAULT_EFFECTNAME), NAME_CARACT));
+    addChild(KeyEffectName,
+             new DuString(QStringLiteral(DEFAULT_EFFECTNAME), NAME_CARACT));
 }
 
 DuVibrato::~DuVibrato()
@@ -58,10 +58,10 @@ DuVibratoPtr DuVibrato::fromDuMusicBinary(const FX_vibrato &du_vibrato)
 
 DuVibratoPtr DuVibrato::fromJson(const QJsonObject &jsonVibrato)
 {
-    QJsonValue jsonDepth        = jsonVibrato[KEY_VIB_DEPTH];
-    QJsonValue jsonDelay        = jsonVibrato[KEY_VIB_DELAY];
-    QJsonValue jsonRate         = jsonVibrato[KEY_VIB_RATE];
-    QJsonValue jsonEffectName   = jsonVibrato[KEY_VIB_EFFECTNAME];
+    QJsonValue jsonDepth        = jsonVibrato[KeyDepth];
+    QJsonValue jsonDelay        = jsonVibrato[KeyDelay];
+    QJsonValue jsonRate         = jsonVibrato[KeyRate];
+    QJsonValue jsonEffectName   = jsonVibrato[KeyEffectName];
 
     if (        !jsonDepth.isDouble()   ||  !jsonDelay.isDouble()
             ||  !jsonRate.isDouble()    ||  !jsonEffectName.isString())
@@ -137,83 +137,7 @@ int DuVibrato::size() const
 }
 
 
-int DuVibrato::getDepth() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_VIB_DEPTH);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuVibrato::setDepth(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_VIB_DEPTH);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuVibrato::getDelay() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_VIB_DELAY);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuVibrato::setDelay(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_VIB_DELAY);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuVibrato::getRate() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_VIB_RATE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuVibrato::setRate(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_VIB_RATE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-QString DuVibrato::getEffectName() const
-{
-    const DuStringConstPtr &tmp = getChildAs<DuString>(KEY_VIB_EFFECTNAME);
-
-    if (tmp == NULL)
-        return QString();
-
-    return tmp->getString();
-}
-
-bool DuVibrato::setEffectName(const QString &value)
-{
-    DuStringPtr tmp = getChildAs<DuString>(KEY_VIB_EFFECTNAME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setString(value);
-}
+DU_KEY_ACCESSORS_IMPL(DuVibrato, Depth,      Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuVibrato, Delay,      Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuVibrato, Rate,       Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuVibrato, EffectName, String, QString, QString())

@@ -9,44 +9,41 @@ DU_OBJECT_IMPL(DuInstrumentInfo)
 DuInstrumentInfo::DuInstrumentInfo() :
     DuContainer()
 {
-    addChild(KEY_INSTRINFO_NAME, new DuString(NAME_CARACT));
+    addChild(KeyName, new DuString(NAME_CARACT));
 
-    addChild(KEY_INSTRINFO_DREAMPROGRAMCHANGE,
+    addChild(KeyDreamProgramChange,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
-    addChild(KEY_INSTRINFO_MIDICONTROLCHANGE0,
+    addChild(KeyMidiControlChange0,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
-    addChild(KEY_INSTRINFO_KEYMAP,
+    addChild(KeyKeyMapping,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x04, 0x00));
 
-    addChild(KEY_INSTRINFO_OCTAVE,
+    addChild(KeyOctave,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
-    addChild(KEY_INSTRINFO_ID,
-             new DuNumeric(0));
+    addChild(KeyID, new DuNumeric(0));
 
-    addChild(KEY_INSTRINFO_ACTIVENOTEOFF,
+    addChild(KeyActiveNoteOff,
              new DuNumeric(0x01, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
-    addChild(KEY_INSTRINFO_CATEGORY,
-             new DuString(NAME_CARACT));
+    addChild(KeyCategory, new DuString(NAME_CARACT));
 
-    addChild(KEY_INSTRINFO_RELVOLUME,
+    addChild(KeyRelativeVolume,
              new DuNumeric(0x40, NUMERIC_DEFAULT_SIZE,
                            0xFF, 0x00));
 
-    addChild(KEY_INSTRINFO_TYPE,
+    addChild(KeyType,
              new DuNumeric(INSTR_HARMONIC, NUMERIC_DEFAULT_SIZE,
                            NUM_INSTR_TYPE, INSTR_HARMONIC));
 
-    addChild(KEY_INSTRINFO_USERID,
-             new DuString(16));
+    addChild(KeyUserID, new DuString(16));
 }
 
 DuInstrumentInfo::~DuInstrumentInfo()
@@ -69,7 +66,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrI
     verif = instrInfo->setDreamProgramChange(du_instrInfo.instr_midi_pc) ? verif : false;
     verif = instrInfo->setMidiControlChange0(du_instrInfo.instr_midi_C0) ? verif : false;
 
-    verif = instrInfo->setKeyMap(du_instrInfo.instr_key_map) ? verif : false;
+    verif = instrInfo->setKeyMapping(du_instrInfo.instr_key_map) ? verif : false;
     verif = instrInfo->setOctave(du_instrInfo.instr_octave) ? verif : false;
     verif = instrInfo->setID(du_instrInfo.instr_id) ? verif : false;
 
@@ -95,17 +92,17 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrI
 
 DuInstrumentInfoPtr DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
 {
-    QJsonValue jsonName         = jsonInstrInfo[KEY_INSTRINFO_NAME];
-    QJsonValue jsonProgChange   = jsonInstrInfo[KEY_INSTRINFO_DREAMPROGRAMCHANGE];
-    QJsonValue jsonCtrlChange   = jsonInstrInfo[KEY_INSTRINFO_MIDICONTROLCHANGE0];
-    QJsonValue jsonKeyMap       = jsonInstrInfo[KEY_INSTRINFO_KEYMAP];
-    QJsonValue jsonOctave       = jsonInstrInfo[KEY_INSTRINFO_OCTAVE];
-    QJsonValue jsonId           = jsonInstrInfo[KEY_INSTRINFO_ID];
-    QJsonValue jsonNoteOff      = jsonInstrInfo[KEY_INSTRINFO_ACTIVENOTEOFF];
-    QJsonValue jsonCategory     = jsonInstrInfo[KEY_INSTRINFO_CATEGORY];
-    QJsonValue jsonRelVolume    = jsonInstrInfo[KEY_INSTRINFO_RELVOLUME];
-    QJsonValue jsonType         = jsonInstrInfo[KEY_INSTRINFO_TYPE];
-    QJsonValue jsonUserId       = jsonInstrInfo[KEY_INSTRINFO_USERID];
+    QJsonValue jsonName         = jsonInstrInfo[KeyName];
+    QJsonValue jsonProgChange   = jsonInstrInfo[KeyDreamProgramChange];
+    QJsonValue jsonCtrlChange   = jsonInstrInfo[KeyMidiControlChange0];
+    QJsonValue jsonKeyMap       = jsonInstrInfo[KeyKeyMapping];
+    QJsonValue jsonOctave       = jsonInstrInfo[KeyOctave];
+    QJsonValue jsonId           = jsonInstrInfo[KeyID];
+    QJsonValue jsonNoteOff      = jsonInstrInfo[KeyActiveNoteOff];
+    QJsonValue jsonCategory     = jsonInstrInfo[KeyCategory];
+    QJsonValue jsonRelVolume    = jsonInstrInfo[KeyRelativeVolume];
+    QJsonValue jsonType         = jsonInstrInfo[KeyType];
+    QJsonValue jsonUserId       = jsonInstrInfo[KeyUserID];
 
     if (        !jsonName.isString()        ||  !jsonProgChange.isDouble()
             ||  !jsonCtrlChange.isDouble()  ||  !jsonKeyMap.isDouble()
@@ -130,7 +127,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
     verif = instrInfo->setDreamProgramChange(jsonProgChange.toInt()) ? verif : false;
     verif = instrInfo->setMidiControlChange0(jsonCtrlChange.toInt()) ? verif : false;
 
-    verif = instrInfo->setKeyMap(jsonKeyMap.toInt()) ? verif : false;
+    verif = instrInfo->setKeyMapping(jsonKeyMap.toInt()) ? verif : false;
     verif = instrInfo->setOctave(jsonOctave.toInt()) ? verif : false;
     verif = instrInfo->setID(jsonId.toInt()) ? verif : false;
 
@@ -173,7 +170,7 @@ QByteArray DuInstrumentInfo::toDuMusicBinary() const
         return QByteArray();
     du_instrumentinfo.instr_midi_C0 = tmpNum;
 
-    tmpNum = getKeyMap();
+    tmpNum = getKeyMapping();
     if (tmpNum == -1)
         return QByteArray();
     du_instrumentinfo.instr_key_map = tmpNum;
@@ -241,254 +238,20 @@ int DuInstrumentInfo::size() const
 }
 
 
-QString DuInstrumentInfo::getName() const
-{
-    const DuStringConstPtr &tmp =
-            getChildAs<DuString>(KEY_INSTRINFO_NAME);
+DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, Name,               String, QString, QString())
 
-    if (tmp == NULL)
-        return QString();
+DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, DreamProgramChange, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, MidiControlChange0, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, KeyMapping,         Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, Octave,             Numeric, int, -1)
 
-    return tmp->getString();
-}
+DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, UserID,             String, QString, QString())
+DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, ID,                 Numeric, int, -1)
 
-bool DuInstrumentInfo::setName(const QString &value)
-{
-    const DuStringPtr &tmp =
-            getChildAs<DuString>(KEY_INSTRINFO_NAME);
+DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, ActiveNoteOff,      Numeric, int, -1)
 
-    if (tmp == NULL)
-        return false;
+DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, Category,           String, QString, QString())
 
-    return tmp->setString(value);
-}
+DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, RelativeVolume,     Numeric, int, -1)
 
-
-int DuInstrumentInfo::getDreamProgramChange() const
-{
-    const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_INSTRINFO_DREAMPROGRAMCHANGE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuInstrumentInfo::setDreamProgramChange(int value)
-{
-    const DuNumericPtr &tmp =
-            getChildAs<DuNumeric>(KEY_INSTRINFO_DREAMPROGRAMCHANGE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuInstrumentInfo::getMidiControlChange0() const
-{
-    const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_INSTRINFO_MIDICONTROLCHANGE0);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuInstrumentInfo::setMidiControlChange0(int value)
-{
-    const DuNumericPtr &tmp =
-            getChildAs<DuNumeric>(KEY_INSTRINFO_MIDICONTROLCHANGE0);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuInstrumentInfo::getKeyMap() const
-{
-    const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_INSTRINFO_KEYMAP);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuInstrumentInfo::setKeyMap(int value)
-{
-    const DuNumericPtr &tmp =
-            getChildAs<DuNumeric>(KEY_INSTRINFO_KEYMAP);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuInstrumentInfo::getOctave() const
-{
-    const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_INSTRINFO_OCTAVE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuInstrumentInfo::setOctave(int value)
-{
-    const DuNumericPtr &tmp =
-            getChildAs<DuNumeric>(KEY_INSTRINFO_OCTAVE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuInstrumentInfo::getID() const
-{
-    const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_INSTRINFO_ID);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuInstrumentInfo::setID(int value)
-{
-    const DuNumericPtr &tmp =
-            getChildAs<DuNumeric>(KEY_INSTRINFO_ID);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuInstrumentInfo::getActiveNoteOff() const
-{
-    const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_INSTRINFO_ACTIVENOTEOFF);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuInstrumentInfo::setActiveNoteOff(int value)
-{
-    const DuNumericPtr &tmp =
-            getChildAs<DuNumeric>(KEY_INSTRINFO_ACTIVENOTEOFF);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-QString DuInstrumentInfo::getCategory() const
-{
-    const DuStringConstPtr &tmp =
-            getChildAs<DuString>(KEY_INSTRINFO_CATEGORY);
-
-    if (tmp == NULL)
-        return QString();
-
-    return tmp->getString();
-}
-
-bool DuInstrumentInfo::setCategory(const QString &value)
-{
-    const DuStringPtr &tmp =
-            getChildAs<DuString>(KEY_INSTRINFO_CATEGORY);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setString(value);
-}
-
-
-int DuInstrumentInfo::getRelativeVolume() const
-{
-    const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_INSTRINFO_RELVOLUME);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuInstrumentInfo::setRelativeVolume(int value)
-{
-    const DuNumericPtr &tmp =
-            getChildAs<DuNumeric>(KEY_INSTRINFO_RELVOLUME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuInstrumentInfo::getType() const
-{
-    const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_INSTRINFO_TYPE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuInstrumentInfo::setType(int value)
-{
-    const DuNumericPtr &tmp =
-            getChildAs<DuNumeric>(KEY_INSTRINFO_TYPE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-QString DuInstrumentInfo::getUserID() const
-{
-    const DuStringConstPtr &tmp =
-            getChildAs<DuString>(KEY_INSTRINFO_USERID);
-
-    if (tmp == NULL)
-        return QString();
-
-    return tmp->getString();
-}
-
-bool DuInstrumentInfo::setUserID(const QString &value)
-{
-    const DuStringPtr &tmp =
-            getChildAs<DuString>(KEY_INSTRINFO_USERID);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setString(value);
-}
+DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, Type,               Numeric, int, -1)

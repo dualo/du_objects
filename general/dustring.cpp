@@ -12,7 +12,7 @@ DuString::DuString(const QString &value, int maxSize) :
 DuString::DuString(int maxSize) :
     DuValue(maxSize)
 {
-    setString("");
+    setString(QString());
 }
 
 DuString::~DuString()

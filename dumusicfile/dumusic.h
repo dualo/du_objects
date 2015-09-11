@@ -8,18 +8,6 @@
 #include "instrument/effects/dureverb.h"
 
 
-#define KEY_MUSIC_HEADER        "FileHeader"
-#define KEY_MUSIC_CONTROLLERS   "ControllerParameters"
-#define KEY_MUSIC_SONGINFO      "SongInfo"
-#define KEY_MUSIC_REVERB        "ReverbSettings"
-#define KEY_MUSIC_TRACKS        "Tracks"
-
-#define KEY_MUSIC_TRANSPOSE     "Transpose"
-
-#define KEY_MUSIC_PLAYHEAD      "Playhead"
-#define KEY_MUSIC_STATE         "State"
-
-
 class QIODevice;
 
 DU_OBJECT(DuMusic)
@@ -60,31 +48,19 @@ public:
     int getFileVersion() const;
     bool setFileVersion(int value);
 
-    DuHeaderConstPtr getHeader() const;
-    void setHeader(const DuHeaderPtr &header);
+    DU_KEY_ACCESSORS_OBJECT(Header,      DuHeader)
+    DU_KEY_ACCESSORS_OBJECT(Controllers, DuControllers)
+    DU_KEY_ACCESSORS_OBJECT(SongInfo,    DuSongInfo)
+    DU_KEY_ACCESSORS_OBJECT(Reverb,      DuReverb)
+    DU_KEY_ACCESSORS_OBJECT(Tracks,      DuArray)
 
-    DuControllersConstPtr getControllers() const;
-    void setControllers(const DuControllersPtr &controllers);
-
-    DuSongInfoConstPtr getSongInfo() const;
-    void setSongInfo(const DuSongInfoPtr &songInfo);
-
-    DuReverbConstPtr getReverb() const;
-    void setReverb(const DuReverbPtr &reverb);
-
-    DuArrayConstPtr getTracks() const;
-    void setTracks(const DuArrayPtr &array);
-
+public:
     bool appendTrack(const DuTrackPtr &track);
 
-    int getTranspose() const;
-    bool setTranspose(int value);
+    DU_KEY_ACCESSORS(Transpose, int)
 
-    int getPlayhead() const;
-    bool setPlayhead(int value);
-
-    int getState() const;
-    bool setState(int value);
+    DU_KEY_ACCESSORS(Playhead,  int)
+    DU_KEY_ACCESSORS(State,     int)
 
 private:
     int m_databaseId;

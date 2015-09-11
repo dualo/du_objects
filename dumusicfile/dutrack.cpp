@@ -10,15 +10,15 @@ DU_OBJECT_IMPL(DuTrack)
 DuTrack::DuTrack() :
     DuContainer()
 {
-    addChild(KEY_TRACK_CHANNEL,
+    addChild(KeyChannel,
              new DuNumeric(0, NUMERIC_DEFAULT_SIZE,
                            MUSIC_MAXTRACK, 0));
 
-    addChild(KEY_TRACK_CURRENTLOOP,
+    addChild(KeyCurrentLoop,
              new DuNumeric(0, NUMERIC_DEFAULT_SIZE,
                            MUSIC_MAXLAYER - 1, 0));
 
-    addChild(KEY_TRACK_LOOPS, new DuArray(MUSIC_MAXLAYER));
+    addChild(KeyLoops, new DuArray(MUSIC_MAXLAYER));
 }
 
 DuTrack::~DuTrack()
@@ -115,9 +115,9 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
 
 DuTrackPtr DuTrack::fromJson(const QJsonObject &jsonTrack)
 {
-    QJsonValue jsonChannel      = jsonTrack[KEY_TRACK_CHANNEL];
-    QJsonValue jsonCurrentLoop  = jsonTrack[KEY_TRACK_CURRENTLOOP];
-    QJsonValue jsonLoops        = jsonTrack[KEY_TRACK_LOOPS];
+    QJsonValue jsonChannel      = jsonTrack[KeyChannel];
+    QJsonValue jsonCurrentLoop  = jsonTrack[KeyCurrentLoop];
+    QJsonValue jsonLoops        = jsonTrack[KeyLoops];
 
     if (        !jsonChannel.isDouble() ||  !jsonCurrentLoop.isDouble()
             ||  !jsonLoops.isArray())
@@ -286,8 +286,8 @@ QByteArray DuTrack::toDuMusicBinary() const
 }
 
 
-QList<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef,
-                                                  int transpose) const
+QVector<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef,
+                                                    int transpose) const
 {
     const DuArrayConstPtr &loops = getLoops();
     if (loops == NULL)
@@ -296,7 +296,7 @@ QList<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef,
                 << "DuTrack::toDuMidiTrackArray():\n"
                 << "KEY_TRACK_LOOPS is NULL";
 
-        return QList<DuMidiTrackPtr>();
+        return QVector<DuMidiTrackPtr>();
     }
 
     int channel = getChannel();
@@ -306,10 +306,10 @@ QList<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef,
                 << "DuTrack::toDuMidiTrackArray():\n"
                 << "invalid channel";
 
-        return QList<DuMidiTrackPtr>();
+        return QVector<DuMidiTrackPtr>();
     }
 
-    QList<DuMidiTrackPtr> retList;
+    QVector<DuMidiTrackPtr> retList;
 
     for (int i = 0; i < MUSIC_MAXLAYER; i++)
     {
@@ -320,7 +320,7 @@ QList<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef,
                     << "DuTrack::toDuMidiTrackArray():\n"
                     << "a loop was NULL";
 
-            return QList<DuMidiTrackPtr>();
+            return QVector<DuMidiTrackPtr>();
         }
 
         const DuMidiTrackPtr &midiTrack =
@@ -340,59 +340,13 @@ int DuTrack::size() const
 }
 
 
-int DuTrack::getChannel() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_TRACK_CHANNEL);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuTrack::setChannel(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_TRACK_CHANNEL);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuTrack::getCurrentLoop() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_TRACK_CURRENTLOOP);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuTrack::setCurrentLoop(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_TRACK_CURRENTLOOP);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-DuArrayConstPtr DuTrack::getLoops() const
-{
-    return getChildAs<DuArray>(KEY_TRACK_LOOPS);
-}
-
-void DuTrack::setLoops(const DuArrayPtr& array)
-{
-    addChild(KEY_TRACK_LOOPS, array);
-}
+DU_KEY_ACCESSORS_IMPL(DuTrack, Channel,     Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuTrack, CurrentLoop, Numeric, int, -1)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuTrack, Loops, DuArray)
 
 bool DuTrack::appendLoop(const DuLoopPtr &loop)
 {
-    const DuArrayPtr &tmp = getChildAs<DuArray>(KEY_TRACK_LOOPS);
+    const DuArrayPtr &tmp = getLoops();
 
     if (tmp == NULL)
         return false;
@@ -406,14 +360,14 @@ int DuTrack::eventsSize() const
     int eventsSize = 0;
     int tmpSize = 0;
 
-    const DuArrayConstPtr &loops = getChildAs<DuArray>(KEY_TRACK_LOOPS);
+    const DuArrayConstPtr &loops = getLoops();
     if (loops == NULL)
         return -1;
 
     int count = loops->count();
     for (int i = 0; i < count; i++)
     {
-        const DuLoopConstPtr &loop = loops->at(i).dynamicCast<const DuLoop>();
+        const DuLoopConstPtr &loop = loops->atAs<DuLoop>(i);
         if (loop == NULL)
             return -1;
 

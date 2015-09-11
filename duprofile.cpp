@@ -17,16 +17,16 @@ DU_OBJECT_IMPL(DuProfile)
 DuProfile::DuProfile() :
     DuContainer()
 {
-    addChild(KEY_PROFILE_FIRSTNAME,     new DuString(""));
-    addChild(KEY_PROFILE_LASTNAME,      new DuString(""));
-    addChild(KEY_PROFILE_PSEUDO,        new DuString(""));
-    addChild(KEY_PROFILE_MAIL,          new DuString(""));
-    addChild(KEY_PROFILE_AVATAR_URL,    new DuUrl);
-    addChild(KEY_PROFILE_CREATION_DATE, new DuDate);
-    addChild(KEY_PROFILE_ROLE,          new DuNumeric(None));
-    addChild(KEY_PROFILE_GUID,          new DuNumeric(-1));
-    addChild(KEY_PROFILE_DUTOUCH_LIST,  new DuArray);
-    addChild(KEY_PROFILE_FRIENDS,       new DuArray);
+    addChild(KeyFirstname,    new DuString);
+    addChild(KeyLastname,     new DuString);
+    addChild(KeyPseudo,       new DuString);
+    addChild(KeyMail,         new DuString);
+    addChild(KeyAvatarUrl,    new DuUrl);
+    addChild(KeyCreationDate, new DuDate);
+    addChild(KeyRole,         new DuNumeric(None));
+    addChild(KeyGUID,         new DuNumeric(-1));
+    addChild(KeyDuTouchList,  new DuArray);
+    addChild(KeyFriends,      new DuArray);
 }
 
 DuObjectPtr DuProfile::clone() const
@@ -43,23 +43,23 @@ DuProfilePtr DuProfile::fromJson(const QJsonObject &jsonProfile, int recursionLe
 
     DuProfilePtr outProfile(new DuProfile);
 
-    outProfile->setFirstname(jsonProfile.value("Firstname").toString());
-    outProfile->setLastname(jsonProfile.value("Lastname").toString());
-    outProfile->setPseudo(jsonProfile.value("username").toString());
-    outProfile->setMail(jsonProfile.value("email").toString());
-    outProfile->setCreationDate(QDateTime::fromTime_t(jsonProfile.value("time_created").toInt()));
-    outProfile->setGUID(jsonProfile.value("global_id").toInt());
+    outProfile->setFirstname(jsonProfile.value(QStringLiteral("Firstname")).toString());
+    outProfile->setLastname(jsonProfile.value(QStringLiteral("Lastname")).toString());
+    outProfile->setPseudo(jsonProfile.value(QStringLiteral("username")).toString());
+    outProfile->setMail(jsonProfile.value(QStringLiteral("email")).toString());
+    outProfile->setCreationDate(QDateTime::fromTime_t(jsonProfile.value(QStringLiteral("time_created")).toInt()));
+    outProfile->setGUID(jsonProfile.value(QStringLiteral("global_id")).toInt());
 
-    QString role = jsonProfile.value("role").toString();
-    if (role == "default" || role == "")
+    QString role = jsonProfile.value(QStringLiteral("role")).toString();
+    if (role == QLatin1String("default") || role.isEmpty())
         outProfile->setRole(Default);
-    else if (role == "beta")
+    else if (role == QLatin1String("beta"))
         outProfile->setRole(Beta);
-    else if (role == "temp")
+    else if (role == QLatin1String("temp"))
         outProfile->setRole(Temp);
-    else if (role == "test")
+    else if (role == QLatin1String("test"))
         outProfile->setRole(Test);
-    else if (role == "dev")
+    else if (role == QLatin1String("dev"))
         outProfile->setRole(Dev);
     else
     {
@@ -69,15 +69,15 @@ DuProfilePtr DuProfile::fromJson(const QJsonObject &jsonProfile, int recursionLe
 
     // DU-TOUCH LIST
     DuArrayPtr list(new DuArray);
-    QJsonArray array = jsonProfile.value("device_list").toArray();
+    QJsonArray array = jsonProfile.value(QStringLiteral("device_list")).toArray();
     for (QJsonArray::iterator it = array.begin(); it != array.end(); ++it)
     {
-        QString serial = (*it).toObject().value("dutouch_serial").toString();
-        QString name = (*it).toObject().value("dutouch_name").toString();
-        QString firmware = (*it).toObject().value("firmware").toString();
-        QString firmwareUpdateDate = (*it).toObject().value("firmware_update_date").toString();
-        QString soundbank = (*it).toObject().value("soundbank").toString();
-        QString soundbankUpdateDate = (*it).toObject().value("soundbank_update_date").toString();
+        QString serial = (*it).toObject().value(QStringLiteral("dutouch_serial")).toString();
+        QString name = (*it).toObject().value(QStringLiteral("dutouch_name")).toString();
+        QString firmware = (*it).toObject().value(QStringLiteral("firmware")).toString();
+        QString firmwareUpdateDate = (*it).toObject().value(QStringLiteral("firmware_update_date")).toString();
+        QString soundbank = (*it).toObject().value(QStringLiteral("soundbank")).toString();
+        QString soundbankUpdateDate = (*it).toObject().value(QStringLiteral("soundbank_update_date")).toString();
 
         DuTouchPtr device(new DuTouch);
         device->setSerialNumber(serial);
@@ -88,21 +88,21 @@ DuProfilePtr DuProfile::fromJson(const QJsonObject &jsonProfile, int recursionLe
         device->setConnected(false);
         device->setBusy(false);
         device->setVersion(firmware);
-        device->setUpdateDate(QDateTime::fromString(firmwareUpdateDate, "yyyy-MM-dd HH:mm:ss"));
+        device->setUpdateDate(QDateTime::fromString(firmwareUpdateDate, QStringLiteral("yyyy-MM-dd HH:mm:ss")));
         device->setSoundbankVersion(soundbank);
-        device->setSoundbankUpdateDate(QDateTime::fromString(soundbankUpdateDate, "yyyy-MM-dd HH:mm:ss"));
+        device->setSoundbankUpdateDate(QDateTime::fromString(soundbankUpdateDate, QStringLiteral("yyyy-MM-dd HH:mm:ss")));
 
         list->append(device);
     }
     outProfile->setDuTouchList(list);
 
     // AVATAR
-    outProfile->setAvatarUrl(jsonProfile.value("avatar").toString());
+    outProfile->setAvatarUrl(jsonProfile.value(QStringLiteral("avatar")).toString());
 
     // FRIENDS
     if (recursionLevel > 0)
     {
-        QJsonArray friendsList = jsonProfile.value("friends").toArray();
+        QJsonArray friendsList = jsonProfile.value(QStringLiteral("friends")).toArray();
 
         DuArrayPtr friends(new DuArray);
         for (QJsonArray::iterator it = friendsList.begin(); it != friendsList.end(); ++it)
@@ -132,10 +132,10 @@ QHttpMultiPart *DuProfile::toHttpMultiPart(const QByteArray &boundary) const
     QHttpMultiPart* multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
     multiPart->setBoundary(boundary);
 
-    multiPart->append(getChild(KEY_PROFILE_GUID)->toHttpPart("guid"));
-    multiPart->append(getChild(KEY_PROFILE_LASTNAME)->toHttpPart("Lastname"));
-    multiPart->append(getChild(KEY_PROFILE_FIRSTNAME)->toHttpPart("Firstname"));
-    multiPart->append(getChild(KEY_PROFILE_MAIL)->toHttpPart("email"));
+    multiPart->append(getChild(KeyGUID)->toHttpPart(QStringLiteral("guid")));
+    multiPart->append(getChild(KeyLastname)->toHttpPart(QStringLiteral("Lastname")));
+    multiPart->append(getChild(KeyFirstname)->toHttpPart(QStringLiteral("Firstname")));
+    multiPart->append(getChild(KeyMail)->toHttpPart(QStringLiteral("email")));
 
     QUrl avatarUrl = getAvatarUrl();
     if (!avatarUrl.isEmpty() && avatarUrl.isLocalFile())
@@ -165,213 +165,14 @@ QHttpMultiPart *DuProfile::toHttpMultiPart(const QByteArray &boundary) const
     return multiPart;
 }
 
-QString DuProfile::getFirstname() const
-{
-    const DuStringConstPtr& firstname = getChildAs<DuString>(KEY_PROFILE_FIRSTNAME);
+DU_KEY_ACCESSORS_IMPL(DuProfile, Firstname,    String, QString, QString())
+DU_KEY_ACCESSORS_IMPL(DuProfile, Lastname,     String, QString, QString())
+DU_KEY_ACCESSORS_IMPL(DuProfile, Pseudo,       String, QString, QString())
+DU_KEY_ACCESSORS_IMPL(DuProfile, Mail,         String, QString, QString())
+DU_KEY_ACCESSORS_IMPL(DuProfile, AvatarUrl,    Url, QUrl, QUrl())
+DU_KEY_ACCESSORS_IMPL(DuProfile, CreationDate, Date, QDateTime, QDateTime())
+DU_KEY_ACCESSORS_IMPL(DuProfile, Role,         Numeric, DuProfile::Role, None)
+DU_KEY_ACCESSORS_IMPL(DuProfile, GUID,         Numeric, int, -1)
 
-    if (firstname == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_PROFILE_FIRSTNAME << "to DuString*";
-        return QString();
-    }
-
-    return firstname->getString();
-}
-
-bool DuProfile::setFirstname(const QString &value)
-{
-    DuStringPtr tmp = getChildAs<DuString>(KEY_PROFILE_FIRSTNAME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setString(value);
-}
-
-QString DuProfile::getLastname() const
-{
-    const DuStringConstPtr& lastname = getChildAs<DuString>(KEY_PROFILE_LASTNAME);
-
-    if (lastname == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_PROFILE_LASTNAME << "to DuString*";
-        return QString();
-    }
-
-    return lastname->getString();
-}
-
-bool DuProfile::setLastname(const QString &value)
-{
-    DuStringPtr tmp = getChildAs<DuString>(KEY_PROFILE_LASTNAME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setString(value);
-}
-
-QString DuProfile::getPseudo() const
-{
-    const DuStringConstPtr& pseudo = getChildAs<DuString>(KEY_PROFILE_PSEUDO);
-
-    if (pseudo == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_PROFILE_PSEUDO << "to DuString*";
-        return QString();
-    }
-
-    return pseudo->getString();
-}
-
-bool DuProfile::setPseudo(const QString &value)
-{
-    DuStringPtr tmp = getChildAs<DuString>(KEY_PROFILE_PSEUDO);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setString(value);
-}
-
-QString DuProfile::getMail() const
-{
-    const DuStringConstPtr& mail = getChildAs<DuString>(KEY_PROFILE_MAIL);
-
-    if (mail == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_PROFILE_MAIL << "to DuString*";
-        return QString();
-    }
-
-    return mail->getString();
-}
-
-bool DuProfile::setMail(const QString &value)
-{
-    DuStringPtr tmp = getChildAs<DuString>(KEY_PROFILE_MAIL);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setString(value);
-}
-
-QUrl DuProfile::getAvatarUrl() const
-{
-    const DuUrlConstPtr& avatarUrl = getChildAs<DuUrl>(KEY_PROFILE_AVATAR_URL);
-
-    if (avatarUrl == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_PROFILE_AVATAR_URL << "to DuUrl*";
-        return QUrl();
-    }
-
-    return avatarUrl->getUrl();
-}
-
-bool DuProfile::setAvatarUrl(const QUrl &value)
-{
-    DuUrlPtr tmp = getChildAs<DuUrl>(KEY_PROFILE_AVATAR_URL);
-
-    if (tmp == NULL)
-        return false;
-
-    tmp->setUrl(value);
-    return true;
-}
-
-QDateTime DuProfile::getCreationDate() const
-{
-    const DuDateConstPtr& creationDate = getChildAs<DuDate>(KEY_PROFILE_CREATION_DATE);
-
-    if (creationDate == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_PROFILE_CREATION_DATE << "to DuDate*";
-        return QDateTime();
-    }
-
-    return creationDate->getDate();
-}
-
-bool DuProfile::setCreationDate(const QDateTime &value)
-{
-    DuDatePtr tmp = getChildAs<DuDate>(KEY_PROFILE_CREATION_DATE);
-
-    if (tmp == NULL)
-        return false;
-
-    tmp->setDate(value);
-    return true;
-}
-
-DuProfile::Role DuProfile::getRole() const
-{
-    const DuNumericConstPtr& role = getChildAs<DuNumeric>(KEY_PROFILE_ROLE);
-
-    if (role == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_PROFILE_ROLE << "to DuNumeric*";
-        return None;
-    }
-
-    return (Role)role->getNumeric();
-}
-
-bool DuProfile::setRole(DuProfile::Role value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PROFILE_ROLE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuProfile::getGUID() const
-{
-    const DuNumericConstPtr& guid = getChildAs<DuNumeric>(KEY_PROFILE_GUID);
-
-    if (guid == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_PROFILE_GUID << "to DuNumeric*";
-        return -1;
-    }
-
-    return guid->getNumeric();
-}
-
-bool DuProfile::setGUID(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_PROFILE_GUID);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-DuArrayConstPtr DuProfile::getDuTouchList() const
-{
-    return getChildAs<const DuArray>(KEY_PROFILE_DUTOUCH_LIST);
-}
-
-DuArrayPtr DuProfile::getDuTouchList()
-{
-    return getChildAs<DuArray>(KEY_PROFILE_DUTOUCH_LIST);
-}
-
-void DuProfile::setDuTouchList(const DuArrayPtr &value)
-{
-    addChild(KEY_PROFILE_DUTOUCH_LIST, value);
-}
-
-DuArrayConstPtr DuProfile::getFriends() const
-{
-    return getChildAs<const DuArray>(KEY_PROFILE_FRIENDS);
-}
-
-void DuProfile::setFriends(const DuArrayPtr &value)
-{
-    addChild(KEY_PROFILE_FRIENDS, value);
-}
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuProfile, DuTouchList, DuArray)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuProfile, Friends,     DuArray)

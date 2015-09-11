@@ -39,10 +39,10 @@ public:
 
     int size() const;
 
-    void importMaps(QJsonObject value);
+    void importMaps(const QJsonObject &value);
 
     QStringList mapList() const;
-    void chooseMap(QString scale, quint8 tonality);
+    void chooseMap(const QString &scale, quint8 tonality);
 
     QPair<QString, QString> scaleIds(const QString &scale) const;
     int dutouchScale(const QString &scale) const;

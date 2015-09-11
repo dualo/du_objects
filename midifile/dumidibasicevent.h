@@ -6,8 +6,8 @@
 #include "dumidistatus.h"
 
 
-#define KEY_MIDIEVENT_TIME      "Time"
-#define KEY_MIDIEVENT_STATUS    "Status"
+#define KEY_MIDIEVENT_TIME      QStringLiteral("Time")
+#define KEY_MIDIEVENT_STATUS    QStringLiteral("Status")
 
 
 DU_OBJECT(DuMidiBasicEvent)

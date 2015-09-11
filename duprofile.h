@@ -4,17 +4,6 @@
 #include "general/duarray.h"
 #include "general/ducontainer.h"
 
-#define KEY_PROFILE_FIRSTNAME     "Firstname"
-#define KEY_PROFILE_LASTNAME      "Lastname"
-#define KEY_PROFILE_PSEUDO        "Pseudo"
-#define KEY_PROFILE_MAIL          "Mail"
-#define KEY_PROFILE_AVATAR_URL    "AvatarUrl"
-#define KEY_PROFILE_CREATION_DATE "CreationDate"
-#define KEY_PROFILE_ROLE          "Role"
-#define KEY_PROFILE_GUID          "GUID"
-#define KEY_PROFILE_DUTOUCH_LIST  "DuTouchList"
-#define KEY_PROFILE_FRIENDS       "Friends"
-
 
 DU_OBJECT(DuProfile)
 
@@ -47,36 +36,17 @@ public:
 
     QHttpMultiPart *toHttpMultiPart(const QByteArray &boundary) const;
 
-    QString getFirstname() const;
-    bool setFirstname(const QString& value);
+    DU_KEY_ACCESSORS(Firstname,    QString)
+    DU_KEY_ACCESSORS(Lastname,     QString)
+    DU_KEY_ACCESSORS(Pseudo,       QString)
+    DU_KEY_ACCESSORS(Mail,         QString)
+    DU_KEY_ACCESSORS(AvatarUrl,    QUrl)
+    DU_KEY_ACCESSORS(CreationDate, QDateTime)
+    DU_KEY_ACCESSORS(Role,         Role)
+    DU_KEY_ACCESSORS(GUID,         int)
 
-    QString getLastname() const;
-    bool setLastname(const QString& value);
-
-    QString getPseudo() const;
-    bool setPseudo(const QString& value);
-
-    QString getMail() const;
-    bool setMail(const QString& value);
-
-    QUrl getAvatarUrl() const;
-    bool setAvatarUrl(const QUrl& value);
-
-    QDateTime getCreationDate() const;
-    bool setCreationDate(const QDateTime& value);
-
-    Role getRole() const;
-    bool setRole(Role value);
-
-    int getGUID() const;
-    bool setGUID(int value);
-
-    DuArrayConstPtr getDuTouchList() const;
-    DuArrayPtr getDuTouchList();
-    void setDuTouchList(const DuArrayPtr& value);
-
-    DuArrayConstPtr getFriends() const;
-    void setFriends(const DuArrayPtr& value);
+    DU_KEY_ACCESSORS_OBJECT(DuTouchList, DuArray)
+    DU_KEY_ACCESSORS_OBJECT(Friends,     DuArray)
 };
 
 Q_DECLARE_METATYPE(DuProfilePtr)

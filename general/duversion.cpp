@@ -58,7 +58,7 @@ QString DuVersion::getVersion() const
 
 bool DuVersion::setVersion(const QString &version)
 {
-    QStringList nbs = version.split(".");
+    QStringList nbs = version.split('.');
 
     if (nbs.size() != 3)
     {

@@ -14,19 +14,6 @@
 #include "effects/duadsr.h"
 
 
-#define KEY_INSTR_INSTRUMENTINFO        "InstrumentInfo"
-#define KEY_INSTR_PRESET                "Preset"
-#define KEY_INSTR_MIXERSETTINGS         "MixerSettings"
-#define KEY_INSTR_DISTORTIONSETTINGS    "DistortionSettings"
-#define KEY_INSTR_WAHSETTINGS           "WahSettings"
-#define KEY_INSTR_COMPRESSORSETTINGS    "CompressorSettings"
-#define KEY_INSTR_EQUALIZERSETTINGS     "EqualizerSettings"
-#define KEY_INSTR_DELAYSETTINGS         "DelaySettings"
-#define KEY_INSTR_CHORUSSETTINGS        "ChorusSettings"
-#define KEY_INSTR_VIBRATOSETTINGS       "VibratoSettings"
-#define KEY_INSTR_ADSRSETTINGS          "AttackDecaySustainReleaseSettings"
-
-
 DU_OBJECT(DuInstrument)
 
 class DuInstrument : public DuContainer
@@ -44,38 +31,17 @@ public:
 
     int size() const;
 
-    DuInstrumentInfoConstPtr getInstrumentInfo() const;
-    void setInstrumentInfo(const DuInstrumentInfoPtr &instrumentInfo);
-
-    DuPresetConstPtr getPreset() const;
-    void setPreset(const DuPresetPtr& preset);
-
-    DuMixerConstPtr getMixer() const;
-    void setMixer(const DuMixerPtr& mixer);
-
-    DuDistortionConstPtr getDistortion() const;
-    void setDistortion(const DuDistortionPtr& distortion);
-
-    DuWahConstPtr getWah() const;
-    void setWah(const DuWahPtr& wah);
-
-    DuCompressorConstPtr getCompressor() const;
-    void setCompressor(const DuCompressorPtr& compressor);
-
-    DuEqualizerConstPtr getEqualizer() const;
-    void setEqualizer(const DuEqualizerPtr& equalizer);
-
-    DuDelayConstPtr getDelay() const;
-    void setDelay(const DuDelayPtr& delay);
-
-    DuChorusConstPtr getChorus() const;
-    void setChorus(const DuChorusPtr& chorus);
-
-    DuVibratoConstPtr getVibrato() const;
-    void setVibrato(const DuVibratoPtr& vibrato);
-
-    DuAdsrConstPtr getAdsr() const;
-    void setAdsr(const DuAdsrPtr& adsr);
+    DU_KEY_ACCESSORS_OBJECT(InstrumentInfo, DuInstrumentInfo)
+    DU_KEY_ACCESSORS_OBJECT(Preset,         DuPreset)
+    DU_KEY_ACCESSORS_OBJECT(Mixer,          DuMixer)
+    DU_KEY_ACCESSORS_OBJECT(Distortion,     DuDistortion)
+    DU_KEY_ACCESSORS_OBJECT(Wah,            DuWah)
+    DU_KEY_ACCESSORS_OBJECT(Compressor,     DuCompressor)
+    DU_KEY_ACCESSORS_OBJECT(Equalizer,      DuEqualizer)
+    DU_KEY_ACCESSORS_OBJECT(Delay,          DuDelay)
+    DU_KEY_ACCESSORS_OBJECT(Chorus,         DuChorus)
+    DU_KEY_ACCESSORS_OBJECT(Vibrato,        DuVibrato)
+    DU_KEY_ACCESSORS_OBJECT(Adsr,           DuAdsr)
 };
 
 #endif // DUINSTRUMENT_H

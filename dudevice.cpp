@@ -9,13 +9,13 @@ DuDevice::DuDevice() :
     connected(false),
     busy(false)
 {
-    addChild(KEY_DEVICE_SERIAL_NUMBER,  new DuString(""));
-    addChild(KEY_DEVICE_NAME,           new DuString(""));
-    addChild(KEY_DEVICE_OWNER,          new DuString(""));
-    addChild(KEY_DEVICE_OWNER_ID,       new DuNumeric(0));
+    addChild(KeySerialNumber,  new DuString);
+    addChild(KeyName,          new DuString);
+    addChild(KeyOwner,         new DuString);
+    addChild(KeyOwnerId,       new DuNumeric(0));
 
-    addChild(KEY_DEVICE_VERSION,        new DuVersion());
-    addChild(KEY_DEVICE_UPDATE_DATE,    new DuDate());
+    addChild(KeyVersion,       new DuVersion());
+    addChild(KeyUpdateDate,    new DuDate());
 }
 
 DuObjectPtr DuDevice::clone() const
@@ -28,58 +28,12 @@ QHttpMultiPart *DuDevice::toHttpMultiPart(const QByteArray& boundary) const
     QHttpMultiPart* multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
     multiPart->setBoundary(boundary);
 
-    multiPart->append(getChild(KEY_DEVICE_SERIAL_NUMBER)->toHttpPart("serial_number"));
-    multiPart->append(getChild(KEY_DEVICE_NAME)->toHttpPart("name"));
-    multiPart->append(getChild(KEY_DEVICE_VERSION)->toHttpPart("version"));
-    multiPart->append(getChild(KEY_DEVICE_OWNER_ID)->toHttpPart("user_id"));
+    multiPart->append(getChild(KeySerialNumber)->toHttpPart(QStringLiteral("serial_number")));
+    multiPart->append(getChild(KeyName)->toHttpPart(QStringLiteral("name")));
+    multiPart->append(getChild(KeyVersion)->toHttpPart(QStringLiteral("version")));
+    multiPart->append(getChild(KeyOwnerId)->toHttpPart(QStringLiteral("user_id")));
 
     return multiPart;
-}
-
-QString DuDevice::getSerialNumber() const
-{
-    const DuStringConstPtr& serialNumber = getChildAs<DuString>(KEY_DEVICE_SERIAL_NUMBER);
-
-    if (serialNumber == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_DEVICE_SERIAL_NUMBER << "to DuString*";
-        return QString();
-    }
-
-    return serialNumber->getString();
-}
-
-bool DuDevice::setSerialNumber(const QString &value)
-{
-    DuStringPtr tmp = getChildAs<DuString>(KEY_DEVICE_SERIAL_NUMBER);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setString(value);
-}
-
-QString DuDevice::getName() const
-{
-    const DuStringConstPtr& name = getChildAs<DuString>(KEY_DEVICE_NAME);
-
-    if (name == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_DEVICE_NAME << "to DuString*";
-        return QString();
-    }
-
-    return name->getString();
-}
-
-bool DuDevice::setName(const QString &value)
-{
-    DuStringPtr tmp = getChildAs<DuString>(KEY_DEVICE_NAME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setString(value);
 }
 
 QString DuDevice::getDisplayName() const
@@ -88,68 +42,9 @@ QString DuDevice::getDisplayName() const
     return name.isEmpty() ? getSerialNumber() : name;
 }
 
-QString DuDevice::getOwner() const
-{
-    const DuStringConstPtr& owner = getChildAs<DuString>(KEY_DEVICE_OWNER);
-
-    if (owner == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_DEVICE_OWNER << "to DuString*";
-        return QString();
-    }
-
-    return owner->getString();
-}
-
-bool DuDevice::setOwner(const QString &value)
-{
-    DuStringPtr tmp = getChildAs<DuString>(KEY_DEVICE_OWNER);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setString(value);
-}
-
-int DuDevice::getOwnerId() const
-{
-    const DuNumericConstPtr& ownerId = getChildAs<DuNumeric>(KEY_DEVICE_OWNER_ID);
-
-    if (ownerId == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_DEVICE_OWNER_ID << "to DuNumeric*";
-        return -1;
-    }
-
-    return ownerId->getNumeric();
-}
-
-bool DuDevice::setOwnerId(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_DEVICE_OWNER_ID);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-DuVersionConstPtr DuDevice::getVersion() const
-{
-    const DuVersionConstPtr& version = getChildAs<DuVersion>(KEY_DEVICE_VERSION);
-
-    if (version == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_DEVICE_VERSION << "to DuVersion*";
-        return DuVersionConstPtr();
-    }
-
-    return version;
-}
-
 bool DuDevice::setVersion(const QString &value)
 {
-    DuVersionPtr tmp = getChildAs<DuVersion>(KEY_DEVICE_VERSION);
+    DuVersionPtr tmp = getVersion();
 
     if (tmp == NULL)
         return false;
@@ -159,36 +54,12 @@ bool DuDevice::setVersion(const QString &value)
 
 bool DuDevice::setVersion(int major, int minor, int patch)
 {
-    DuVersionPtr tmp = getChildAs<DuVersion>(KEY_DEVICE_VERSION);
+    DuVersionPtr tmp = getVersion();
 
     if (tmp == NULL)
         return false;
 
     return tmp->setVersion(major, minor, patch);
-}
-
-QDateTime DuDevice::getUpdateDate() const
-{
-    const DuDateConstPtr& updateDate = getChildAs<DuDate>(KEY_DEVICE_UPDATE_DATE);
-
-    if (updateDate == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_DEVICE_UPDATE_DATE << "to DuDate*";
-        return QDateTime();
-    }
-
-    return updateDate->getDate();
-}
-
-bool DuDevice::setUpdateDate(const QDateTime &value)
-{
-    DuDatePtr tmp = getChildAs<DuDate>(KEY_DEVICE_UPDATE_DATE);
-
-    if (tmp == NULL)
-        return false;
-
-    tmp->setDate(value);
-    return true;
 }
 
 bool DuDevice::getPlugged() const
@@ -220,3 +91,12 @@ void DuDevice::setBusy(bool value)
 {
     busy = value;
 }
+
+DU_KEY_ACCESSORS_IMPL(DuDevice, SerialNumber, String, QString, QString())
+DU_KEY_ACCESSORS_IMPL(DuDevice, Name,         String, QString, QString())
+DU_KEY_ACCESSORS_IMPL(DuDevice, Owner,        String, QString, QString())
+DU_KEY_ACCESSORS_IMPL(DuDevice, OwnerId,      Numeric, int, -1)
+
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuDevice, Version, DuVersion)
+
+DU_KEY_ACCESSORS_IMPL(DuDevice, UpdateDate, Date, QDateTime, QDateTime())

@@ -4,14 +4,6 @@
 #include "dueffectsettings.h"
 
 
-#define KEY_ADSR_ENVELOPEATTACKTIME                 "EnvelopeAttackTime"
-#define KEY_ADSR_ENVELOPEDECAYTIME                  "EnvelopeDecayTime"
-#define KEY_ADSR_TIMEVARIANTFILTERCUTOFFRESONANCE   "TimeVariantFilterCutoffResonance"
-#define KEY_ADSR_TIMEVARIANTFILTERCUTOFFFREQUENCY   "TimeVariantFilterCutoffFrequency"
-#define KEY_ADSR_ENVELOPERELEASETIME                "EnvelopeReleaseTime"
-#define KEY_ADSR_EFFECTNAME                         "EffectName"
-
-
 DU_OBJECT(DuAdsr)
 
 class DuAdsr : public DuEffectSettings
@@ -29,23 +21,13 @@ public:
 
     int size() const;
 
-    int getEnvelopeAttackTime() const;
-    bool setEnvelopeAttackTime(int value);
 
-    int getEnvelopeDecayTime() const;
-    bool setEnvelopeDecayTime(int value);
-
-    int getTimeVariantFilterCutoffResonance() const;
-    bool setTimeVariantFilterCutoffResonance(int value);
-
-    int getTimeVariantFilterCutoffFrequency() const;
-    bool setTimeVariantFilterCutoffFrequency(int value);
-
-    int getEnvelopeReleaseTime() const;
-    bool setEnvelopeReleaseTime(int value);
-
-    QString getEffectName() const;
-    bool setEffectName(const QString &value);
+    DU_KEY_ACCESSORS(EnvelopeAttackTime,               int)
+    DU_KEY_ACCESSORS(EnvelopeDecayTime,                int)
+    DU_KEY_ACCESSORS(TimeVariantFilterCutoffResonance, int)
+    DU_KEY_ACCESSORS(TimeVariantFilterCutoffFrequency, int)
+    DU_KEY_ACCESSORS(EnvelopeReleaseTime,              int)
+    DU_KEY_ACCESSORS(EffectName,                       QString)
 };
 
 #endif // DUADSR_H

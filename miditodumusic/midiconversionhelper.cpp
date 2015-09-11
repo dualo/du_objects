@@ -21,14 +21,12 @@ MidiConversionHelper::MidiConversionHelper(QObject *parent) :
     duration(0),
     tempo(100),
     timeSig(TIME_4_4),
-    scale(SCALE_MAJOR),
+    scale(QStringLiteral(SCALE_MAJOR)),
     tonality(0),
-    title(""),
     midiTempo(100),
     midiTimeSig(0x0404),
     midiScale(0),
     midiTonality(0),
-    midiTitle(""),
     selectedFile(),
     mapper(new DuMidiKeyMapper(this)),
     trackNames(),
@@ -159,7 +157,7 @@ QString MidiConversionHelper::getMidiTimeSigStr() const
     quint8 num = midiTimeSig & 0xFF;
     quint8 denom = (midiTimeSig >> 8) & 0xFF;
 
-    return QString::number(num) + QString(" : ") + QString::number(denom);
+    return QString::number(num) + QStringLiteral(" : ") + QString::number(denom);
 }
 
 QString MidiConversionHelper::getMidiScale() const
@@ -178,31 +176,31 @@ QString MidiConversionHelper::getMidiTitle() const
 }
 
 
-QList<DuMidiTrackPtr> MidiConversionHelper::getTracks()
+QVector<DuMidiTrackPtr> MidiConversionHelper::getTracks()
 {
-    QList<DuMidiTrackPtr> trackList;
+    QVector<DuMidiTrackPtr> trackList;
     trackList.clear();
 
     const DuArrayPtr tracks = selectedFile->getTracks();
     if (tracks == NULL)
-        return QList<DuMidiTrackPtr>();
+        return QVector<DuMidiTrackPtr>();
 
     DuObjectPtr tmpObject = DuObjectPtr();
     DuMidiTrackPtr tmpTrack = DuMidiTrackPtr();
 
     int count = tracks->count();
     if (count == -1)
-        return QList<DuMidiTrackPtr>();
+        return QVector<DuMidiTrackPtr>();
 
     for (int i = 0; i < count; i++)
     {
         tmpObject = tracks->at(i);
         if (tmpObject == NULL)
-            return QList<DuMidiTrackPtr>();
+            return QVector<DuMidiTrackPtr>();
 
         tmpTrack = tmpObject.dynamicCast<DuMidiTrack>();
         if (tmpTrack == NULL)
-            return QList<DuMidiTrackPtr>();
+            return QVector<DuMidiTrackPtr>();
 
         trackList.append(tmpTrack);
     }
@@ -261,7 +259,7 @@ QStringList MidiConversionHelper::mapList() const
 
 void MidiConversionHelper::chooseMap()
 {
-    if (scale == "" || tonality == -1)
+    if (scale.isEmpty() || tonality == -1)
         return;
 
     mapper->chooseMap(scale, tonality);
@@ -480,7 +478,7 @@ bool MidiConversionHelper::populateMapper(const QJsonObject &jsonMaps)
     mapper->importMaps(jsonMaps);
 
     QStringList mapList = mapper->mapList();
-    scaleBoxModel.addScale(DuScale(SCALE_NONE, tr(SCALE_NONE)));
+    scaleBoxModel.addScale(DuScale(QStringLiteral(SCALE_NONE), tr(SCALE_NONE)));
 
     int count = mapList.count();
 
@@ -500,8 +498,8 @@ bool MidiConversionHelper::populateMapper(const QJsonObject &jsonMaps)
 void MidiConversionHelper::importMidiFromFile()
 {
     QSettings settings;
-    QString importDirName = settings.contains("midi/lastImportDir") ?
-                settings.value("midi/lastImportDir").toString() :
+    QString importDirName = settings.contains(QStringLiteral("midi/lastImportDir")) ?
+                settings.value(QStringLiteral("midi/lastImportDir")).toString() :
                 QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
 
     QFileDialog::Options options = 0;
@@ -520,7 +518,7 @@ void MidiConversionHelper::importMidiFromFile()
         return;
     }
 
-    settings.setValue("midi/lastImportDir", QFileInfo(importPath).absolutePath());
+    settings.setValue(QStringLiteral("midi/lastImportDir"), QFileInfo(importPath).absolutePath());
 
 
     QFile *midiInput = new QFile(importPath);
@@ -541,8 +539,8 @@ void MidiConversionHelper::importMidiFromFile()
 void MidiConversionHelper::importMapsFromFile()
 {
     QSettings settings;
-    QString mapperName = settings.contains("midi/lastMapper") ?
-                settings.value("midi/lastMapper").toString() :
+    QString mapperName = settings.contains(QStringLiteral("midi/lastMapper")) ?
+                settings.value(QStringLiteral("midi/lastMapper")).toString() :
                 QString();
 
     if (mapperName.isNull())
@@ -567,7 +565,7 @@ void MidiConversionHelper::importMapsFromFile()
         }
     }
 
-    settings.setValue("midi/lastMapper", mapperName);
+    settings.setValue(QStringLiteral("midi/lastMapper"), mapperName);
 
 
     QFile *mapsInput = new QFile(mapperName);
@@ -626,7 +624,7 @@ bool MidiConversionHelper::filterMetaEvents()
     {
         bool instrumentFound = false;
         bool progChangeFound = false;
-        QString trackName = "";
+        QString trackName;
 
         const DuMidiTrackPtr &midiTrack =
                 midiTracks->at(i).dynamicCast<DuMidiTrack>();
@@ -721,9 +719,9 @@ bool MidiConversionHelper::filterMetaEvents()
                             if (tmpNum == -1)
                                 return false;
 
-                            trackName.append(QString(" (PC#")
+                            trackName.append(QStringLiteral(" (PC#")
                                              + QString::number(tmpNum)
-                                             + QString(")"));
+                                             + QStringLiteral(")"));
                         }
 
                         midiEvents->removeAt(j);
@@ -820,7 +818,7 @@ bool MidiConversionHelper::filterMetaEvents()
         else
         {
             if (!instrumentFound)
-                trackName.prepend(QString("Track ") + QString::number(i));
+                trackName.prepend(QStringLiteral("Track ") + QString::number(i));
             trackNames.append(trackName);
             i++;
         }
@@ -890,11 +888,11 @@ void MidiConversionHelper::setMidiScale(int value)
     midiScale = value;
 
     if (midiScale == 0)
-        setScale(SCALE_MAJOR);
+        setScale(QStringLiteral(SCALE_MAJOR));
     else if (midiScale == 1)
-        setScale(SCALE_MINOR);
+        setScale(QStringLiteral(SCALE_MINOR));
     else
-        setScale("");
+        setScale(QString());
 }
 
 void MidiConversionHelper::setMidiTonality(int value)

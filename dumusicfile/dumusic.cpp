@@ -15,28 +15,28 @@ DuMusic::DuMusic() :
     DuContainer(),
     m_databaseId(-1)
 {
-    addChild(KEY_MUSIC_HEADER, new DuHeader);
+    addChild(KeyHeader, new DuHeader);
 
-    addChild(KEY_MUSIC_CONTROLLERS, new DuControllers);
+    addChild(KeyControllers, new DuControllers);
 
-    addChild(KEY_MUSIC_SONGINFO, new DuSongInfo);
+    addChild(KeySongInfo, new DuSongInfo);
 
-    addChild(KEY_MUSIC_REVERB, new DuReverb);
-
-
-    addChild(KEY_MUSIC_TRACKS, new DuArray(MUSIC_MAXTRACK));
+    addChild(KeyReverb, new DuReverb);
 
 
-    addChild(KEY_MUSIC_TRANSPOSE,
+    addChild(KeyTracks, new DuArray(MUSIC_MAXTRACK));
+
+
+    addChild(KeyTranspose,
              new DuNumeric(RECORD_TRANSPOSEDEFAULT, NUMERIC_DEFAULT_SIZE,
                            2 * RECORD_TRANSPOSEDEFAULT, 0));
 
 
-    addChild(KEY_MUSIC_PLAYHEAD,
+    addChild(KeyPlayhead,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0xFF, 0x00));
 
-    addChild(KEY_MUSIC_STATE,
+    addChild(KeyState,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0xFF, 0x00));
 }
@@ -269,14 +269,14 @@ DuMusicPtr DuMusic::fromBinary(QIODevice *input)
 
 DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
 {
-    QJsonValue jsonHeader       = jsonMusic[KEY_MUSIC_HEADER];
-    QJsonValue jsonControllers  = jsonMusic[KEY_MUSIC_CONTROLLERS];
-    QJsonValue jsonSongInfo     = jsonMusic[KEY_MUSIC_SONGINFO];
-    QJsonValue jsonReverb       = jsonMusic[KEY_MUSIC_REVERB];
-    QJsonValue jsonTracks       = jsonMusic[KEY_MUSIC_TRACKS];
-    QJsonValue jsonTranspose    = jsonMusic[KEY_MUSIC_TRANSPOSE];
-    QJsonValue jsonPlayhead     = jsonMusic[KEY_MUSIC_PLAYHEAD];
-    QJsonValue jsonState        = jsonMusic[KEY_MUSIC_STATE];
+    QJsonValue jsonHeader       = jsonMusic[KeyHeader];
+    QJsonValue jsonControllers  = jsonMusic[KeyControllers];
+    QJsonValue jsonSongInfo     = jsonMusic[KeySongInfo];
+    QJsonValue jsonReverb       = jsonMusic[KeyReverb];
+    QJsonValue jsonTracks       = jsonMusic[KeyTracks];
+    QJsonValue jsonTranspose    = jsonMusic[KeyTranspose];
+    QJsonValue jsonPlayhead     = jsonMusic[KeyPlayhead];
+    QJsonValue jsonState        = jsonMusic[KeyState];
 
     if (        !jsonHeader.isObject()      ||  !jsonControllers.isObject()
             ||  !jsonSongInfo.isObject()    ||  !jsonReverb.isObject()
@@ -867,7 +867,7 @@ int DuMusic::size() const
     int eventsSize = 0;
     int tmpSize = 0;
 
-    const DuArrayConstPtr &tracks = getChildAs<DuArray>(KEY_MUSIC_TRACKS);
+    const DuArrayConstPtr &tracks = getTracks();
     if (tracks == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "KEY_MUSIC_TRACKS is NULL";
@@ -877,8 +877,7 @@ int DuMusic::size() const
     int count = tracks->count();
     for (int i = 0; i < count; i++)
     {
-        const DuTrackConstPtr &track =
-                tracks->at(i).dynamicCast<const DuTrack>();
+        const DuTrackConstPtr &track = tracks->atAs<DuTrack>(i);
         if (track == NULL)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "track" << i << "is NULL";
@@ -926,8 +925,7 @@ void DuMusic::setLists(const QStringList &lists)
 
 QString DuMusic::getSongName() const
 {
-    const DuSongInfoConstPtr &songInfo =
-            getChildAs<DuSongInfo>(KEY_MUSIC_SONGINFO);
+    const DuSongInfoConstPtr &songInfo = getSongInfo();
 
     if (songInfo == NULL)
     {
@@ -939,8 +937,7 @@ QString DuMusic::getSongName() const
 
 bool DuMusic::setSongName(const QString &value)
 {
-    const DuSongInfoPtr &songInfo =
-            getChildAs<DuSongInfo>(KEY_MUSIC_SONGINFO);
+    const DuSongInfoPtr &songInfo = getSongInfo();
 
     if (songInfo == NULL)
     {
@@ -952,8 +949,7 @@ bool DuMusic::setSongName(const QString &value)
 
 int DuMusic::getFileVersion() const
 {
-    const DuHeaderConstPtr &header =
-            getChildAs<DuHeader>(KEY_MUSIC_HEADER);
+    const DuHeaderConstPtr &header = getHeader();
 
     if (header == NULL)
     {
@@ -965,8 +961,7 @@ int DuMusic::getFileVersion() const
 
 bool DuMusic::setFileVersion(int value)
 {
-    const DuHeaderPtr &header =
-            getChildAs<DuHeader>(KEY_MUSIC_HEADER);
+    const DuHeaderPtr &header = getHeader();
 
     if (header == NULL)
     {
@@ -976,59 +971,15 @@ bool DuMusic::setFileVersion(int value)
     return header->setFileVersion(value);
 }
 
-DuHeaderConstPtr DuMusic::getHeader() const
-{
-    return getChildAs<DuHeader>(KEY_MUSIC_HEADER);
-}
-
-void DuMusic::setHeader(const DuHeaderPtr &header)
-{
-    addChild(KEY_MUSIC_HEADER, header);
-}
-
-DuControllersConstPtr DuMusic::getControllers() const
-{
-    return getChildAs<DuControllers>(KEY_MUSIC_CONTROLLERS);
-}
-
-void DuMusic::setControllers(const DuControllersPtr &controllers)
-{
-    addChild(KEY_MUSIC_CONTROLLERS, controllers);
-}
-
-DuSongInfoConstPtr DuMusic::getSongInfo() const
-{
-    return getChildAs<DuSongInfo>(KEY_MUSIC_SONGINFO);
-}
-
-void DuMusic::setSongInfo(const DuSongInfoPtr &songInfo)
-{
-    addChild(KEY_MUSIC_SONGINFO, songInfo);
-}
-
-DuReverbConstPtr DuMusic::getReverb() const
-{
-    return getChildAs<DuReverb>(KEY_MUSIC_REVERB);
-}
-
-void DuMusic::setReverb(const DuReverbPtr &reverb)
-{
-    addChild(KEY_MUSIC_REVERB, reverb);
-}
-
-DuArrayConstPtr DuMusic::getTracks() const
-{
-    return getChildAs<DuArray>(KEY_MUSIC_TRACKS);
-}
-
-void DuMusic::setTracks(const DuArrayPtr &array)
-{
-    addChild(KEY_MUSIC_TRACKS, array);
-}
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusic, Header,      DuHeader)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusic, Controllers, DuControllers)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusic, SongInfo,    DuSongInfo)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusic, Reverb,      DuReverb)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusic, Tracks,      DuArray)
 
 bool DuMusic::appendTrack(const DuTrackPtr &track)
 {
-    DuArrayPtr tmp = getChildAs<DuArray>(KEY_MUSIC_TRACKS);
+    DuArrayPtr tmp = getChildAs<DuArray>(KeyTracks);
 
     if (tmp == NULL)
         return false;
@@ -1036,70 +987,7 @@ bool DuMusic::appendTrack(const DuTrackPtr &track)
     return tmp->append(track);
 }
 
+DU_KEY_ACCESSORS_IMPL(DuMusic, Transpose, Numeric, int, -1)
 
-int DuMusic::getTranspose() const
-{
-    const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_MUSIC_TRANSPOSE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuMusic::setTranspose(int value)
-{
-    const DuNumericPtr &tmp =
-            getChildAs<DuNumeric>(KEY_MUSIC_TRANSPOSE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuMusic::getPlayhead() const
-{
-    const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_MUSIC_PLAYHEAD);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuMusic::setPlayhead(int value)
-{
-    const DuNumericPtr &tmp =
-            getChildAs<DuNumeric>(KEY_MUSIC_PLAYHEAD);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuMusic::getState() const
-{
-    const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_MUSIC_STATE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuMusic::setState(int value)
-{
-    const DuNumericPtr &tmp =
-            getChildAs<DuNumeric>(KEY_MUSIC_STATE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
+DU_KEY_ACCESSORS_IMPL(DuMusic, Playhead,  Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuMusic, State,     Numeric, int, -1)

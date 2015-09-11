@@ -20,7 +20,7 @@ public:
     QDebug debugPrint(QDebug dbg) const;
 
     QDateTime getDate() const;
-    void setDate(const QDateTime& date);
+    bool setDate(const QDateTime& date);
 };
 
 #endif // DUDATE_H

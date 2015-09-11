@@ -9,24 +9,24 @@ DU_OBJECT_IMPL(DuWah)
 DuWah::DuWah() :
     DuEffectSettings()
 {
-    addChild(KEY_WAH_FILTERTYPE,
+    addChild(KeyFilterType,
              new DuNumeric(FX_WAH_FILTERTYPE_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_WAH_FILTERTYPE_MAXVALUE, FX_WAH_FILTERTYPE_MINVALUE));
 
-    addChild(KEY_WAH_FILTERFREQUENCY,
+    addChild(KeyFilterFrequency,
              new DuNumeric(FX_WAH_FILTERFREQ_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_WAH_FILTERFREQ_MAXVALUE, FX_WAH_FILTERFREQ_MINVALUE));
 
-    addChild(KEY_WAH_FILTERRESONANCE,
+    addChild(KeyFilterResonance,
              new DuNumeric(FX_WAH_FILTERRES_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_WAH_FILTERRES_MAXVALUE, FX_WAH_FILTERRES_MINVALUE));
 
-    addChild(KEY_WAH_AUTOWAHSENSITIVITY,
+    addChild(KeyAutoWahSensitivity,
              new DuNumeric(FX_WAH_SENSITIVITY_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_WAH_SENSITIVITY_MAXVALUE, FX_WAH_SENSITIVITY_MINVALUE));
 
-    addChild(KEY_WAH_EFFECTNAME,
-             new DuString(QString(DEFAULT_EFFECTNAME), NAME_CARACT));
+    addChild(KeyEffectName,
+             new DuString(QStringLiteral(DEFAULT_EFFECTNAME), NAME_CARACT));
 }
 
 DuWah::~DuWah()
@@ -63,11 +63,11 @@ DuWahPtr DuWah::fromDuMusicBinary(const FX_wah &du_wah)
 
 DuWahPtr DuWah::fromJson(const QJsonObject &jsonWah)
 {
-    QJsonValue jsonFilterType   = jsonWah[KEY_WAH_FILTERTYPE];
-    QJsonValue jsonFilterFreq   = jsonWah[KEY_WAH_FILTERFREQUENCY];
-    QJsonValue jsonFilterRes    = jsonWah[KEY_WAH_FILTERRESONANCE];
-    QJsonValue jsonSensitivity  = jsonWah[KEY_WAH_AUTOWAHSENSITIVITY];
-    QJsonValue jsonEffectName   = jsonWah[KEY_WAH_EFFECTNAME];
+    QJsonValue jsonFilterType   = jsonWah[KeyFilterType];
+    QJsonValue jsonFilterFreq   = jsonWah[KeyFilterFrequency];
+    QJsonValue jsonFilterRes    = jsonWah[KeyFilterResonance];
+    QJsonValue jsonSensitivity  = jsonWah[KeyAutoWahSensitivity];
+    QJsonValue jsonEffectName   = jsonWah[KeyEffectName];
 
     if (        !jsonFilterType.isDouble()  ||  !jsonFilterFreq.isDouble()
             ||  !jsonFilterRes.isDouble()   ||  !jsonSensitivity.isDouble()
@@ -149,104 +149,8 @@ int DuWah::size() const
 }
 
 
-int DuWah::getFilterType() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERTYPE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuWah::setFilterType(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERTYPE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuWah::getFilterFrequency() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERFREQUENCY);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuWah::setFilterFrequency(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERFREQUENCY);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuWah::getFilterResonance() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERRESONANCE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuWah::setFilterResonance(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_WAH_FILTERRESONANCE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuWah::getAutoWahSensitivity() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_WAH_AUTOWAHSENSITIVITY);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuWah::setAutoWahSensitivity(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_WAH_AUTOWAHSENSITIVITY);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-QString DuWah::getEffectName() const
-{
-    const DuStringConstPtr &tmp = getChildAs<DuString>(KEY_WAH_EFFECTNAME);
-
-    if (tmp == NULL)
-        return QString();
-
-    return tmp->getString();
-}
-
-bool DuWah::setEffectName(const QString &value)
-{
-    DuStringPtr tmp = getChildAs<DuString>(KEY_WAH_EFFECTNAME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setString(value);
-}
+DU_KEY_ACCESSORS_IMPL(DuWah, FilterType,         Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuWah, FilterFrequency,    Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuWah, FilterResonance,    Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuWah, AutoWahSensitivity, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuWah, EffectName,         String, QString, QString())

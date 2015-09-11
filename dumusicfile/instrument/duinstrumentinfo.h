@@ -5,22 +5,6 @@
 #include "../../general/dustring.h"
 #include "../../general/dunumeric.h"
 
-//TODO: add key for GM program change when possible
-
-#define KEY_INSTRINFO_NAME                  "Name"
-#define KEY_INSTRINFO_DREAMPROGRAMCHANGE    "DreamProgramChange"
-#define KEY_INSTRINFO_MIDICONTROLCHANGE0    "MidiControlChange0"
-#define KEY_INSTRINFO_KEYMAP                "KepMapping"
-#define KEY_INSTRINFO_OCTAVE                "Octave"
-#define KEY_INSTRINFO_ID                    "ID"
-#define KEY_INSTRINFO_ACTIVENOTEOFF         "ActiveNoteOff"
-#define KEY_INSTRINFO_CATEGORY              "Category"
-#define KEY_INSTRINFO_RELVOLUME             "RelativeVolume"
-#define KEY_INSTRINFO_TYPE                  "Type"
-#define KEY_INSTRINFO_USERID                "UserID"
-
-//TODO: add parameters for du-sounds when possible
-
 
 DU_OBJECT(DuInstrumentInfo)
 
@@ -39,38 +23,26 @@ public:
 
     int size() const;
 
-    QString getName() const;
-    bool setName(const QString &value);
+    //TODO: add key for GM program change when possible
+    //TODO: add parameters for du-sounds when possible
 
-    int getDreamProgramChange() const;
-    bool setDreamProgramChange(int value);
+    DU_KEY_ACCESSORS(Name,               QString)
 
-    int getMidiControlChange0() const;
-    bool setMidiControlChange0(int value);
+    DU_KEY_ACCESSORS(DreamProgramChange, int)
+    DU_KEY_ACCESSORS(MidiControlChange0, int)
+    DU_KEY_ACCESSORS(KeyMapping,         int)
+    DU_KEY_ACCESSORS(Octave,             int)
 
-    int getKeyMap() const;
-    bool setKeyMap(int value);
+    DU_KEY_ACCESSORS(UserID,             QString)
+    DU_KEY_ACCESSORS(ID,                 int)
 
-    int getOctave() const;
-    bool setOctave(int value);
+    DU_KEY_ACCESSORS(ActiveNoteOff,      int)
 
-    int getID() const;
-    bool setID(int value);
+    DU_KEY_ACCESSORS(Category,           QString)
 
-    int getActiveNoteOff() const;
-    bool setActiveNoteOff(int value);
+    DU_KEY_ACCESSORS(RelativeVolume,     int)
 
-    QString getCategory() const;
-    bool setCategory(const QString &value);
-
-    int getRelativeVolume() const;
-    bool setRelativeVolume(int value);
-
-    int getType() const;
-    bool setType(int value);
-
-    QString getUserID() const;
-    bool setUserID(const QString &value);
+    DU_KEY_ACCESSORS(Type,               int)
 };
 
 #endif // DUINSTRUMENTINFO_H

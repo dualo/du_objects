@@ -3,9 +3,6 @@
 
 #include "dudevice.h"
 
-#define KEY_TOUCH_SOUNDBANK_VERSION     "SoundbankVersion"
-#define KEY_TOUCH_SOUNDBANK_UPDATE_DATE "SoundbankUpdateDate"
-
 
 DU_OBJECT(DuTouch)
 
@@ -18,12 +15,11 @@ public:
 
     QHttpMultiPart *toHttpMultiPart(const QByteArray &boundary) const;
 
-    DuVersionConstPtr getSoundbankVersion() const;
     bool setSoundbankVersion(const QString& value);
     bool setSoundbankVersion(int major, int minor, int patch);
 
-    QDateTime getSoundbankUpdateDate() const;
-    bool setSoundbankUpdateDate(const QDateTime& value);
+    DU_KEY_ACCESSORS_OBJECT(SoundbankVersion, DuVersion)
+    DU_KEY_ACCESSORS(SoundbankUpdateDate, QDateTime)
 };
 
 #endif // DUTOUCH_H

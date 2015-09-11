@@ -4,8 +4,8 @@
 #include "dumidibasicevent.h"
 
 
-#define KEY_MIDICHANNELEVENT_KEY        "Key"
-#define KEY_MIDICHANNELEVENT_VALUE      "Value"
+#define KEY_MIDICHANNELEVENT_KEY    QStringLiteral("Key")
+#define KEY_MIDICHANNELEVENT_VALUE  QStringLiteral("Value")
 
 
 DU_OBJECT(DuMidiChannelEvent)

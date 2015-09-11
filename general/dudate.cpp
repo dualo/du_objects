@@ -41,7 +41,8 @@ QDateTime DuDate::getDate() const
     return getValue().toDateTime();
 }
 
-void DuDate::setDate(const QDateTime &date)
+bool DuDate::setDate(const QDateTime &date)
 {
     setValue(date);
+    return true;
 }

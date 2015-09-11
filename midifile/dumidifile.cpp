@@ -252,7 +252,7 @@ bool DuMidiFile::appendTrack(const DuMidiTrackPtr &track)
     return tmp->append(track);
 }
 
-bool DuMidiFile::appendTracks(const QList<DuMidiTrackPtr> &tracks)
+bool DuMidiFile::appendTracks(const QVector<DuMidiTrackPtr> &tracks)
 {
     DuArrayPtr tmp = getChildAs<DuArray>(KEY_MIDIFILE_TRACKS);
 

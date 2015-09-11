@@ -4,13 +4,6 @@
 #include "dueffectsettings.h"
 
 
-#define KEY_WAH_FILTERTYPE              "FilterType"
-#define KEY_WAH_FILTERFREQUENCY         "FilterFrequency"
-#define KEY_WAH_FILTERRESONANCE         "FilterResonance"
-#define KEY_WAH_AUTOWAHSENSITIVITY      "AutoWahSensitivity"
-#define KEY_WAH_EFFECTNAME              "EffectName"
-
-
 DU_OBJECT(DuWah)
 
 class DuWah : public DuEffectSettings
@@ -28,20 +21,12 @@ public:
 
     int size() const;
 
-    int getFilterType() const;
-    bool setFilterType(int value);
 
-    int getFilterFrequency() const;
-    bool setFilterFrequency(int value);
-
-    int getFilterResonance() const;
-    bool setFilterResonance(int value);
-
-    int getAutoWahSensitivity() const;
-    bool setAutoWahSensitivity(int value);
-
-    QString getEffectName() const;
-    bool setEffectName(const QString &value);
+    DU_KEY_ACCESSORS(FilterType,         int)
+    DU_KEY_ACCESSORS(FilterFrequency,    int)
+    DU_KEY_ACCESSORS(FilterResonance,    int)
+    DU_KEY_ACCESSORS(AutoWahSensitivity, int)
+    DU_KEY_ACCESSORS(EffectName,         QString)
 };
 
 #endif // DUWAH_H

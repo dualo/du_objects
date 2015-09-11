@@ -10,63 +10,63 @@ DU_OBJECT_IMPL(DuSongInfo)
 DuSongInfo::DuSongInfo() :
     DuContainer()
 {
-    addChild(KEY_SONG_SONGID, new DuNumeric(0));
+    addChild(KeySongId, new DuNumeric(0));
 
-    addChild(KEY_SONG_SONGNAME, new DuString(MUSIC_SONG_NAME_SIZE));
+    addChild(KeySongName, new DuString(MUSIC_SONG_NAME_SIZE));
 
-    addChild(KEY_SONG_SONGVERSION, new DuNumeric(0));
+    addChild(KeySongVersion, new DuNumeric(0));
 
-    addChild(KEY_SONG_REFERENCETRACK,
+    addChild(KeyReferenceTrack,
              new DuNumeric(0, NUMERIC_DEFAULT_SIZE,
                            MUSIC_MAXTRACK, 0));
 
-    addChild(KEY_SONG_REFERENCELOOPDURATION,
+    addChild(KeyReferenceLoopDuration,
              new DuNumeric(0));
 
-    addChild(KEY_SONG_CURRENTTRACK,
+    addChild(KeyCurrentTrack,
              new DuNumeric(0, NUMERIC_DEFAULT_SIZE,
                            MUSIC_MAXTRACK, 0));
 
-    addChild(KEY_SONG_VOLUME,
+    addChild(KeyVolume,
              new DuNumeric(MUSIC_VOL_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            MUSIC_VOL_MAXVALUE, MUSIC_VOL_MINVALUE));
 
-    addChild(KEY_SONG_TEMPO,
+    addChild(KeyTempo,
              new DuNumeric(MUSIC_TEMPO_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            MUSIC_TEMPO_MAXVALUE, MUSIC_TEMPO_MINVALUE));
 
-    addChild(KEY_SONG_OFFSET,
+    addChild(KeyOffset,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0xFF, 0x00));
 
-    addChild(KEY_SONG_CLICKVOLUME,
+    addChild(KeyClickVolume,
              new DuNumeric(MUSIC_TEMPOVOL_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            MUSIC_TEMPOVOL_MAXVALUE, MUSIC_TEMPOVOL_MINVALUE));
 
-    addChild(KEY_SONG_MIXER, new DuMixer());
+    addChild(KeyMixer, new DuMixer());
 
 
-    addChild(KEY_SONG_SCALE,
+    addChild(KeyScale,
              new DuNumeric(MAJOR_LED_MODE, NUMERIC_DEFAULT_SIZE,
                            NUM_LED_MODE - 1, NONE_LED_MODE));
 
-    addChild(KEY_SONG_TONALITY,
+    addChild(KeyTonality,
              new DuNumeric(1, NUMERIC_DEFAULT_SIZE,
                            23, 0));
 
-    addChild(KEY_SONG_TIMESIGNATURE,
+    addChild(KeyTimeSignature,
              new DuNumeric(TIME_4_4, NUMERIC_DEFAULT_SIZE,
                            NUM_TIMESIGNATURE - 1, TIME_OFF));
 
-    addChild(KEY_SONG_REVERBPRESET,
+    addChild(KeyReverbPreset,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
-    addChild(KEY_SONG_LEDS,
+    addChild(KeyLeds,
              new DuBinaryData(NUM_LED_VALUE));
 
 
-    addChild(KEY_SONG_QUANTIFICATION,
+    addChild(KeyQuantification,
              new DuNumeric(0x00));
 }
 
@@ -131,23 +131,23 @@ DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
 
 DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
 {
-    QJsonValue jsonSongId           = jsonSongInfo[KEY_SONG_SONGID];
-    QJsonValue jsonSongName         = jsonSongInfo[KEY_SONG_SONGNAME];
-    QJsonValue jsonSongVersion      = jsonSongInfo[KEY_SONG_SONGVERSION];
-    QJsonValue jsonRefTrack         = jsonSongInfo[KEY_SONG_REFERENCETRACK];
-    QJsonValue jsonRefDuration      = jsonSongInfo[KEY_SONG_REFERENCELOOPDURATION];
-    QJsonValue jsonCurrentTrack     = jsonSongInfo[KEY_SONG_CURRENTTRACK];
-    QJsonValue jsonVolume           = jsonSongInfo[KEY_SONG_VOLUME];
-    QJsonValue jsonTempo            = jsonSongInfo[KEY_SONG_TEMPO];
-    QJsonValue jsonClickVolume      = jsonSongInfo[KEY_SONG_CLICKVOLUME];
-    QJsonValue jsonOffset           = jsonSongInfo[KEY_SONG_OFFSET];
-    QJsonValue jsonMixer            = jsonSongInfo[KEY_SONG_MIXER];
-    QJsonValue jsonScale            = jsonSongInfo[KEY_SONG_SCALE];
-    QJsonValue jsonTonality         = jsonSongInfo[KEY_SONG_TONALITY];
-    QJsonValue jsonTimeSignature    = jsonSongInfo[KEY_SONG_TIMESIGNATURE];
-    QJsonValue jsonReverbPreset     = jsonSongInfo[KEY_SONG_REVERBPRESET];
-    QJsonValue jsonLeds             = jsonSongInfo[KEY_SONG_LEDS];
-    QJsonValue jsonQuantif          = jsonSongInfo[KEY_SONG_QUANTIFICATION];
+    QJsonValue jsonSongId           = jsonSongInfo[KeySongId];
+    QJsonValue jsonSongName         = jsonSongInfo[KeySongName];
+    QJsonValue jsonSongVersion      = jsonSongInfo[KeySongVersion];
+    QJsonValue jsonRefTrack         = jsonSongInfo[KeyReferenceTrack];
+    QJsonValue jsonRefDuration      = jsonSongInfo[KeyReferenceLoopDuration];
+    QJsonValue jsonCurrentTrack     = jsonSongInfo[KeyCurrentTrack];
+    QJsonValue jsonVolume           = jsonSongInfo[KeyVolume];
+    QJsonValue jsonTempo            = jsonSongInfo[KeyTempo];
+    QJsonValue jsonClickVolume      = jsonSongInfo[KeyClickVolume];
+    QJsonValue jsonOffset           = jsonSongInfo[KeyOffset];
+    QJsonValue jsonMixer            = jsonSongInfo[KeyMixer];
+    QJsonValue jsonScale            = jsonSongInfo[KeyScale];
+    QJsonValue jsonTonality         = jsonSongInfo[KeyTonality];
+    QJsonValue jsonTimeSignature    = jsonSongInfo[KeyTimeSignature];
+    QJsonValue jsonReverbPreset     = jsonSongInfo[KeyReverbPreset];
+    QJsonValue jsonLeds             = jsonSongInfo[KeyLeds];
+    QJsonValue jsonQuantif          = jsonSongInfo[KeyQuantification];
 
     if (        !jsonSongId.isDouble()      ||  !jsonSongName.isString()
             ||  !jsonSongVersion.isDouble()
@@ -390,342 +390,27 @@ int DuSongInfo::size() const
     return SONGINFO_SIZE;
 }
 
+DU_KEY_ACCESSORS_IMPL(DuSongInfo, SongId,                Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuSongInfo, SongName,              String, QString, QString())
+DU_KEY_ACCESSORS_IMPL(DuSongInfo, SongVersion,           Numeric, int, -1)
 
-int DuSongInfo::getSongId() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_SONGID);
+DU_KEY_ACCESSORS_IMPL(DuSongInfo, ReferenceTrack,        Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuSongInfo, ReferenceLoopDuration, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuSongInfo, CurrentTrack,          Numeric, int, -1)
 
-    if (tmp == NULL)
-        return -1;
+DU_KEY_ACCESSORS_IMPL(DuSongInfo, Volume,                Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuSongInfo, Tempo,                 Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuSongInfo, Offset,                Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuSongInfo, ClickVolume,           Numeric, int, -1)
 
-    return tmp->getNumeric();
-}
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuSongInfo, Mixer, DuMixer)
 
-bool DuSongInfo::setSongId(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_SONGID);
+DU_KEY_ACCESSORS_IMPL(DuSongInfo, TimeSignature,         Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuSongInfo, Scale,                 Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuSongInfo, Tonality,              Numeric, int, -1)
 
-    if (tmp == NULL)
-        return false;
+DU_KEY_ACCESSORS_IMPL(DuSongInfo, ReverbPreset,          Numeric, int, -1)
 
-    return tmp->setNumeric(value);
-}
+DU_KEY_ACCESSORS_IMPL(DuSongInfo, Leds,                  BinaryData, QByteArray, QByteArray())
 
-QString DuSongInfo::getSongName() const
-{
-    const DuStringConstPtr &tmp = getChildAs<DuString>(KEY_SONG_SONGNAME);
-
-    if (tmp == NULL)
-        return QString();
-
-    return tmp->getString();
-}
-
-bool DuSongInfo::setSongName(const QString value)
-{
-    const DuStringPtr &tmp = getChildAs<DuString>(KEY_SONG_SONGNAME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setString(value);
-}
-
-int DuSongInfo::getSongVersion() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_SONGVERSION);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuSongInfo::setSongVersion(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_SONGVERSION);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuSongInfo::getReferenceTrack() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_REFERENCETRACK);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuSongInfo::setReferenceTrack(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_REFERENCETRACK);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuSongInfo::getReferenceLoopDuration() const
-{
-    const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_SONG_REFERENCELOOPDURATION);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuSongInfo::setReferenceLoopDuration(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_REFERENCELOOPDURATION);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuSongInfo::getCurrentTrack() const
-{
-    const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_SONG_CURRENTTRACK);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuSongInfo::setCurrentTrack(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_CURRENTTRACK);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuSongInfo::getVolume() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_VOLUME);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuSongInfo::setVolume(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_VOLUME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuSongInfo::getTempo() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_TEMPO);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuSongInfo::setTempo(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_TEMPO);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuSongInfo::getClickVolume() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_CLICKVOLUME);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuSongInfo::setClickVolume(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_CLICKVOLUME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuSongInfo::getOffset() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_OFFSET);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuSongInfo::setOffset(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_OFFSET);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-DuMixerConstPtr DuSongInfo::getMixer() const
-{
-    return getChildAs<DuMixer>(KEY_SONG_MIXER);
-}
-
-void DuSongInfo::setMixer(const DuMixerPtr &mixer)
-{
-    addChild(KEY_SONG_MIXER, mixer);
-}
-
-
-int DuSongInfo::getScale() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_SCALE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuSongInfo::setScale(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_SCALE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuSongInfo::getTonality() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_TONALITY);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuSongInfo::setTonality(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_TONALITY);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuSongInfo::getTimeSignature() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_TIMESIGNATURE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuSongInfo::setTimeSignature(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_TIMESIGNATURE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuSongInfo::getReverbPreset() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_REVERBPRESET);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuSongInfo::setReverbPreset(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_REVERBPRESET);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-QByteArray DuSongInfo::getLeds() const
-{
-    const DuBinaryDataConstPtr &tmp = getChildAs<DuBinaryData>(KEY_SONG_LEDS);
-
-    if (tmp == NULL)
-        return QByteArray();
-
-    return tmp->getBinaryData();
-}
-
-bool DuSongInfo::setLeds(const QByteArray &value)
-{
-    const DuBinaryDataPtr &tmp = getChildAs<DuBinaryData>(KEY_SONG_LEDS);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setBinaryData(value);
-}
-
-
-int DuSongInfo::getQuantification() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_QUANTIFICATION);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuSongInfo::setQuantification(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_SONG_QUANTIFICATION);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
+DU_KEY_ACCESSORS_IMPL(DuSongInfo, Quantification,        Numeric, int, -1)

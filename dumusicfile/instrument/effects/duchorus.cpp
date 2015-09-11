@@ -9,48 +9,48 @@ DU_OBJECT_IMPL(DuChorus)
 DuChorus::DuChorus() :
     DuEffectSettings()
 {
-    addChild(KEY_CHORUS_MODE,
+    addChild(KeyMode,
              new DuNumeric(FX_CHORUS_MODE_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_CHORUS_MODE_MAXVALUE, FX_CHORUS_MODE_MINVALUE));
 
-    addChild(KEY_CHORUS_EFFECTLEVEL,
+    addChild(KeyEffectLevel,
              new DuNumeric(FX_CHORUS_LEVEL_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_CHORUS_LEVEL_MAXVALUE, FX_CHORUS_LEVEL_MINVALUE));
 
-    addChild(KEY_CHORUS_DELAYTIME,
+    addChild(KeyDelayTime,
              new DuNumeric(FX_CHORUS_DELAY_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_CHORUS_DELAY_MAXVALUE, FX_CHORUS_DELAY_MINVALUE));
 
-    addChild(KEY_CHORUS_FEEDBACK,
+    addChild(KeyFeedback,
              new DuNumeric(FX_CHORUS_FEEDBACK_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_CHORUS_FEEDBACK_MAXVALUE, FX_CHORUS_FEEDBACK_MINVALUE));
 
-    addChild(KEY_CHORUS_INPUTHIGHPASSFILTER,
+    addChild(KeyInputHighPassFilterFrequency,
              new DuNumeric(FX_CHORUS_INPUTHP_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_CHORUS_INPUTHP_MAXVALUE, FX_CHORUS_INPUTHP_MINVALUE));
 
-    addChild(KEY_CHORUS_HDAMP,
+    addChild(KeyHDAmp,
              new DuNumeric(FX_CHORUS_HDAMP_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_CHORUS_HDAMP_MAXVALUE, FX_CHORUS_HDAMP_MINVALUE));
 
-    addChild(KEY_CHORUS_MODULATIONDEPTH,
+    addChild(KeyModulationDepth,
              new DuNumeric(FX_CHORUS_MODDEPTH_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_CHORUS_MODDEPTH_MAXVALUE, FX_CHORUS_MODDEPTH_MINVALUE));
 
-    addChild(KEY_CHORUS_MODULATIONRATE,
+    addChild(KeyModulationRate,
              new DuNumeric(FX_CHORUS_MODRATE_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_CHORUS_MODRATE_MAXVALUE, FX_CHORUS_MODRATE_MINVALUE));
 
-    addChild(KEY_CHORUS_TREMOLOSHAPE,
+    addChild(KeyTremoloShape,
              new DuNumeric(FX_CHORUS_TREMOLO_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_CHORUS_TREMOLO_MAXVALUE, FX_CHORUS_TREMOLO_MINVALUE));
 
-    addChild(KEY_CHORUS_ROTARYSPEED,
+    addChild(KeyRotarySpeed,
              new DuNumeric(FX_CHORUS_ROTARY_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_CHORUS_ROTARY_MAXVALUE, FX_CHORUS_ROTARY_MINVALUE));
 
-    addChild(KEY_CHORUS_EFFECTNAME,
-             new DuString(QString(DEFAULT_EFFECTNAME), NAME_CARACT));
+    addChild(KeyEffectName,
+             new DuString(QStringLiteral(DEFAULT_EFFECTNAME), NAME_CARACT));
 }
 
 DuChorus::~DuChorus()
@@ -95,17 +95,17 @@ DuChorusPtr DuChorus::fromDuMusicBinary(const FX_chorus &du_chorus)
 
 DuChorusPtr DuChorus::fromJson(const QJsonObject &jsonChorus)
 {
-    QJsonValue jsonMode         = jsonChorus[KEY_CHORUS_MODE];
-    QJsonValue jsonEffectLvl    = jsonChorus[KEY_CHORUS_EFFECTLEVEL];
-    QJsonValue jsonDelayTime    = jsonChorus[KEY_CHORUS_DELAYTIME];
-    QJsonValue jsonFeedback     = jsonChorus[KEY_CHORUS_FEEDBACK];
-    QJsonValue jsonHiPassFreq   = jsonChorus[KEY_CHORUS_INPUTHIGHPASSFILTER];
-    QJsonValue jsonHDAmp        = jsonChorus[KEY_CHORUS_HDAMP];
-    QJsonValue jsonModDepth     = jsonChorus[KEY_CHORUS_MODULATIONDEPTH];
-    QJsonValue jsonModRate      = jsonChorus[KEY_CHORUS_MODULATIONRATE];
-    QJsonValue jsonTremShape    = jsonChorus[KEY_CHORUS_TREMOLOSHAPE];
-    QJsonValue jsonRotSpeed     = jsonChorus[KEY_CHORUS_ROTARYSPEED];
-    QJsonValue jsonEffectName   = jsonChorus[KEY_CHORUS_EFFECTNAME];
+    QJsonValue jsonMode         = jsonChorus[KeyMode];
+    QJsonValue jsonEffectLvl    = jsonChorus[KeyEffectLevel];
+    QJsonValue jsonDelayTime    = jsonChorus[KeyDelayTime];
+    QJsonValue jsonFeedback     = jsonChorus[KeyFeedback];
+    QJsonValue jsonHiPassFreq   = jsonChorus[KeyInputHighPassFilterFrequency];
+    QJsonValue jsonHDAmp        = jsonChorus[KeyHDAmp];
+    QJsonValue jsonModDepth     = jsonChorus[KeyModulationDepth];
+    QJsonValue jsonModRate      = jsonChorus[KeyModulationRate];
+    QJsonValue jsonTremShape    = jsonChorus[KeyTremoloShape];
+    QJsonValue jsonRotSpeed     = jsonChorus[KeyRotarySpeed];
+    QJsonValue jsonEffectName   = jsonChorus[KeyEffectName];
 
     if (        !jsonMode.isDouble()        ||  !jsonEffectLvl.isDouble()
             ||  !jsonDelayTime.isDouble()   ||  !jsonFeedback.isDouble()
@@ -228,225 +228,14 @@ int DuChorus::size() const
 }
 
 
-int DuChorus::getMode() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuChorus::setMode(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuChorus::getEffectLevel() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CHORUS_EFFECTLEVEL);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuChorus::setEffectLevel(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_CHORUS_EFFECTLEVEL);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuChorus::getDelayTime() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CHORUS_DELAYTIME);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuChorus::setDelayTime(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_CHORUS_DELAYTIME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuChorus::getFeedback() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CHORUS_FEEDBACK);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuChorus::setFeedback(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_CHORUS_FEEDBACK);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuChorus::getInputHighPassFilterFrequency() const
-{
-    const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_CHORUS_INPUTHIGHPASSFILTER);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuChorus::setInputHighPassFilterFrequency(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_CHORUS_INPUTHIGHPASSFILTER);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuChorus::getHDAmp() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CHORUS_HDAMP);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuChorus::setHDAmp(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_CHORUS_HDAMP);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuChorus::getModulationDepth() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODULATIONDEPTH);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuChorus::setModulationDepth(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODULATIONDEPTH);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuChorus::getModulationRate() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODULATIONRATE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuChorus::setModulationRate(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_CHORUS_MODULATIONRATE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuChorus::getTremoloShape() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CHORUS_TREMOLOSHAPE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuChorus::setTremoloShape(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_CHORUS_TREMOLOSHAPE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuChorus::getRotarySpeed() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CHORUS_ROTARYSPEED);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuChorus::setRotarySpeed(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_CHORUS_ROTARYSPEED);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-QString DuChorus::getEffectName() const
-{
-    const DuStringConstPtr &tmp = getChildAs<DuString>(KEY_CHORUS_EFFECTNAME);
-
-    if (tmp == NULL)
-        return QString();
-
-    return tmp->getString();
-}
-
-bool DuChorus::setEffectName(const QString &value)
-{
-    DuStringPtr tmp = getChildAs<DuString>(KEY_CHORUS_EFFECTNAME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setString(value);
-}
+DU_KEY_ACCESSORS_IMPL(DuChorus, Mode,                         Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuChorus, EffectLevel,                  Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuChorus, DelayTime,                    Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuChorus, Feedback,                     Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuChorus, InputHighPassFilterFrequency, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuChorus, HDAmp,                        Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuChorus, ModulationDepth,              Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuChorus, ModulationRate,               Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuChorus, TremoloShape,                 Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuChorus, RotarySpeed,                  Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuChorus, EffectName,                   String, QString, QString())

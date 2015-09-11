@@ -6,17 +6,6 @@
 #include "duevent.h"
 
 
-#define KEY_LOOP_STATE              "State"
-#define KEY_LOOP_DURATIONMODIFIER   "DurationModifier"
-#define KEY_LOOP_SCOREDISPLAY       "ScoreDisplay"
-#define KEY_LOOP_MIDIOUTCHANNEL     "MidiOutChannel"
-
-#define KEY_LOOP_SAVELOOPTIMER      "SaveLoopTimer"
-
-#define KEY_LOOP_INSTRUMENT         "Instrument"
-#define KEY_LOOP_EVENTS             "Events"
-
-
 DU_OBJECT(DuLoop)
 
 class DuLoop : public DuContainer
@@ -37,27 +26,17 @@ public:
 
     int size() const;
 
-    int getState() const;
-    bool setState(int value);
+DU_KEY_ACCESSORS(State,            int)
+DU_KEY_ACCESSORS(DurationModifier, int)
+DU_KEY_ACCESSORS(ScoreDisplay,     int)
+DU_KEY_ACCESSORS(MidiOutChannel,   int)
 
-    int getDurationModifier() const;
-    bool setDurationModifier(int value);
+DU_KEY_ACCESSORS(SaveLoopTimer,    int)
 
-    int getScoreDisplay() const;
-    bool setScoreDisplay(int value);
+DU_KEY_ACCESSORS_OBJECT(Instrument, DuInstrument)
+DU_KEY_ACCESSORS_OBJECT(Events,     DuArray)
 
-    int getMidiOutChannel() const;
-    bool setMidiOutChannel(int value);
-
-    int getSaveLoopTimer() const;
-    bool setSaveLoopTimer(int value);
-
-    DuInstrumentConstPtr getInstrument() const;
-    void setInstrument(const DuInstrumentPtr &instrument);
-
-    DuArrayConstPtr getEvents() const;
-    void setEvents(const DuArrayPtr& array);
-
+public:
     int eventsSize() const;
 
     int countEvents() const;

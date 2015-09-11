@@ -10,39 +10,39 @@ DU_OBJECT_IMPL(DuControllers)
 DuControllers::DuControllers() :
     DuContainer()
 {
-    addChild(KEY_CONTROLS_DIRECTIONGYROP,
+    addChild(KeyDirectionGyroP,
              new DuNumeric(DIRECTIONGYRO_MINVALUE, NUMERIC_DEFAULT_SIZE,
                            DIRECTIONGYRO_MAXVALUE, DIRECTIONGYRO_MINVALUE));
 
-    addChild(KEY_CONTROLS_DIRECTIONGYROR,
+    addChild(KeyDirectionGyroR,
              new DuNumeric(DIRECTIONGYRO_MINVALUE, NUMERIC_DEFAULT_SIZE,
                            DIRECTIONGYRO_MAXVALUE, DIRECTIONGYRO_MINVALUE));
 
-    addChild(KEY_CONTROLS_DIRECTIONGYROY,
+    addChild(KeyDirectionGyroY,
              new DuNumeric(DIRECTIONGYRO_MINVALUE, NUMERIC_DEFAULT_SIZE,
                            DIRECTIONGYRO_MAXVALUE, DIRECTIONGYRO_MINVALUE));
 
-    addChild(KEY_CONTROLS_ACTIVEAFTERTOUCH,
+    addChild(KeyActiveAftertouch,
              new DuNumeric(0x00, CONTROLS_NUMERIC_SIZE,
                            0xFFFF, 0x0000));
 
-    addChild(KEY_CONTROLS_ACTIVESLIDERL,
+    addChild(KeyActiveSliderL,
              new DuNumeric(0x00, CONTROLS_NUMERIC_SIZE,
                            0xFFFF, 0x0000));
 
-    addChild(KEY_CONTROLS_ACTIVESLIDERR,
+    addChild(KeyActiveSliderR,
              new DuNumeric(0x00, CONTROLS_NUMERIC_SIZE,
                            0xFFFF, 0x0000));
 
-    addChild(KEY_CONTROLS_ACTIVEGYROP,
+    addChild(KeyActiveGyroP,
              new DuNumeric(0x00, CONTROLS_NUMERIC_SIZE,
                            0xFFFF, 0x0000));
 
-    addChild(KEY_CONTROLS_ACTIVEGYROR,
+    addChild(KeyActiveGyroR,
              new DuNumeric(0x00, CONTROLS_NUMERIC_SIZE,
                            0xFFFF, 0x0000));
 
-    addChild(KEY_CONTROLS_ACTIVEGYROY,
+    addChild(KeyActiveGyroY,
              new DuNumeric(0x00, CONTROLS_NUMERIC_SIZE,
                            0xFFFF, 0x0000));
 }
@@ -113,15 +113,15 @@ DuControllersPtr DuControllers::fromDuMusicBinary(const preset_instr &du_preset)
 
 DuControllersPtr DuControllers::fromJson(const QJsonObject &jsonControllers)
 {
-    QJsonValue jsonDirectionGyroP       = jsonControllers[KEY_CONTROLS_DIRECTIONGYROP];
-    QJsonValue jsonDirectionGyroR       = jsonControllers[KEY_CONTROLS_DIRECTIONGYROR];
-    QJsonValue jsonDirectionGyroY       = jsonControllers[KEY_CONTROLS_DIRECTIONGYROY];
-    QJsonValue jsonActiveAftertouch     = jsonControllers[KEY_CONTROLS_ACTIVEAFTERTOUCH];
-    QJsonValue jsonActiveSliderL        = jsonControllers[KEY_CONTROLS_ACTIVESLIDERL];
-    QJsonValue jsonActiveSliderR        = jsonControllers[KEY_CONTROLS_ACTIVESLIDERR];
-    QJsonValue jsonActiveGyroP          = jsonControllers[KEY_CONTROLS_ACTIVEGYROP];
-    QJsonValue jsonActiveGyroR          = jsonControllers[KEY_CONTROLS_ACTIVEGYROR];
-    QJsonValue jsonActiveGyroY          = jsonControllers[KEY_CONTROLS_ACTIVEGYROY];
+    QJsonValue jsonDirectionGyroP       = jsonControllers[KeyDirectionGyroP];
+    QJsonValue jsonDirectionGyroR       = jsonControllers[KeyDirectionGyroR];
+    QJsonValue jsonDirectionGyroY       = jsonControllers[KeyDirectionGyroY];
+    QJsonValue jsonActiveAftertouch     = jsonControllers[KeyActiveAftertouch];
+    QJsonValue jsonActiveSliderL        = jsonControllers[KeyActiveSliderL];
+    QJsonValue jsonActiveSliderR        = jsonControllers[KeyActiveSliderR];
+    QJsonValue jsonActiveGyroP          = jsonControllers[KeyActiveGyroP];
+    QJsonValue jsonActiveGyroR          = jsonControllers[KeyActiveGyroR];
+    QJsonValue jsonActiveGyroY          = jsonControllers[KeyActiveGyroY];
 
     if (        !jsonDirectionGyroP.isDouble()  ||  !jsonDirectionGyroR.isDouble()
             ||  !jsonDirectionGyroY.isDouble()  ||  !jsonActiveAftertouch.isDouble()
@@ -236,7 +236,7 @@ int DuControllers::size() const
 
 int DuControllers::getDirectionGyroP() const
 {
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CONTROLS_DIRECTIONGYROP);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KeyDirectionGyroP);
 
     if (tmp == NULL)
         return 0;
@@ -244,9 +244,9 @@ int DuControllers::getDirectionGyroP() const
     return tmp->getNumeric();
 }
 
-bool DuControllers::setDirectionGyroP(int value)
+bool DuControllers::setDirectionGyroP(const int& value)
 {
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_CONTROLS_DIRECTIONGYROP);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KeyDirectionGyroP);
 
     if (tmp == NULL)
         return false;
@@ -262,11 +262,13 @@ bool DuControllers::setDirectionGyroP(int value)
 
     return tmp->setNumeric(value);
 }
+
+const QString DuControllers::KeyDirectionGyroP = QStringLiteral("DirectionGyroP");
 
 
 int DuControllers::getDirectionGyroR() const
 {
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CONTROLS_DIRECTIONGYROR);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KeyDirectionGyroR);
 
     if (tmp == NULL)
         return 0;
@@ -274,9 +276,9 @@ int DuControllers::getDirectionGyroR() const
     return tmp->getNumeric();
 }
 
-bool DuControllers::setDirectionGyroR(int value)
+bool DuControllers::setDirectionGyroR(const int& value)
 {
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_CONTROLS_DIRECTIONGYROR);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KeyDirectionGyroR);
 
     if (tmp == NULL)
         return false;
@@ -292,11 +294,13 @@ bool DuControllers::setDirectionGyroR(int value)
 
     return tmp->setNumeric(value);
 }
+
+const QString DuControllers::KeyDirectionGyroR = QStringLiteral("DirectionGyroR");
 
 
 int DuControllers::getDirectionGyroY() const
 {
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CONTROLS_DIRECTIONGYROY);
+    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KeyDirectionGyroY);
 
     if (tmp == NULL)
         return 0;
@@ -304,9 +308,9 @@ int DuControllers::getDirectionGyroY() const
     return tmp->getNumeric();
 }
 
-bool DuControllers::setDirectionGyroY(int value)
+bool DuControllers::setDirectionGyroY(const int& value)
 {
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_CONTROLS_DIRECTIONGYROY);
+    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KeyDirectionGyroY);
 
     if (tmp == NULL)
         return false;
@@ -323,128 +327,13 @@ bool DuControllers::setDirectionGyroY(int value)
     return tmp->setNumeric(value);
 }
 
-
-int DuControllers::getActiveAftertouch() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CONTROLS_ACTIVEAFTERTOUCH);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuControllers::setActiveAftertouch(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_CONTROLS_ACTIVEAFTERTOUCH);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
+const QString DuControllers::KeyDirectionGyroY = QStringLiteral("DirectionGyroY");
 
 
-int DuControllers::getActiveSliderL() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CONTROLS_ACTIVESLIDERL);
+DU_KEY_ACCESSORS_IMPL(DuControllers, ActiveAftertouch, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuControllers, ActiveSliderL,    Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuControllers, ActiveSliderR,    Numeric, int, -1)
 
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuControllers::setActiveSliderL(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_CONTROLS_ACTIVESLIDERL);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuControllers::getActiveSliderR() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CONTROLS_ACTIVESLIDERR);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuControllers::setActiveSliderR(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_CONTROLS_ACTIVESLIDERR);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuControllers::getActiveGyroP() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CONTROLS_ACTIVEGYROP);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuControllers::setActiveGyroP(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_CONTROLS_ACTIVEGYROP);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuControllers::getActiveGyroR() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CONTROLS_ACTIVEGYROR);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuControllers::setActiveGyroR(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_CONTROLS_ACTIVEGYROR);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuControllers::getActiveGyroY() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_CONTROLS_ACTIVEGYROY);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuControllers::setActiveGyroY(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_CONTROLS_ACTIVEGYROY);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
+DU_KEY_ACCESSORS_IMPL(DuControllers, ActiveGyroP,      Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuControllers, ActiveGyroR,      Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuControllers, ActiveGyroY,      Numeric, int, -1)

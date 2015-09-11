@@ -10,11 +10,11 @@ DU_OBJECT_IMPL(DuPreset)
 DuPreset::DuPreset() :
     DuContainer()
 {
-    addChild(KEY_PRESET_EXPRESSION, new DuExpression);
+    addChild(KeyExpression, new DuExpression);
 
-    addChild(KEY_PRESET_CONTROLLERS, new DuControllers);
+    addChild(KeyControllers, new DuControllers);
 
-    addChild(KEY_PRESET_EFFECTSET, new DuEffectSet);
+    addChild(KeyEffectSet, new DuEffectSet);
 }
 
 DuPreset::~DuPreset()
@@ -76,9 +76,9 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
 
 DuPresetPtr DuPreset::fromJson(const QJsonObject &jsonPreset)
 {
-    QJsonValue jsonExpression       = jsonPreset[KEY_PRESET_EXPRESSION];
-    QJsonValue jsonControllers      = jsonPreset[KEY_PRESET_CONTROLLERS];
-    QJsonValue jsonEffectSet        = jsonPreset[KEY_PRESET_EFFECTSET];
+    QJsonValue jsonExpression       = jsonPreset[KeyExpression];
+    QJsonValue jsonControllers      = jsonPreset[KeyControllers];
+    QJsonValue jsonEffectSet        = jsonPreset[KeyEffectSet];
 
     if (        !jsonExpression.isObject()      ||  !jsonControllers.isObject()
             ||  !jsonEffectSet.isObject())
@@ -183,34 +183,6 @@ int DuPreset::size() const
 }
 
 
-DuExpressionConstPtr DuPreset::getExpression() const
-{
-    return getChildAs<DuExpression>(KEY_PRESET_EXPRESSION);
-}
-
-void DuPreset::setExpression(const DuExpressionPtr &expression)
-{
-    addChild(KEY_PRESET_EXPRESSION, expression);
-}
-
-
-DuControllersConstPtr DuPreset::getControllers() const
-{
-    return getChildAs<DuControllers>(KEY_PRESET_CONTROLLERS);
-}
-
-void DuPreset::setControllers(const DuControllersPtr &controllers)
-{
-    addChild(KEY_PRESET_CONTROLLERS, controllers);
-}
-
-
-DuEffectSetConstPtr DuPreset::getEffectSet() const
-{
-    return getChildAs<DuEffectSet>(KEY_PRESET_EFFECTSET);
-}
-
-void DuPreset::setEffectSet(const DuEffectSetPtr &effectSet)
-{
-    addChild(KEY_PRESET_EFFECTSET, effectSet);
-}
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuPreset, Expression,  DuExpression)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuPreset, Controllers, DuControllers)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuPreset, EffectSet,   DuEffectSet)

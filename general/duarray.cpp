@@ -20,9 +20,10 @@ DuArray::DuArray(const DuArray &other) :
     DuObject(other),
     maxSize(other.maxSize)
 {
-    QListIterator<DuObjectPtr> i(other.array);
-    while (i.hasNext()) {
-        array.append(i.next()->clone());
+    array.reserve(other.array.size());
+    foreach (const DuObjectPtr& obj, other.array)
+    {
+        array.append(obj->clone());
     }
 }
 
