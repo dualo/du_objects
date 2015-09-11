@@ -124,8 +124,18 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
         return DuEventPtr();
     }
 
+    int midiType = channelEvent->getType();
+    if (midiType <= 0x08)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuEvent::fromMidi():\n"
+                << "invalid MIDI event type" << midiType;
+
+        return DuEventPtr();
+    }
+
     //This case should not occur since it is already tested in DuLoop::fromMidi()
-    if (channelEvent->getType() == DuMidiChannelEvent::ProgramChange)
+    if (midiType == DuMidiChannelEvent::ProgramChange)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuEvent::fromMidi():\n"
@@ -135,20 +145,7 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
         return DuEventPtr();
     }
 
-    //Converting event in case of note off written as note on with velocity 0
-    if (channelEvent->getType() == DuMidiChannelEvent::NoteOn
-            && channelEvent->getValue() == 0)
-    {
-        channelEvent->setType(DuMidiChannelEvent::NoteOff);
-        channelEvent->setValue(0x40);
-    }
-
     DuEventPtr event(new DuEvent);
-    bool verif = true;
-
-    verif = event->setTime(channelEvent->getTime()) ? verif : false;
-    verif = event->setControl(channelEvent->getType() - 0x08) ? verif : false;
-    verif = event->setValue(channelEvent->getValue()) ? verif : false;
 
     int tmpKey = channelEvent->getKey();
     if (tmpKey == -1)
@@ -160,8 +157,18 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
         return DuEventPtr();
     }
 
+    //Converting event in case of note off written as note on with velocity 0
+    if (midiType == DuMidiChannelEvent::NoteOn
+            && channelEvent->getValue() == 0)
+    {
+        channelEvent->setType(DuMidiChannelEvent::NoteOff);
+        channelEvent->setValue(0x40);
+    }
+
     int keyboard = 0;
     int key = tmpKey;
+
+    bool verif = true;
 
     if (isPercu)
     {
@@ -181,7 +188,7 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
 
         verif = event->setCanal((percuIndex << 4) & 0xF0) ? verif : false;
     }
-    else
+    else if (midiType <= DuMidiChannelEvent::KeyAftertouch)
     {
         //KEY_MUSIC_TRANSPOSE set to default when importing from Midi
         key = tmpKey - 12 * presetOctave;
@@ -199,6 +206,10 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
 
     verif = event->setKeyboard(keyboard) ? verif : false;
     verif = event->setNote(key) ? verif : false;
+
+    verif = event->setTime(channelEvent->getTime()) ? verif : false;
+    verif = event->setControl(midiType - 0x08) ? verif : false;
+    verif = event->setValue(channelEvent->getValue()) ? verif : false;
 
     if (!verif)
     {
