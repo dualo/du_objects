@@ -125,7 +125,7 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
     }
 
     int midiType = channelEvent->getType();
-    if (midiType <= 0x08)
+    if (midiType < 0x08)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuEvent::fromMidi():\n"
@@ -176,14 +176,17 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
         //In du-musics, it starts from 1 (0 being for harmonic instruments)
         quint8 percuIndex = instrKeyMap - 1;
 
-        key = MidiConversionHelper::percuFromMidi(tmpKey, percuIndex);
-        if (key == -1)
+        if (midiType <= DuMidiChannelEvent::KeyAftertouch)
         {
-            qCWarning(LOG_CAT_DU_OBJECT)
-                    << "DuEvent::fromMidi():\n"
-                    << "key not found in this mapping";
+            key = MidiConversionHelper::percuFromMidi(tmpKey, percuIndex);
+            if (key == -1)
+            {
+                qCWarning(LOG_CAT_DU_OBJECT)
+                        << "DuEvent::fromMidi():\n"
+                        << "key not found in this mapping";
 
-            return DuEventPtr();
+                return DuEventPtr();
+            }
         }
 
         verif = event->setCanal((percuIndex << 4) & 0xF0) ? verif : false;
