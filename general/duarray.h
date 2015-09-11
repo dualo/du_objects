@@ -41,6 +41,12 @@ public:
 
     DuObjectPtr at(int index);
     DuObjectConstPtr at(int index) const;
+
+    template <class T>
+    QSharedPointer<T> atAs(int index);
+    template <class T>
+    QSharedPointer<const T> atAs(int index) const;
+
     DuObjectPtr operator[](int index);
 
 protected:
@@ -50,5 +56,17 @@ private:
     QList<DuObjectPtr> array;
     int maxSize;
 };
+
+template <class T>
+inline QSharedPointer<T> DuArray::atAs(int index)
+{
+    return at(index).dynamicCast<T>();
+}
+
+template <class T>
+inline QSharedPointer<const T> DuArray::atAs(int index) const
+{
+    return at(index).dynamicCast<const T>();
+}
 
 #endif // DUARRAY_H

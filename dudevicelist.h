@@ -3,8 +3,6 @@
 
 #include "dulist.h"
 
-#define KEY_DEVICE_LIST_SERIAL_NUMBER "SerialNumber"
-
 
 DU_OBJECT(DuDevice)
 
@@ -19,9 +17,6 @@ public:
 
     bool equals(const DuListConstPtr& other) const;
 
-    QString getSerialNumber() const;
-    bool setSerialNumber(const QString& value);
-
     bool getConnected() const;
     void setConnected(bool value);
 
@@ -29,6 +24,8 @@ public:
     void setBusy(bool value);
 
     bool setType(Type value);
+
+    DU_KEY_ACCESSORS(SerialNumber, QString)
 
 private:
     bool connected;

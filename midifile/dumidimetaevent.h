@@ -4,9 +4,9 @@
 #include "dumidibasicevent.h"
 
 
-#define KEY_MIDIMETAEVENT_TYPE      "Type"
-#define KEY_MIDIMETAEVENT_LENGTH    "Length"
-#define KEY_MIDIMETAEVENT_DATA      "Data"
+#define KEY_MIDIMETAEVENT_TYPE      QStringLiteral("Type")
+#define KEY_MIDIMETAEVENT_LENGTH    QStringLiteral("Length")
+#define KEY_MIDIMETAEVENT_DATA      QStringLiteral("Data")
 
 #define MICROSECS_PER_MIN           60000000
 

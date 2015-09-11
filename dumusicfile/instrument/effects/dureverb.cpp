@@ -10,52 +10,52 @@
 
 DuReverb::DuReverb()
 {
-    addChild(KEY_REVERB_LEVEL,
+    addChild(KeyLevel,
              new DuNumeric(FX_REVERB_LEVEL_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_REVERB_LEVEL_MAXVALUE, FX_REVERB_LEVEL_MINVALUE));
 
-    addChild(KEY_REVERB_DIRECTLEVEL,
+    addChild(KeyDirectLevel,
              new DuNumeric(FX_REVERB_DIRECTLEVEL_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_REVERB_DIRECTLEVEL_MAXVALUE, FX_REVERB_DIRECTLEVEL_MINVALUE));
 
-    addChild(KEY_REVERB_REVERBSEND,
+    addChild(KeyReverbSend,
              new DuNumeric(FX_REVERB_REVSEND_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_REVERB_REVSEND_MAXVALUE, FX_REVERB_REVSEND_MINVALUE));
 
-    addChild(KEY_REVERB_TONEGAIN,
+    addChild(KeyToneGain,
              new DuNumeric(FX_REVERB_TONEGAIN_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_REVERB_TONEGAIN_MAXVALUE, FX_REVERB_TONEGAIN_MINVALUE));
 
-    addChild(KEY_REVERB_TONEFREQUENCY,
+    addChild(KeyToneFrequency,
              new DuNumeric(FX_REVERB_TONEFREQ_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_REVERB_TONEFREQ_MAXVALUE, FX_REVERB_TONEFREQ_MINVALUE));
 
-    addChild(KEY_REVERB_PREHPFILTER,
+    addChild(KeyPreHighPassFilter,
              new DuNumeric(FX_REVERB_PREHP_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_REVERB_PREHP_MAXVALUE, FX_REVERB_PREHP_MINVALUE));
 
-    addChild(KEY_REVERB_TIME,
+    addChild(KeyTime,
              new DuNumeric(FX_REVERB_TIME_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_REVERB_TIME_MAXVALUE, FX_REVERB_TIME_MINVALUE));
 
-    addChild(KEY_REVERB_ECHOFEEDBACK,
+    addChild(KeyEchoFeedback,
              new DuNumeric(FX_REVERB_ECHOFEED_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_REVERB_ECHOFEED_MAXVALUE, FX_REVERB_ECHOFEED_MINVALUE));
 
-    addChild(KEY_REVERB_HDAMP,
+    addChild(KeyHDAmp,
              new DuNumeric(FX_REVERB_HDAMP_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_REVERB_HDAMP_MAXVALUE, FX_REVERB_HDAMP_MINVALUE));
 
-    addChild(KEY_REVERB_THRESHOLDGATE,
+    addChild(KeyThresholdGate,
              new DuNumeric(FX_REVERB_THRESGATE_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_REVERB_THRESGATE_MAXVALUE, FX_REVERB_THRESGATE_MINVALUE));
 
-    addChild(KEY_REVERB_PREDELAYTIME,
+    addChild(KeyPreDelayTime,
              new DuNumeric(FX_REVERB_PREDELAYTIME_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_REVERB_PREDELAYTIME_MAXVALUE, FX_REVERB_PREDELAYTIME_MINVALUE));
 
-    addChild(KEY_REVERB_EFFECTNAME,
-             new DuString(DEFAULT_EFFECTNAME, NAME_CARACT));
+    addChild(KeyEffectName,
+             new DuString(QStringLiteral(DEFAULT_EFFECTNAME), NAME_CARACT));
 }
 
 DuReverb::~DuReverb()
@@ -80,7 +80,7 @@ DuReverbPtr DuReverb::fromDuMusicBinary(const FX_reverb &du_reverb)
 
     verif = reverb->setToneGain(du_reverb.r_tonegain) ? verif : false;
     verif = reverb->setToneFrequency(du_reverb.r_tonefreq) ? verif : false;
-    verif = reverb->setPreHPFilter(du_reverb.r_prehp) ? verif : false;
+    verif = reverb->setPreHighPassFilter(du_reverb.r_prehp) ? verif : false;
 
     verif = reverb->setTime(du_reverb.r_time) ? verif : false;
     verif = reverb->setEchoFeedback(du_reverb.r_echofeedback) ? verif : false;
@@ -103,18 +103,18 @@ DuReverbPtr DuReverb::fromDuMusicBinary(const FX_reverb &du_reverb)
 
 DuReverbPtr DuReverb::fromJson(const QJsonObject &jsonReverb)
 {
-    QJsonValue jsonLevel                    = jsonReverb[KEY_REVERB_LEVEL];
-    QJsonValue jsonDirectLevel              = jsonReverb[KEY_REVERB_DIRECTLEVEL];
-    QJsonValue jsonRevSend                  = jsonReverb[KEY_REVERB_REVERBSEND];
-    QJsonValue jsonToneGain                 = jsonReverb[KEY_REVERB_TONEGAIN];
-    QJsonValue jsonToneFreq                 = jsonReverb[KEY_REVERB_TONEFREQUENCY];
-    QJsonValue jsonPreHPFilter              = jsonReverb[KEY_REVERB_PREHPFILTER];
-    QJsonValue jsonTime                     = jsonReverb[KEY_REVERB_TIME];
-    QJsonValue jsonEchoFeedback             = jsonReverb[KEY_REVERB_ECHOFEEDBACK];
-    QJsonValue jsonHDAmp                    = jsonReverb[KEY_REVERB_HDAMP];
-    QJsonValue jsonThreshGate               = jsonReverb[KEY_REVERB_THRESHOLDGATE];
-    QJsonValue jsonPreDelayTime             = jsonReverb[KEY_REVERB_PREDELAYTIME];
-    QJsonValue jsonEffectName               = jsonReverb[KEY_REVERB_EFFECTNAME];
+    QJsonValue jsonLevel                    = jsonReverb[KeyLevel];
+    QJsonValue jsonDirectLevel              = jsonReverb[KeyDirectLevel];
+    QJsonValue jsonRevSend                  = jsonReverb[KeyReverbSend];
+    QJsonValue jsonToneGain                 = jsonReverb[KeyToneGain];
+    QJsonValue jsonToneFreq                 = jsonReverb[KeyToneFrequency];
+    QJsonValue jsonPreHPFilter              = jsonReverb[KeyPreHighPassFilter];
+    QJsonValue jsonTime                     = jsonReverb[KeyTime];
+    QJsonValue jsonEchoFeedback             = jsonReverb[KeyEchoFeedback];
+    QJsonValue jsonHDAmp                    = jsonReverb[KeyHDAmp];
+    QJsonValue jsonThreshGate               = jsonReverb[KeyThresholdGate];
+    QJsonValue jsonPreDelayTime             = jsonReverb[KeyPreDelayTime];
+    QJsonValue jsonEffectName               = jsonReverb[KeyEffectName];
 
     if (        !jsonLevel.isDouble()           ||  !jsonDirectLevel.isDouble()
             ||  !jsonRevSend.isDouble()         ||  !jsonToneGain.isDouble()
@@ -140,7 +140,7 @@ DuReverbPtr DuReverb::fromJson(const QJsonObject &jsonReverb)
 
     verif = reverb->setToneGain(jsonToneGain.toInt()) ? verif : false;
     verif = reverb->setToneFrequency(jsonToneFreq.toInt()) ? verif : false;
-    verif = reverb->setPreHPFilter(jsonPreHPFilter.toInt()) ? verif : false;
+    verif = reverb->setPreHighPassFilter(jsonPreHPFilter.toInt()) ? verif : false;
 
     verif = reverb->setTime(jsonTime.toInt()) ? verif : false;
     verif = reverb->setEchoFeedback(jsonEchoFeedback.toInt()) ? verif : false;
@@ -194,7 +194,7 @@ QByteArray DuReverb::toDuMusicBinary() const
         return QByteArray();
     du_reverb.r_tonefreq = tmpNum;
 
-    tmpNum = getPreHPFilter();
+    tmpNum = getPreHighPassFilter();
     if (tmpNum == -1)
         return QByteArray();
     du_reverb.r_prehp = tmpNum;
@@ -245,253 +245,18 @@ int DuReverb::size() const
 }
 
 
-int DuReverb::getLevel() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_LEVEL);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuReverb::setLevel(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_LEVEL);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuReverb::getDirectLevel() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_DIRECTLEVEL);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuReverb::setDirectLevel(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_DIRECTLEVEL);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuReverb::getReverbSend() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_REVERBSEND);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuReverb::setReverbSend(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_REVERBSEND);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuReverb::getToneGain() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_TONEGAIN);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuReverb::setToneGain(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_TONEGAIN);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuReverb::getToneFrequency() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_TONEFREQUENCY);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuReverb::setToneFrequency(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_TONEFREQUENCY);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuReverb::getPreHPFilter() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_PREHPFILTER);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuReverb::setPreHPFilter(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_PREHPFILTER);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuReverb::getTime() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_TIME);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuReverb::setTime(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_TIME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuReverb::getEchoFeedback() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_ECHOFEEDBACK);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuReverb::setEchoFeedback(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_ECHOFEEDBACK);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuReverb::getHDAmp() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_HDAMP);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuReverb::setHDAmp(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_HDAMP);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuReverb::getThresholdGate() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_THRESHOLDGATE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuReverb::setThresholdGate(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_THRESHOLDGATE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuReverb::getPreDelayTime() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_PREDELAYTIME);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuReverb::setPreDelayTime(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_REVERB_PREDELAYTIME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-QString DuReverb::getEffectName() const
-{
-    const DuStringConstPtr &tmp = getChildAs<DuString>(KEY_REVERB_EFFECTNAME);
-
-    if (tmp == NULL)
-        return QString();
-
-    return tmp->getString();
-}
-
-bool DuReverb::setEffectName(const QString &value)
-{
-    const DuStringPtr &tmp = getChildAs<DuString>(KEY_REVERB_EFFECTNAME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setString(value);
-}
+DU_KEY_ACCESSORS_IMPL(DuReverb, Level,             Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuReverb, DirectLevel,       Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuReverb, ReverbSend,        Numeric, int, -1)
+
+DU_KEY_ACCESSORS_IMPL(DuReverb, ToneGain,          Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuReverb, ToneFrequency,     Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuReverb, PreHighPassFilter, Numeric, int, -1)
+
+DU_KEY_ACCESSORS_IMPL(DuReverb, Time,              Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuReverb, EchoFeedback,      Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuReverb, HDAmp,             Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuReverb, ThresholdGate,     Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuReverb, PreDelayTime,      Numeric, int, -1)
+
+DU_KEY_ACCESSORS_IMPL(DuReverb, EffectName,        String, QString, QString())

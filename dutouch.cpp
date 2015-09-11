@@ -9,8 +9,8 @@ DU_OBJECT_IMPL(DuTouch)
 DuTouch::DuTouch() :
     DuDevice()
 {
-    addChild(KEY_TOUCH_SOUNDBANK_VERSION,       new DuVersion());
-    addChild(KEY_TOUCH_SOUNDBANK_UPDATE_DATE,   new DuDate());
+    addChild(KeySoundbankVersion,    new DuVersion());
+    addChild(KeySoundbankUpdateDate, new DuDate());
 }
 
 DuObjectPtr DuTouch::clone() const
@@ -22,27 +22,14 @@ QHttpMultiPart *DuTouch::toHttpMultiPart(const QByteArray& boundary) const
 {
     QHttpMultiPart* multiPart = DuDevice::toHttpMultiPart(boundary);
 
-    multiPart->append(getChild(KEY_TOUCH_SOUNDBANK_VERSION)->toHttpPart("soundbank_version"));
+    multiPart->append(getChild(KeySoundbankVersion)->toHttpPart(QStringLiteral("soundbank_version")));
 
     return multiPart;
 }
 
-DuVersionConstPtr DuTouch::getSoundbankVersion() const
-{
-    const DuVersionConstPtr& version = getChildAs<DuVersion>(KEY_TOUCH_SOUNDBANK_VERSION);
-
-    if (version == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_TOUCH_SOUNDBANK_VERSION << "to DuVersion*";
-        return DuVersionConstPtr();
-    }
-
-    return version;
-}
-
 bool DuTouch::setSoundbankVersion(const QString &value)
 {
-    DuVersionPtr tmp = getChildAs<DuVersion>(KEY_TOUCH_SOUNDBANK_VERSION);
+    DuVersionPtr tmp = getSoundbankVersion();
 
     if (tmp == NULL)
         return false;
@@ -52,7 +39,7 @@ bool DuTouch::setSoundbankVersion(const QString &value)
 
 bool DuTouch::setSoundbankVersion(int major, int minor, int patch)
 {
-    DuVersionPtr tmp = getChildAs<DuVersion>(KEY_TOUCH_SOUNDBANK_VERSION);
+    DuVersionPtr tmp = getSoundbankVersion();
 
     if (tmp == NULL)
         return false;
@@ -60,26 +47,5 @@ bool DuTouch::setSoundbankVersion(int major, int minor, int patch)
     return tmp->setVersion(major, minor, patch);
 }
 
-QDateTime DuTouch::getSoundbankUpdateDate() const
-{
-    const DuDateConstPtr& updateDate = getChildAs<DuDate>(KEY_TOUCH_SOUNDBANK_UPDATE_DATE);
-
-    if (updateDate == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_TOUCH_SOUNDBANK_UPDATE_DATE << "to DuDate*";
-        return QDateTime();
-    }
-
-    return updateDate->getDate();
-}
-
-bool DuTouch::setSoundbankUpdateDate(const QDateTime &value)
-{
-    DuDatePtr tmp = getChildAs<DuDate>(KEY_TOUCH_SOUNDBANK_UPDATE_DATE);
-
-    if (tmp == NULL)
-        return false;
-
-    tmp->setDate(value);
-    return true;
-}
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuTouch, SoundbankVersion, DuVersion)
+DU_KEY_ACCESSORS_IMPL(DuTouch, SoundbankUpdateDate, Date, QDateTime, QDateTime())

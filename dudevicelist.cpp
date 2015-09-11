@@ -12,7 +12,7 @@ DuDeviceList::DuDeviceList(const DuDeviceConstPtr& device) :
     connected(device->getConnected()),
     busy(device->getBusy())
 {
-    addChild(KEY_DEVICE_LIST_SERIAL_NUMBER, new DuString(device->getSerialNumber()));
+    addChild(KeySerialNumber, new DuString(device->getSerialNumber()));
 }
 
 DuObjectPtr DuDeviceList::clone() const
@@ -34,29 +34,6 @@ bool DuDeviceList::equals(const DuListConstPtr& other) const
     }
 
     return this->getSerialNumber() == casted->getSerialNumber();
-}
-
-QString DuDeviceList::getSerialNumber() const
-{
-    const DuStringConstPtr serialNumber = getChildAs<DuString>(KEY_DEVICE_LIST_SERIAL_NUMBER);
-
-    if (serialNumber == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Unable to cast" << KEY_DEVICE_LIST_SERIAL_NUMBER << "to DuString*";
-        return QString();
-    }
-
-    return serialNumber->getString();
-}
-
-bool DuDeviceList::setSerialNumber(const QString &value)
-{
-    DuStringPtr tmp = getChildAs<DuString>(KEY_DEVICE_LIST_SERIAL_NUMBER);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setString(value);
 }
 
 bool DuDeviceList::getConnected() const
@@ -85,3 +62,5 @@ bool DuDeviceList::setType(Type value)
     Q_UNUSED(value)
     return false;
 }
+
+DU_KEY_ACCESSORS_IMPL(DuDeviceList, SerialNumber, String, QString, QString())

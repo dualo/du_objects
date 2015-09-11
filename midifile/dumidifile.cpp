@@ -50,7 +50,8 @@ DuMidiFilePtr DuMidiFile::fromMidiBinary(QDataStream &stream)
 
     if (headerId != MIDI_HEADER_ID_VALUE || headerSize != MIDI_HEADER_CHUNK_SIZE)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "The selected file is not a Standard MIDI File";
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "The selected file is not a Standard MIDI File";
 
         return DuMidiFilePtr();
     }
@@ -60,7 +61,8 @@ DuMidiFilePtr DuMidiFile::fromMidiBinary(QDataStream &stream)
 
     if (format > 0x01)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "The software cannot read MIDI format" << format;
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "The software cannot read MIDI format" << format;
 
         return DuMidiFilePtr();
     }
@@ -257,7 +259,7 @@ bool DuMidiFile::appendTrack(const DuMidiTrackPtr &track)
     return tmp->append(track);
 }
 
-bool DuMidiFile::appendTracks(const QList<DuMidiTrackPtr> &tracks)
+bool DuMidiFile::appendTracks(const QVector<DuMidiTrackPtr> &tracks)
 {
     DuArrayPtr tmp = getChildAs<DuArray>(KEY_MIDIFILE_TRACKS);
 

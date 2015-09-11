@@ -27,25 +27,30 @@ DU_OBJECT_IMPL(DuLoop)
 DuLoop::DuLoop() :
     DuContainer()
 {
-    addChild(KEY_LOOP_STATE,
+    addChild(KeyState,
              new DuNumeric(REC_EMPTY, NUMERIC_DEFAULT_SIZE,
                            REC_STATE_NUM - 1, REC_EMPTY));
 
-    addChild(KEY_LOOP_DURATIONMODIFIER,
+    addChild(KeyDurationModifier,
              new DuNumeric(MUSIC_LOOPMOD_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            MUSIC_LOOPMOD_MAXVALUE, MUSIC_LOOPMOD_MINVALUE));
 
-    addChild(KEY_LOOP_SCOREDISPLAY,
+    addChild(KeyScoreDisplay,
              new DuNumeric(LEARN_OFF, NUMERIC_DEFAULT_SIZE,
                            NUM_LEARNMODE - 1, LEARN_OFF));
 
-    addChild(KEY_LOOP_MIDIOUTCHANNEL,
+    addChild(KeyMidiOutChannel,
              new DuNumeric(0, NUMERIC_DEFAULT_SIZE,
                            15, 0));
 
-    addChild(KEY_LOOP_INSTRUMENT, new DuInstrument());
 
-    addChild(KEY_LOOP_EVENTS, new DuArray(RECORD_SAMPLEBUFFERSIZE));
+    addChild(KeySaveLoopTimer,
+             new DuNumeric(0));
+
+
+    addChild(KeyInstrument, new DuInstrument());
+
+    addChild(KeyEvents, new DuArray(RECORD_SAMPLEBUFFERSIZE));
 }
 
 DuLoop::~DuLoop()
@@ -88,6 +93,8 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
     verif = loop->setScoreDisplay(du_loop.l_learn) ? verif : false;
     verif = loop->setMidiOutChannel(du_loop.l_midioutchannel) ? verif : false;
 
+    verif = loop->setSaveLoopTimer(du_loop.l_savelooptimer) ? verif : false;
+
     if (!verif)
     {
         qCWarning(LOG_CAT_DU_OBJECT)
@@ -124,17 +131,18 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
 
 DuLoopPtr DuLoop::fromJson(const QJsonObject &jsonLoop)
 {
-    QJsonValue jsonState        = jsonLoop[KEY_LOOP_STATE];
-    QJsonValue jsonDurationMod  = jsonLoop[KEY_LOOP_DURATIONMODIFIER];
-    QJsonValue jsonScoreDisp    = jsonLoop[KEY_LOOP_SCOREDISPLAY];
-    QJsonValue jsonOutChannel   = jsonLoop[KEY_LOOP_MIDIOUTCHANNEL];
-    QJsonValue jsonInstrument   = jsonLoop[KEY_LOOP_INSTRUMENT];
-    QJsonValue jsonEvents       = jsonLoop[KEY_LOOP_EVENTS];
+    QJsonValue jsonState        = jsonLoop[KeyState];
+    QJsonValue jsonDurationMod  = jsonLoop[KeyDurationModifier];
+    QJsonValue jsonScoreDisp    = jsonLoop[KeyScoreDisplay];
+    QJsonValue jsonOutChannel   = jsonLoop[KeyMidiOutChannel];
+    QJsonValue jsonSaveLoopTmr  = jsonLoop[KeySaveLoopTimer];
+    QJsonValue jsonInstrument   = jsonLoop[KeyInstrument];
+    QJsonValue jsonEvents       = jsonLoop[KeyEvents];
 
     if (        !jsonState.isDouble()       ||  !jsonDurationMod.isDouble()
-            ||  !jsonScoreDisp.isDouble()
-            ||  !jsonOutChannel.isDouble()  ||  !jsonInstrument.isObject()
-            ||  !jsonEvents.isArray())
+            ||  !jsonScoreDisp.isDouble()   ||  !jsonOutChannel.isDouble()
+            ||  !jsonSaveLoopTmr.isDouble()
+            ||  !jsonInstrument.isObject()  ||  !jsonEvents.isArray())
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuLoop::fromJson():\n"
                     << "failed to generate DuLoop\n"
@@ -151,6 +159,8 @@ DuLoopPtr DuLoop::fromJson(const QJsonObject &jsonLoop)
     verif = loop->setDurationModifier(jsonDurationMod.toInt()) ? verif : false;
     verif = loop->setScoreDisplay(jsonScoreDisp.toInt()) ? verif : false;
     verif = loop->setMidiOutChannel(jsonOutChannel.toInt()) ? verif : false;
+
+    verif = loop->setSaveLoopTimer(jsonSaveLoopTmr.toInt()) ? verif : false;
 
     if (!verif)
     {
@@ -201,7 +211,7 @@ DuLoopPtr DuLoop::fromJson(const QJsonObject &jsonLoop)
 }
 
 
-DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
+DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int midiTrackIndex)
 {
     if (!helper.isValid())
     {
@@ -214,7 +224,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
     }
 
 
-    const DuMidiTrackPtr &midiTrack = helper.getMidiTrack(loopIndex);
+    const DuMidiTrackPtr &midiTrack = helper.getMidiTrack(midiTrackIndex);
     if (midiTrack == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
@@ -248,7 +258,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
     }
 
 
-    const DuInstrumentPtr &instrument = helper.getInstrument(loopIndex);
+    const DuInstrumentPtr &instrument = helper.getInstrument(midiTrackIndex);
     if (instrument == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
@@ -304,7 +314,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
         return DuLoopPtr();
     }
 
-    int presetOctave = instrInfo->getOctave();
+    int presetOctave = presetExpr->getOctave();
     if (presetOctave == -1)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
@@ -327,7 +337,9 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int loopIndex)
     verif = loop->setState(REC_STOP) ? verif : false;
     verif = loop->setDurationModifier(1) ? verif : false;
     verif = loop->setScoreDisplay(LEARN_OFF) ? verif : false;
-    verif = loop->setMidiOutChannel(helper.getMidiChannel(loopIndex)) ? verif : false;
+    verif = loop->setMidiOutChannel(helper.getMidiChannel(midiTrackIndex)) ? verif : false;
+
+//    verif = loop->setSaveLoopTimer();
 
     if (!verif)
     {
@@ -439,6 +451,11 @@ QByteArray DuLoop::toDuMusicBinary() const
     if(tmpNum == -1)
         return QByteArray();
     du_loop.l_numsample = tmpNum;
+
+    tmpNum = getSaveLoopTimer();
+    if(tmpNum == -1)
+        return QByteArray();
+    du_loop.l_savelooptimer = tmpNum;
 
 
     return QByteArray((char *)&(du_loop), size());
@@ -552,7 +569,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
 
     if (instrType == INSTR_PERCU)
     {
-        if (instrKeyMap <= -1)
+        if (instrKeyMap <= 0)
         {
             //NOTE: maybe a qCCritical and return DuMidiTrackPtr() would be better
 
@@ -650,7 +667,6 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
             {
                 channelEvent->setTime((quint32)durationRef * (quint8)durationMod
                                       + tmpTime - prevTime, prevTime);
-                channelEvent->setChannel((quint8)midiChannel);
             }
         }
 
@@ -659,10 +675,6 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
             channelEvent = event->toDuMidiChannelEvent(prevTime, prevType,
                                                        presetOctave, transpose,
                                                        isPercu, instrKeyMap);
-            if (channelEvent != NULL)
-            {
-                channelEvent->setChannel((quint8)midiChannel);
-            }
         }
 
         if (channelEvent == NULL)
@@ -674,6 +686,8 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
         }
         else
         {
+            channelEvent->setChannel((quint8)midiChannel);
+
             midiEvents->append(channelEvent);
 
             prevTime = channelEvent->getTime();
@@ -699,107 +713,15 @@ int DuLoop::size() const
     return MUSIC_LOOP_SIZE;
 }
 
+DU_KEY_ACCESSORS_IMPL(DuLoop, State,            Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuLoop, DurationModifier, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuLoop, ScoreDisplay,     Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuLoop, MidiOutChannel,   Numeric, int, -1)
 
-int DuLoop::getState() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_LOOP_STATE);
+DU_KEY_ACCESSORS_IMPL(DuLoop, SaveLoopTimer,    Numeric, int, -1)
 
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuLoop::setState(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_LOOP_STATE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuLoop::getDurationModifier() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_LOOP_DURATIONMODIFIER);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuLoop::setDurationModifier(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_LOOP_DURATIONMODIFIER);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuLoop::getScoreDisplay() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_LOOP_SCOREDISPLAY);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuLoop::setScoreDisplay(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_LOOP_SCOREDISPLAY);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuLoop::getMidiOutChannel() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_LOOP_MIDIOUTCHANNEL);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuLoop::setMidiOutChannel(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_LOOP_MIDIOUTCHANNEL);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-DuInstrumentConstPtr DuLoop::getInstrument() const
-{
-    return getChildAs<DuInstrument>(KEY_LOOP_INSTRUMENT);
-}
-
-void DuLoop::setInstrument(const DuInstrumentPtr &instrument)
-{
-    addChild(KEY_LOOP_INSTRUMENT, instrument);
-}
-
-DuArrayConstPtr DuLoop::getEvents() const
-{
-    return getChildAs<DuArray>(KEY_LOOP_EVENTS);
-}
-
-void DuLoop::setEvents(const DuArrayPtr &array)
-{
-    addChild(KEY_LOOP_EVENTS, array);
-}
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuLoop, Instrument, DuInstrument)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuLoop, Events,     DuArray)
 
 
 int DuLoop::eventsSize() const
@@ -814,7 +736,7 @@ int DuLoop::eventsSize() const
 
 int DuLoop::countEvents() const
 {
-    const DuArrayConstPtr &tmp = getChildAs<DuArray>(KEY_LOOP_EVENTS);
+    const DuArrayConstPtr &tmp = getEvents();
 
     if (tmp == NULL)
         return -1;
@@ -824,7 +746,7 @@ int DuLoop::countEvents() const
 
 bool DuLoop::appendEvent(const DuEventPtr &event)
 {
-    const DuArrayPtr &tmp = getChildAs<DuArray>(KEY_LOOP_EVENTS);
+    const DuArrayPtr &tmp = getEvents();
 
     if (tmp == NULL)
         return false;

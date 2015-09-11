@@ -39,8 +39,9 @@ DuMidiTrackPtr DuMidiTrack::fromMidiBinary(QDataStream &stream)
 
     if (trackId != MIDI_TRACK_ID_VALUE)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMidiTrack::fromMidiBinary():\n"
-                    << "the processed chunk is not a track";
+        qCCritical(LOG_CAT_DU_OBJECT)
+               << "DuMidiTrack::fromMidiBinary():\n"
+               << "the processed chunk is not a track";
 
         return DuMidiTrackPtr();
     }
@@ -52,9 +53,12 @@ DuMidiTrackPtr DuMidiTrack::fromMidiBinary(QDataStream &stream)
     quint32 offset = 0;
     quint32 delta = 0;
 
-    stream.skipRawData(MIDI_TRACK_SIZE_SIZE);
+    quint32 byteCount;
+    stream >> byteCount;
 
-    while (!trackEnded)
+    quint32 totalSize = 0;
+
+    while ((!trackEnded) && totalSize < byteCount)
     {
         DuMidiBasicEventPtr event(new DuMidiBasicEvent());
 
@@ -80,10 +84,17 @@ DuMidiTrackPtr DuMidiTrack::fromMidiBinary(QDataStream &stream)
                 {
                     event = DuMidiMetaEvent::fromMidiBinary(stream, &trackEnded);
                 }
-
-                else
+                else if (tmp == 0xF0 || tmp == 0xF7)
                 {
                     event = DuMidiSysExEvent::fromMidiBinary(stream, tmp);
+                }
+                else
+                {
+                    qCCritical(LOG_CAT_DU_OBJECT)
+                            << "DuMidiTrack::fromMidiBinary():\n"
+                            << "invalid status byte encountered" << tmp;
+
+                    return DuMidiTrackPtr();
                 }
             }
         }
@@ -94,8 +105,9 @@ DuMidiTrackPtr DuMidiTrack::fromMidiBinary(QDataStream &stream)
 
         if (event == NULL)
         {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuMidiTrack::fromMidiBinary():\n"
-                        << "problem encountered during event generation";
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuMidiTrack::fromMidiBinary():\n"
+                    << "problem encountered during event generation";
 
             return DuMidiTrackPtr();
         }
@@ -107,6 +119,17 @@ DuMidiTrackPtr DuMidiTrack::fromMidiBinary(QDataStream &stream)
 
         if (trackEnded)
             track->m_duration = offset;
+
+        totalSize += event->size();
+    }
+
+    if (totalSize > byteCount)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMidiTrack::fromMidiBinary():\n"
+                << "total track size too big" << byteCount << totalSize;
+
+        return DuMidiTrackPtr();
     }
 
     return track;

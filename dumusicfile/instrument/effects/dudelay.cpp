@@ -12,36 +12,36 @@ DU_OBJECT_IMPL(DuDelay)
 DuDelay::DuDelay() :
     DuEffectSettings()
 {
-    addChild(KEY_DELAY_ONOFF,
+    addChild(KeyOnOff,
              new DuNumeric(FX_DELAY_ONOFF_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_DELAY_ONOFF_MAXVALUE, FX_DELAY_ONOFF_MINVALUE));
 
-    addChild(KEY_DELAY_MODE,
+    addChild(KeyMode,
              new DuNumeric(FX_DELAY_MODE_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_DELAY_MODE_MAXVALUE, FX_DELAY_MODE_MINVALUE));
 
-    addChild(KEY_DELAY_PRELOWPASSFILTER,
+    addChild(KeyPreLowPassFilter,
              new DuNumeric(FX_DELAY_PRELP_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_DELAY_PRELP_MAXVALUE, FX_DELAY_PRELP_MINVALUE));
 
-    addChild(KEY_DELAY_EFFECTLEVEL,
+    addChild(KeyEffectLevel,
              new DuNumeric(FX_DELAY_LEVEL_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_DELAY_LEVEL_MAXVALUE, FX_DELAY_LEVEL_MINVALUE));
 
-    addChild(KEY_DELAY_EFFECTTIME,
+    addChild(KeyEffectTime,
              new DuNumeric(FX_DELAY_TIME_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_DELAY_TIME_MAXVALUE, FX_DELAY_TIME_MINVALUE));
 
-    addChild(KEY_DELAY_FEEDBACK,
+    addChild(KeyFeedback,
              new DuNumeric(FX_DELAY_FEEDBACK_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_DELAY_FEEDBACK_MAXVALUE, FX_DELAY_FEEDBACK_MINVALUE));
 
-    addChild(KEY_DELAY_HDAMP,
+    addChild(KeyHDAmp,
              new DuNumeric(FX_DELAY_HDAMP_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_DELAY_HDAMP_MAXVALUE, FX_DELAY_HDAMP_MINVALUE));
 
-    addChild(KEY_DELAY_EFFECTNAME,
-             new DuString(QString(DEFAULT_EFFECTNAME), NAME_CARACT));
+    addChild(KeyEffectName,
+             new DuString(QStringLiteral(DEFAULT_EFFECTNAME), NAME_CARACT));
 }
 
 DuDelay::~DuDelay()
@@ -83,14 +83,14 @@ DuDelayPtr DuDelay::fromDuMusicBinary(const FX_delay &du_delay)
 
 DuDelayPtr DuDelay::fromJson(const QJsonObject &jsonDelay)
 {
-    QJsonValue jsonOnOff        = jsonDelay[KEY_DELAY_ONOFF];
-    QJsonValue jsonMode         = jsonDelay[KEY_DELAY_MODE];
-    QJsonValue jsonLoPassFilt   = jsonDelay[KEY_DELAY_PRELOWPASSFILTER];
-    QJsonValue jsonEffectLvl    = jsonDelay[KEY_DELAY_EFFECTLEVEL];
-    QJsonValue jsonEffectTime   = jsonDelay[KEY_DELAY_EFFECTTIME];
-    QJsonValue jsonFeedback     = jsonDelay[KEY_DELAY_FEEDBACK];
-    QJsonValue jsonHDAmp        = jsonDelay[KEY_DELAY_HDAMP];
-    QJsonValue jsonEffectName   = jsonDelay[KEY_DELAY_EFFECTNAME];
+    QJsonValue jsonOnOff        = jsonDelay[KeyOnOff];
+    QJsonValue jsonMode         = jsonDelay[KeyMode];
+    QJsonValue jsonLoPassFilt   = jsonDelay[KeyPreLowPassFilter];
+    QJsonValue jsonEffectLvl    = jsonDelay[KeyEffectLevel];
+    QJsonValue jsonEffectTime   = jsonDelay[KeyEffectTime];
+    QJsonValue jsonFeedback     = jsonDelay[KeyFeedback];
+    QJsonValue jsonHDAmp        = jsonDelay[KeyHDAmp];
+    QJsonValue jsonEffectName   = jsonDelay[KeyEffectName];
 
     if (        !jsonOnOff.isDouble()       ||  !jsonMode.isDouble()
             ||  !jsonLoPassFilt.isDouble()  ||  !jsonEffectLvl.isDouble()
@@ -194,164 +194,11 @@ int DuDelay::size() const
 }
 
 
-int DuDelay::getOnOff() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_DELAY_ONOFF);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuDelay::setOnOff(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_DELAY_ONOFF);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuDelay::getMode() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_DELAY_MODE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuDelay::setMode(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_DELAY_MODE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuDelay::getPreLowPassFilter() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_DELAY_PRELOWPASSFILTER);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuDelay::setPreLowPassFilter(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_DELAY_PRELOWPASSFILTER);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuDelay::getEffectLevel() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_DELAY_EFFECTLEVEL);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuDelay::setEffectLevel(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_DELAY_EFFECTLEVEL);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuDelay::getEffectTime() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_DELAY_EFFECTTIME);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuDelay::setEffectTime(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_DELAY_EFFECTTIME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuDelay::getFeedback() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_DELAY_FEEDBACK);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuDelay::setFeedback(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_DELAY_FEEDBACK);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuDelay::getHDAmp() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_DELAY_HDAMP);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuDelay::setHDAmp(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_DELAY_HDAMP);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-QString DuDelay::getEffectName() const
-{
-    const DuStringConstPtr &tmp = getChildAs<DuString>(KEY_DELAY_EFFECTNAME);
-
-    if (tmp == NULL)
-        return QString();
-
-    return tmp->getString();
-}
-
-bool DuDelay::setEffectName(const QString &value)
-{
-    DuStringPtr tmp = getChildAs<DuString>(KEY_DELAY_EFFECTNAME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setString(value);
-}
+DU_KEY_ACCESSORS_IMPL(DuDelay, OnOff,            Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuDelay, Mode,             Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuDelay, PreLowPassFilter, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuDelay, EffectLevel,      Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuDelay, EffectTime,       Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuDelay, Feedback,         Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuDelay, HDAmp,            Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuDelay, EffectName,       String, QString, QString())

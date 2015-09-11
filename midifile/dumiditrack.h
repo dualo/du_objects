@@ -4,11 +4,11 @@
 #include "../general/ducontainer.h"
 
 
-#define MIDI_TRACK_ID_VALUE             "MTrk"
-#define MIDI_TRACK_ID_SIZE              4
-#define MIDI_TRACK_SIZE_SIZE            4
+#define MIDI_TRACK_ID_VALUE     "MTrk"
+#define MIDI_TRACK_ID_SIZE      4
+#define MIDI_TRACK_SIZE_SIZE    4
 
-#define KEY_MIDITRACK_EVENTS            "Events"
+#define KEY_MIDITRACK_EVENTS    QStringLiteral("Events")
 
 
 DU_OBJECT(DuArray)

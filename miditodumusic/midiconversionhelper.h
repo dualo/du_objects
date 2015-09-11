@@ -55,7 +55,7 @@ public:
     QString getMidiTonality() const;
     QString getMidiTitle() const;
 
-    QList<DuMidiTrackPtr> getTracks();
+    QVector<DuMidiTrackPtr> getTracks();
     int getMidiChannel(int index) const;
 
     QString getTrackName(int index) const;

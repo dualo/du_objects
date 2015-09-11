@@ -4,12 +4,6 @@
 #include "dueffectsettings.h"
 
 
-#define KEY_VIB_DEPTH               "Depth"
-#define KEY_VIB_DELAY               "Delay"
-#define KEY_VIB_RATE                "Rate"
-#define KEY_VIB_EFFECTNAME          "EffectName"
-
-
 DU_OBJECT(DuVibrato)
 
 class DuVibrato : public DuEffectSettings
@@ -27,17 +21,11 @@ public:
 
     int size() const;
 
-    int getDepth() const;
-    bool setDepth(int value);
 
-    int getDelay() const;
-    bool setDelay(int value);
-
-    int getRate() const;
-    bool setRate(int value);
-
-    QString getEffectName() const;
-    bool setEffectName(const QString &value);
+    DU_KEY_ACCESSORS(Depth,      int)
+    DU_KEY_ACCESSORS(Delay,      int)
+    DU_KEY_ACCESSORS(Rate,       int)
+    DU_KEY_ACCESSORS(EffectName, QString)
 };
 
 #endif // DUVIBRATO_H

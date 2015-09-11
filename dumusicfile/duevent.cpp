@@ -141,6 +141,14 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
         return DuEventPtr();
     }
 
+    //Converting event in case of note off written as note on with velocity 0
+    if (channelEvent->getType() == DuMidiChannelEvent::NoteOn
+            && channelEvent->getValue() == 0)
+    {
+        channelEvent->setType(DuMidiChannelEvent::NoteOff);
+        channelEvent->setValue(0x40);
+    }
+
     DuEventPtr event(new DuEvent);
     bool verif = true;
 
@@ -286,7 +294,6 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
 
 
     tmp = getControl();
-    quint8 midiType = (quint8)tmp + 0x08;
 
     if (tmp == -1)
     {
@@ -296,6 +303,8 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
 
         return DuMidiChannelEventPtr();
     }
+
+    quint8 midiType = (quint8)tmp + 0x08;
 
     channelEvent->setRunningStatus(midiType == prevType);
     channelEvent->setType(midiType);

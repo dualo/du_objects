@@ -4,23 +4,6 @@
 #include "dueffectsettings.h"
 
 
-#define KEY_REVERB_LEVEL                "Level"
-#define KEY_REVERB_DIRECTLEVEL          "DirectLevel"
-#define KEY_REVERB_REVERBSEND           "ReverbSend"
-
-#define KEY_REVERB_TONEGAIN             "ToneGain"
-#define KEY_REVERB_TONEFREQUENCY        "ToneFrequency"
-#define KEY_REVERB_PREHPFILTER          "PreHighPassFilter"
-
-#define KEY_REVERB_TIME                 "Time"
-#define KEY_REVERB_ECHOFEEDBACK         "EchoFeedback"
-#define KEY_REVERB_HDAMP                "HDAmp"
-#define KEY_REVERB_THRESHOLDGATE        "ThresholdGate"
-#define KEY_REVERB_PREDELAYTIME         "PreDelayTime"
-
-#define KEY_REVERB_EFFECTNAME           "EffectName"
-
-
 DU_OBJECT(DuReverb)
 
 class DuReverb : public DuEffectSettings
@@ -38,41 +21,22 @@ public:
 
     int size() const;
 
-    int getLevel() const;
-    bool setLevel(int value);
 
-    int getDirectLevel() const;
-    bool setDirectLevel(int value);
+    DU_KEY_ACCESSORS(Level,             int)
+    DU_KEY_ACCESSORS(DirectLevel,       int)
+    DU_KEY_ACCESSORS(ReverbSend,        int)
 
-    int getReverbSend() const;
-    bool setReverbSend(int value);
+    DU_KEY_ACCESSORS(ToneGain,          int)
+    DU_KEY_ACCESSORS(ToneFrequency,     int)
+    DU_KEY_ACCESSORS(PreHighPassFilter, int)
 
-    int getToneGain() const;
-    bool setToneGain(int value);
+    DU_KEY_ACCESSORS(Time,              int)
+    DU_KEY_ACCESSORS(EchoFeedback,      int)
+    DU_KEY_ACCESSORS(HDAmp,             int)
+    DU_KEY_ACCESSORS(ThresholdGate,     int)
+    DU_KEY_ACCESSORS(PreDelayTime,      int)
 
-    int getToneFrequency() const;
-    bool setToneFrequency(int value);
-
-    int getPreHPFilter() const;
-    bool setPreHPFilter(int value);
-
-    int getTime() const;
-    bool setTime(int value);
-
-    int getEchoFeedback() const;
-    bool setEchoFeedback(int value);
-
-    int getHDAmp() const;
-    bool setHDAmp(int value);
-
-    int getThresholdGate() const;
-    bool setThresholdGate(int value);
-
-    int getPreDelayTime() const;
-    bool setPreDelayTime(int value);
-
-    QString getEffectName() const;
-    bool setEffectName(const QString &value);
+    DU_KEY_ACCESSORS(EffectName,        QString)
 };
 
 #endif // DUREVERB_H

@@ -4,19 +4,6 @@
 #include "../../general/ducontainer.h"
 
 
-#define KEY_CONTROLS_DIRECTIONGYROP         "DirectionGyroP"
-#define KEY_CONTROLS_DIRECTIONGYROR         "DirectionGyroR"
-#define KEY_CONTROLS_DIRECTIONGYROY         "DirectionGyroY"
-
-#define KEY_CONTROLS_ACTIVEAFTERTOUCH       "ActiveAftertouch"
-#define KEY_CONTROLS_ACTIVESLIDERL          "ActiveSliderLeft"
-#define KEY_CONTROLS_ACTIVESLIDERR          "ActiveSliderRight"
-
-#define KEY_CONTROLS_ACTIVEGYROP            "ActiveGyroP"
-#define KEY_CONTROLS_ACTIVEGYROR            "ActiveGyroR"
-#define KEY_CONTROLS_ACTIVEGYROY            "ActiveGyroY"
-
-
 #define CONTROLLERS_SIZE                    15
 #define CONTROLLERS_SONG_OFFSET             4 + 8 * 16 + 10 + 3
 
@@ -45,32 +32,17 @@ public:
 
     int size() const;
 
-    int getDirectionGyroP() const;
-    bool setDirectionGyroP(int value);
+    DU_KEY_ACCESSORS(DirectionGyroP,   int)
+    DU_KEY_ACCESSORS(DirectionGyroR,   int)
+    DU_KEY_ACCESSORS(DirectionGyroY,   int)
 
-    int getDirectionGyroR() const;
-    bool setDirectionGyroR(int value);
+    DU_KEY_ACCESSORS(ActiveAftertouch, int)
+    DU_KEY_ACCESSORS(ActiveSliderL,    int)
+    DU_KEY_ACCESSORS(ActiveSliderR,    int)
 
-    int getDirectionGyroY() const;
-    bool setDirectionGyroY(int value);
-
-    int getActiveAftertouch() const;
-    bool setActiveAftertouch(int value);
-
-    int getActiveSliderL() const;
-    bool setActiveSliderL(int value);
-
-    int getActiveSliderR() const;
-    bool setActiveSliderR(int value);
-
-    int getActiveGyroP() const;
-    bool setActiveGyroP(int value);
-
-    int getActiveGyroR() const;
-    bool setActiveGyroR(int value);
-
-    int getActiveGyroY() const;
-    bool setActiveGyroY(int value);
+    DU_KEY_ACCESSORS(ActiveGyroP,      int)
+    DU_KEY_ACCESSORS(ActiveGyroR,      int)
+    DU_KEY_ACCESSORS(ActiveGyroY,      int)
 };
 
 #endif // DUCONTROLLERS_H

@@ -12,36 +12,36 @@ DU_OBJECT_IMPL(DuCompressor)
 DuCompressor::DuCompressor() :
     DuEffectSettings()
 {
-    addChild(KEY_COMP_ONOFF,
+    addChild(KeyOnOff,
              new DuNumeric(FX_COMP_ONOFF_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_COMP_ONOFF_MAXVALUE, FX_COMP_ONOFF_MINVALUE));
 
-    addChild(KEY_COMP_ATTACKTIME,
+    addChild(KeyAttackTime,
              new DuNumeric(FX_COMP_ATTACK_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_COMP_ATTACK_MAXVALUE, FX_COMP_ATTACK_MINVALUE));
 
-    addChild(KEY_COMP_RELEASETIME,
+    addChild(KeyReleaseTime,
              new DuNumeric(FX_COMP_RELEASE_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_COMP_RELEASE_MAXVALUE, FX_COMP_RELEASE_MINVALUE));
 
-    addChild(KEY_COMP_THRESHOLD,
+    addChild(KeyThreshold,
              new DuNumeric(FX_COMP_THRESHOLD_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_COMP_THRESHOLD_MAXVALUE, FX_COMP_THRESHOLD_MINVALUE));
 
-    addChild(KEY_COMP_RATIO,
+    addChild(KeyRatio,
              new DuNumeric(FX_COMP_RATIO_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_COMP_RATIO_MAXVALUE, FX_COMP_RATIO_MINVALUE));
 
-    addChild(KEY_COMP_BOOST,
+    addChild(KeyBoost,
              new DuNumeric(FX_COMP_BOOST_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_COMP_BOOST_MAXVALUE, FX_COMP_BOOST_MINVALUE));
 
-    addChild(KEY_COMP_KNEETYPE,
+    addChild(KeyKneeType,
              new DuNumeric(FX_COMP_KNEE_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_COMP_KNEE_MAXVALUE, FX_COMP_KNEE_MINVALUE));
 
-    addChild(KEY_COMP_EFFECTNAME,
-             new DuString(QString(DEFAULT_EFFECTNAME), NAME_CARACT));
+    addChild(KeyEffectName,
+             new DuString(QStringLiteral(DEFAULT_EFFECTNAME), NAME_CARACT));
 }
 
 DuCompressor::~DuCompressor()
@@ -83,14 +83,14 @@ DuCompressorPtr DuCompressor::fromDuMusicBinary(const FX_compressor &du_compress
 
 DuCompressorPtr DuCompressor::fromJson(const QJsonObject &jsonCompressor)
 {
-    QJsonValue jsonOnOff        = jsonCompressor[KEY_COMP_ONOFF];
-    QJsonValue jsonAttTime      = jsonCompressor[KEY_COMP_ATTACKTIME];
-    QJsonValue jsonRelTime      = jsonCompressor[KEY_COMP_RELEASETIME];
-    QJsonValue jsonThreshold    = jsonCompressor[KEY_COMP_THRESHOLD];
-    QJsonValue jsonRatio        = jsonCompressor[KEY_COMP_RATIO];
-    QJsonValue jsonBoost        = jsonCompressor[KEY_COMP_BOOST];
-    QJsonValue jsonKneeType     = jsonCompressor[KEY_COMP_KNEETYPE];
-    QJsonValue jsonEffectName   = jsonCompressor[KEY_COMP_EFFECTNAME];
+    QJsonValue jsonOnOff        = jsonCompressor[KeyOnOff];
+    QJsonValue jsonAttTime      = jsonCompressor[KeyAttackTime];
+    QJsonValue jsonRelTime      = jsonCompressor[KeyReleaseTime];
+    QJsonValue jsonThreshold    = jsonCompressor[KeyThreshold];
+    QJsonValue jsonRatio        = jsonCompressor[KeyRatio];
+    QJsonValue jsonBoost        = jsonCompressor[KeyBoost];
+    QJsonValue jsonKneeType     = jsonCompressor[KeyKneeType];
+    QJsonValue jsonEffectName   = jsonCompressor[KeyEffectName];
 
     if (        !jsonOnOff.isDouble()       ||  !jsonAttTime.isDouble()
             ||  !jsonRelTime.isDouble()     ||  !jsonThreshold.isDouble()
@@ -192,164 +192,11 @@ int DuCompressor::size() const
 }
 
 
-int DuCompressor::getOnOff() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_COMP_ONOFF);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuCompressor::setOnOff(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_COMP_ONOFF);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuCompressor::getAttackTime() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_COMP_ATTACKTIME);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuCompressor::setAttackTime(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_COMP_ATTACKTIME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuCompressor::getReleaseTime() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_COMP_RELEASETIME);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuCompressor::setReleaseTime(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_COMP_RELEASETIME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuCompressor::getThreshold() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_COMP_THRESHOLD);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuCompressor::setThreshold(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_COMP_THRESHOLD);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuCompressor::getRatio() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_COMP_RATIO);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuCompressor::setRatio(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_COMP_RATIO);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuCompressor::getBoost() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_COMP_BOOST);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuCompressor::setBoost(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_COMP_BOOST);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuCompressor::getKneeType() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_COMP_KNEETYPE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuCompressor::setKneeType(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_COMP_KNEETYPE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-QString DuCompressor::getEffectName() const
-{
-    const DuStringConstPtr &tmp = getChildAs<DuString>(KEY_COMP_EFFECTNAME);
-
-    if (tmp == NULL)
-        return QString();
-
-    return tmp->getString();
-}
-
-bool DuCompressor::setEffectName(const QString &value)
-{
-    DuStringPtr tmp = getChildAs<DuString>(KEY_COMP_EFFECTNAME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setString(value);
-}
+DU_KEY_ACCESSORS_IMPL(DuCompressor, OnOff,       Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuCompressor, AttackTime,  Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuCompressor, ReleaseTime, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuCompressor, Threshold,   Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuCompressor, Ratio,       Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuCompressor, Boost,       Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuCompressor, KneeType,    Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuCompressor, EffectName,  String, QString, QString())

@@ -4,14 +4,6 @@
 #include "../general/ducontainer.h"
 
 
-#define KEY_LOOP_STATE              "State"
-#define KEY_LOOP_DURATIONMODIFIER   "DurationModifier"
-#define KEY_LOOP_SCOREDISPLAY       "ScoreDisplay"
-#define KEY_LOOP_MIDIOUTCHANNEL     "MidiOutChannel"
-#define KEY_LOOP_INSTRUMENT         "Instrument"
-#define KEY_LOOP_EVENTS             "Events"
-
-
 class MidiConversionHelper;
 DU_OBJECT(DuArray)
 DU_OBJECT(DuEvent)
@@ -31,31 +23,24 @@ public:
     static DuLoopPtr fromDuMusicBinary(const music_loop &du_loop,
                                        const music_sample *du_sample);
     static DuLoopPtr fromJson(const QJsonObject &jsonLoop);
-    static DuLoopPtr fromMidi(const MidiConversionHelper &helper, int loopIndex);
+    static DuLoopPtr fromMidi(const MidiConversionHelper &helper, int midiTrackIndex);
 
     QByteArray toDuMusicBinary() const;
     DuMidiTrackPtr toDuMidiTrack(int durationRef, int channel, int transpose) const;
 
     int size() const;
 
-    int getState() const;
-    bool setState(int value);
+DU_KEY_ACCESSORS(State,            int)
+DU_KEY_ACCESSORS(DurationModifier, int)
+DU_KEY_ACCESSORS(ScoreDisplay,     int)
+DU_KEY_ACCESSORS(MidiOutChannel,   int)
 
-    int getDurationModifier() const;
-    bool setDurationModifier(int value);
+DU_KEY_ACCESSORS(SaveLoopTimer,    int)
 
-    int getScoreDisplay() const;
-    bool setScoreDisplay(int value);
+DU_KEY_ACCESSORS_OBJECT(Instrument, DuInstrument)
+DU_KEY_ACCESSORS_OBJECT(Events,     DuArray)
 
-    int getMidiOutChannel() const;
-    bool setMidiOutChannel(int value);
-
-    DuInstrumentConstPtr getInstrument() const;
-    void setInstrument(const DuInstrumentPtr &instrument);
-
-    DuArrayConstPtr getEvents() const;
-    void setEvents(const DuArrayPtr& array);
-
+public:
     int eventsSize() const;
 
     int countEvents() const;

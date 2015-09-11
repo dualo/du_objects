@@ -12,28 +12,28 @@ DU_OBJECT_IMPL(DuAdsr)
 DuAdsr::DuAdsr() :
     DuEffectSettings()
 {
-    addChild(KEY_ADSR_ENVELOPEATTACKTIME,
+    addChild(KeyEnvelopeAttackTime,
              new DuNumeric(FX_ADSR_ATTACK_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_ADSR_ATTACK_MAXVALUE, FX_ADSR_ATTACK_MINVALUE));
 
-    addChild(KEY_ADSR_ENVELOPEDECAYTIME,
+    addChild(KeyEnvelopeDecayTime,
              new DuNumeric(FX_ADSR_DECAY_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_ADSR_DECAY_MAXVALUE, FX_ADSR_DECAY_MINVALUE));
 
-    addChild(KEY_ADSR_TIMEVARIANTFILTERCUTOFFRESONANCE,
+    addChild(KeyTimeVariantFilterCutoffResonance,
              new DuNumeric(FX_ADSR_RES_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_ADSR_RES_MAXVALUE, FX_ADSR_RES_MINVALUE));
 
-    addChild(KEY_ADSR_TIMEVARIANTFILTERCUTOFFFREQUENCY,
+    addChild(KeyTimeVariantFilterCutoffFrequency,
              new DuNumeric(FX_ADSR_FREQ_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_ADSR_FREQ_MAXVALUE, FX_ADSR_FREQ_MINVALUE));
 
-    addChild(KEY_ADSR_ENVELOPERELEASETIME,
+    addChild(KeyEnvelopeReleaseTime,
              new DuNumeric(FX_ADSR_RELEAS_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_ADSR_RELEAS_MAXVALUE, FX_ADSR_RELEAS_MINVALUE));
 
-    addChild(KEY_ADSR_EFFECTNAME,
-             new DuString(QString(DEFAULT_EFFECTNAME), NAME_CARACT));
+    addChild(KeyEffectName,
+             new DuString(QStringLiteral(DEFAULT_EFFECTNAME), NAME_CARACT));
 }
 
 DuAdsr::~DuAdsr()
@@ -71,12 +71,12 @@ DuAdsrPtr DuAdsr::fromDuMusicBinary(const FX_adsr &du_adsr)
 
 DuAdsrPtr DuAdsr::fromJson(const QJsonObject &jsonAdsr)
 {
-    QJsonValue jsonEnvAttTime   = jsonAdsr[KEY_ADSR_ENVELOPEATTACKTIME];
-    QJsonValue jsonEnvDecTime   = jsonAdsr[KEY_ADSR_ENVELOPEDECAYTIME];
-    QJsonValue jsonTvfCutRes    = jsonAdsr[KEY_ADSR_TIMEVARIANTFILTERCUTOFFRESONANCE];
-    QJsonValue jsonTvfCutFreq   = jsonAdsr[KEY_ADSR_TIMEVARIANTFILTERCUTOFFFREQUENCY];
-    QJsonValue jsonEnvRelTime   = jsonAdsr[KEY_ADSR_ENVELOPERELEASETIME];
-    QJsonValue jsonEffectName   = jsonAdsr[KEY_ADSR_EFFECTNAME];
+    QJsonValue jsonEnvAttTime   = jsonAdsr[KeyEnvelopeAttackTime];
+    QJsonValue jsonEnvDecTime   = jsonAdsr[KeyEnvelopeDecayTime];
+    QJsonValue jsonTvfCutRes    = jsonAdsr[KeyTimeVariantFilterCutoffResonance];
+    QJsonValue jsonTvfCutFreq   = jsonAdsr[KeyTimeVariantFilterCutoffFrequency];
+    QJsonValue jsonEnvRelTime   = jsonAdsr[KeyEnvelopeReleaseTime];
+    QJsonValue jsonEffectName   = jsonAdsr[KeyEffectName];
 
     if (        !jsonEnvAttTime.isDouble()  ||  !jsonEnvDecTime.isDouble()
             ||  !jsonTvfCutRes.isDouble()   ||  !jsonTvfCutFreq.isDouble()
@@ -164,129 +164,9 @@ int DuAdsr::size() const
 }
 
 
-int DuAdsr::getEnvelopeAttackTime() const
-{
-    const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_ADSR_ENVELOPEATTACKTIME);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuAdsr::setEnvelopeAttackTime(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_ADSR_ENVELOPEATTACKTIME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuAdsr::getEnvelopeDecayTime() const
-{
-    const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_ADSR_ENVELOPEDECAYTIME);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuAdsr::setEnvelopeDecayTime(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_ADSR_ENVELOPEDECAYTIME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuAdsr::getTimeVariantFilterCutoffResonance() const
-{
-    const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_ADSR_TIMEVARIANTFILTERCUTOFFRESONANCE);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuAdsr::setTimeVariantFilterCutoffResonance(int value)
-{
-    const DuNumericPtr &tmp =
-            getChildAs<DuNumeric>(KEY_ADSR_TIMEVARIANTFILTERCUTOFFRESONANCE);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuAdsr::getTimeVariantFilterCutoffFrequency() const
-{
-    const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_ADSR_TIMEVARIANTFILTERCUTOFFFREQUENCY);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuAdsr::setTimeVariantFilterCutoffFrequency(int value)
-{
-    const DuNumericPtr &tmp =
-            getChildAs<DuNumeric>(KEY_ADSR_TIMEVARIANTFILTERCUTOFFFREQUENCY);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuAdsr::getEnvelopeReleaseTime() const
-{
-    const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_ADSR_ENVELOPERELEASETIME);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuAdsr::setEnvelopeReleaseTime(int value)
-{
-    const DuNumericPtr &tmp = getChildAs<DuNumeric>(KEY_ADSR_ENVELOPERELEASETIME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-QString DuAdsr::getEffectName() const
-{
-    const DuStringConstPtr &tmp = getChildAs<DuString>(KEY_ADSR_EFFECTNAME);
-
-    if (tmp == NULL)
-        return QString();
-
-    return tmp->getString();
-}
-
-bool DuAdsr::setEffectName(const QString &value)
-{
-    const DuStringPtr &tmp = getChildAs<DuString>(KEY_ADSR_EFFECTNAME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setString(value);
-}
+DU_KEY_ACCESSORS_IMPL(DuAdsr, EnvelopeAttackTime,               Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuAdsr, EnvelopeDecayTime,                Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuAdsr, TimeVariantFilterCutoffResonance, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuAdsr, TimeVariantFilterCutoffFrequency, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuAdsr, EnvelopeReleaseTime,              Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuAdsr, EffectName,                       String, QString, QString())

@@ -3,14 +3,6 @@
 
 #include "general/ducontainer.h"
 
-#define KEY_DEVICE_SERIAL_NUMBER    "SerialNumber"
-#define KEY_DEVICE_NAME             "Name"
-#define KEY_DEVICE_OWNER            "Owner"
-#define KEY_DEVICE_OWNER_ID         "OwnerId"
-
-#define KEY_DEVICE_VERSION          "Version"
-#define KEY_DEVICE_UPDATE_DATE      "UpdateDate"
-
 
 DU_OBJECT(DuVersion)
 
@@ -25,26 +17,10 @@ public:
 
     virtual QHttpMultiPart* toHttpMultiPart(const QByteArray &boundary) const;
 
-    QString getSerialNumber() const;
-    bool setSerialNumber(const QString& value);
-
-    QString getName() const;
-    bool setName(const QString& value);
-
     QString getDisplayName() const;
 
-    QString getOwner() const;
-    bool setOwner(const QString& value);
-
-    int getOwnerId() const;
-    bool setOwnerId(int value);
-
-    DuVersionConstPtr getVersion() const;
     bool setVersion(const QString& value);
     bool setVersion(int major, int minor, int patch);
-
-    QDateTime getUpdateDate() const;
-    bool setUpdateDate(const QDateTime& value);
 
     bool getPlugged() const;
     void setPlugged(bool value);
@@ -54,6 +30,15 @@ public:
 
     bool getBusy() const;
     void setBusy(bool value);
+
+    DU_KEY_ACCESSORS(SerialNumber, QString)
+    DU_KEY_ACCESSORS(Name,         QString)
+    DU_KEY_ACCESSORS(Owner,        QString)
+    DU_KEY_ACCESSORS(OwnerId,      int)
+
+    DU_KEY_ACCESSORS_OBJECT(Version, DuVersion)
+
+    DU_KEY_ACCESSORS(UpdateDate, QDateTime)
 
 private:
     bool plugged;

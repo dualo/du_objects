@@ -36,6 +36,12 @@ QByteArray DuMidiStatus::toMidiBinary() const
 }
 
 
+int DuMidiStatus::size() const
+{
+    return runningStatus ? 0 : 1;
+}
+
+
 QDebug DuMidiStatus::debugPrint(QDebug dbg) const
 {
     dbg.nospace() << "DuMidiStatus(" << getNumeric() << ")";

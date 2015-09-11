@@ -12,52 +12,52 @@ DU_OBJECT_IMPL(DuEqualizer)
 DuEqualizer::DuEqualizer() :
     DuEffectSettings()
 {
-    addChild(KEY_EQ_ONOFF,
+    addChild(KeyOnOff,
              new DuNumeric(FX_PEQ_ONOFF_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_PEQ_ONOFF_MAXVALUE, FX_PEQ_ONOFF_MINVALUE));
 
-    addChild(KEY_EQ_LOWBANDGAIN,
+    addChild(KeyLowBandGain,
              new DuNumeric(FX_PEQ_LBGAIN_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_PEQ_LBGAIN_MAXVALUE, FX_PEQ_LBGAIN_MINVALUE));
 
-    addChild(KEY_EQ_LOWMIDBANDGAIN,
+    addChild(KeyLowMidBandGain,
              new DuNumeric(FX_PEQ_LMBGAIN_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_PEQ_LMBGAIN_MAXVALUE, FX_PEQ_LMBGAIN_MINVALUE));
 
-    addChild(KEY_EQ_HIGHMIDBANDGAIN,
+    addChild(KeyHighMidBandGain,
              new DuNumeric(FX_PEQ_HMBGAIN_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_PEQ_HMBGAIN_MAXVALUE, FX_PEQ_HMBGAIN_MINVALUE));
 
-    addChild(KEY_EQ_HIGHBANDGAIN,
+    addChild(KeyHighBandGain,
              new DuNumeric(FX_PEQ_HBGAIN_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_PEQ_HBGAIN_MAXVALUE, FX_PEQ_HBGAIN_MINVALUE));
 
-    addChild(KEY_EQ_LOWBANDFREQUENCY,
+    addChild(KeyLowBandFrequency,
              new DuNumeric(FX_PEQ_LBFREQ_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_PEQ_LBFREQ_MAXVALUE, FX_PEQ_LBFREQ_MINVALUE));
 
-    addChild(KEY_EQ_LOWMIDBANDFREQUENCY,
+    addChild(KeyLowMidBandFrequency,
              new DuNumeric(FX_PEQ_LMBFREQ_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_PEQ_LMBFREQ_MAXVALUE, FX_PEQ_LMBFREQ_MINVALUE));
 
-    addChild(KEY_EQ_HIGHMIDBANDFREQUENCY,
+    addChild(KeyHighMidBandFrequency,
              new DuNumeric(FX_PEQ_HMBFREQ_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_PEQ_HMBFREQ_MAXVALUE, FX_PEQ_HMBFREQ_MINVALUE));
 
-    addChild(KEY_EQ_HIGHBANDFREQUENCY,
+    addChild(KeyHighBandFrequency,
              new DuNumeric(FX_PEQ_HBFREQ_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_PEQ_HBFREQ_MAXVALUE, FX_PEQ_HBFREQ_MINVALUE));
 
-    addChild(KEY_EQ_LOWMIDBANDQUALITYFACTOR,
+    addChild(KeyLowMidBandQualityFactor,
              new DuNumeric(FX_PEQ_LMBQ_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_PEQ_LMBQ_MAXVALUE, FX_PEQ_LMBQ_MINVALUE));
 
-    addChild(KEY_EQ_HIGHMIDBANDQUALITYFACTOR,
+    addChild(KeyHighMidBandQualityFactor,
              new DuNumeric(FX_PEQ_HMBQ_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_PEQ_HMBQ_MAXVALUE, FX_PEQ_HMBQ_MINVALUE));
 
-    addChild(KEY_EQ_EFFECTNAME,
-             new DuString(QString(DEFAULT_EFFECTNAME), NAME_CARACT));
+    addChild(KeyEffectName,
+             new DuString(QStringLiteral(DEFAULT_EFFECTNAME), NAME_CARACT));
 }
 
 DuEqualizer::~DuEqualizer()
@@ -70,7 +70,7 @@ DuObjectPtr DuEqualizer::clone() const
 }
 
 
-DuEqualizerPtr DuEqualizer::fromDuMusicBinary(const FX_equalizer du_equalizer)
+DuEqualizerPtr DuEqualizer::fromDuMusicBinary(const FX_equalizer& du_equalizer)
 {
     DuEqualizerPtr equalizer(new DuEqualizer);
     bool verif = true;
@@ -105,18 +105,18 @@ DuEqualizerPtr DuEqualizer::fromDuMusicBinary(const FX_equalizer du_equalizer)
 
 DuEqualizerPtr DuEqualizer::fromJson(const QJsonObject &jsonEqualizer)
 {
-    QJsonValue jsonOnOff        = jsonEqualizer[KEY_EQ_ONOFF];
-    QJsonValue jsonLowGain      = jsonEqualizer[KEY_EQ_LOWBANDGAIN];
-    QJsonValue jsonLoMidGain    = jsonEqualizer[KEY_EQ_LOWMIDBANDGAIN];
-    QJsonValue jsonHiMidGain    = jsonEqualizer[KEY_EQ_HIGHMIDBANDGAIN];
-    QJsonValue jsonHighGain     = jsonEqualizer[KEY_EQ_HIGHBANDGAIN];
-    QJsonValue jsonLowFreq      = jsonEqualizer[KEY_EQ_LOWBANDFREQUENCY];
-    QJsonValue jsonLoMidFreq    = jsonEqualizer[KEY_EQ_LOWMIDBANDFREQUENCY];
-    QJsonValue jsonHiMidFreq    = jsonEqualizer[KEY_EQ_HIGHMIDBANDFREQUENCY];
-    QJsonValue jsonHighFreq     = jsonEqualizer[KEY_EQ_HIGHBANDFREQUENCY];
-    QJsonValue jsonLoMidQual    = jsonEqualizer[KEY_EQ_LOWMIDBANDQUALITYFACTOR];
-    QJsonValue jsonHiMidQual    = jsonEqualizer[KEY_EQ_HIGHMIDBANDQUALITYFACTOR];
-    QJsonValue jsonEffectName   = jsonEqualizer[KEY_EQ_EFFECTNAME];
+    QJsonValue jsonOnOff        = jsonEqualizer[KeyOnOff];
+    QJsonValue jsonLowGain      = jsonEqualizer[KeyLowBandGain];
+    QJsonValue jsonLoMidGain    = jsonEqualizer[KeyLowMidBandGain];
+    QJsonValue jsonHiMidGain    = jsonEqualizer[KeyHighMidBandGain];
+    QJsonValue jsonHighGain     = jsonEqualizer[KeyHighBandGain];
+    QJsonValue jsonLowFreq      = jsonEqualizer[KeyLowBandFrequency];
+    QJsonValue jsonLoMidFreq    = jsonEqualizer[KeyLowMidBandFrequency];
+    QJsonValue jsonHiMidFreq    = jsonEqualizer[KeyHighMidBandFrequency];
+    QJsonValue jsonHighFreq     = jsonEqualizer[KeyHighBandFrequency];
+    QJsonValue jsonLoMidQual    = jsonEqualizer[KeyLowMidBandQualityFactor];
+    QJsonValue jsonHiMidQual    = jsonEqualizer[KeyHighMidBandQualityFactor];
+    QJsonValue jsonEffectName   = jsonEqualizer[KeyEffectName];
 
     if (        !jsonOnOff.isDouble()       ||  !jsonLowGain.isDouble()
             ||  !jsonLoMidGain.isDouble()   ||  !jsonHiMidGain.isDouble()
@@ -246,248 +246,15 @@ int DuEqualizer::size() const
 }
 
 
-int DuEqualizer::getOnOff() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EQ_ONOFF);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEqualizer::setOnOff(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_EQ_ONOFF);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuEqualizer::getLowBandGain() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EQ_LOWBANDGAIN);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEqualizer::setLowBandGain(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_EQ_LOWBANDGAIN);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuEqualizer::getLowMidBandGain() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EQ_LOWMIDBANDGAIN);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEqualizer::setLowMidBandGain(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_EQ_LOWMIDBANDGAIN);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuEqualizer::getHighMidBandGain() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EQ_HIGHMIDBANDGAIN);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEqualizer::setHighMidBandGain(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_EQ_HIGHMIDBANDGAIN);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuEqualizer::getHighBandGain() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EQ_HIGHBANDGAIN);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEqualizer::setHighBandGain(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_EQ_HIGHBANDGAIN);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuEqualizer::getLowBandFrequency() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EQ_LOWBANDFREQUENCY);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEqualizer::setLowBandFrequency(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_EQ_LOWBANDFREQUENCY);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuEqualizer::getLowMidBandFrequency() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EQ_LOWMIDBANDFREQUENCY);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEqualizer::setLowMidBandFrequency(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_EQ_LOWMIDBANDFREQUENCY);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuEqualizer::getHighMidBandFrequency() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EQ_HIGHMIDBANDFREQUENCY);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEqualizer::setHighMidBandFrequency(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_EQ_HIGHMIDBANDFREQUENCY);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuEqualizer::getHighBandFrequency() const
-{
-    const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_EQ_HIGHBANDFREQUENCY);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEqualizer::setHighBandFrequency(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_EQ_HIGHBANDFREQUENCY);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-int DuEqualizer::getLowMidBandQualityFactor() const
-{
-    const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_EQ_LOWMIDBANDQUALITYFACTOR);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEqualizer::setLowMidBandQualityFactor(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_EQ_LOWMIDBANDQUALITYFACTOR);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-int DuEqualizer::getHighMidBandQualityFactor() const
-{
-    const DuNumericConstPtr &tmp =
-            getChildAs<DuNumeric>(KEY_EQ_HIGHMIDBANDQUALITYFACTOR);
-
-    if (tmp == NULL)
-        return -1;
-
-    return tmp->getNumeric();
-}
-
-bool DuEqualizer::setHighMidBandQualityFactor(int value)
-{
-    DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_EQ_HIGHMIDBANDQUALITYFACTOR);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setNumeric(value);
-}
-
-
-QString DuEqualizer::getEffectName() const
-{
-    const DuStringConstPtr &tmp = getChildAs<DuString>(KEY_EQ_EFFECTNAME);
-
-    if (tmp == NULL)
-        return QString();
-
-    return tmp->getString();
-}
-
-bool DuEqualizer::setEffectName(const QString &value)
-{
-    DuStringPtr tmp = getChildAs<DuString>(KEY_EQ_EFFECTNAME);
-
-    if (tmp == NULL)
-        return false;
-
-    return tmp->setString(value);
-}
+DU_KEY_ACCESSORS_IMPL(DuEqualizer, OnOff,                    Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuEqualizer, LowBandGain,              Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuEqualizer, LowMidBandGain,           Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuEqualizer, HighMidBandGain,          Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuEqualizer, HighBandGain,             Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuEqualizer, LowBandFrequency,         Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuEqualizer, LowMidBandFrequency,      Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuEqualizer, HighMidBandFrequency,     Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuEqualizer, HighBandFrequency,        Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuEqualizer, LowMidBandQualityFactor,  Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuEqualizer, HighMidBandQualityFactor, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuEqualizer, EffectName,               String, QString, QString())

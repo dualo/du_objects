@@ -30,11 +30,9 @@ DuInstrumentInfo::DuInstrumentInfo() :
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
-    addChild(KeyUserID,
-             new DuNumeric(0));
+    addChild(KeyUserID, new DuNumeric(0));
 
-    addChild(KeyID,
-             new DuNumeric(0));
+    addChild(KeyID, new DuNumeric(0));
 
     addChild(KeySampleAddress, new DuNumeric(0));
 
@@ -42,8 +40,7 @@ DuInstrumentInfo::DuInstrumentInfo() :
              new DuNumeric(0x01, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
-    addChild(KeyCategory,
-             new DuString(NAME_CARACT));
+    addChild(KeyCategory, new DuString(NAME_CARACT));
 
     addChild(KeyRelativeVolume,
              new DuNumeric(0x40, NUMERIC_DEFAULT_SIZE,
@@ -92,6 +89,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrI
 
     verif = instrInfo->setDreamProgramChange(du_instrInfo.instr_midi_pc) ? verif : false;
     verif = instrInfo->setMidiControlChange0(du_instrInfo.instr_midi_C0) ? verif : false;
+
     verif = instrInfo->setKeyMapping(du_instrInfo.instr_key_map) ? verif : false;
     verif = instrInfo->setOctave(du_instrInfo.instr_octave) ? verif : false;
 

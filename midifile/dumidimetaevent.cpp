@@ -369,9 +369,9 @@ void DuMidiMetaEvent::setKeySignature(quint8 key, bool isMinor)
     quint8 scale = 0;
     if (isMinor) scale++;
 
-    qint8 tmpTonal = ((qint8)key + 3 * scale) % 12;
+    qint8 tmpTonal = ((qint8)key + 3 * scale - 1) % 12;
 
-    qint8 signature = (tmpTonal - 6 * (tmpTonal / 2)) % 12;
+    qint8 signature = (tmpTonal - 6 * (tmpTonal % 2)) % 12;
     if (signature > 7)
         signature -= 12;
     else if (signature < -7)

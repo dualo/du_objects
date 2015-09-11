@@ -3,9 +3,6 @@
 
 #include "general/ducontainer.h"
 
-#define KEY_LIST_NAME "Name"
-#define KEY_LIST_TYPE "Type"
-
 
 DU_OBJECT(DuList)
 
@@ -26,17 +23,14 @@ public:
         // Keep in sync with DuListObject::Type
     };
 
-    DuList(const QString& name = "", Type type = None);
+    DuList(const QString& name = QString(), Type type = None);
 
     virtual DuObjectPtr clone() const;
 
     virtual bool equals(const DuListConstPtr& other) const;
 
-    QString getName() const;
-    bool setName(const QString& value);
-
-    Type getType() const;
-    virtual bool setType(Type value);
+    DU_KEY_ACCESSORS(Name, QString)
+    DU_KEY_ACCESSORS(Type, Type)
 };
 
 Q_DECLARE_METATYPE(DuListPtr)

@@ -33,14 +33,12 @@ MidiConversionHelper::MidiConversionHelper(QObject *parent) :
     duration(0),
     tempo(100),
     timeSig(TIME_4_4),
-    scale(SCALE_MAJOR),
+    scale(QStringLiteral(SCALE_MAJOR)),
     tonality(0),
-    title(""),
     midiTempo(100),
     midiTimeSig(0x0404),
     midiScale(0),
     midiTonality(0),
-    midiTitle(""),
     selectedFile(),
     mapper(new DuMidiKeyMapper(this)),
     trackNames(),
@@ -61,31 +59,30 @@ MidiConversionHelper::MidiConversionHelper(QObject *parent) :
     timeSigBoxModel.addTimeSignature(DuTimeSignature(TIME_4_4, tr("4 : 4")));
     timeSigBoxModel.addTimeSignature(DuTimeSignature(TIME_5_4, tr("5 : 4")));
 
-//    tonalityBoxModel.addTonality(DuTonality(0,  tr("C")));
-//    tonalityBoxModel.addTonality(DuTonality(1,  tr("C#")));
-//    tonalityBoxModel.addTonality(DuTonality(2,  tr("D")));
-//    tonalityBoxModel.addTonality(DuTonality(3,  tr("D#")));
-//    tonalityBoxModel.addTonality(DuTonality(4,  tr("E")));
-//    tonalityBoxModel.addTonality(DuTonality(5,  tr("F")));
-//    tonalityBoxModel.addTonality(DuTonality(6,  tr("F#")));
-//    tonalityBoxModel.addTonality(DuTonality(7,  tr("G")));
-//    tonalityBoxModel.addTonality(DuTonality(8,  tr("G#")));
-//    tonalityBoxModel.addTonality(DuTonality(9,  tr("A")));
-//    tonalityBoxModel.addTonality(DuTonality(10, tr("A#")));
-//    tonalityBoxModel.addTonality(DuTonality(11, tr("B")));
-
-    tonalityBoxModel.addTonality(DuTonality(0 , tr("B")));
-    tonalityBoxModel.addTonality(DuTonality(1,  tr("C")));
-    tonalityBoxModel.addTonality(DuTonality(2,  tr("C#")));
-    tonalityBoxModel.addTonality(DuTonality(3,  tr("D")));
-    tonalityBoxModel.addTonality(DuTonality(4,  tr("D#")));
-    tonalityBoxModel.addTonality(DuTonality(5,  tr("E")));
-    tonalityBoxModel.addTonality(DuTonality(6,  tr("F")));
-    tonalityBoxModel.addTonality(DuTonality(7,  tr("F#")));
-    tonalityBoxModel.addTonality(DuTonality(8,  tr("G")));
-    tonalityBoxModel.addTonality(DuTonality(9,  tr("G#")));
-    tonalityBoxModel.addTonality(DuTonality(10, tr("A")));
-    tonalityBoxModel.addTonality(DuTonality(11, tr("A#")));
+    tonalityBoxModel.addTonality(DuTonality(0,      12,     tr("Cb")));
+    tonalityBoxModel.addTonality(DuTonality(1,      1,      tr("C")));
+    tonalityBoxModel.addTonality(DuTonality(2,      2,      tr("C#")));
+    tonalityBoxModel.addTonality(DuTonality(3,      15,     tr("Ebb")));
+    tonalityBoxModel.addTonality(DuTonality(4,      16,     tr("Eb")));
+    tonalityBoxModel.addTonality(DuTonality(5,      5,      tr("E")));
+    tonalityBoxModel.addTonality(DuTonality(6,      18,     tr("E#")));
+    tonalityBoxModel.addTonality(DuTonality(7,      19,     tr("Gb")));
+    tonalityBoxModel.addTonality(DuTonality(8,      8,      tr("G")));
+    tonalityBoxModel.addTonality(DuTonality(9,      9,      tr("G#")));
+    tonalityBoxModel.addTonality(DuTonality(10,     22,     tr("Bbb")));
+    tonalityBoxModel.addTonality(DuTonality(11,     23,     tr("Bb")));
+    tonalityBoxModel.addTonality(DuTonality(12,     0,      tr("B")));
+    tonalityBoxModel.addTonality(DuTonality(13,     13,     tr("B#")));
+    tonalityBoxModel.addTonality(DuTonality(14,     14,     tr("Db")));
+    tonalityBoxModel.addTonality(DuTonality(15,     3,      tr("D")));
+    tonalityBoxModel.addTonality(DuTonality(16,     4,      tr("D#")));
+    tonalityBoxModel.addTonality(DuTonality(17,     17,     tr("Fb")));
+    tonalityBoxModel.addTonality(DuTonality(18,     6,      tr("F")));
+    tonalityBoxModel.addTonality(DuTonality(19,     7,      tr("F#")));
+    tonalityBoxModel.addTonality(DuTonality(20,     20,     tr("F##")));
+    tonalityBoxModel.addTonality(DuTonality(21,     21,     tr("Ab")));
+    tonalityBoxModel.addTonality(DuTonality(22,     10,     tr("A")));
+    tonalityBoxModel.addTonality(DuTonality(23,     11,     tr("A#")));
 }
 
 MidiConversionHelper::~MidiConversionHelper()
@@ -172,7 +169,7 @@ QString MidiConversionHelper::getMidiTimeSigStr() const
     quint8 num = midiTimeSig & 0xFF;
     quint8 denom = (midiTimeSig >> 8) & 0xFF;
 
-    return QString::number(num) + QString(" : ") + QString::number(denom);
+    return QString::number(num) + QStringLiteral(" : ") + QString::number(denom);
 }
 
 QString MidiConversionHelper::getMidiScale() const
@@ -191,31 +188,31 @@ QString MidiConversionHelper::getMidiTitle() const
 }
 
 
-QList<DuMidiTrackPtr> MidiConversionHelper::getTracks()
+QVector<DuMidiTrackPtr> MidiConversionHelper::getTracks()
 {
-    QList<DuMidiTrackPtr> trackList;
+    QVector<DuMidiTrackPtr> trackList;
     trackList.clear();
 
     const DuArrayPtr tracks = selectedFile->getTracks();
     if (tracks == NULL)
-        return QList<DuMidiTrackPtr>();
+        return QVector<DuMidiTrackPtr>();
 
     DuObjectPtr tmpObject = DuObjectPtr();
     DuMidiTrackPtr tmpTrack = DuMidiTrackPtr();
 
     int count = tracks->count();
     if (count == -1)
-        return QList<DuMidiTrackPtr>();
+        return QVector<DuMidiTrackPtr>();
 
     for (int i = 0; i < count; i++)
     {
         tmpObject = tracks->at(i);
         if (tmpObject == NULL)
-            return QList<DuMidiTrackPtr>();
+            return QVector<DuMidiTrackPtr>();
 
         tmpTrack = tmpObject.dynamicCast<DuMidiTrack>();
         if (tmpTrack == NULL)
-            return QList<DuMidiTrackPtr>();
+            return QVector<DuMidiTrackPtr>();
 
         trackList.append(tmpTrack);
     }
@@ -274,7 +271,7 @@ QStringList MidiConversionHelper::mapList() const
 
 void MidiConversionHelper::chooseMap()
 {
-    if (scale == "" || tonality == -1)
+    if (scale.isEmpty() || tonality == -1)
         return;
 
     mapper->chooseMap(scale, tonality);
@@ -395,7 +392,7 @@ int MidiConversionHelper::percuFromMidi(int gmKey, int mapIndex)
     s_note tmpNote;
     int tmpKey = 0xFF;
 
-    for (int i = 0; i < 58; i++)
+    for (int i = 0; i < NUM_BUTTON_KEYBOARD; i++)
     {
         tmpNote = keyboard_note_map[mapIndex][0][i];
         tmpKey = tmpNote.note_gmref;
@@ -410,7 +407,10 @@ int MidiConversionHelper::percuFromMidi(int gmKey, int mapIndex)
 int MidiConversionHelper::percuToMidi(quint8 duKey, quint8 keyboardIndex,
                                       quint8 mapIndex)
 {
-    if (duKey > 57 + 35 || keyboardIndex > 1 || mapIndex > 3)
+    quint32 mapIndexRef = (NUM_KEY_MAP - 1) / 2 - 1;
+    quint32 keyIndexRef = NUM_BUTTON_KEYBOARD + 35 - 1;
+
+    if (duKey > keyIndexRef || keyboardIndex > 1 || mapIndex > mapIndexRef)
     {
         qCWarning(LOG_CAT_DU_OBJECT)
                 << "MidiConversionHelper::percuKey():\n"
@@ -490,7 +490,7 @@ bool MidiConversionHelper::populateMapper(const QJsonObject &jsonMaps)
     mapper->importMaps(jsonMaps);
 
     QStringList mapList = mapper->mapList();
-    scaleBoxModel.addScale(DuScale(SCALE_NONE, tr(SCALE_NONE)));
+    scaleBoxModel.addScale(DuScale(QStringLiteral(SCALE_NONE), tr(SCALE_NONE)));
 
     int count = mapList.count();
 
@@ -510,8 +510,8 @@ bool MidiConversionHelper::populateMapper(const QJsonObject &jsonMaps)
 void MidiConversionHelper::importMidiFromFile()
 {
     QSettings settings;
-    QString importDirName = settings.contains("midi/lastImportDir") ?
-                settings.value("midi/lastImportDir").toString() :
+    QString importDirName = settings.contains(QStringLiteral("midi/lastImportDir")) ?
+                settings.value(QStringLiteral("midi/lastImportDir")).toString() :
                 QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
 
     QFileDialog::Options options = 0;
@@ -530,7 +530,7 @@ void MidiConversionHelper::importMidiFromFile()
         return;
     }
 
-    settings.setValue("midi/lastImportDir", QFileInfo(importPath).absolutePath());
+    settings.setValue(QStringLiteral("midi/lastImportDir"), QFileInfo(importPath).absolutePath());
 
 
     QFile *midiInput = new QFile(importPath);
@@ -551,8 +551,8 @@ void MidiConversionHelper::importMidiFromFile()
 void MidiConversionHelper::importMapsFromFile()
 {
     QSettings settings;
-    QString mapperName = settings.contains("midi/lastMapper") ?
-                settings.value("midi/lastMapper").toString() :
+    QString mapperName = settings.contains(QStringLiteral("midi/lastMapper")) ?
+                settings.value(QStringLiteral("midi/lastMapper")).toString() :
                 QString();
 
     if (mapperName.isNull())
@@ -577,7 +577,7 @@ void MidiConversionHelper::importMapsFromFile()
         }
     }
 
-    settings.setValue("midi/lastMapper", mapperName);
+    settings.setValue(QStringLiteral("midi/lastMapper"), mapperName);
 
 
     QFile *mapsInput = new QFile(mapperName);
@@ -636,7 +636,7 @@ bool MidiConversionHelper::filterMetaEvents()
     {
         bool instrumentFound = false;
         bool progChangeFound = false;
-        QString trackName = "";
+        QString trackName;
 
         const DuMidiTrackPtr &midiTrack =
                 midiTracks->at(i).dynamicCast<DuMidiTrack>();
@@ -652,10 +652,41 @@ bool MidiConversionHelper::filterMetaEvents()
 
 
         //The last event in a midi track should always be an EndOfTrack meta event
-        //We will use it later so we are not removing it now
+
+        const DuMidiBasicEventPtr &midiEvent =
+                midiEvents->at(midiEvents->count() - 1).dynamicCast<DuMidiBasicEvent>();
+        if (midiEvent == NULL)
+            return false;
+
+        const DuMidiMetaEventPtr &metaEvent =
+                midiEvent.dynamicCast<DuMidiMetaEvent>();
+        if (metaEvent == NULL)
+            return false;
+
+        if (metaEvent->getType() != DuMidiMetaEvent::EndOfTrack)
+            return false;
+
+        int trackDuration = metaEvent->getTime();
+
+        if (trackDuration != -1)
+        {
+            quint64 tmp = trackDuration;
+            tmp *= DUMUSIC_DIVISION;
+            tmp /= midiDivision;
+
+            //This prevents having events with a timestamp equal to the loop reference duration
+            tmp += 1;
+
+            if ((quint32)tmp > (quint32)duration)
+                setDuration(tmp);
+        }
+
+        //Removing EndOfTrack event
+        midiEvents->removeAt(midiEvents->count() - 1);
+
 
         int j = 0;
-        while (j < midiEvents->count() - 1)
+        while (j < midiEvents->count())
         {
             const DuMidiBasicEventPtr &midiEvent =
                     midiEvents->at(j).dynamicCast<DuMidiBasicEvent>();
@@ -665,6 +696,7 @@ bool MidiConversionHelper::filterMetaEvents()
             //Adjusting timestamp for .dumusic time division
 
             int time = midiEvent->getTime();
+
             if (time != -1)
             {
                 quint64 tmp = time;
@@ -677,17 +709,17 @@ bool MidiConversionHelper::filterMetaEvents()
             const DuMidiMetaEventPtr &metaEvent =
                     midiEvent.dynamicCast<DuMidiMetaEvent>();
 
-            if (metaEvent == NULL)          //ChannelEvent or SysExEvent
+            if (metaEvent == NULL)          //Event is ChannelEvent or SysExEvent
             {
                 const DuMidiChannelEventPtr &channelEvent =
                         midiEvent.dynamicCast<DuMidiChannelEvent>();
 
-                if (channelEvent == NULL)   //SysExEvent
+                if (channelEvent == NULL)   //Event is SysExEvent
                 {
                     midiEvents->removeAt(j);
                 }
 
-                else                        //ChannelEvent
+                else                        //Event is ChannelEvent
                 {
                     if (channelEvent->getType() == DuMidiChannelEvent::ProgramChange)
                     {
@@ -699,9 +731,9 @@ bool MidiConversionHelper::filterMetaEvents()
                             if (tmpNum == -1)
                                 return false;
 
-                            trackName.append(QString(" (PC#")
+                            trackName.append(QStringLiteral(" (PC#")
                                              + QString::number(tmpNum)
-                                             + QString(")"));
+                                             + QStringLiteral(")"));
                         }
 
                         midiEvents->removeAt(j);
@@ -791,42 +823,16 @@ bool MidiConversionHelper::filterMetaEvents()
             }
         }
 
-        if (midiEvents->count() == 1)
+        //When all events are removed, j is still 0
+        if (j == 0)
             midiTracks->removeAt(i);
 
         else
         {
             if (!instrumentFound)
-                trackName.prepend(QString("Track ") + QString::number(i));
+                trackName.prepend(QStringLiteral("Track ") + QString::number(i));
             trackNames.append(trackName);
             i++;
-
-
-            const DuMidiBasicEventPtr &midiEvent =
-                    midiEvents->at(j).dynamicCast<DuMidiBasicEvent>();
-            if (midiEvent == NULL)
-                return false;
-
-            const DuMidiMetaEventPtr &metaEvent =
-                    midiEvent.dynamicCast<DuMidiMetaEvent>();
-            if (metaEvent == NULL)
-                return false;
-
-            if (metaEvent->getType() != DuMidiMetaEvent::EndOfTrack)
-                return false;
-            int trackDuration = metaEvent->getTime();
-
-            midiEvents->removeAt(j);
-
-            if (trackDuration != -1)
-            {
-                quint64 tmp = trackDuration;
-                tmp *= DUMUSIC_DIVISION;
-                tmp /= midiDivision;
-
-                if ((quint32)tmp > (quint32)duration)
-                    setDuration(tmp);
-            }
         }
     }
 
@@ -894,17 +900,17 @@ void MidiConversionHelper::setMidiScale(int value)
     midiScale = value;
 
     if (midiScale == 0)
-        setScale(SCALE_MAJOR);
+        setScale(QStringLiteral(SCALE_MAJOR));
     else if (midiScale == 1)
-        setScale(SCALE_MINOR);
+        setScale(QStringLiteral(SCALE_MINOR));
     else
-        setScale("");
+        setScale(QString());
 }
 
 void MidiConversionHelper::setMidiTonality(int value)
 {
     midiTonality = value;
-    setTonality(value);
+    setTonality(tonalityBoxModel.findValue(value));
 }
 
 void MidiConversionHelper::setMidiTitle(const QString &value)

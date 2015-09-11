@@ -1,8 +1,9 @@
 #include "dutonalitymodel.h"
 
 
-DuTonality::DuTonality(int value, const QString &name) :
+DuTonality::DuTonality(int value, int midiRef, const QString &name) :
     m_value(value),
+    m_midiRef(midiRef),
     m_name(name)
 {
 }
@@ -10,6 +11,11 @@ DuTonality::DuTonality(int value, const QString &name) :
 int DuTonality::value() const
 {
     return m_value;
+}
+
+int DuTonality::midiRef() const
+{
+    return m_midiRef;
 }
 
 QString DuTonality::name() const
@@ -45,14 +51,28 @@ int DuTonalityModel::findValue(const QString &name) const
     return -1;
 }
 
-QString DuTonalityModel::findName(int value) const
+int DuTonalityModel::findValue(int midiRef) const
 {
     QListIterator<DuTonality> it(m_tonalities);
 
     while (it.hasNext())
     {
         const DuTonality &tmpTonality = it.next();
-        if (tmpTonality.value() == value)
+        if (tmpTonality.midiRef() == midiRef)
+            return tmpTonality.value();
+    }
+
+    return -1;
+}
+
+QString DuTonalityModel::findName(int midiRef) const
+{
+    QListIterator<DuTonality> it(m_tonalities);
+
+    while (it.hasNext())
+    {
+        const DuTonality &tmpTonality = it.next();
+        if (tmpTonality.midiRef() == midiRef)
             return tmpTonality.name();
     }
 

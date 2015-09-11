@@ -4,8 +4,8 @@
 #include "dumidibasicevent.h"
 
 
-#define KEY_MIDISYSEXEVENT_LENGTH      "Length"
-#define KEY_MIDISYSEXEVENT_DATA        "Data"
+#define KEY_MIDISYSEXEVENT_LENGTH   QStringLiteral("Length")
+#define KEY_MIDISYSEXEVENT_DATA     QStringLiteral("Data")
 
 
 DU_OBJECT(DuMidiSysExEvent)
