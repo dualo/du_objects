@@ -2,8 +2,10 @@
 
 #include <cstring>
 
+#include <QJsonArray>
 #include <QJsonObject>
 
+#include "../../general/duarray.h"
 #include "../../general/dubinarydata.h"
 #include "../../general/dunumeric.h"
 
@@ -50,8 +52,7 @@ DuEffectSet::DuEffectSet() :
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
-    addChild(KeyMultinote,
-             new DuBinaryData(4));
+    addChild(KeyMultinote, new DuArray(4));
 
 
     addChild(KeyPitch,
@@ -121,7 +122,13 @@ DuEffectSetPtr DuEffectSet::fromDuMusicBinary(const preset_instr &du_preset)
     verif = effectSet->setWahOnOff(du_preset.s_wah_onoff) ? verif : false;
 
     verif = effectSet->setMultinoteAct(du_preset.s_multinote_act) ? verif : false;
-    verif = effectSet->setMultinote(QByteArray((char *)du_preset.s_multinote, 4)) ? verif : false;
+
+    DuArrayPtr multinoteArray(new DuArray);
+    for (int i = 0; i < 4; ++i)
+    {
+        multinoteArray->append(DuNumericPtr(new DuNumeric(du_preset.s_multinote[i], NUMERIC_DEFAULT_SIZE, 0xFF, 0x00, 0x00)));
+    }
+    effectSet->setMultinote(multinoteArray);
 
     verif = effectSet->setPitch(du_preset.s_pitch) ? verif : false;
 
@@ -174,7 +181,7 @@ DuEffectSetPtr DuEffectSet::fromJson(const QJsonObject &jsonEffectSet)
             ||  !jsonEqualOnOff.isDouble()      ||  !jsonChorusOnOff.isDouble()
             ||  !jsonVibOnOff.isDouble()        ||  !jsonWahOnOff.isDouble()
 
-            ||  !jsonMultinoteAct.isDouble()    ||  !jsonMultinote.isString()
+            ||  !jsonMultinoteAct.isDouble()    ||  !jsonMultinote.isArray()
 
             ||  !jsonPitch.isDouble()
 
@@ -204,7 +211,14 @@ DuEffectSetPtr DuEffectSet::fromJson(const QJsonObject &jsonEffectSet)
     verif = effectSet->setWahOnOff(jsonWahOnOff.toInt()) ? verif : false;
 
     verif = effectSet->setMultinoteAct(jsonMultinoteAct.toInt()) ? verif : false;
-    verif = effectSet->setMultinote(jsonMultinote.toString().toUtf8()) ? verif : false;
+
+    DuArrayPtr multinoteArray(new DuArray);
+    const QJsonArray& array = jsonMultinote.toArray();
+    for (QJsonArray::const_iterator it = array.constBegin(); it != array.constEnd(); ++it)
+    {
+        multinoteArray->append(DuNumericPtr(new DuNumeric(it->toInt(0), NUMERIC_DEFAULT_SIZE, 0xFF, 0x00, 0x00)));
+    }
+    effectSet->setMultinote(multinoteArray);
 
     verif = effectSet->setPitch(jsonPitch.toInt()) ? verif : false;
 
@@ -283,10 +297,10 @@ QByteArray DuEffectSet::toDuMusicBinary() const
         return QByteArray();
     du_effectset.s_multinote_act = tmpNum;
 
-    const QByteArray &tmpArray = getMultinote();
-    if (tmpArray.isNull())
+    const DuArrayConstPtr &multinoteArray = getMultinote();
+    if (multinoteArray == NULL)
         return QByteArray();
-    std::memcpy(du_effectset.s_multinote, tmpArray.data(), 4);
+    std::memcpy(du_effectset.s_multinote, multinoteArray->toDuMusicBinary().constData(), multinoteArray->size());
 
 
     tmpNum = getPitch();
@@ -356,7 +370,7 @@ DU_KEY_ACCESSORS_IMPL(DuEffectSet, VibratoOnOff,      Numeric,      int,        
 DU_KEY_ACCESSORS_IMPL(DuEffectSet, WahOnOff,          Numeric,      int,        -1)
 
 DU_KEY_ACCESSORS_IMPL(DuEffectSet, MultinoteAct,      Numeric,      int,        -1)
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, Multinote,         BinaryData,   QByteArray, QByteArray())
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuEffectSet, Multinote, DuArray)
 
 DU_KEY_ACCESSORS_IMPL(DuEffectSet, Pitch,             Numeric,      int,        -1)
 

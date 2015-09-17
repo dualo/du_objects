@@ -7,6 +7,7 @@
 #define EFFECTSET_SIZE              8 + 11 + 5 + 9 + 59
 #define EFFECTSET_PRESET_OFFSET     36
 
+DU_OBJECT(DuArray);
 
 DU_OBJECT(DuEffectSet);
 
@@ -35,7 +36,7 @@ public:
     DU_KEY_ACCESSORS(WahOnOff,          int)
 
     DU_KEY_ACCESSORS(MultinoteAct,      int)
-    DU_KEY_ACCESSORS(Multinote,         QByteArray)
+    DU_KEY_ACCESSORS_OBJECT(Multinote,  DuArray)
 
     DU_KEY_ACCESSORS(Pitch,             int)
 
