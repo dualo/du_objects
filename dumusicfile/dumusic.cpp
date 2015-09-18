@@ -567,14 +567,11 @@ bool DuMusic::upgrade(s_total_buffer &du_music)
                 preset.s_direction_gyro_R = -1;
                 preset.s_direction_gyro_Y = -1;
 
-                preset.s_adsr_onoff = 0;
                 preset.s_compressor_onoff = 0;
                 preset.s_delay_onoff = 0;
                 preset.s_distortion_onoff = 0;
                 preset.s_eq_onoff = 0;
                 preset.s_chorus_onoff = 0;
-                preset.s_vibrato_onoff = 0;
-                preset.s_wah_onoff = 0;
 
                 preset.s_autopitch_rate = 0;
                 preset.s_autopitch_range = 127;
@@ -593,6 +590,12 @@ bool DuMusic::upgrade(s_total_buffer &du_music)
                 preset.s_multinote[1] = 0;
                 preset.s_multinote[2] = 0;
                 preset.s_multinote[3] = 0;
+
+                preset.s_adsr_attack    = FX_ADSR_ATTACK_DEFAULTVALUE;
+                preset.s_adsr_release   = FX_ADSR_RELEAS_DEFAULTVALUE;
+                preset.s_wah_type       = FX_WAH_FILTERTYPE_DEFAULTVALUE;
+                preset.s_wah_freq       = FX_WAH_FILTERFREQ_DEFAULTVALUE;
+                preset.s_wah_res        = FX_WAH_FILTERRES_DEFAULTVALUE;
 
                 // INSTR
                 s_instr& instr = loop.l_instr.i_instrument;

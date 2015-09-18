@@ -27,14 +27,11 @@ public:
 
     int size() const;
 
-    DU_KEY_ACCESSORS(AdsrOnOff,         int)
     DU_KEY_ACCESSORS(CompressorOnOff,   int)
     DU_KEY_ACCESSORS(DelayOnOff,        int)
     DU_KEY_ACCESSORS(DistortionOnOff,   int)
     DU_KEY_ACCESSORS(EqualizerOnOff,    int)
     DU_KEY_ACCESSORS(ChorusOnOff,       int)
-    DU_KEY_ACCESSORS(VibratoOnOff,      int)
-    DU_KEY_ACCESSORS(WahOnOff,          int)
 
     DU_KEY_ACCESSORS(MultinoteAct,      int)
     DU_KEY_ACCESSORS(Multinote,         QByteArray)
@@ -49,6 +46,12 @@ public:
     DU_KEY_ACCESSORS(AutopanRange,      int)
     DU_KEY_ACCESSORS(AutowahRate,       int)
     DU_KEY_ACCESSORS(AutowahRange,      int)
+
+    DU_KEY_ACCESSORS(AdsrAttack,        int)
+    DU_KEY_ACCESSORS(AdsrRelease,       int)
+    DU_KEY_ACCESSORS(WahType,           int)
+    DU_KEY_ACCESSORS(WahFrequency,      int)
+    DU_KEY_ACCESSORS(WahResonance,      int)
 };
 
 #endif // DUEFFECTSET_H

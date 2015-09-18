@@ -36,16 +36,13 @@ public:
     DU_KEY_ACCESSORS(PortamentoTime,        int)
     DU_KEY_ACCESSORS(Expression,            int)
     DU_KEY_ACCESSORS(PitchBendSensitivity,  int)
-    DU_KEY_ACCESSORS(Disposition,           int)
+    DU_KEY_ACCESSORS(KeyCurve,              int)
 
-    DU_KEY_ACCESSORS(AdsrPreset,            int)
     DU_KEY_ACCESSORS(CompressorPreset,      int)
     DU_KEY_ACCESSORS(DelayPreset,           int)
     DU_KEY_ACCESSORS(DistortionPreset,      int)
     DU_KEY_ACCESSORS(EqualizerPreset,       int)
     DU_KEY_ACCESSORS(ChorusPreset,          int)
-    DU_KEY_ACCESSORS(VibratoPreset,         int)
-    DU_KEY_ACCESSORS(WahPreset,             int)
 
     DU_KEY_ACCESSORS(ArpeggiatorType,       int)
     DU_KEY_ACCESSORS(ArpeggiatorBeat,       int)

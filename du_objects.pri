@@ -25,7 +25,6 @@ HEADERS += \
     $$PWD/dumusicfile/instrument/duexpression.h \
     $$PWD/dumusicfile/instrument/ducontrollers.h \
     $$PWD/dumusicfile/instrument/dueffectset.h \
-    $$PWD/dumusicfile/instrument/effects/duadsr.h \
     $$PWD/dumusicfile/instrument/effects/duchorus.h \
     $$PWD/dumusicfile/instrument/effects/ducompressor.h \
     $$PWD/dumusicfile/instrument/effects/dudelay.h \
@@ -33,8 +32,6 @@ HEADERS += \
     $$PWD/dumusicfile/instrument/effects/dueffectsettings.h \
     $$PWD/dumusicfile/instrument/effects/duequalizer.h \
     $$PWD/dumusicfile/instrument/effects/dumixer.h \
-    $$PWD/dumusicfile/instrument/effects/duvibrato.h \
-    $$PWD/dumusicfile/instrument/effects/duwah.h \
     $$PWD/dumusicfile/instrument/effects/dureverb.h \
     $$PWD/midifile/dumidivariablelength.h \
     $$PWD/midifile/dumidistatus.h \
@@ -54,7 +51,8 @@ HEADERS += \
     $$PWD/dudevicelist.h \
     $$PWD/duprofile.h \
     $$PWD/dusoundfile/dusound.h \
-    $$PWD/miditodumusic/duscalemodel.h
+    $$PWD/miditodumusic/duscalemodel.h \
+    $$PWD/du-touch/parameters/controler_parameters_mng.h
 
 SOURCES += \
     $$PWD/du-touch/parameters/instr_mapping.c \
@@ -80,7 +78,6 @@ SOURCES += \
     $$PWD/dumusicfile/instrument/duexpression.cpp \
     $$PWD/dumusicfile/instrument/ducontrollers.cpp \
     $$PWD/dumusicfile/instrument/dueffectset.cpp \
-    $$PWD/dumusicfile/instrument/effects/duadsr.cpp \
     $$PWD/dumusicfile/instrument/effects/duchorus.cpp \
     $$PWD/dumusicfile/instrument/effects/ducompressor.cpp \
     $$PWD/dumusicfile/instrument/effects/dudelay.cpp \
@@ -88,8 +85,6 @@ SOURCES += \
     $$PWD/dumusicfile/instrument/effects/dueffectsettings.cpp \
     $$PWD/dumusicfile/instrument/effects/duequalizer.cpp \
     $$PWD/dumusicfile/instrument/effects/dumixer.cpp \
-    $$PWD/dumusicfile/instrument/effects/duvibrato.cpp \
-    $$PWD/dumusicfile/instrument/effects/duwah.cpp \
     $$PWD/dumusicfile/instrument/effects/dureverb.cpp \
     $$PWD/midifile/dumidivariablelength.cpp \
     $$PWD/midifile/dumidistatus.cpp \
