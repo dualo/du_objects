@@ -1,5 +1,6 @@
 #include "dumidivariablelength.h"
 
+#include <QDataStream>
 #include <QJsonValue>
 
 

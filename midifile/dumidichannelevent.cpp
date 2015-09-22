@@ -5,6 +5,8 @@
 
 #include "../general/dunumeric.h"
 
+#include <QDataStream>
+
 
 
 DU_OBJECT_IMPL(DuMidiChannelEvent)

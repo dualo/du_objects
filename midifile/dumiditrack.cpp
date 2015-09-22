@@ -7,6 +7,7 @@
 
 #include "../general/duarray.h"
 
+#include <QDataStream>
 #include <QJsonValue>
 
 

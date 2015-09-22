@@ -5,6 +5,7 @@
 #include "../general/duarray.h"
 #include "../general/dunumeric.h"
 
+#include <QDataStream>
 #include <QJsonValue>
 
 
