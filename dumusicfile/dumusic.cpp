@@ -504,6 +504,7 @@ bool DuMusic::upgrade(s_total_buffer &du_music)
         song.s_size = MUSIC_SONG_SIZE + (song.s_totalsample * MUSIC_SAMPLE_SIZE);
         song.s_metadata = 0;
         song.s_playhead = 0;
+        song.s_state = 0;
         song.s_transpose = RECORD_TRANSPOSEDEFAULT;
 
         song.s_reverb_preset = FX_REVERB_PRESET_DEFAULTVALUE;
@@ -517,6 +518,23 @@ bool DuMusic::upgrade(s_total_buffer &du_music)
         song.s_activ_gyro_P = 0;
         song.s_activ_gyro_R = 0;
         song.s_activ_gyro_Y = 0;
+
+        FX_reverb& reverb = song.s_reverb;
+        reverb.r_level          = FX_REVERB_LEVEL_DEFAULTVALUE;
+        reverb.r_directlevel    = FX_REVERB_DIRECTLEVEL_DEFAULTVALUE;
+        reverb.r_revsend        = FX_REVERB_REVSEND_DEFAULTVALUE;
+        reverb.r_tonegain       = FX_REVERB_TONEGAIN_DEFAULTVALUE;
+        reverb.r_tonefreq       = FX_REVERB_TONEFREQ_DEFAULTVALUE;
+        reverb.r_prehp          = FX_REVERB_PREHP_DEFAULTVALUE;
+        reverb.r_time           = FX_REVERB_TIME_DEFAULTVALUE;
+        reverb.r_echofeedback   = FX_REVERB_ECHOFEED_DEFAULTVALUE;
+        reverb.r_hdamp          = FX_REVERB_HDAMP_DEFAULTVALUE;
+        reverb.r_thresgate      = FX_REVERB_THRESGATE_DEFAULTVALUE;
+        reverb.r_predelaytime   = FX_REVERB_PREDELAYTIME_DEFAULTVALUE;
+
+        QByteArray tmpName(NAME_CARACT, (char)0x00);
+        tmpName.prepend(QStringLiteral(DEFAULT_EFFECTNAME).toUtf8());
+        std::memcpy(reverb.r_name, tmpName.data(), NAME_CARACT);
 
 
         for (i = 0; i < MUSIC_MAXTRACK; i++)
