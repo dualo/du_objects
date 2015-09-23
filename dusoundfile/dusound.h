@@ -30,23 +30,12 @@ public:
     QStringList lists() const;
     void setLists(const QStringList &lists);
 
-    QString name() const;
-    bool setName(const QString &name);
-
-    int dreamProgramChange() const;
-    bool setDreamProgramChange(int value);
-
-    int octave() const;
-    bool setOctave(int value);
-
-    int activeNoteOff() const;
-    bool setActiveNoteOff(int value);
-
-    QString category() const;
-    bool setCategory(const QString& value);
-
-    int relativeVolume() const;
-    bool setRelativeVolume(int value);
+    DU_KEY_ACCESSORS_IN_CHILD(Name,                 QString)
+    DU_KEY_ACCESSORS_IN_CHILD(DreamProgramChange,   int)
+    DU_KEY_ACCESSORS_IN_CHILD(Octave,               int)
+    DU_KEY_ACCESSORS_IN_CHILD(ActiveNoteOff,        int)
+    DU_KEY_ACCESSORS_IN_CHILD(Category,             QString)
+    DU_KEY_ACCESSORS_IN_CHILD(RelativeVolume,       int)
 
     DU_KEY_ACCESSORS_OBJECT(Header,                 DuSoundHeader)
 
