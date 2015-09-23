@@ -56,6 +56,31 @@
     \
     const QString className::Key ## key = QStringLiteral(#key);
 
+#define DU_KEY_ACCESSORS_IN_CHILD(key, type) \
+    type get ## key() const; \
+    bool set ## key(const type& value);
+
+#define DU_KEY_ACCESSORS_IN_CHILD_IMPL(className, key, childType, childKey, type, defaultReturn) \
+    type className::get ## key() const \
+    { \
+        const childType ## ConstPtr& child = get ## childKey(); \
+         \
+        if (child == NULL) \
+            return defaultReturn; \
+         \
+        return child->get ## key(); \
+    } \
+     \
+    bool className::set ## key(const type& value) \
+    { \
+        const childType ## Ptr &child = getChildAs<childType>(QStringLiteral(#childKey)); \
+         \
+        if (child == NULL) \
+            return false; \
+         \
+        return child->set ## key(value); \
+    }
+
 
 DU_OBJECT(DuContainer);
 
