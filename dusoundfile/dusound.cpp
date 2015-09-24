@@ -206,8 +206,8 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
     int sampleAddress = firstSPAddress + m3Infos->getSPSize();
     for (int i = 0; i < dreamSPArray->count() - 1; ++i)
     {
-        const DuDreamSampleParamConstPtr& currentSampleParam = dreamSPArray->at(i).dynamicCast<const DuDreamSampleParam>();
-        const DuDreamSampleParamConstPtr& nextSampleParam = dreamSPArray->at(i+1).dynamicCast<const DuDreamSampleParam>();
+        const DuDreamSampleParamConstPtr& currentSampleParam = dreamSPArray->atAs<DuDreamSampleParam>(i);
+        const DuDreamSampleParamConstPtr& nextSampleParam = dreamSPArray->atAs<DuDreamSampleParam>(i+1);
         Q_ASSERT(currentSampleParam != NULL);
         Q_ASSERT(nextSampleParam != NULL);
 
@@ -230,7 +230,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
         sampleAddress += sampleSize;
     }
 
-    const DuDreamSampleParamConstPtr& currentSampleParam = dreamSPArray->at(dreamSPArray->count() - 1).dynamicCast<const DuDreamSampleParam>();
+    const DuDreamSampleParamConstPtr& currentSampleParam = dreamSPArray->atAs<DuDreamSampleParam>(dreamSPArray->count() - 1);
     Q_ASSERT(currentSampleParam != NULL);
     int sampleSize = m3Infos->getSampleSize() - currentSampleParam->getWavAddress();
     if (sampleSize <= 0)
