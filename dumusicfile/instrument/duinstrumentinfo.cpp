@@ -27,8 +27,8 @@ DuInstrumentInfo::DuInstrumentInfo() :
                            0x04, 0x00));
 
     addChild(KeyOctave,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
+             new DuNumeric(MAIN_OCTAVE_DEFAULT, NUMERIC_DEFAULT_SIZE,
+                           MAIN_OCTAVE_MAX, MAIN_OCTAVE_MIN));
 
     addChild(KeyUserID, new DuNumeric(0));
 
