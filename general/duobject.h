@@ -47,6 +47,8 @@ protected:
 
 public:
     virtual DuObjectPtr clone() const = 0;
+    template <class T>
+    QSharedPointer<T> cloneAs() const;
 
     virtual QByteArray toDuMusicBinary() const = 0;
     virtual QByteArray toMidiBinary() const;
@@ -57,5 +59,11 @@ public:
 
     virtual int size() const = 0;
 };
+
+template <class T>
+inline QSharedPointer<T> DuObject::cloneAs() const
+{
+    return clone().dynamicCast<T>();
+}
 
 #endif // DUOBJECT_H
