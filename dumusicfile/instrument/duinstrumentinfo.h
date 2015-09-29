@@ -3,6 +3,11 @@
 
 #include "../../general/ducontainer.h"
 
+// TODO: Get this from external
+#ifndef SOUNDBANK_STARTADRESS
+#define SOUNDBANK_STARTADRESS 0x10000
+#endif
+
 
 DU_OBJECT(DuInstrumentInfo);
 

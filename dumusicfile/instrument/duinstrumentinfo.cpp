@@ -95,7 +95,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrI
 
     verif = instrInfo->setUserID(du_instrInfo.instr_user_id) ? verif : false;
     verif = instrInfo->setID(du_instrInfo.instr_id) ? verif : false;
-    verif = instrInfo->setSampleAddress(du_instrInfo.sample_address >= 0x10000 ? ((du_instrInfo.sample_address - 0x10000) * 2) : 0) ? verif : false;
+    verif = instrInfo->setSampleAddress((du_instrInfo.sample_address - SOUNDBANK_STARTADRESS) * 2) ? verif : false;
 
     verif = instrInfo->setActiveNoteOff(du_instrInfo.instr_noteoff) ? verif : false;
 
@@ -233,7 +233,7 @@ QByteArray DuInstrumentInfo::toDuMusicBinary() const
     tmpNum = getSampleAddress();
     if (tmpNum == -1)
         return QByteArray();
-    du_instrumentinfo.sample_address = tmpNum;
+    du_instrumentinfo.sample_address = (tmpNum / 2) + SOUNDBANK_STARTADRESS;
 
     tmpNum = getActiveNoteOff();
     if (tmpNum == -1)
