@@ -24,10 +24,21 @@ public:
 
     DU_KEY_ACCESSORS_IN_CHILD(Name,                 QString)
     DU_KEY_ACCESSORS_IN_CHILD(DreamProgramChange,   int)
+    DU_KEY_ACCESSORS_IN_CHILD(MidiControlChange0,   int)
+    DU_KEY_ACCESSORS_IN_CHILD(KeyMapping,           int)
     DU_KEY_ACCESSORS_IN_CHILD(Octave,               int)
+    DU_KEY_ACCESSORS_IN_CHILD(UserID,               int)
+    DU_KEY_ACCESSORS_IN_CHILD(ID,                   int)
+    DU_KEY_ACCESSORS_IN_CHILD(SampleAddress,        int)
     DU_KEY_ACCESSORS_IN_CHILD(ActiveNoteOff,        int)
     DU_KEY_ACCESSORS_IN_CHILD(Category,             QString)
     DU_KEY_ACCESSORS_IN_CHILD(RelativeVolume,       int)
+    DU_KEY_ACCESSORS_IN_CHILD(NbLayer,              int)
+    DU_KEY_ACCESSORS_IN_CHILD(IPSize,               int)
+    DU_KEY_ACCESSORS_IN_CHILD(SPSize,               int)
+    DU_KEY_ACCESSORS_IN_CHILD(SampleSize,           int)
+    DU_KEY_ACCESSORS_IN_CHILD(InstrType,            INSTRUMENT_TYPE)
+    DU_KEY_ACCESSORS_IN_CHILD(InstrVersion,         int)
 
     DU_KEY_ACCESSORS_OBJECT(InstrumentInfo,  DuInstrumentInfo)
 

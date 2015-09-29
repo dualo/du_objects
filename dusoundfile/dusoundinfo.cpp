@@ -355,10 +355,21 @@ QByteArray DuSoundInfo::toBinary() const
 
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, Name,               DuInstrumentInfo, InstrumentInfo, QString, QString())
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, DreamProgramChange, DuInstrumentInfo, InstrumentInfo, int, -1)
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, MidiControlChange0, DuInstrumentInfo, InstrumentInfo, int, -1)
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, KeyMapping,         DuInstrumentInfo, InstrumentInfo, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, Octave,             DuInstrumentInfo, InstrumentInfo, int, -1)
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, UserID,             DuInstrumentInfo, InstrumentInfo, int, -1)
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, ID,                 DuInstrumentInfo, InstrumentInfo, int, -1)
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, SampleAddress,      DuInstrumentInfo, InstrumentInfo, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, ActiveNoteOff,      DuInstrumentInfo, InstrumentInfo, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, Category,           DuInstrumentInfo, InstrumentInfo, QString, QString())
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, RelativeVolume,     DuInstrumentInfo, InstrumentInfo, int, -1)
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, NbLayer,            DuInstrumentInfo, InstrumentInfo, int, -1)
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, IPSize,             DuInstrumentInfo, InstrumentInfo, int, -1)
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, SPSize,             DuInstrumentInfo, InstrumentInfo, int, -1)
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, SampleSize,         DuInstrumentInfo, InstrumentInfo, int, -1)
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, InstrType,          DuInstrumentInfo, InstrumentInfo, INSTRUMENT_TYPE, NUM_INSTR_TYPE)
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, InstrVersion,       DuInstrumentInfo, InstrumentInfo, int, -1)
 
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuSoundInfo, InstrumentInfo,  DuInstrumentInfo)
 
