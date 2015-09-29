@@ -1,8 +1,8 @@
 #include "dusound.h"
 
-#include "dudreaminstrparam.h"
-#include "dudreamsampleparam.h"
+#include "dulayer.h"
 #include "dunote.h"
+#include "dusample.h"
 #include "dusoundheader.h"
 #include "dusoundinfo.h"
 
@@ -22,18 +22,15 @@ DuSound::DuSound() :
     DuContainer(),
     m_databaseId(-1)
 {
-    addChild(KeyHeader,                new DuSoundHeader);
+    addChild(KeyHeader,     new DuSoundHeader);
 
-    addChild(KeyInfo,                  new DuSoundInfo);
+    addChild(KeyInfo,       new DuSoundInfo);
 
-    addChild(KeyDreamInstrParamArray,  new DuArray);
-    addChild(KeyDreamSampleParamArray, new DuArray);
+    addChild(KeyLayerArray, new DuArray);
 
-    addChild(KeySampleArray,           new DuArray);
+    addChild(KeyMapping,    new DuArray);
 
-    addChild(KeyMapping,               new DuArray);
-
-    addChild(KeyMetadata,              new DuArray);
+    addChild(KeyMetadata,   new DuArray);
 }
 
 DuObjectPtr DuSound::clone() const
@@ -110,53 +107,30 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
 
     int nbLayers = m3Infos->getNbLayer();
 
-    DuArrayPtr nbSamplesPerLayerArray(new DuArray);
+    QList<uint8_t> nbSamplesPerLayerArray;
+    nbSamplesPerLayerArray.reserve(nbLayers);
     for (int i = 0; i < nbLayers; ++i)
     {
         uint8_t nbSamples = (uint8_t)data.data()[INSTR_NB_SAMPLES_PER_LAYER_ADDRESS + (2*i)];
-
-        DuNumericPtr nbSamplesObject(new DuNumeric(nbSamples, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00, 0));
-        if (nbSamplesObject != NULL)
-        {
-            nbSamplesPerLayerArray->append(nbSamplesObject);
-        }
-        else
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
-                                          << "NbSamples for layer" << i << "was not properly generated";
-
-            return DuSoundPtr();
-        }
+        nbSamplesPerLayerArray << nbSamples;
     }
-    sound->setNbSamplesPerLayerArray(nbSamplesPerLayerArray);
 
-    DuArrayPtr dreamIPArray(new DuArray);
+    QList<dream_ip> dreamIPArray;
     int firstIPAddress = INSTR_NB_SAMPLES_PER_LAYER_ADDRESS + (2 * nbLayers);
     int ipSize = m3Infos->getIPSize() - (2 * nbLayers);
+    dreamIPArray.reserve(ipSize / INSTR_DREAM_IP_SIZE);
     for (int i = 0; i < ipSize; i += INSTR_DREAM_IP_SIZE)
     {
         dream_ip dreamIP;
         std::memcpy((char*)&dreamIP, &data.data()[firstIPAddress + i], INSTR_DREAM_IP_SIZE);
 
-        DuDreamInstrParamPtr dreamIPObject = DuDreamInstrParam::fromBinary(dreamIP);
-        if (dreamIPObject != NULL)
-        {
-            dreamIPArray->append(dreamIPObject);
-        }
-        else
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
-                                          << "dreamIP" << i / INSTR_DREAM_IP_SIZE << "was not properly generated";
-
-            return DuSoundPtr();
-        }
+        dreamIPArray << dreamIP;
     }
-    sound->setDreamInstrParamArray(dreamIPArray);
 
-
-    DuArrayPtr dreamSPArray(new DuArray);
+    QList<dream_sp> dreamSPArray;
     int firstSPAddress = firstIPAddress + ipSize;
     int spSize = m3Infos->getSPSize();
+    dreamSPArray.reserve(spSize / INSTR_DREAM_SP_SIZE);
     for (int i = 0; i < spSize; i += INSTR_DREAM_SP_SIZE)
     {
         dream_sp dreamSP;
@@ -164,7 +138,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
 
         if (m3Infos->getDreamFormatId() == DuInstrumentInfo::SDK_3000)
         {
-            if (dreamSP.loopType != DuDreamSampleParam::SND3000_Forward)
+            if (dreamSP.loopType != DuSample::SND3000_Forward)
             {
                 qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
                                               << "dreamSP" << i / INSTR_DREAM_SP_SIZE << "was not properly generated\n"
@@ -175,8 +149,8 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
         }
         else if (m3Infos->getDreamFormatId() == DuInstrumentInfo::SDK_5000)
         {
-            if (dreamSP.loopType != DuDreamSampleParam::SND5000_Forward
-                    && dreamSP.loopType != DuDreamSampleParam::SND5000_OneShot)
+            if (dreamSP.loopType != DuSample::SND5000_Forward
+                    && dreamSP.loopType != DuSample::SND5000_OneShot)
             {
                 qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
                                               << "dreamSP" << i / INSTR_DREAM_SP_SIZE << "was not properly generated\n"
@@ -186,71 +160,94 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
             }
         }
 
-        DuDreamSampleParamPtr dreamSPObject = DuDreamSampleParam::fromBinary(dreamSP, sampleOffset);
-        if (dreamSPObject != NULL)
-        {
-            dreamSPArray->append(dreamSPObject);
-        }
-        else
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
-                                          << "dreamSP" << i / INSTR_DREAM_SP_SIZE << "was not properly generated";
-
-            return DuSoundPtr();
-        }
+        dreamSPArray << dreamSP;
     }
-    sound->setDreamSampleParamArray(dreamSPArray);
 
-
-    DuArrayPtr sampleArray(new DuArray);
+    QByteArrayList sampleArray;
     int sampleAddress = firstSPAddress + m3Infos->getSPSize();
-    for (int i = 0; i < dreamSPArray->count() - 1; ++i)
+    sampleArray.reserve(dreamSPArray.count());
+    for (int i = 0; i < dreamSPArray.count() - 1; ++i)
     {
-        const DuDreamSampleParamConstPtr& currentSampleParam = dreamSPArray->atAs<DuDreamSampleParam>(i);
-        const DuDreamSampleParamConstPtr& nextSampleParam = dreamSPArray->atAs<DuDreamSampleParam>(i+1);
-        Q_ASSERT(currentSampleParam != NULL);
-        Q_ASSERT(nextSampleParam != NULL);
+        const dream_sp& currentSampleParam  = dreamSPArray[i];
+        const dream_sp& nextSampleParam     = dreamSPArray[i+1];
 
-        int sampleSize = nextSampleParam->getWavAddress() - currentSampleParam->getWavAddress();
+        uint32_t currentWavAddress  = DuSample::wavAddressDreamToReadable(currentSampleParam.wav_address,   sampleOffset);
+        uint32_t nextWavAddress     = DuSample::wavAddressDreamToReadable(nextSampleParam.wav_address,      sampleOffset);
+
+        int sampleSize = nextWavAddress - currentWavAddress;
         if (sampleSize <= 0)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
                                           << "sample" << i << "size is not positive:" << sampleSize << "\n"
-                                          << "nextSampleParam->getWavAddress():" << nextSampleParam->getWavAddress() << "\n"
-                                          << "currentSampleParam->getWavAddress():" << currentSampleParam->getWavAddress();
+                                          << "nextWavAddress:" << nextWavAddress << "\n"
+                                          << "currentWavAddress:" << currentWavAddress;
 
             return DuSoundPtr();
         }
 
-        DuBinaryDataPtr sampleObject(new DuBinaryData);
-        sampleObject->setData(data.mid(sampleAddress, sampleSize));
+        QByteArray sample(data.mid(sampleAddress, sampleSize));
 
-        sampleArray->append(sampleObject);
+        sampleArray << sample;
 
         sampleAddress += sampleSize;
     }
 
-    const DuDreamSampleParamConstPtr& currentSampleParam = dreamSPArray->atAs<DuDreamSampleParam>(dreamSPArray->count() - 1);
-    Q_ASSERT(currentSampleParam != NULL);
-    int sampleSize = m3Infos->getSampleSize() - currentSampleParam->getWavAddress();
+    const dream_sp& currentSampleParam  = dreamSPArray[dreamSPArray.count() - 1];
+
+    uint32_t currentWavAddress  = DuSample::wavAddressDreamToReadable(currentSampleParam.wav_address,   sampleOffset);
+
+    int sampleSize = m3Infos->getSampleSize() - currentWavAddress;
     if (sampleSize <= 0)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
-                                      << "last sample (" << dreamSPArray->count() - 1 << ") size is not positive:" << sampleSize << "\n"
+                                      << "last sample (" << dreamSPArray.count() - 1 << ") size is not positive:" << sampleSize << "\n"
                                       << "m3Infos->getSampleSize():" << m3Infos->getSampleSize() << "\n"
-                                      << "currentSampleParam->getWavAddress():" << currentSampleParam->getWavAddress();
+                                      << "currentWavAddress:" << currentWavAddress;
 
         return DuSoundPtr();
     }
 
     QByteArray sample(data.mid(sampleAddress, sampleSize));
 
-    DuBinaryDataPtr sampleObject(new DuBinaryData);
-    sampleObject->setData(sample);
+    sampleArray << sample;
 
-    sampleArray->append(sampleObject);
 
-    sound->setSampleArray(sampleArray);
+    int totalNbSamples = 0;
+    for (int i = 0; i < nbLayers; ++i)
+    {
+        totalNbSamples += nbSamplesPerLayerArray[i];
+    }
+
+    Q_ASSERT(dreamIPArray.size() == totalNbSamples);
+    Q_ASSERT(dreamSPArray.size() == totalNbSamples);
+    Q_ASSERT(sampleArray.size()  == totalNbSamples);
+
+
+    DuArrayPtr layerArray(new DuArray);
+    int sampleCpt = 0;
+    for (int i = 0; i < nbLayers; ++i)
+    {
+        int nbSamples = nbSamplesPerLayerArray[i];
+
+        DuLayerPtr layer = DuLayer::fromBinary(dreamIPArray.mid(sampleCpt, nbSamples),
+                                               dreamSPArray.mid(sampleCpt, nbSamples),
+                                               sampleArray.mid(sampleCpt, nbSamples),
+                                               sampleOffset);
+        if (layer != NULL)
+        {
+            layerArray->append(layer);
+        }
+        else
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
+                                          << "Layer" << i << "was not properly generated";
+
+            return DuSoundPtr();
+        }
+
+        sampleCpt += nbSamples;
+    }
+    sound->setLayerArray(layerArray);
 
 
     if (soundHeader.mapping_addr != 0)
@@ -323,26 +320,49 @@ QByteArray DuSound::toBinary() const
     data += info->toBinary();
     data += QByteArray(INTR_STRUCT_ALIGN, 0);
 
-    const DuArrayConstPtr &nbSamplesPerLayerArray = getNbSamplesPerLayerArray();
-    if (nbSamplesPerLayerArray == NULL)
+    uint32_t sampleOffset = info->getSampleAddress();
+
+    const DuArrayConstPtr& layerArray = getLayerArray();
+    if (layerArray == NULL)
         return QByteArray();
-    int nbLayer = nbSamplesPerLayerArray->count();
+    int nbLayer = layerArray->count();
     QByteArray ipHeader(2 * nbLayer, 0);
+    QByteArray dreamIPData;
+    QByteArray dreamSPData;
+    QByteArray dreamSamplesData;
     for (int i = 0; i < nbLayer; ++i)
     {
-        ipHeader[i * 2] = ((DuNumericConstPtr)nbSamplesPerLayerArray->at(i).dynamicCast<const DuNumeric>())->getNumeric();
+        DuLayerConstPtr layer = layerArray->atAs<DuLayer>(i);
+        if (layer == NULL)
+            return QByteArray();
+
+        DuArrayConstPtr samples = layer->getSampleArray();
+        if (samples == NULL)
+            return QByteArray();
+
+        int nbSamples = samples->count();
+
+        ipHeader[i * 2] = nbSamples;
         if (i == 0)
             ipHeader[(i * 2) + 1] = nbLayer;
         else
             ipHeader[(i * 2) + 1] = 0;
+
+        for (int j = 0; j < nbSamples; ++j)
+        {
+            DuSampleConstPtr sample = samples->atAs<DuSample>(j);
+            if (sample == NULL)
+                return QByteArray();
+
+            dreamIPData += sample->ipBinary(layer->getMinVelocity() - 1, layer->getMaxVelocity());
+            dreamSPData += sample->spBinary(sampleOffset);
+            dreamSamplesData += sample->getData();
+        }
     }
     data += ipHeader;
-
-    data += getDreamInstrParamArray()->toDuMusicBinary();
-
-    data += getDreamSampleParamArray()->toDuMusicBinary();
-
-    data += getSampleArray()->toDuMusicBinary();
+    data += dreamIPData;
+    data += dreamSPData;
+    data += dreamSamplesData;
 
     data += getMapping()->toDuMusicBinary();
 
@@ -378,17 +398,12 @@ DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, ActiveNoteOff,      DuSoundInfo, Info, i
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, Category,           DuSoundInfo, Info, QString, QString())
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, RelativeVolume,     DuSoundInfo, Info, int, -1)
 
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, Header,                 DuSoundHeader)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, Header,       DuSoundHeader)
 
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, Info,                   DuSoundInfo)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, Info,         DuSoundInfo)
 
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, NbSamplesPerLayerArray, DuArray)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, LayerArray,   DuArray)
 
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, DreamInstrParamArray,   DuArray)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, DreamSampleParamArray,  DuArray)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, Mapping,      DuArray)
 
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, SampleArray,            DuArray)
-
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, Mapping,                DuArray)
-
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, Metadata,               DuArray)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, Metadata,     DuArray)

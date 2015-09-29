@@ -41,12 +41,7 @@ public:
 
     DU_KEY_ACCESSORS_OBJECT(Info,                   DuSoundInfo)
 
-    DU_KEY_ACCESSORS_OBJECT(NbSamplesPerLayerArray, DuArray)
-
-    DU_KEY_ACCESSORS_OBJECT(DreamInstrParamArray,   DuArray)
-    DU_KEY_ACCESSORS_OBJECT(DreamSampleParamArray,  DuArray)
-
-    DU_KEY_ACCESSORS_OBJECT(SampleArray,            DuArray)
+    DU_KEY_ACCESSORS_OBJECT(LayerArray,             DuArray)
 
     DU_KEY_ACCESSORS_OBJECT(Mapping,                DuArray)
 

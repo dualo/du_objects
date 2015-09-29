@@ -1,12 +1,18 @@
-#ifndef DUDREAMSAMPLEPARAM_H
-#define DUDREAMSAMPLEPARAM_H
+#ifndef DUSAMPLE_H
+#define DUSAMPLE_H
 
-#include "../general/ducontainer.h"
+#include <du_objects/general/ducontainer.h>
 
+// TODO: Get this from external
+#ifndef SOUNDBANK_STARTADRESS
+#define SOUNDBANK_STARTADRESS 0x10000
+#endif
 
-DU_OBJECT(DuDreamSampleParam);
+DU_OBJECT(DuBinaryData);
 
-class DuDreamSampleParam : public DuContainer
+DU_OBJECT(DuSample);
+
+class DuSample : public DuContainer
 {
 public:
     enum SampleType
@@ -17,14 +23,31 @@ public:
         SND3000_Forward = 0xC56C
     };
 
-    DuDreamSampleParam();
+    DuSample();
 
-    virtual DuObjectPtr clone() const;
-    virtual int size() const;
-    virtual QByteArray toDuMusicBinary() const;
+    virtual DuObjectPtr clone() const override;
 
-    static DuDreamSampleParamPtr fromBinary(const dream_sp& data, uint32_t sampleOffset);
+    static DuSamplePtr fromBinary(const dream_ip &dreamIP,
+                                  const dream_sp &dreamSP,
+                                  const QByteArray& data,
+                                  uint32_t sampleOffset);
 
+    QByteArray ipBinary(uint8_t min_vel, uint8_t max_vel) const;
+    QByteArray spBinary(uint32_t sampleOffset) const;
+
+    static uint32_t wavAddressDreamToReadable(uint32_t dreamValue, uint32_t sampleOffset);
+    static uint32_t wavAddressReadableToDream(uint32_t readableValue, uint32_t sampleOffset);
+
+    static int volumeDreamToReadable(uint16_t dreamValue);
+    static uint16_t volumeReadableToDream(int readableValue);
+
+    // Intrument Parameters
+    DU_KEY_ACCESSORS(StartNote,       int)
+    DU_KEY_ACCESSORS(EndNote,         int)
+
+    DU_KEY_ACCESSORS(SampleParamAddr, int)
+
+    // Sample Parameters
     DU_KEY_ACCESSORS(Address1,        int)
     DU_KEY_ACCESSORS(LoopType,        SampleType)
     DU_KEY_ACCESSORS(Address2,        int)
@@ -46,6 +69,9 @@ public:
 
     DU_KEY_ACCESSORS(AmplitudeOscAmp, int)
     DU_KEY_ACCESSORS(VolumeMixer2,    int)
+
+    // Data
+    DU_KEY_ACCESSORS(Data,            QByteArray)
 };
 
 static quint8 finetune_convert[101] = {
@@ -152,4 +178,4 @@ static quint8 finetune_convert[101] = {
     0xc2
 };
 
-#endif // DUDREAMSAMPLEPARAM_H
+#endif // DUSAMPLE_H
