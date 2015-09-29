@@ -30,6 +30,7 @@
          \
         return tmp->set ## dutype(value); \
     } \
+    \
     const QString className::Key ## key = QStringLiteral(#key);
 
 #define DU_KEY_ACCESSORS_OBJECT(key, dutype) \
@@ -58,7 +59,8 @@
 
 #define DU_KEY_ACCESSORS_IN_CHILD(key, type) \
     type get ## key() const; \
-    bool set ## key(const type& value);
+    bool set ## key(const type& value); \
+    static const QString Key ## key;
 
 #define DU_KEY_ACCESSORS_IN_CHILD_IMPL(className, key, childType, childKey, type, defaultReturn) \
     type className::get ## key() const \
@@ -70,7 +72,7 @@
          \
         return child->get ## key(); \
     } \
-     \
+    \
     bool className::set ## key(const type& value) \
     { \
         const childType ## Ptr &child = getChildAs<childType>(QStringLiteral(#childKey)); \
@@ -79,7 +81,9 @@
             return false; \
          \
         return child->set ## key(value); \
-    }
+    } \
+    \
+    const QString className::Key ## key = QStringLiteral(#key);
 
 
 DU_OBJECT(DuContainer);
@@ -125,8 +129,9 @@ protected:
      */
     void addChild(const QString &key, DuObject* child);
 
-    DuObjectPtr getChild(const QString &key);
-    DuObjectConstPtr getChild(const QString &key) const;
+public:
+    virtual DuObjectPtr getChild(const QString &key);
+    virtual DuObjectConstPtr getChild(const QString &key) const;
 
     template <class T>
     QSharedPointer<T> getChildAs(const QString &key);
