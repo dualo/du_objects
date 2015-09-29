@@ -22,6 +22,10 @@ public:
 
     QByteArray toBinary() const;
 
+    virtual DuObjectPtr getChild(const QString &key) override;
+    virtual DuObjectConstPtr getChild(const QString &key) const override;
+
+public:
     DU_KEY_ACCESSORS_IN_CHILD(Name,                 QString)
     DU_KEY_ACCESSORS_IN_CHILD(DreamProgramChange,   int)
     DU_KEY_ACCESSORS_IN_CHILD(MidiControlChange0,   int)

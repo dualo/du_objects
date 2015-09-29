@@ -24,6 +24,9 @@ public:
 
     QByteArray toBinary() const;
 
+    virtual DuObjectPtr getChild(const QString &key) override;
+    virtual DuObjectConstPtr getChild(const QString &key) const override;
+
     int databaseId() const;
     void setDatabaseId(int databaseId);
 

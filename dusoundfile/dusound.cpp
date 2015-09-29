@@ -371,6 +371,74 @@ QByteArray DuSound::toBinary() const
     return data;
 }
 
+DuObjectPtr DuSound::getChild(const QString &key)
+{
+    if (    key == KeyName               ||
+            key == KeyDreamProgramChange ||
+            key == KeyMidiControlChange0 ||
+            key == KeyKeyMapping         ||
+            key == KeyOctave             ||
+            key == KeyUserID             ||
+            key == KeyID                 ||
+            key == KeySampleAddress      ||
+            key == KeyActiveNoteOff      ||
+            key == KeyCategory           ||
+            key == KeyRelativeVolume     ||
+            key == KeyNbLayer            ||
+            key == KeyIPSize             ||
+            key == KeySPSize             ||
+            key == KeySampleSize         ||
+            key == KeyInstrType          ||
+            key == KeyInstrVersion)
+    {
+        DuSoundInfoPtr info = getInfo();
+        if (info == NULL)
+        {
+            return DuObjectPtr();
+        }
+
+        return info->getChild(key);
+    }
+    else
+    {
+        return DuContainer::getChild(key);
+    }
+}
+
+DuObjectConstPtr DuSound::getChild(const QString &key) const
+{
+    if (    key == KeyName               ||
+            key == KeyDreamProgramChange ||
+            key == KeyMidiControlChange0 ||
+            key == KeyKeyMapping         ||
+            key == KeyOctave             ||
+            key == KeyUserID             ||
+            key == KeyID                 ||
+            key == KeySampleAddress      ||
+            key == KeyActiveNoteOff      ||
+            key == KeyCategory           ||
+            key == KeyRelativeVolume     ||
+            key == KeyNbLayer            ||
+            key == KeyIPSize             ||
+            key == KeySPSize             ||
+            key == KeySampleSize         ||
+            key == KeyInstrType          ||
+            key == KeyInstrVersion)
+    {
+        DuSoundInfoConstPtr info = getInfo();
+        if (info == NULL)
+        {
+            return DuObjectPtr();
+        }
+
+        return info->getChild(key);
+    }
+    else
+    {
+        return DuContainer::getChild(key);
+    }
+}
+
 int DuSound::databaseId() const
 {
     return m_databaseId;

@@ -353,6 +353,74 @@ QByteArray DuSoundInfo::toBinary() const
     return QByteArray((char*)&soundStruct, size());
 }
 
+DuObjectPtr DuSoundInfo::getChild(const QString &key)
+{
+    if (    key == KeyName               ||
+            key == KeyDreamProgramChange ||
+            key == KeyMidiControlChange0 ||
+            key == KeyKeyMapping         ||
+            key == KeyOctave             ||
+            key == KeyUserID             ||
+            key == KeyID                 ||
+            key == KeySampleAddress      ||
+            key == KeyActiveNoteOff      ||
+            key == KeyCategory           ||
+            key == KeyRelativeVolume     ||
+            key == KeyNbLayer            ||
+            key == KeyIPSize             ||
+            key == KeySPSize             ||
+            key == KeySampleSize         ||
+            key == KeyInstrType          ||
+            key == KeyInstrVersion)
+    {
+        DuInstrumentInfoPtr info = getInstrumentInfo();
+        if (info == NULL)
+        {
+            return DuObjectPtr();
+        }
+
+        return info->getChild(key);
+    }
+    else
+    {
+        return DuContainer::getChild(key);
+    }
+}
+
+DuObjectConstPtr DuSoundInfo::getChild(const QString &key) const
+{
+    if (    key == KeyName               ||
+            key == KeyDreamProgramChange ||
+            key == KeyMidiControlChange0 ||
+            key == KeyKeyMapping         ||
+            key == KeyOctave             ||
+            key == KeyUserID             ||
+            key == KeyID                 ||
+            key == KeySampleAddress      ||
+            key == KeyActiveNoteOff      ||
+            key == KeyCategory           ||
+            key == KeyRelativeVolume     ||
+            key == KeyNbLayer            ||
+            key == KeyIPSize             ||
+            key == KeySPSize             ||
+            key == KeySampleSize         ||
+            key == KeyInstrType          ||
+            key == KeyInstrVersion)
+    {
+        DuInstrumentInfoConstPtr info = getInstrumentInfo();
+        if (info == NULL)
+        {
+            return DuObjectPtr();
+        }
+
+        return info->getChild(key);
+    }
+    else
+    {
+        return DuContainer::getChild(key);
+    }
+}
+
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, Name,               DuInstrumentInfo, InstrumentInfo, QString, QString())
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, DreamProgramChange, DuInstrumentInfo, InstrumentInfo, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, MidiControlChange0, DuInstrumentInfo, InstrumentInfo, int, -1)
