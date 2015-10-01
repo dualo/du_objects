@@ -12,8 +12,8 @@ DuLayer::DuLayer() :
 {
     addChild(KeySampleArray, new DuArray);
 
-    addChild(KeyMinVelocity, new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
-    addChild(KeyMaxVelocity, new DuNumeric(0x7F, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
+    addChild(KeyMinVelocity, new DuNumeric(0x01, NUMERIC_DEFAULT_SIZE, 0x7F, 0x01));
+    addChild(KeyMaxVelocity, new DuNumeric(0x7F, NUMERIC_DEFAULT_SIZE, 0x7F, 0x01));
 }
 
 DuObjectPtr DuLayer::clone() const
@@ -23,14 +23,18 @@ DuObjectPtr DuLayer::clone() const
 
 DuLayerPtr DuLayer::fromBinary(const QList<dream_ip>& dreamIPArray,
                                const QList<dream_sp>& dreamSPArray,
-                               const QByteArrayList& sampleDataArray,
-                               uint32_t sampleOffset)
+                               const QByteArrayList& sampleDataArray)
 {
     DuLayerPtr layer(new DuLayer);
 
     int nbSamples = sampleDataArray.size();
     Q_ASSERT(nbSamples == dreamIPArray.size());
     Q_ASSERT(nbSamples == dreamSPArray.size());
+
+    if (nbSamples == 0)
+    {
+        return layer;
+    }
 
     uint8_t min_vel = dreamIPArray[0].min_vel;
     uint8_t max_vel = dreamIPArray[0].max_vel;
@@ -58,7 +62,7 @@ DuLayerPtr DuLayer::fromBinary(const QList<dream_ip>& dreamIPArray,
             return DuLayerPtr();
         }
 
-        DuSamplePtr sample = DuSample::fromBinary(dreamIPArray[i], dreamSPArray[i], sampleDataArray[i], sampleOffset);
+        DuSamplePtr sample = DuSample::fromBinary(dreamIPArray[i], dreamSPArray[i], sampleDataArray[i]);
         if (sample != NULL)
         {
             sampleArray->append(sample);

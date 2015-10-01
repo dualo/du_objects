@@ -3,7 +3,6 @@
 #include "dulayer.h"
 #include "dunote.h"
 #include "dusample.h"
-#include "dusoundheader.h"
 #include "dusoundinfo.h"
 
 #include "../dumusicfile/instrument/duinstrumentinfo.h"
@@ -22,8 +21,6 @@ DuSound::DuSound() :
     DuContainer(),
     m_databaseId(-1)
 {
-    addChild(KeyHeader,     new DuSoundHeader);
-
     addChild(KeyInfo,       new DuSoundInfo);
 
     addChild(KeyLayerArray, new DuArray);
@@ -40,7 +37,78 @@ DuObjectPtr DuSound::clone() const
 
 int DuSound::size() const
 {
-    return getHeader()->getSize();
+    int nbLayer = 0;
+    int sampleSize = 0;
+
+    const DuArrayConstPtr& layers = getLayerArray();
+    if (layers == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "Layer array null";
+        return -1;
+    }
+
+    nbLayer = getLayerArray()->count();
+    for (int i = 0; i < nbLayer; ++i)
+    {
+        const DuLayerConstPtr& layer = layers->atAs<DuLayer>(i);
+        if (layer == NULL)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "Layer" << i << "null";
+            return -1;
+        }
+
+        const DuArrayConstPtr& samples = layer->getSampleArray();
+        if (samples == NULL)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "Sample array null";
+            return -1;
+        }
+
+        int nbSamples = samples->count();
+        for (int j = 0; j < nbSamples; ++j)
+        {
+            const DuSampleConstPtr& sample = samples->atAs<DuSample>(j);
+            if (sample == NULL)
+            {
+                qCCritical(LOG_CAT_DU_OBJECT) << "Sample" << j << "null";
+                return -1;
+            }
+
+            sampleSize += sample->getData().size();
+        }
+    }
+
+    int mappingSize = 0;
+    const DuArrayConstPtr& mapping = getMapping();
+    if (mapping == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "Mapping array null";
+        return -1;
+    }
+
+    if (mapping->count() != 0)
+    {
+        mappingSize = MAPPING_SIZE;
+    }
+
+    int metadataSize = 0;
+    const DuArrayConstPtr& metadata = getMetadata();
+    if (metadata == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "Metadata array null";
+        return -1;
+    }
+
+    if (metadata->count() != 0)
+    {
+        //TODO: calculate metadata size
+    }
+
+    return INSTR_NB_SAMPLES_PER_LAYER_ADDRESS
+            + nbLayer * (2 + INSTR_DREAM_IP_SIZE + INSTR_DREAM_SP_SIZE)
+            + sampleSize
+            + mappingSize
+            + metadataSize;
 }
 
 DuSoundPtr DuSound::fromBinary(const QByteArray &data)
@@ -68,19 +136,6 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
         return sound;
     }
 
-    DuSoundHeaderPtr header = DuSoundHeader::fromBinary(soundHeader);
-    if (header != NULL)
-    {
-        sound->setHeader(header);
-    }
-    else
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
-                                      << "Header was not properly generated";
-
-        return DuSoundPtr();
-    }
-
     DuSoundInfoPtr info = DuSoundInfo::fromBinary(soundStruct);
     if (info != NULL)
     {
@@ -103,9 +158,9 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
         return DuSoundPtr();
     }
 
-    uint32_t sampleOffset = m3Infos->getSampleAddress();
+    uint32_t sampleOffset = DuInstrumentInfo::sampleAddressDreamToReadable(soundStruct.s_instrument.sample_address);
 
-    int nbLayers = m3Infos->getNbLayer();
+    int nbLayers = soundStruct.s_instrument.nb_layer;
 
     QList<uint8_t> nbSamplesPerLayerArray;
     nbSamplesPerLayerArray.reserve(nbLayers);
@@ -117,7 +172,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
 
     QList<dream_ip> dreamIPArray;
     int firstIPAddress = INSTR_NB_SAMPLES_PER_LAYER_ADDRESS + (2 * nbLayers);
-    int ipSize = m3Infos->getIPSize() - (2 * nbLayers);
+    int ipSize = soundStruct.s_instrument.ip_size - (2 * nbLayers);
     dreamIPArray.reserve(ipSize / INSTR_DREAM_IP_SIZE);
     for (int i = 0; i < ipSize; i += INSTR_DREAM_IP_SIZE)
     {
@@ -129,7 +184,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
 
     QList<dream_sp> dreamSPArray;
     int firstSPAddress = firstIPAddress + ipSize;
-    int spSize = m3Infos->getSPSize();
+    int spSize = soundStruct.s_instrument.sp_size;
     dreamSPArray.reserve(spSize / INSTR_DREAM_SP_SIZE);
     for (int i = 0; i < spSize; i += INSTR_DREAM_SP_SIZE)
     {
@@ -164,7 +219,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
     }
 
     QByteArrayList sampleArray;
-    int sampleAddress = firstSPAddress + m3Infos->getSPSize();
+    int sampleAddress = firstSPAddress + spSize;
     sampleArray.reserve(dreamSPArray.count());
     for (int i = 0; i < dreamSPArray.count() - 1; ++i)
     {
@@ -194,14 +249,14 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
 
     const dream_sp& currentSampleParam  = dreamSPArray[dreamSPArray.count() - 1];
 
-    uint32_t currentWavAddress  = DuSample::wavAddressDreamToReadable(currentSampleParam.wav_address,   sampleOffset);
+    uint32_t currentWavAddress  = DuSample::wavAddressDreamToReadable(currentSampleParam.wav_address, sampleOffset);
 
-    int sampleSize = m3Infos->getSampleSize() - currentWavAddress;
+    int sampleSize = soundStruct.s_instrument.sample_size - currentWavAddress;
     if (sampleSize <= 0)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
                                       << "last sample (" << dreamSPArray.count() - 1 << ") size is not positive:" << sampleSize << "\n"
-                                      << "m3Infos->getSampleSize():" << m3Infos->getSampleSize() << "\n"
+                                      << "m3Infos->getSampleSize():" << soundStruct.s_instrument.sample_size << "\n"
                                       << "currentWavAddress:" << currentWavAddress;
 
         return DuSoundPtr();
@@ -231,8 +286,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
 
         DuLayerPtr layer = DuLayer::fromBinary(dreamIPArray.mid(sampleCpt, nbSamples),
                                                dreamSPArray.mid(sampleCpt, nbSamples),
-                                               sampleArray.mid(sampleCpt, nbSamples),
-                                               sampleOffset);
+                                               sampleArray.mid(sampleCpt, nbSamples));
         if (layer != NULL)
         {
             layerArray->append(layer);
@@ -306,30 +360,39 @@ QByteArray DuSound::toBinary() const
 {
     QByteArray data;
 
-    // HEADER
-    const DuSoundHeaderConstPtr &header = getHeader();
-    if (header == NULL)
-        return QByteArray();
-    data += header->toDuMusicBinary();
-
-    // SOUND STRUCT
-    const DuSoundInfoConstPtr &info = getInfo();
-    if (info == NULL)
-        return QByteArray();
-
-    data += info->toBinary();
-    data += QByteArray(INTR_STRUCT_ALIGN, 0);
-
-    uint32_t sampleOffset = info->getSampleAddress();
+    uint32_t sampleOffset = 0;
 
     const DuArrayConstPtr& layerArray = getLayerArray();
     if (layerArray == NULL)
         return QByteArray();
+
     int nbLayer = layerArray->count();
+    int totalNbSamples = 0;
+    for (int i = 0; i < nbLayer; ++i)
+    {
+        const DuLayerConstPtr& layer = layerArray->atAs<DuLayer>(i);
+        if (layer == NULL)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "Layer" << i << "null";
+            return QByteArray();
+        }
+
+        const DuArrayConstPtr& samples = layer->getSampleArray();
+        if (samples == NULL)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "Sample array null";
+            return QByteArray();
+        }
+
+        totalNbSamples += samples->count();
+    }
+
     QByteArray ipHeader(2 * nbLayer, 0);
     QByteArray dreamIPData;
     QByteArray dreamSPData;
     QByteArray dreamSamplesData;
+    int sampleAddress = 0;
+    int totalSampleSize = 0;
     for (int i = 0; i < nbLayer; ++i)
     {
         DuLayerConstPtr layer = layerArray->atAs<DuLayer>(i);
@@ -355,10 +418,64 @@ QByteArray DuSound::toBinary() const
                 return QByteArray();
 
             dreamIPData += sample->ipBinary(layer->getMinVelocity() - 1, layer->getMaxVelocity());
-            dreamSPData += sample->spBinary(sampleOffset);
+            dreamSPData += sample->spBinary(sampleAddress, sampleOffset);
             dreamSamplesData += sample->getData();
+
+            sampleAddress += sample->getData().size();
+            totalSampleSize += sample->getData().size();
         }
     }
+
+    // HEADER
+    s_instr_header soundHeader;
+
+    soundHeader.KW_INST = 0x54534E49;
+    soundHeader.KW_MAPP = 0x5050414D;
+    soundHeader.KW_META = 0x4154454D;
+
+    soundHeader.full_size = size();
+
+    int mappingAddr = 0;
+    const DuArrayConstPtr& mapping = getMapping();
+    if (mapping == NULL)
+        return QByteArray();
+
+    if (mapping->count() != 0)
+    {
+        mappingAddr = INSTR_NB_SAMPLES_PER_LAYER_ADDRESS + 2 * nbLayer + (INSTR_DREAM_IP_SIZE + INSTR_DREAM_SP_SIZE) * totalNbSamples + totalSampleSize;
+    }
+
+    soundHeader.mapping_addr = mappingAddr;
+
+    int metadataAddr = 0;
+    const DuArrayConstPtr& metadata = getMetadata();
+    if (metadata == NULL)
+        return QByteArray();
+
+    if (metadata->count() != 0)
+    {
+        if (mappingAddr != 0)
+        {
+            metadataAddr = mappingAddr + MAPPING_SIZE;
+        }
+        else
+        {
+            metadataAddr = INSTR_NB_SAMPLES_PER_LAYER_ADDRESS + 2 * nbLayer + (INSTR_DREAM_IP_SIZE + INSTR_DREAM_SP_SIZE) * totalNbSamples + totalSampleSize;
+        }
+    }
+
+    soundHeader.meta_addr = metadataAddr;
+
+    data.append((char*)&soundHeader, INSTR_HEADER_SIZE);
+
+    // SOUND STRUCT
+    const DuSoundInfoConstPtr &info = getInfo();
+    if (info == NULL)
+        return QByteArray();
+
+    data += info->toBinary(sampleOffset, nbLayer, totalNbSamples, totalSampleSize);
+    data += QByteArray(INTR_STRUCT_ALIGN, 0);
+
     data += ipHeader;
     data += dreamIPData;
     data += dreamSPData;
@@ -380,14 +497,9 @@ DuObjectPtr DuSound::getChild(const QString &key)
             key == KeyOctave             ||
             key == KeyUserID             ||
             key == KeyID                 ||
-            key == KeySampleAddress      ||
             key == KeyActiveNoteOff      ||
             key == KeyCategory           ||
             key == KeyRelativeVolume     ||
-            key == KeyNbLayer            ||
-            key == KeyIPSize             ||
-            key == KeySPSize             ||
-            key == KeySampleSize         ||
             key == KeyInstrType          ||
             key == KeyInstrVersion)
     {
@@ -414,14 +526,9 @@ DuObjectConstPtr DuSound::getChild(const QString &key) const
             key == KeyOctave             ||
             key == KeyUserID             ||
             key == KeyID                 ||
-            key == KeySampleAddress      ||
             key == KeyActiveNoteOff      ||
             key == KeyCategory           ||
             key == KeyRelativeVolume     ||
-            key == KeyNbLayer            ||
-            key == KeyIPSize             ||
-            key == KeySPSize             ||
-            key == KeySampleSize         ||
             key == KeyInstrType          ||
             key == KeyInstrVersion)
     {
@@ -466,18 +573,11 @@ DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, KeyMapping,         DuSoundInfo, Info, i
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, Octave,             DuSoundInfo, Info, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, UserID,             DuSoundInfo, Info, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, ID,                 DuSoundInfo, Info, int, -1)
-DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, SampleAddress,      DuSoundInfo, Info, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, ActiveNoteOff,      DuSoundInfo, Info, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, Category,           DuSoundInfo, Info, QString, QString())
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, RelativeVolume,     DuSoundInfo, Info, int, -1)
-DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, NbLayer,            DuSoundInfo, Info, int, -1)
-DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, IPSize,             DuSoundInfo, Info, int, -1)
-DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, SPSize,             DuSoundInfo, Info, int, -1)
-DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, SampleSize,         DuSoundInfo, Info, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, InstrType,          DuSoundInfo, Info, INSTRUMENT_TYPE, NUM_INSTR_TYPE)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, InstrVersion,       DuSoundInfo, Info, int, -1)
-
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, Header,       DuSoundHeader)
 
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, Info,         DuSoundInfo)
 

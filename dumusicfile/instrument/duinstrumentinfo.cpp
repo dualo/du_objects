@@ -34,8 +34,6 @@ DuInstrumentInfo::DuInstrumentInfo() :
 
     addChild(KeyID, new DuNumeric(0));
 
-    addChild(KeySampleAddress, new DuNumeric(0));
-
     addChild(KeyActiveNoteOff,
              new DuNumeric(0x01, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
@@ -49,17 +47,6 @@ DuInstrumentInfo::DuInstrumentInfo() :
     addChild(KeyDreamFormatId,
              new DuNumeric(NO_FORMAT, NUMERIC_DEFAULT_SIZE,
                            SDK_5000, NO_FORMAT));
-
-    addChild(KeyNbLayer,
-             new DuNumeric(0, NUMERIC_DEFAULT_SIZE,
-                           0xFF, 0x00));
-
-
-    addChild(KeyIPSize, new DuNumeric(0, 2, 0xFFFF, 0x0000));
-
-    addChild(KeySPSize, new DuNumeric(0, 2, 0xFFFF, 0x0000));
-
-    addChild(KeySampleSize, new DuNumeric(0));
 
     addChild(KeyInstrType,
              new DuNumeric(INSTR_HARMONIC, NUMERIC_DEFAULT_SIZE,
@@ -95,7 +82,6 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrI
 
     verif = instrInfo->setUserID(du_instrInfo.instr_user_id) ? verif : false;
     verif = instrInfo->setID(du_instrInfo.instr_id) ? verif : false;
-    verif = instrInfo->setSampleAddress((du_instrInfo.sample_address - SOUNDBANK_STARTADRESS) * 2) ? verif : false;
 
     verif = instrInfo->setActiveNoteOff(du_instrInfo.instr_noteoff) ? verif : false;
 
@@ -104,11 +90,6 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrI
     verif = instrInfo->setRelativeVolume(du_instrInfo.instr_relvolume) ? verif : false;
 
     verif = instrInfo->setDreamFormatId((DreamFormat)du_instrInfo.format_id) ? verif : false;
-    verif = instrInfo->setNbLayer(du_instrInfo.nb_layer) ? verif : false;
-
-    verif = instrInfo->setIPSize(du_instrInfo.ip_size) ? verif : false;
-    verif = instrInfo->setSPSize(du_instrInfo.sp_size) ? verif : false;
-    verif = instrInfo->setSampleSize(du_instrInfo.sample_size) ? verif : false;
 
     verif = instrInfo->setInstrType((INSTRUMENT_TYPE)du_instrInfo.instr_type) ? verif : false;
     verif = instrInfo->setInstrVersion(du_instrInfo.instr_version) ? verif : false;
@@ -181,115 +162,128 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
     return instrInfo;
 }
 
-
-QByteArray DuInstrumentInfo::toDuMusicBinary() const
+bool DuInstrumentInfo::toStruct(s_instr& outStruct) const
 {
-    s_instr du_instrumentinfo;
-
     QString tmpStr;
     int tmpNum = 0;
 
-    QByteArray tmpClear(size(), (char)0x00);
-    std::memcpy((char *)&(du_instrumentinfo), tmpClear.data(), size());
+    std::memcpy((char *)&(outStruct), QByteArray(size(), 0x00), size());
 
     QByteArray tmpName(NAME_CARACT, (char)0x00);
     tmpStr = getName();
     if (tmpStr.isNull())
-        return QByteArray();
+        return false;
     tmpName.prepend(tmpStr.toUtf8());
 
-    std::memcpy(du_instrumentinfo.instr_name, tmpName.data(), NAME_CARACT);
+    std::memcpy(outStruct.instr_name, tmpName.data(), NAME_CARACT);
 
     tmpNum = getDreamProgramChange();
     if (tmpNum == -1)
-        return QByteArray();
-    du_instrumentinfo.instr_midi_pc = tmpNum;
+        return false;
+    outStruct.instr_midi_pc = tmpNum;
 
     tmpNum = getMidiControlChange0();
     if (tmpNum == -1)
-        return QByteArray();
-    du_instrumentinfo.instr_midi_C0 = tmpNum;
+        return false;
+    outStruct.instr_midi_C0 = tmpNum;
 
     tmpNum = getKeyMapping();
     if (tmpNum == -1)
-        return QByteArray();
-    du_instrumentinfo.instr_key_map = tmpNum;
+        return false;
+    outStruct.instr_key_map = tmpNum;
 
     tmpNum = getOctave();
     if (tmpNum == -1)
-        return QByteArray();
-    du_instrumentinfo.instr_octave = tmpNum;
+        return false;
+    outStruct.instr_octave = tmpNum;
 
     tmpNum = getUserID();
     if (tmpNum == -1)
-        return QByteArray();
-    du_instrumentinfo.instr_user_id = tmpNum;
+        return false;
+    outStruct.instr_user_id = tmpNum;
 
     tmpNum = getID();
     if (tmpNum == -1)
-        return QByteArray();
-    du_instrumentinfo.instr_id = tmpNum;
-
-    tmpNum = getSampleAddress();
-    if (tmpNum == -1)
-        return QByteArray();
-    du_instrumentinfo.sample_address = (tmpNum / 2) + SOUNDBANK_STARTADRESS;
+        return false;
+    outStruct.instr_id = tmpNum;
 
     tmpNum = getActiveNoteOff();
     if (tmpNum == -1)
-        return QByteArray();
-    du_instrumentinfo.instr_noteoff = tmpNum;
+        return false;
+    outStruct.instr_noteoff = tmpNum;
 
     QByteArray tmpCategory(NAME_CARACT, (char)0x00);
     tmpStr = getCategory();
     if (tmpStr.isNull())
-        return QByteArray();
+        return false;
     tmpCategory.prepend(tmpStr.toUtf8());
 
-    std::memcpy(du_instrumentinfo.instr_cat, tmpCategory.data(), NAME_CARACT);
+    std::memcpy(outStruct.instr_cat, tmpCategory.data(), NAME_CARACT);
 
     tmpNum = getRelativeVolume();
     if (tmpNum == -1)
-        return QByteArray();
-    du_instrumentinfo.instr_relvolume = tmpNum;
+        return false;
+    outStruct.instr_relvolume = tmpNum;
 
     DreamFormat tmpFormat = getDreamFormatId();
     if (tmpFormat == NO_FORMAT)
-        return QByteArray();
-    du_instrumentinfo.format_id = (uint8_t)tmpFormat;
-
-    tmpNum = getNbLayer();
-    if (tmpNum == -1)
-        return QByteArray();
-    du_instrumentinfo.nb_layer = tmpNum;
-
-    tmpNum = getIPSize();
-    if (tmpNum == -1)
-        return QByteArray();
-    du_instrumentinfo.ip_size = tmpNum;
-
-    tmpNum = getSPSize();
-    if (tmpNum == -1)
-        return QByteArray();
-    du_instrumentinfo.sp_size = tmpNum;
-
-    tmpNum = getSampleSize();
-    if (tmpNum == -1)
-        return QByteArray();
-    du_instrumentinfo.sample_size = tmpNum;
+        return false;
+    outStruct.format_id = (uint8_t)tmpFormat;
 
     INSTRUMENT_TYPE tmpType = getInstrType();
     if (tmpType == NUM_INSTR_TYPE)
-        return QByteArray();
-    du_instrumentinfo.instr_type = (uint8_t)tmpType;
+        return false;
+    outStruct.instr_type = (uint8_t)tmpType;
 
     tmpNum = getInstrVersion();
     if (tmpNum == -1)
-        return QByteArray();
-    du_instrumentinfo.instr_version = tmpNum;
+        return false;
+    outStruct.instr_version = tmpNum;
 
+    return true;
+}
+
+QByteArray DuInstrumentInfo::toDuMusicBinary() const
+{
+    s_instr du_instrumentinfo;
+    if (!toStruct(du_instrumentinfo))
+    {
+        return QByteArray();
+    }
 
     return QByteArray((char *)&(du_instrumentinfo), size());
+}
+
+
+QByteArray DuInstrumentInfo::toBinary(uint32_t sampleAddress, uint8_t nbLayer, int nbSamples, uint32_t sampleSize) const
+{
+    s_instr du_instrumentinfo;
+    if (!toStruct(du_instrumentinfo))
+    {
+        return QByteArray();
+    }
+
+    du_instrumentinfo.sample_address = sampleAddressReadableToDream(sampleAddress);
+
+    du_instrumentinfo.nb_layer = nbLayer;
+
+    du_instrumentinfo.ip_size = nbLayer * 2 + nbSamples * INSTR_DREAM_IP_SIZE;
+
+    du_instrumentinfo.sp_size = nbSamples * INSTR_DREAM_SP_SIZE;
+
+    du_instrumentinfo.sample_size = sampleSize;
+
+    return QByteArray((char *)&(du_instrumentinfo), size());
+}
+
+uint32_t DuInstrumentInfo::sampleAddressDreamToReadable(uint32_t dreamValue)
+{
+    return (dreamValue - SOUNDBANK_STARTADRESS) * 2;
+}
+
+uint32_t DuInstrumentInfo::sampleAddressReadableToDream(uint32_t readableValue)
+{
+    return (readableValue / 2) + SOUNDBANK_STARTADRESS;
 }
 
 
@@ -308,7 +302,6 @@ DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, Octave,             Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, UserID,             Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, ID,                 Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, SampleAddress,      Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, ActiveNoteOff,      Numeric, int, -1)
 
@@ -317,11 +310,6 @@ DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, Category,           String, QString, QSt
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, RelativeVolume,     Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, DreamFormatId,      Numeric, DuInstrumentInfo::DreamFormat, NO_FORMAT)
-DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, NbLayer,            Numeric, int, -1)
-
-DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, IPSize,             Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, SPSize,             Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, SampleSize,         Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, InstrType,          Numeric, INSTRUMENT_TYPE, NUM_INSTR_TYPE)
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, InstrVersion,       Numeric, int, -1)

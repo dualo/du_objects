@@ -273,7 +273,7 @@ DuSoundInfoPtr DuSoundInfo::fromBinary(const struct_instr &data)
     return soundInfo;
 }
 
-QByteArray DuSoundInfo::toBinary() const
+QByteArray DuSoundInfo::toBinary(uint32_t sampleAddress, uint8_t nbLayer, int nbSamples, uint32_t sampleSize) const
 {
     int tmpInt;
 
@@ -283,7 +283,7 @@ QByteArray DuSoundInfo::toBinary() const
     const DuInstrumentInfoConstPtr &m3infos = getInstrumentInfo();
     if (m3infos == NULL)
         return QByteArray();
-    std::memcpy((char*)&(soundStruct.s_instrument), m3infos->toDuMusicBinary().constData(), m3infos->size());
+    std::memcpy((char*)&(soundStruct.s_instrument), m3infos->toBinary(sampleAddress, nbLayer, nbSamples, sampleSize).constData(), m3infos->size());
 
     tmpInt = getPresetNum();
     if (tmpInt == -1)
@@ -362,14 +362,9 @@ DuObjectPtr DuSoundInfo::getChild(const QString &key)
             key == KeyOctave             ||
             key == KeyUserID             ||
             key == KeyID                 ||
-            key == KeySampleAddress      ||
             key == KeyActiveNoteOff      ||
             key == KeyCategory           ||
             key == KeyRelativeVolume     ||
-            key == KeyNbLayer            ||
-            key == KeyIPSize             ||
-            key == KeySPSize             ||
-            key == KeySampleSize         ||
             key == KeyInstrType          ||
             key == KeyInstrVersion)
     {
@@ -396,14 +391,9 @@ DuObjectConstPtr DuSoundInfo::getChild(const QString &key) const
             key == KeyOctave             ||
             key == KeyUserID             ||
             key == KeyID                 ||
-            key == KeySampleAddress      ||
             key == KeyActiveNoteOff      ||
             key == KeyCategory           ||
             key == KeyRelativeVolume     ||
-            key == KeyNbLayer            ||
-            key == KeyIPSize             ||
-            key == KeySPSize             ||
-            key == KeySampleSize         ||
             key == KeyInstrType          ||
             key == KeyInstrVersion)
     {
@@ -428,14 +418,9 @@ DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, KeyMapping,         DuInstrumentInfo
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, Octave,             DuInstrumentInfo, InstrumentInfo, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, UserID,             DuInstrumentInfo, InstrumentInfo, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, ID,                 DuInstrumentInfo, InstrumentInfo, int, -1)
-DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, SampleAddress,      DuInstrumentInfo, InstrumentInfo, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, ActiveNoteOff,      DuInstrumentInfo, InstrumentInfo, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, Category,           DuInstrumentInfo, InstrumentInfo, QString, QString())
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, RelativeVolume,     DuInstrumentInfo, InstrumentInfo, int, -1)
-DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, NbLayer,            DuInstrumentInfo, InstrumentInfo, int, -1)
-DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, IPSize,             DuInstrumentInfo, InstrumentInfo, int, -1)
-DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, SPSize,             DuInstrumentInfo, InstrumentInfo, int, -1)
-DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, SampleSize,         DuInstrumentInfo, InstrumentInfo, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, InstrType,          DuInstrumentInfo, InstrumentInfo, INSTRUMENT_TYPE, NUM_INSTR_TYPE)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, InstrVersion,       DuInstrumentInfo, InstrumentInfo, int, -1)
 

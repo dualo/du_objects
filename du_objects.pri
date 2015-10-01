@@ -55,7 +55,6 @@ HEADERS += \
     $$PWD/duprofile.h \
     $$PWD/dusoundfile/dusound.h \
     $$PWD/dusoundfile/dunote.h \
-    $$PWD/dusoundfile/dusoundheader.h \
     $$PWD/dusoundfile/dusoundinfo.h \
     $$PWD/miditodumusic/duscalemodel.h \
     $$PWD/dusoundfile/dulayer.h \
@@ -115,7 +114,6 @@ SOURCES += \
     $$PWD/duprofile.cpp \
     $$PWD/dusoundfile/dusound.cpp \
     $$PWD/dusoundfile/dunote.cpp \
-    $$PWD/dusoundfile/dusoundheader.cpp \
     $$PWD/dusoundfile/dusoundinfo.cpp \
     $$PWD/miditodumusic/duscalemodel.cpp \
     $$PWD/dusoundfile/dulayer.cpp \

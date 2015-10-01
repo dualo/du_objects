@@ -28,7 +28,12 @@ public:
     static DuInstrumentInfoPtr fromDuMusicBinary(const s_instr &du_instrInfo);
     static DuInstrumentInfoPtr fromJson(const QJsonObject &jsonInstrInfo);
 
+    bool toStruct(s_instr& outStruct) const;
     QByteArray toDuMusicBinary() const;
+    QByteArray toBinary(uint32_t sampleAddress, uint8_t nbLayer, int nbSamples, uint32_t sampleSize) const;
+
+    static uint32_t sampleAddressDreamToReadable(uint32_t dreamValue);
+    static uint32_t sampleAddressReadableToDream(uint32_t readableValue);
 
     int size() const;
 
@@ -41,7 +46,6 @@ public:
 
     DU_KEY_ACCESSORS(UserID,             int)
     DU_KEY_ACCESSORS(ID,                 int)
-    DU_KEY_ACCESSORS(SampleAddress,      int)
 
     DU_KEY_ACCESSORS(ActiveNoteOff,      int)
 
@@ -50,11 +54,6 @@ public:
     DU_KEY_ACCESSORS(RelativeVolume,     int)
 
     DU_KEY_ACCESSORS(DreamFormatId,      DreamFormat)
-    DU_KEY_ACCESSORS(NbLayer,            int)
-
-    DU_KEY_ACCESSORS(IPSize,             int)
-    DU_KEY_ACCESSORS(SPSize,             int)
-    DU_KEY_ACCESSORS(SampleSize,         int)
 
     DU_KEY_ACCESSORS(InstrType,          INSTRUMENT_TYPE)
     DU_KEY_ACCESSORS(InstrVersion,       int)

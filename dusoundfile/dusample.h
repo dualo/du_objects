@@ -29,14 +29,19 @@ public:
 
     static DuSamplePtr fromBinary(const dream_ip &dreamIP,
                                   const dream_sp &dreamSP,
-                                  const QByteArray& data,
-                                  uint32_t sampleOffset);
+                                  const QByteArray& data);
 
     QByteArray ipBinary(uint8_t min_vel, uint8_t max_vel) const;
-    QByteArray spBinary(uint32_t sampleOffset) const;
+    QByteArray spBinary(uint32_t sampleAddress, uint32_t sampleOffset) const;
 
     static uint32_t wavAddressDreamToReadable(uint32_t dreamValue, uint32_t sampleOffset);
     static uint32_t wavAddressReadableToDream(uint32_t readableValue, uint32_t sampleOffset);
+
+    static uint32_t loopStartDreamToReadable(uint16_t loopStartMSB, uint16_t loopStartLSB);
+    static void loopStartReadableToDream(uint32_t readableValue, uint16_t& outLoopStartMSB, uint16_t& outLoopStartLSB);
+
+    static uint32_t loopEndDreamToReadable(uint16_t loopEndMSB, uint16_t loopEndLSB);
+    static void loopEndReadableToDream(uint32_t readableValue, uint16_t& outLoopEndMSB, uint16_t& outLoopEndLSB);
 
     static int volumeDreamToReadable(uint16_t dreamValue);
     static uint16_t volumeReadableToDream(int readableValue);
@@ -44,8 +49,6 @@ public:
     // Intrument Parameters
     DU_KEY_ACCESSORS(StartNote,       int)
     DU_KEY_ACCESSORS(EndNote,         int)
-
-    DU_KEY_ACCESSORS(SampleParamAddr, int)
 
     // Sample Parameters
     DU_KEY_ACCESSORS(Address1,        int)
@@ -60,8 +63,6 @@ public:
     DU_KEY_ACCESSORS(CoarseTune,      int)
 
     DU_KEY_ACCESSORS(LoopStart,       int)
-
-    DU_KEY_ACCESSORS(WavAddress,      int)
 
     DU_KEY_ACCESSORS(VolumeMixer1,    int)
 
