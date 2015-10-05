@@ -9,8 +9,8 @@ DuSample::DuSample() :
     DuContainer()
 {
     // Intrument Parameters
-    addChild(KeyStartNote,       new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
-    addChild(KeyEndNote,         new DuNumeric(0x7F, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
+    addChild(KeyStartNote,       new DuNumeric(0x01, NUMERIC_DEFAULT_SIZE, 0x7F, 0x01));
+    addChild(KeyEndNote,         new DuNumeric(0x7F, NUMERIC_DEFAULT_SIZE, 0x7F, 0x01));
 
     // Sample Parameters
     addChild(KeyAddress1,        new DuNumeric(0x0000, 2, 0xFFFF, 0x0000));
