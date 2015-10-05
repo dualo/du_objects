@@ -118,6 +118,8 @@ QByteArray DuSample::ipBinary(uint8_t min_vel, uint8_t max_vel) const
 {
     dream_ip dataStruct;
 
+    std::memcpy((char*)&dataStruct, QByteArray(INSTR_DREAM_IP_SIZE, 0x00), INSTR_DREAM_IP_SIZE);
+
     int tmpNum = 0;
 
     dataStruct.min_vel = min_vel;
@@ -141,6 +143,8 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress, uint32_t sampleOffset) con
 {
     dream_sp data;
 
+    std::memcpy((char*)&data, QByteArray(INSTR_DREAM_SP_SIZE, 0x00), INSTR_DREAM_SP_SIZE);
+
     int tmpNum = 0;
 
     tmpNum = getAddress1();
@@ -163,10 +167,18 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress, uint32_t sampleOffset) con
         return QByteArray();
     data.address3 = tmpNum;
 
+    data.unknown1 = 0xB5F0;
+    data.unknown2 = 0x0814;
+    data.unknown3 = 0xFF00;
+    data.unknown4 = 0x1032;
+    data.unknown5 = 0x04;
+
     tmpNum = getVolumeAmplifier();
     if (tmpNum == -1)
         return QByteArray();
     data.volume_amplifier = tmpNum;
+
+    data.unknown6 = 0x0081;
 
     tmpNum = getFineTune();
     if (tmpNum == -1 || tmpNum >= 100)
@@ -195,6 +207,9 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress, uint32_t sampleOffset) con
         return QByteArray();
     loopEndReadableToDream(tmpNum, data.loop_end_MSB, data.loop_end_LSB);
 
+    data.unknown7 = 0x7F0E;
+    data.unknown8 = 0x06;
+
     tmpNum = getAmplitudeOscAmp();
     if (tmpNum == -1)
         return QByteArray();
@@ -204,6 +219,24 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress, uint32_t sampleOffset) con
     if (tmpNum == -1)
         return QByteArray();
     data.volume_mixer2 = tmpNum;
+
+    data.unknown9 = 0x7F00;
+    data.unknown10 = 0x1FE3;
+    data.unknown11 = 0x5FE3;
+    data.unknown12 = 0x605A;
+    data.unknown13 = 0x0401;
+    data.unknown14 = 0x0F00;
+    data.unknown15 = 0x0015;
+    data.unknown16 = 0x0403;
+    data.unknown17 = 0x0010;
+    data.unknown18 = 0x0201;
+
+    data.unknown19 = 0x00000000;
+    data.unknown20 = 0x00000000;
+    data.unknown21 = 0x0000;
+
+    data.unknown22 = 0x0002;
+    data.unknown23 = 0x00000000;
 
     return QByteArray((char*)&data, INSTR_DREAM_SP_SIZE);
 }
