@@ -38,6 +38,7 @@ DuObjectPtr DuSound::clone() const
 int DuSound::size() const
 {
     int nbLayer = 0;
+    int totalNbSamples = 0;
     int sampleSize = 0;
 
     const DuArrayConstPtr& layers = getLayerArray();
@@ -76,6 +77,8 @@ int DuSound::size() const
 
             sampleSize += sample->getData().size();
         }
+
+        totalNbSamples += nbSamples;
     }
 
     int mappingSize = 0;
@@ -105,7 +108,8 @@ int DuSound::size() const
     }
 
     return INSTR_NB_SAMPLES_PER_LAYER_ADDRESS
-            + nbLayer * (2 + INSTR_DREAM_IP_SIZE + INSTR_DREAM_SP_SIZE)
+            + nbLayer * 2
+            + totalNbSamples * (INSTR_DREAM_IP_SIZE + INSTR_DREAM_SP_SIZE)
             + sampleSize
             + mappingSize
             + metadataSize;
@@ -251,7 +255,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
     {
         const dream_sp& currentSampleParam  = dreamSPArray[dreamSPArray.count() - 1];
 
-        uint32_t currentWavAddress  = DuSample::wavAddressDreamToReadable(currentSampleParam.wav_address, sampleOffset);
+        uint32_t currentWavAddress = DuSample::wavAddressDreamToReadable(currentSampleParam.wav_address, sampleOffset);
 
         int sampleSize = soundStruct.s_instrument.sample_size - currentWavAddress;
         if (sampleSize <= 0)
