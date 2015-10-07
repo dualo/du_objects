@@ -247,24 +247,27 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
         sampleAddress += sampleSize;
     }
 
-    const dream_sp& currentSampleParam  = dreamSPArray[dreamSPArray.count() - 1];
-
-    uint32_t currentWavAddress  = DuSample::wavAddressDreamToReadable(currentSampleParam.wav_address, sampleOffset);
-
-    int sampleSize = soundStruct.s_instrument.sample_size - currentWavAddress;
-    if (sampleSize <= 0)
+    if (dreamSPArray.count() != 0)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
-                                      << "last sample (" << dreamSPArray.count() - 1 << ") size is not positive:" << sampleSize << "\n"
-                                      << "m3Infos->getSampleSize():" << soundStruct.s_instrument.sample_size << "\n"
-                                      << "currentWavAddress:" << currentWavAddress;
+        const dream_sp& currentSampleParam  = dreamSPArray[dreamSPArray.count() - 1];
 
-        return DuSoundPtr();
+        uint32_t currentWavAddress  = DuSample::wavAddressDreamToReadable(currentSampleParam.wav_address, sampleOffset);
+
+        int sampleSize = soundStruct.s_instrument.sample_size - currentWavAddress;
+        if (sampleSize <= 0)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
+                                          << "last sample (" << dreamSPArray.count() - 1 << ") size is not positive:" << sampleSize << "\n"
+                                          << "m3Infos->getSampleSize():" << soundStruct.s_instrument.sample_size << "\n"
+                                          << "currentWavAddress:" << currentWavAddress;
+
+            return DuSoundPtr();
+        }
+
+        QByteArray sample(data.mid(sampleAddress, sampleSize));
+
+        sampleArray << sample;
     }
-
-    QByteArray sample(data.mid(sampleAddress, sampleSize));
-
-    sampleArray << sample;
 
 
     int totalNbSamples = 0;
