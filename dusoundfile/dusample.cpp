@@ -22,7 +22,6 @@ DuSample::DuSample() :
 
     addChild(KeyFineTune,        new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
     addChild(KeyUnityNote,       new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
-    addChild(KeyCoarseTune,      new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
 
     addChild(KeyLoopStart,       new DuNumeric(0));
 
@@ -77,22 +76,23 @@ DuSamplePtr DuSample::fromBinary(const dream_ip& dreamIP,
         return DuSamplePtr();
     }
     verif = sample->setFineTune(convertedFineTune) ? verif : false;
-//    verif = sample->setUnityNote(dreamSP.unity_note) ? verif : false;
 
-//    int convertedCoarseTune = 0;
-//    if (dreamSP.unity_note < 65)
-//    {
-//        convertedCoarseTune = dreamSP.coarse_tune + dreamSP.unity_note - 64;
-//    }
-//    else
-//    {
-//        convertedCoarseTune = dreamSP.coarse_tune + dreamSP.unity_note - 320;
-//    }
-//    while (convertedCoarseTune < 0)
-//    {
-//        convertedCoarseTune += 256;
-//    }
-    verif = sample->setCoarseTune(dreamSP.coarse_tune) ? verif : false;
+    int unityNote = 0;
+    if (dreamSP.coarse_tune >= 0 && dreamSP.coarse_tune <= 64)
+    {
+        unityNote = 64 - dreamSP.coarse_tune;
+    }
+    else if (dreamSP.coarse_tune >= 193 && dreamSP.coarse_tune <= 255)
+    {
+        unityNote = 320 - dreamSP.coarse_tune;
+    }
+    else
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate sample:\n"
+                                      << "Coarse tune out of bounds:" << dreamSP.coarse_tune;
+        return DuSamplePtr();
+    }
+    verif = sample->setUnityNote(unityNote) ? verif : false;
 
     verif = sample->setLoopStart(loopStartDreamToReadable(dreamSP.loop_start_MSB, dreamSP.loop_start_LSB)) ? verif : false;
 
@@ -185,10 +185,13 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress, uint32_t sampleOffset) con
         return QByteArray();
     data.fine_tune = finetune_convert[tmpNum];
 
-    tmpNum = getCoarseTune();
+    tmpNum = getUnityNote();
     if (tmpNum == -1)
         return QByteArray();
-    data.coarse_tune = tmpNum;
+    if (tmpNum <= 64)
+        data.coarse_tune = 64 - tmpNum;
+    else // tmpNum > 64
+        data.coarse_tune = 320 - tmpNum;
 
     tmpNum = getLoopStart();
     if (tmpNum == -1)
@@ -348,7 +351,6 @@ DU_KEY_ACCESSORS_IMPL(DuSample, VolumeAmplifier, Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuSample, FineTune,        Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuSample, UnityNote,       Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuSample, CoarseTune,      Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuSample, LoopStart,       Numeric, int, -1)
 

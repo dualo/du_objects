@@ -60,7 +60,6 @@ public:
 
     DU_KEY_ACCESSORS(FineTune,        int)
     DU_KEY_ACCESSORS(UnityNote,       int)
-    DU_KEY_ACCESSORS(CoarseTune,      int)
 
     DU_KEY_ACCESSORS(LoopStart,       int)
 
