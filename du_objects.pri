@@ -1,3 +1,15 @@
+macx {
+    INCLUDEPATH += $$PWD/libs/mac/libsndfile/include
+    DEPENDPATH += $$PWD/libs/mac/libsndfile/include
+
+    LIBS += -L$$PWD/libs/mac/libsndfile/lib -lsndfile
+
+    libsndfile.path = Contents/Frameworks
+    libsndfile.files = $$PWD/libs/mac/libsndfile/lib/libsndfile.1.dylib
+
+    QMAKE_BUNDLE_DATA += libsndfile
+}
+
 HEADERS += \
     $$PWD/du-touch/parameters/music_parameters_mng.h \
     $$PWD/du-touch/parameters/sound_parameters_mng.h \
