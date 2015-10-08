@@ -29,7 +29,7 @@ DuSample::DuSample() :
 
     addChild(KeyLoopStart,       new DuNumeric(0));
 
-    addChild(KeyVolumeMixer1,    new DuNumeric(0xEEEF, 2, 0xFFFF, 0x0000));
+    addChild(KeyVolumeMixer1,    new DuNumeric(0xEE, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
 
     addChild(KeyLoopEnd,         new DuNumeric(0));
 
