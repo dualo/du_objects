@@ -3,6 +3,10 @@
 
 #include <du_objects/general/ducontainer.h>
 
+#include <QFile>
+
+#include <sndfile.hh>
+
 // TODO: Get this from external
 #ifndef SOUNDBANK_STARTADRESS
 #define SOUNDBANK_STARTADRESS 0x10000
@@ -30,6 +34,11 @@ public:
     static DuSamplePtr fromBinary(const dream_ip &dreamIP,
                                   const dream_sp &dreamSP,
                                   const QByteArray& data);
+    static DuSamplePtr fromWav(QFile *input);
+
+    static QString convertToMono(SndfileHandle& oldSoundFile);
+    static QString convertTo16bits(SndfileHandle& oldSoundFile);
+    static int normalizeWaveType(int format);
 
     QByteArray ipBinary(uint8_t min_vel, uint8_t max_vel) const;
     QByteArray spBinary(uint32_t sampleAddress, uint32_t sampleOffset) const;

@@ -3,6 +3,10 @@
 #include <du_objects/general/dubinarydata.h>
 #include <du_objects/general/dunumeric.h>
 
+#include <QFile>
+#include <QStandardPaths>
+#include <QtEndian>
+
 DU_OBJECT_IMPL(DuSample)
 
 DuSample::DuSample() :
@@ -112,6 +116,340 @@ DuSamplePtr DuSample::fromBinary(const dream_ip& dreamIP,
     }
 
     return sample;
+}
+
+DuSamplePtr DuSample::fromWav(QFile *input)
+{
+    // Copy file to temp folder
+    QString wavFileName = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/tmp.wav";
+    if (wavFileName.isEmpty())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "Failed to generate DuSample\n"
+                << "can't find temp folder";
+
+        return DuSamplePtr();
+    }
+
+    if (QFile::exists(wavFileName))
+    {
+        if (!QFile::remove(wavFileName))
+        {
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "Failed to generate DuSample\n"
+                    << "couldn't remove previous temp file :" << wavFileName;
+
+            return DuSamplePtr();
+        }
+    }
+
+    if (!input->copy(wavFileName))
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "Failed to generate DuSample\n"
+                << "selected file could not be copied to temp folder";
+
+        return DuSamplePtr();
+    }
+
+    // Open file
+    SndfileHandle soundFile(wavFileName.toStdString(), SFM_READ, 0);
+    if (soundFile.rawHandle() == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "Failed to open the file" << wavFileName << ":\n"
+                                      << soundFile.strError();
+        return DuSamplePtr();
+    }
+
+    unsigned int wavSize = soundFile.frames() * soundFile.channels();
+
+    // Convert stereo to mono
+    if (soundFile.channels() == 2)
+    {
+        qCDebug(LOG_CAT_DU_OBJECT) << "Stereo sample, take 1 sample on 2";
+
+        wavFileName = convertToMono(soundFile);
+        if (wavFileName.isEmpty())
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to convert to mono";
+            return DuSamplePtr();
+        }
+
+        soundFile = SndfileHandle(wavFileName.toStdString(), SFM_READ, 0);
+        if (soundFile.rawHandle() == NULL)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to open the file" << wavFileName << ":\n"
+                                          << soundFile.strError();
+            return DuSamplePtr();
+        }
+
+        wavSize /= 2;
+    }
+
+    // Convert to 16 bits
+    if ((soundFile.format() & SF_FORMAT_SUBMASK) > 2)
+    {
+        qCDebug(LOG_CAT_DU_OBJECT) << "Wrong sample resolution => " << (soundFile.format() & SF_FORMAT_SUBMASK) * 8 << " bits";
+
+        wavFileName = convertTo16bits(soundFile);
+        if (wavFileName.isEmpty())
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to convert to 16 bits";
+            return DuSamplePtr();
+        }
+
+        soundFile = SndfileHandle(wavFileName.toStdString(), SFM_READ, 0);
+        if (soundFile.rawHandle() == NULL)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to open the file" << wavFileName << ":\n"
+                                          << soundFile.strError();
+            return DuSamplePtr();
+        }
+
+        wavSize *= 2; // 16 bits (2*8)
+    }
+    else
+    {
+        wavSize *= (soundFile.format() & SF_FORMAT_SUBMASK);
+    }
+
+    // Arrondi PAIR
+    wavSize /= 2;
+    wavSize *= 2;
+
+
+    qCDebug(LOG_CAT_DU_OBJECT) << "size in wav =" << QString::number(wavSize, 16) << "o";
+
+
+    QFile wavFile(wavFileName);
+    if (!wavFile.open(QIODevice::ReadOnly))
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "Failed to open the file" << wavFileName << ":\n"
+                                      << wavFile.errorString();
+        return DuSamplePtr();
+    }
+
+    /***** Checking Error *****/
+    int diff = (int) wavSize - wavFile.size();
+    qCDebug(LOG_CAT_DU_OBJECT) << "Size wav = 0x" << QString::number(wavSize, 16) << "o / File Size = 0x" << QString::number(wavFile.size(), 16) << "o";
+
+    if (diff < (int) (-(wavFile.size() / 2))) //(-(CNT_MAX_FOR_WAV_SIZE*10))
+    {
+        qCWarning(LOG_CAT_DU_OBJECT) << "Size error : too far from the end of the file";
+    }
+
+    if (diff > 0)
+    {
+        qCWarning(LOG_CAT_DU_OBJECT) << "Size error : sample bigger than the file size";
+    }
+
+    QByteArray wavFileData = wavFile.readAll();
+    int dataKeywordIndex = wavFileData.indexOf(QByteArrayLiteral("data"));
+    if (dataKeywordIndex == -1)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "Can't find keyword 'data' in wav file";
+        return DuSamplePtr();
+    }
+
+    quint32 sizeInFile = qFromLittleEndian<quint32>((uchar*)wavFileData.mid(dataKeywordIndex + 4, 4).data());
+    if (sizeInFile != wavSize)
+    {
+        qCWarning(LOG_CAT_DU_OBJECT) << "Size in file is different from calculated size:\n"
+                                     << "size in file:" << sizeInFile << "o\n"
+                                     << "calculated:" << wavSize << "o";
+    }
+
+    QByteArray rawData = wavFileData.mid(dataKeywordIndex + 4 + 4, wavSize); // +4 for "data", +4 for size
+
+    DuSamplePtr sample(new DuSample);
+
+    sample->setData(rawData);
+
+    return sample;
+}
+
+QString DuSample::convertToMono(SndfileHandle &oldSoundFile)
+{
+    QString monoWavFileName = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/tmp_mono.wav";
+    if (monoWavFileName.isEmpty())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "Failed to convert to mono\n"
+                << "can't find temp folder";
+        return QString();
+    }
+
+    if (QFile::exists(monoWavFileName))
+    {
+        if (!QFile::remove(monoWavFileName))
+        {
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "Failed to convert to mono\n"
+                    << "couldn't remove previous temp file :" << monoWavFileName;
+            return QString();
+        }
+    }
+
+    SndfileHandle newSoundFile(monoWavFileName.toStdString(), SFM_WRITE, oldSoundFile.format(), 1, oldSoundFile.samplerate());
+    if (newSoundFile.rawHandle() == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "Failed to open the file" << monoWavFileName << ":\n"
+                                      << newSoundFile.strError();
+        return QString();
+    }
+
+    SF_INSTRUMENT inst;
+    if (oldSoundFile.command(SFC_GET_INSTRUMENT, &inst, sizeof(inst)) != SF_TRUE)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "Failed to convert to mono\n"
+                << "can't get instrument :" << oldSoundFile.strError();
+        return QString();
+    }
+
+    if (newSoundFile.command(SFC_SET_INSTRUMENT, &inst, sizeof(inst)) != SF_TRUE)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "Failed to convert to mono\n"
+                << "can't set instrument :" << newSoundFile.strError();
+        return QString();
+    }
+
+    double oldFrames[oldSoundFile.channels() * oldSoundFile.frames()];
+    sf_count_t nbFramesRead = oldSoundFile.readf(oldFrames, oldSoundFile.frames());
+    if (nbFramesRead != oldSoundFile.frames())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "Failed to convert to mono\n"
+                << "error reading frames from stereo sound"
+                << "info.frames =" << oldSoundFile.frames() << "\n"
+                << "frames read =" << nbFramesRead << "\n"
+                << oldSoundFile.strError();
+        return QString();
+    }
+
+    double newFrames[newSoundFile.channels() * oldSoundFile.frames()];
+    for (int i = 0; i < oldSoundFile.frames(); ++i)
+    {
+        newFrames[i] = 0;
+        for (int j = 0; j < oldSoundFile.channels(); ++j)
+        {
+            newFrames[i] += oldFrames[i * oldSoundFile.channels() + j];
+        }
+
+        newFrames[i] /= oldSoundFile.channels();
+    }
+
+    sf_count_t writtenFrames = newSoundFile.writef(newFrames, oldSoundFile.frames());
+    if (writtenFrames != oldSoundFile.frames())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "Failed to convert to mono\n"
+                << "error writing frames to mono sound"
+                << "info.frames =" << oldSoundFile.frames() << "\n"
+                << "frames written =" << writtenFrames << "\n"
+                << newSoundFile.strError();
+        return QString();
+    }
+
+    newSoundFile.writeSync();
+
+    return monoWavFileName;
+}
+
+QString DuSample::convertTo16bits(SndfileHandle &oldSoundFile)
+{
+    QString wav16bitsFileName = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/tmp_16bits.wav";
+    if (wav16bitsFileName.isEmpty())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "Failed to convert to 16 bits\n"
+                << "can't find temp folder";
+        return QString();
+    }
+
+    if (QFile::exists(wav16bitsFileName))
+    {
+        if (!QFile::remove(wav16bitsFileName))
+        {
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "Failed to convert to 16 bits\n"
+                    << "couldn't remove previous temp file :" << wav16bitsFileName;
+            return QString();
+        }
+    }
+
+    SndfileHandle newSoundFile(wav16bitsFileName.toStdString(), SFM_WRITE, normalizeWaveType(oldSoundFile.format()), oldSoundFile.channels(), oldSoundFile.samplerate());
+    if (newSoundFile.rawHandle() == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "Failed to open the file" << wav16bitsFileName << ":\n"
+                                      << newSoundFile.strError();
+        return QString();
+    }
+
+    SF_INSTRUMENT inst;
+    if (oldSoundFile.command(SFC_GET_INSTRUMENT, &inst, sizeof(inst)) != SF_TRUE)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "Failed to convert to 16 bits\n"
+                << "can't get instrument :" << oldSoundFile.strError();
+        return QString();
+    }
+
+    if (newSoundFile.command(SFC_SET_INSTRUMENT, &inst, sizeof(inst)) != SF_TRUE)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "Failed to convert to 16 bits\n"
+                << "can't set instrument :" << newSoundFile.strError();
+        return QString();
+    }
+
+    double frames[oldSoundFile.frames() * oldSoundFile.channels()];
+    sf_count_t nbFramesRead = oldSoundFile.readf(frames, oldSoundFile.frames());
+    if (nbFramesRead != oldSoundFile.frames())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "Failed to convert to 16 bits\n"
+                << "error reading frames from old sound"
+                << "info.frames =" << oldSoundFile.frames() << "\n"
+                << "frames read =" << nbFramesRead << "\n"
+                << oldSoundFile.strError();
+        return QString();
+    }
+
+    sf_count_t writtenFrames = newSoundFile.writef(frames, oldSoundFile.frames());
+    if (writtenFrames != oldSoundFile.frames())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "Failed to convert to mono\n"
+                << "error writing frames to mono sound"
+                << "info.frames =" << oldSoundFile.frames() << "\n"
+                << "frames written =" << writtenFrames << "\n"
+                << newSoundFile.strError();
+        return QString();
+    }
+
+    newSoundFile.writeSync();
+
+    return wav16bitsFileName;
+}
+
+int DuSample::normalizeWaveType(int format)
+{
+    quint16 subtype = format & SF_FORMAT_SUBMASK;
+    quint32 majorFormat = format & SF_FORMAT_TYPEMASK;
+    quint32 newFormat = 0x00;
+
+    qCDebug(LOG_CAT_DU_OBJECT) << "Resolution =" << subtype * 8 << "bits";
+    qCDebug(LOG_CAT_DU_OBJECT) << "MajorFormat =" << majorFormat;
+
+    subtype = 0x02;
+
+    newFormat = majorFormat | subtype;
+
+    qCDebug(LOG_CAT_DU_OBJECT) << "New format =" + QString::number(newFormat, 16);
+
+    return newFormat;
 }
 
 QByteArray DuSample::ipBinary(uint8_t min_vel, uint8_t max_vel) const
