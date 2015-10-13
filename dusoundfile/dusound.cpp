@@ -186,7 +186,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
         dreamIPArray << dreamIP;
     }
 
-    QList<dream_sp> dreamSPArray;
+    QVector<dream_sp> dreamSPArray;
     int firstSPAddress = firstIPAddress + ipSize;
     int spSize = soundStruct.s_instrument.sp_size;
     dreamSPArray.reserve(spSize / INSTR_DREAM_SP_SIZE);

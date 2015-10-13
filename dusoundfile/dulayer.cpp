@@ -22,7 +22,7 @@ DuObjectPtr DuLayer::clone() const
 }
 
 DuLayerPtr DuLayer::fromBinary(const QList<dream_ip>& dreamIPArray,
-                               const QList<dream_sp>& dreamSPArray,
+                               const QVector<dream_sp>& dreamSPArray,
                                const QByteArrayList& sampleDataArray)
 {
     DuLayerPtr layer(new DuLayer);

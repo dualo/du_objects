@@ -15,7 +15,7 @@ public:
     virtual DuObjectPtr clone() const override;
 
     static DuLayerPtr fromBinary(const QList<dream_ip> &dreamIPArray,
-                                 const QList<dream_sp> &dreamSPArray,
+                                 const QVector<dream_sp> &dreamSPArray,
                                  const QByteArrayList &sampleDataArray);
 
     DU_KEY_ACCESSORS_OBJECT(SampleArray, DuArray)
