@@ -3,6 +3,8 @@
 #include "../general/dunumeric.h"
 #include "../general/dustring.h"
 
+#include <cstring>
+
 DuNote::DuNote() :
     DuContainer()
 {

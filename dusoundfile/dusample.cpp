@@ -7,6 +7,8 @@
 #include <QStandardPaths>
 #include <QtEndian>
 
+#include <cstring>
+
 DU_OBJECT_IMPL(DuSample)
 
 DuSample::DuSample() :
