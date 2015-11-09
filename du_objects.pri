@@ -8,6 +8,8 @@ macx {
     libsndfile.files = $$PWD/libs/mac/libsndfile/lib/libsndfile.1.dylib
 
     QMAKE_BUNDLE_DATA += libsndfile
+} else:unix {
+    LIBS += -lsndfile
 }
 
 HEADERS += \
