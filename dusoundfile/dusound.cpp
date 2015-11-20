@@ -19,7 +19,8 @@ DU_OBJECT_IMPL(DuSound)
 
 DuSound::DuSound() :
     DuContainer(),
-    m_databaseId(-1)
+    m_databaseId(-1),
+    m_indexInDevice(-1)
 {
     addChild(KeyInfo,       new DuSoundInfo);
 
@@ -571,6 +572,26 @@ QStringList DuSound::lists() const
 void DuSound::setLists(const QStringList &lists)
 {
     m_lists = lists;
+}
+
+int DuSound::indexInDevice() const
+{
+    return m_indexInDevice;
+}
+
+void DuSound::setIndexInDevice(int indexInDevice)
+{
+    m_indexInDevice = indexInDevice;
+}
+
+QString DuSound::deviceSerialNumber() const
+{
+    return m_deviceSerialNumber;
+}
+
+void DuSound::setDeviceSerialNumber(const QString &deviceSerialNumber)
+{
+    m_deviceSerialNumber = deviceSerialNumber;
 }
 
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, Name,               DuSoundInfo, Info, QString, QString())
