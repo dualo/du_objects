@@ -216,7 +216,7 @@ DuEffectSetPtr DuEffectSet::fromJson(const QJsonObject &jsonEffectSet)
     const QJsonArray& array = jsonMultinote.toArray();
     for (QJsonArray::const_iterator it = array.constBegin(); it != array.constEnd(); ++it)
     {
-        multinoteArray->append(DuNumericPtr(new DuNumeric(it->toInt(0), NUMERIC_DEFAULT_SIZE, 0xFF, 0x00, 0x00)));
+        multinoteArray->append(DuNumericPtr(new DuNumeric((*it).toInt(0), NUMERIC_DEFAULT_SIZE, 0xFF, 0x00, 0x00)));
     }
     effectSet->setMultinote(multinoteArray);
 

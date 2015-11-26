@@ -3,6 +3,10 @@
 
 #include <du_objects/general/ducontainer.h>
 
+#if QT_VERSION < 0x050400
+typedef QList<QByteArray> QByteArrayList;
+#endif
+
 DU_OBJECT(DuArray);
 
 DU_OBJECT(DuLayer);
