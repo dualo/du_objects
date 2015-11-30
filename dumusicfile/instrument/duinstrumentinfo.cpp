@@ -55,6 +55,12 @@ DuInstrumentInfo::DuInstrumentInfo() :
     addChild(KeyInstrVersion,
              new DuNumeric(0, NUMERIC_DEFAULT_SIZE,
                            0xFF, 0x00));
+
+    addChild(KeyHardInstrVersion,
+             new DuNumeric(0x0000, 2, 0xFFFF, 0x0000));
+
+    addChild(KeySoftInstrVersion,
+             new DuNumeric(0x0000, 2, 0xFFFF, 0x0000));
 }
 
 DuInstrumentInfo::~DuInstrumentInfo()
@@ -93,6 +99,8 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrI
 
     verif = instrInfo->setInstrType((INSTRUMENT_TYPE)du_instrInfo.instr_type) ? verif : false;
     verif = instrInfo->setInstrVersion(du_instrInfo.instr_version) ? verif : false;
+    verif = instrInfo->setHardInstrVersion(du_instrInfo.HW_instr_version) ? verif : false;
+    verif = instrInfo->setSoftInstrVersion(du_instrInfo.SW_instr_version) ? verif : false;
 
     if (!verif)
     {
@@ -240,6 +248,16 @@ bool DuInstrumentInfo::toStruct(s_instr& outStruct) const
         return false;
     outStruct.instr_version = tmpNum;
 
+    tmpNum = getHardInstrVersion();
+    if (tmpNum == -1)
+        return false;
+    outStruct.HW_instr_version = tmpNum;
+
+    tmpNum = getSoftInstrVersion();
+    if (tmpNum == -1)
+        return false;
+    outStruct.SW_instr_version = tmpNum;
+
     return true;
 }
 
@@ -313,3 +331,5 @@ DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, DreamFormatId,      Numeric, DuInstrumen
 
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, InstrType,          Numeric, INSTRUMENT_TYPE, NUM_INSTR_TYPE)
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, InstrVersion,       Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, HardInstrVersion,   Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, SoftInstrVersion,   Numeric, int, -1)

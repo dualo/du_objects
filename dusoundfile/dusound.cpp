@@ -438,10 +438,12 @@ QByteArray DuSound::toBinary() const
     s_instr_header soundHeader;
 
     soundHeader.KW_INST = 0x54534E49;
-    soundHeader.KW_MAPP = 0x5050414D;
     soundHeader.KW_META = 0x4154454D;
 
     soundHeader.full_size = size();
+
+    soundHeader.HW_version = getHardInstrVersion();
+    soundHeader.SW_version = getSoftInstrVersion();
 
     int mappingAddr = 0;
     const DuArrayConstPtr& mapping = getMapping();
@@ -509,7 +511,9 @@ DuObjectPtr DuSound::getChild(const QString &key)
             key == KeyCategory           ||
             key == KeyRelativeVolume     ||
             key == KeyInstrType          ||
-            key == KeyInstrVersion)
+            key == KeyInstrVersion       ||
+            key == KeyHardInstrVersion   ||
+            key == KeySoftInstrVersion)
     {
         DuSoundInfoPtr info = getInfo();
         if (info == NULL)
@@ -538,7 +542,9 @@ DuObjectConstPtr DuSound::getChild(const QString &key) const
             key == KeyCategory           ||
             key == KeyRelativeVolume     ||
             key == KeyInstrType          ||
-            key == KeyInstrVersion)
+            key == KeyInstrVersion       ||
+            key == KeyHardInstrVersion   ||
+            key == KeySoftInstrVersion)
     {
         DuSoundInfoConstPtr info = getInfo();
         if (info == NULL)
@@ -606,6 +612,8 @@ DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, Category,           DuSoundInfo, Info, Q
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, RelativeVolume,     DuSoundInfo, Info, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, InstrType,          DuSoundInfo, Info, INSTRUMENT_TYPE, NUM_INSTR_TYPE)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, InstrVersion,       DuSoundInfo, Info, int, -1)
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, HardInstrVersion,   DuSoundInfo, Info, int, -1)
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, SoftInstrVersion,   DuSoundInfo, Info, int, -1)
 
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, Info,         DuSoundInfo)
 

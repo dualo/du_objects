@@ -38,6 +38,8 @@ public:
     DU_KEY_ACCESSORS_IN_CHILD(RelativeVolume,       int)
     DU_KEY_ACCESSORS_IN_CHILD(InstrType,            INSTRUMENT_TYPE)
     DU_KEY_ACCESSORS_IN_CHILD(InstrVersion,         int)
+    DU_KEY_ACCESSORS_IN_CHILD(HardInstrVersion,     int)
+    DU_KEY_ACCESSORS_IN_CHILD(SoftInstrVersion,     int)
 
     DU_KEY_ACCESSORS_OBJECT(InstrumentInfo,  DuInstrumentInfo)
 
@@ -48,13 +50,10 @@ public:
 
     DU_KEY_ACCESSORS_OBJECT(Mixer,           DuMixer)
     DU_KEY_ACCESSORS_OBJECT(DistortionArray, DuArray)
-    DU_KEY_ACCESSORS_OBJECT(WahArray,        DuArray)
     DU_KEY_ACCESSORS_OBJECT(CompressorArray, DuArray)
     DU_KEY_ACCESSORS_OBJECT(EqualizerArray,  DuArray)
     DU_KEY_ACCESSORS_OBJECT(DelayArray,      DuArray)
     DU_KEY_ACCESSORS_OBJECT(ChorusArray,     DuArray)
-    DU_KEY_ACCESSORS_OBJECT(VibratoArray,    DuArray)
-    DU_KEY_ACCESSORS_OBJECT(AdsrArray,       DuArray)
 
     DU_KEY_ACCESSORS_OBJECT(LedArray,        DuArray)
 };

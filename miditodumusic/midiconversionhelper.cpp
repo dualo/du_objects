@@ -376,6 +376,7 @@ void MidiConversionHelper::setSelectedInstr(int index, int instrumentIndex)
     if (index >= selectedInstruments.count())
         return;
 
+    Q_UNUSED(instrumentIndex);
     //TODO
 //    selectedInstruments[index] = ;
 }
@@ -389,9 +390,13 @@ int MidiConversionHelper::getKeyboardFromMidi(int key) const
 
 int MidiConversionHelper::percuFromMidi(int gmKey, int mapIndex)
 {
+    Q_UNUSED(gmKey);
+    Q_UNUSED(mapIndex);
+    Q_UNIMPLEMENTED();
+    //TODO: get mapping directly from du-sound
+    /*
     s_note tmpNote;
     int tmpKey = 0xFF;
-
     for (int i = 0; i < NUM_BUTTON_KEYBOARD; i++)
     {
         tmpNote = keyboard_note_map[mapIndex][0][i];
@@ -400,6 +405,7 @@ int MidiConversionHelper::percuFromMidi(int gmKey, int mapIndex)
         if (tmpKey == gmKey)
             return tmpNote.note_key;
     }
+    */
 
     return -1;
 }
@@ -422,7 +428,9 @@ int MidiConversionHelper::percuToMidi(quint8 duKey, quint8 keyboardIndex,
         return -1;
     }
 
-    return keyboard_note_map[mapIndex][keyboardIndex][duKey - 35].note_gmref;
+    //TODO: get mapping directly from du-sound
+//    return keyboard_note_map[mapIndex][keyboardIndex][duKey - 35].note_gmref;
+    return -1;
 }
 
 

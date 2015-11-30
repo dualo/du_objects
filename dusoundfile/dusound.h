@@ -51,6 +51,8 @@ public:
     DU_KEY_ACCESSORS_IN_CHILD(RelativeVolume,       int)
     DU_KEY_ACCESSORS_IN_CHILD(InstrType,            INSTRUMENT_TYPE)
     DU_KEY_ACCESSORS_IN_CHILD(InstrVersion,         int)
+    DU_KEY_ACCESSORS_IN_CHILD(HardInstrVersion,     int)
+    DU_KEY_ACCESSORS_IN_CHILD(SoftInstrVersion,     int)
 
     DU_KEY_ACCESSORS_OBJECT(Info,                   DuSoundInfo)
 

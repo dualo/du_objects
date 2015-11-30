@@ -15,10 +15,6 @@ DU_OBJECT_IMPL(DuEffectSet)
 DuEffectSet::DuEffectSet() :
     DuContainer()
 {
-    addChild(KeyAdsrOnOff,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x01, 0x00));
-
     addChild(KeyCompressorOnOff,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x01, 0x00));
@@ -36,14 +32,6 @@ DuEffectSet::DuEffectSet() :
                            0x01, 0x00));
 
     addChild(KeyChorusOnOff,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x01, 0x00));
-
-    addChild(KeyVibratoOnOff,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x01, 0x00));
-
-    addChild(KeyWahOnOff,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x01, 0x00));
 
@@ -94,6 +82,28 @@ DuEffectSet::DuEffectSet() :
     addChild(KeyAutowahRange,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
+
+
+    addChild(KeyAdsrAttack,
+             new DuNumeric(FX_ADSR_ATTACK_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
+                           FX_ADSR_ATTACK_MAXVALUE, FX_ADSR_ATTACK_MINVALUE));
+
+    addChild(KeyAdsrRelease,
+             new DuNumeric(FX_ADSR_RELEAS_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
+                           FX_ADSR_RELEAS_MAXVALUE, FX_ADSR_RELEAS_MINVALUE));
+
+
+    addChild(KeyWahType,
+             new DuNumeric(FX_WAH_FILTERTYPE_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
+                           FX_WAH_FILTERTYPE_MAXVALUE, FX_WAH_FILTERTYPE_MINVALUE));
+
+    addChild(KeyWahFrequency,
+             new DuNumeric(FX_WAH_FILTERFREQ_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
+                           FX_WAH_FILTERFREQ_MAXVALUE, FX_WAH_FILTERFREQ_MINVALUE));
+
+    addChild(KeyWahResonance,
+             new DuNumeric(FX_WAH_FILTERRES_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
+                           FX_WAH_FILTERRES_MAXVALUE, FX_WAH_FILTERRES_MINVALUE));
 }
 
 DuEffectSet::~DuEffectSet()
@@ -112,14 +122,11 @@ DuEffectSetPtr DuEffectSet::fromDuMusicBinary(const preset_instr &du_preset)
     DuEffectSetPtr effectSet(new DuEffectSet);
     bool verif = true;
 
-    verif = effectSet->setAdsrOnOff(du_preset.s_adsr_onoff) ? verif : false;
     verif = effectSet->setCompressorOnOff(du_preset.s_compressor_onoff) ? verif : false;
     verif = effectSet->setDelayOnOff(du_preset.s_delay_onoff) ? verif : false;
     verif = effectSet->setDistortionOnOff(du_preset.s_distortion_onoff) ? verif : false;
     verif = effectSet->setEqualizerOnOff(du_preset.s_eq_onoff) ? verif : false;
     verif = effectSet->setChorusOnOff(du_preset.s_chorus_onoff) ? verif : false;
-    verif = effectSet->setVibratoOnOff(du_preset.s_vibrato_onoff) ? verif : false;
-    verif = effectSet->setWahOnOff(du_preset.s_wah_onoff) ? verif : false;
 
     verif = effectSet->setMultinoteAct(du_preset.s_multinote_act) ? verif : false;
 
@@ -141,6 +148,12 @@ DuEffectSetPtr DuEffectSet::fromDuMusicBinary(const preset_instr &du_preset)
     verif = effectSet->setAutowahRate(du_preset.s_autowah_rate) ? verif : false;
     verif = effectSet->setAutowahRange(du_preset.s_autowah_range) ? verif : false;
 
+    verif = effectSet->setAdsrAttack(du_preset.s_adsr_attack) ? verif : false;
+    verif = effectSet->setAdsrRelease(du_preset.s_adsr_release) ? verif : false;
+    verif = effectSet->setWahType(du_preset.s_wah_type) ? verif : false;
+    verif = effectSet->setWahFrequency(du_preset.s_wah_freq) ? verif : false;
+    verif = effectSet->setWahResonance(du_preset.s_wah_res) ? verif : false;
+
     if (!verif)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "DuEffectSet::fromDuMusicBinary():\n"
@@ -153,14 +166,11 @@ DuEffectSetPtr DuEffectSet::fromDuMusicBinary(const preset_instr &du_preset)
 
 DuEffectSetPtr DuEffectSet::fromJson(const QJsonObject &jsonEffectSet)
 {
-    QJsonValue jsonAdsrOnOff            = jsonEffectSet[KeyAdsrOnOff];
     QJsonValue jsonComprOnOff           = jsonEffectSet[KeyCompressorOnOff];
     QJsonValue jsonDelayOnOff           = jsonEffectSet[KeyDelayOnOff];
     QJsonValue jsonDistoOnOff           = jsonEffectSet[KeyDistortionOnOff];
     QJsonValue jsonEqualOnOff           = jsonEffectSet[KeyEqualizerOnOff];
     QJsonValue jsonChorusOnOff          = jsonEffectSet[KeyChorusOnOff];
-    QJsonValue jsonVibOnOff             = jsonEffectSet[KeyVibratoOnOff];
-    QJsonValue jsonWahOnOff             = jsonEffectSet[KeyWahOnOff];
 
     QJsonValue jsonMultinoteAct         = jsonEffectSet[KeyMultinoteAct];
     QJsonValue jsonMultinote            = jsonEffectSet[KeyMultinote];
@@ -176,24 +186,33 @@ DuEffectSetPtr DuEffectSet::fromJson(const QJsonObject &jsonEffectSet)
     QJsonValue jsonAutowahRate          = jsonEffectSet[KeyAutowahRate];
     QJsonValue jsonAutowahRange         = jsonEffectSet[KeyAutowahRange];
 
-    if (        !jsonAdsrOnOff.isDouble()       ||  !jsonComprOnOff.isDouble()
+    QJsonValue jsonAdsrAttack           = jsonEffectSet[KeyAdsrAttack];
+    QJsonValue jsonAdsrRelease          = jsonEffectSet[KeyAdsrRelease];
+    QJsonValue jsonWahType              = jsonEffectSet[KeyWahType];
+    QJsonValue jsonWahFrequency         = jsonEffectSet[KeyWahFrequency];
+    QJsonValue jsonWahResonance         = jsonEffectSet[KeyWahResonance];
+
+    if (        !jsonComprOnOff.isDouble()
             ||  !jsonDelayOnOff.isDouble()      ||  !jsonDistoOnOff.isDouble()
             ||  !jsonEqualOnOff.isDouble()      ||  !jsonChorusOnOff.isDouble()
-            ||  !jsonVibOnOff.isDouble()        ||  !jsonWahOnOff.isDouble()
-
-            ||  !jsonMultinoteAct.isDouble()    ||  !jsonMultinote.isArray()
-
+            
+            ||  !jsonMultinoteAct.isDouble()    ||  !jsonMultinote.isString()
+            
             ||  !jsonPitch.isDouble()
-
+            
             ||  !jsonAutopitchRate.isDouble()   ||  !jsonAutopitchRange.isDouble()
             ||  !jsonTremoloRate.isDouble()     ||  !jsonTremoloRange.isDouble()
             ||  !jsonAutopanRate.isDouble()     ||  !jsonAutopanRange.isDouble()
-            ||  !jsonAutowahRate.isDouble()     ||  !jsonAutowahRange.isDouble())
+            ||  !jsonAutowahRate.isDouble()     ||  !jsonAutowahRange.isDouble()
+
+            ||  !jsonAdsrAttack.isDouble()      ||  !jsonAdsrRelease.isDouble()
+            ||  !jsonWahType.isDouble()         ||  !jsonWahFrequency.isDouble()
+            ||  !jsonWahResonance.isDouble())
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuEffectSet::fromJson():\n"
-                    << "failed to generate DuEffectSet\n"
-                    << "a json key did not contain the proper type";
-
+                                      << "failed to generate DuEffectSet\n"
+                                      << "a json key did not contain the proper type";
+        
         return DuEffectSetPtr();
     }
 
@@ -201,14 +220,11 @@ DuEffectSetPtr DuEffectSet::fromJson(const QJsonObject &jsonEffectSet)
     DuEffectSetPtr effectSet(new DuEffectSet);
     bool verif = true;
 
-    verif = effectSet->setAdsrOnOff(jsonAdsrOnOff.toInt()) ? verif : false;
     verif = effectSet->setCompressorOnOff(jsonComprOnOff.toInt()) ? verif : false;
     verif = effectSet->setDelayOnOff(jsonDelayOnOff.toInt()) ? verif : false;
     verif = effectSet->setDistortionOnOff(jsonDistoOnOff.toInt()) ? verif : false;
     verif = effectSet->setEqualizerOnOff(jsonEqualOnOff.toInt()) ? verif : false;
     verif = effectSet->setChorusOnOff(jsonChorusOnOff.toInt()) ? verif : false;
-    verif = effectSet->setVibratoOnOff(jsonVibOnOff.toInt()) ? verif : false;
-    verif = effectSet->setWahOnOff(jsonWahOnOff.toInt()) ? verif : false;
 
     verif = effectSet->setMultinoteAct(jsonMultinoteAct.toInt()) ? verif : false;
 
@@ -231,6 +247,12 @@ DuEffectSetPtr DuEffectSet::fromJson(const QJsonObject &jsonEffectSet)
     verif = effectSet->setAutowahRate(jsonAutowahRate.toInt()) ? verif : false;
     verif = effectSet->setAutowahRange(jsonAutowahRange.toInt()) ? verif : false;
 
+    verif = effectSet->setAdsrAttack(jsonAdsrAttack.toInt()) ? verif : false;
+    verif = effectSet->setAdsrRelease(jsonAdsrRelease.toInt()) ? verif : false;
+    verif = effectSet->setWahType(jsonWahType.toInt()) ? verif : false;
+    verif = effectSet->setWahFrequency(jsonWahFrequency.toInt()) ? verif : false;
+    verif = effectSet->setWahResonance(jsonWahResonance.toInt()) ? verif : false;
+
     if (!verif)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "DuEffectSet::fromJson():\n"
@@ -250,11 +272,6 @@ QByteArray DuEffectSet::toDuMusicBinary() const
     QByteArray tmpClear(size(), (char)0x00);
     std::memcpy((char *)&(du_effectset) + EFFECTSET_PRESET_OFFSET, tmpClear.data(), size());
 
-
-    tmpNum = getAdsrOnOff();
-    if (tmpNum == -1)
-        return QByteArray();
-    du_effectset.s_adsr_onoff = tmpNum;
 
     tmpNum = getCompressorOnOff();
     if (tmpNum == -1)
@@ -280,16 +297,6 @@ QByteArray DuEffectSet::toDuMusicBinary() const
     if (tmpNum == -1)
         return QByteArray();
     du_effectset.s_chorus_onoff = tmpNum;
-
-    tmpNum = getVibratoOnOff();
-    if (tmpNum == -1)
-        return QByteArray();
-    du_effectset.s_vibrato_onoff = tmpNum;
-
-    tmpNum = getWahOnOff();
-    if (tmpNum == -1)
-        return QByteArray();
-    du_effectset.s_wah_onoff = tmpNum;
 
 
     tmpNum = getMultinoteAct();
@@ -350,6 +357,32 @@ QByteArray DuEffectSet::toDuMusicBinary() const
     du_effectset.s_autowah_range = tmpNum;
 
 
+    tmpNum = getAdsrAttack();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_effectset.s_adsr_attack = tmpNum;
+
+    tmpNum = getAdsrRelease();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_effectset.s_adsr_release = tmpNum;
+
+    tmpNum = getWahType();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_effectset.s_wah_type = tmpNum;
+
+    tmpNum = getWahFrequency();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_effectset.s_wah_freq = tmpNum;
+
+    tmpNum = getWahResonance();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_effectset.s_wah_res = tmpNum;
+
+
     return QByteArray((char *)&(du_effectset) + EFFECTSET_PRESET_OFFSET, size());
 }
 
@@ -360,14 +393,11 @@ int DuEffectSet::size() const
 }
 
 
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, AdsrOnOff,         Numeric,      int,        -1)
 DU_KEY_ACCESSORS_IMPL(DuEffectSet, CompressorOnOff,   Numeric,      int,        -1)
 DU_KEY_ACCESSORS_IMPL(DuEffectSet, DelayOnOff,        Numeric,      int,        -1)
 DU_KEY_ACCESSORS_IMPL(DuEffectSet, DistortionOnOff,   Numeric,      int,        -1)
 DU_KEY_ACCESSORS_IMPL(DuEffectSet, EqualizerOnOff,    Numeric,      int,        -1)
 DU_KEY_ACCESSORS_IMPL(DuEffectSet, ChorusOnOff,       Numeric,      int,        -1)
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, VibratoOnOff,      Numeric,      int,        -1)
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, WahOnOff,          Numeric,      int,        -1)
 
 DU_KEY_ACCESSORS_IMPL(DuEffectSet, MultinoteAct,      Numeric,      int,        -1)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuEffectSet, Multinote, DuArray)
@@ -382,3 +412,9 @@ DU_KEY_ACCESSORS_IMPL(DuEffectSet, AutopanRate,       Numeric,      int,        
 DU_KEY_ACCESSORS_IMPL(DuEffectSet, AutopanRange,      Numeric,      int,        -1)
 DU_KEY_ACCESSORS_IMPL(DuEffectSet, AutowahRate,       Numeric,      int,        -1)
 DU_KEY_ACCESSORS_IMPL(DuEffectSet, AutowahRange,      Numeric,      int,        -1)
+
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, AdsrAttack,        Numeric,      int,        -1)
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, AdsrRelease,       Numeric,      int,        -1)
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, WahType,           Numeric,      int,        -1)
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, WahFrequency,      Numeric,      int,        -1)
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, WahResonance,      Numeric,      int,        -1)

@@ -3,15 +3,12 @@
 #include "../dumusicfile/instrument/duinstrumentinfo.h"
 #include "../dumusicfile/instrument/dupreset.h"
 
-#include "../dumusicfile/instrument/effects/duadsr.h"
 #include "../dumusicfile/instrument/effects/duchorus.h"
 #include "../dumusicfile/instrument/effects/ducompressor.h"
 #include "../dumusicfile/instrument/effects/dudelay.h"
 #include "../dumusicfile/instrument/effects/dudistortion.h"
 #include "../dumusicfile/instrument/effects/duequalizer.h"
 #include "../dumusicfile/instrument/effects/dumixer.h"
-#include "../dumusicfile/instrument/effects/duvibrato.h"
-#include "../dumusicfile/instrument/effects/duwah.h"
 
 #include "../general/duarray.h"
 #include "../general/dunumeric.h"
@@ -29,13 +26,10 @@ DuSoundInfo::DuSoundInfo()
 
     addChild(KeyMixer,           new DuMixer);
     addChild(KeyDistortionArray, new DuArray(FX_NUM_FX_INTR));
-    addChild(KeyWahArray,        new DuArray(FX_NUM_FX_INTR));
     addChild(KeyCompressorArray, new DuArray(FX_NUM_FX_INTR));
     addChild(KeyEqualizerArray,  new DuArray(FX_NUM_FX_INTR));
     addChild(KeyDelayArray,      new DuArray(FX_NUM_FX_INTR));
     addChild(KeyChorusArray,     new DuArray(FX_NUM_FX_INTR));
-    addChild(KeyVibratoArray,    new DuArray(FX_NUM_FX_INTR));
-    addChild(KeyAdsrArray,       new DuArray(FX_NUM_FX_INTR));
 
     addChild(KeyLedArray,        new DuArray(NUM_LED_VALUE));
 }
@@ -126,24 +120,6 @@ DuSoundInfoPtr DuSoundInfo::fromBinary(const struct_instr &data)
     }
     soundInfo->setDistortionArray(distoArray);
 
-    DuArrayPtr wahArray(new DuArray);
-    for (int i = 0; i < FX_NUM_FX_INTR; ++i)
-    {
-        DuWahPtr wah = DuWah::fromDuMusicBinary(data.s_wah[i]);
-        if (wah != NULL)
-        {
-            wahArray->append(wah);
-        }
-        else
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound info:\n"
-                                          << "Wah" << i << "was not properly generated";
-
-            return DuSoundInfoPtr();
-        }
-    }
-    soundInfo->setWahArray(wahArray);
-
     DuArrayPtr compressorArray(new DuArray);
     for (int i = 0; i < FX_NUM_FX_INTR; ++i)
     {
@@ -216,42 +192,6 @@ DuSoundInfoPtr DuSoundInfo::fromBinary(const struct_instr &data)
     }
     soundInfo->setChorusArray(chorusArray);
 
-    DuArrayPtr vibratoArray(new DuArray);
-    for (int i = 0; i < FX_NUM_FX_INTR; ++i)
-    {
-        DuVibratoPtr vibrato = DuVibrato::fromDuMusicBinary(data.s_vibrato[i]);
-        if (vibrato != NULL)
-        {
-            vibratoArray->append(vibrato);
-        }
-        else
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound info:\n"
-                                          << "Vibrato" << i << "was not properly generated";
-
-            return DuSoundInfoPtr();
-        }
-    }
-    soundInfo->setVibratoArray(vibratoArray);
-
-    DuArrayPtr adsrArray(new DuArray);
-    for (int i = 0; i < FX_NUM_FX_INTR; ++i)
-    {
-        DuAdsrPtr adsr = DuAdsr::fromDuMusicBinary(data.s_adsr[i]);
-        if (adsr != NULL)
-        {
-            adsrArray->append(adsr);
-        }
-        else
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound info:\n"
-                                          << "ADSR" << i << "was not properly generated";
-
-            return DuSoundInfoPtr();
-        }
-    }
-    soundInfo->setAdsrArray(adsrArray);
-
     DuArrayPtr ledsArray(new DuArray);
     for (int i = 0; i < NUM_LED_VALUE; ++i)
     {
@@ -310,11 +250,6 @@ QByteArray DuSoundInfo::toBinary(uint32_t sampleAddress, uint8_t nbLayer, int nb
         return QByteArray();
     std::memcpy((char*)&(soundStruct.s_distortion), distortionArray->toDuMusicBinary().constData(), distortionArray->size());
 
-    const DuArrayConstPtr &wahArray = getWahArray();
-    if (wahArray == NULL)
-        return QByteArray();
-    std::memcpy((char*)&(soundStruct.s_wah), wahArray->toDuMusicBinary().constData(), wahArray->size());
-
     const DuArrayConstPtr &compressorArray = getCompressorArray();
     if (compressorArray == NULL)
         return QByteArray();
@@ -334,16 +269,6 @@ QByteArray DuSoundInfo::toBinary(uint32_t sampleAddress, uint8_t nbLayer, int nb
     if (chorusArray == NULL)
         return QByteArray();
     std::memcpy((char*)&(soundStruct.s_chorus), chorusArray->toDuMusicBinary().constData(), chorusArray->size());
-
-    const DuArrayConstPtr &vibratoArray = getVibratoArray();
-    if (vibratoArray == NULL)
-        return QByteArray();
-    std::memcpy((char*)&(soundStruct.s_vibrato), vibratoArray->toDuMusicBinary().constData(), vibratoArray->size());
-
-    const DuArrayConstPtr &adsrArray = getAdsrArray();
-    if (adsrArray == NULL)
-        return QByteArray();
-    std::memcpy((char*)&(soundStruct.s_adsr), adsrArray->toDuMusicBinary().constData(), adsrArray->size());
 
     const DuArrayConstPtr &ledsArray = getLedArray();
     if (ledsArray == NULL)
@@ -366,7 +291,9 @@ DuObjectPtr DuSoundInfo::getChild(const QString &key)
             key == KeyCategory           ||
             key == KeyRelativeVolume     ||
             key == KeyInstrType          ||
-            key == KeyInstrVersion)
+            key == KeyInstrVersion       ||
+            key == KeyHardInstrVersion   ||
+            key == KeySoftInstrVersion)
     {
         DuInstrumentInfoPtr info = getInstrumentInfo();
         if (info == NULL)
@@ -395,7 +322,9 @@ DuObjectConstPtr DuSoundInfo::getChild(const QString &key) const
             key == KeyCategory           ||
             key == KeyRelativeVolume     ||
             key == KeyInstrType          ||
-            key == KeyInstrVersion)
+            key == KeyInstrVersion       ||
+            key == KeyHardInstrVersion   ||
+            key == KeySoftInstrVersion)
     {
         DuInstrumentInfoConstPtr info = getInstrumentInfo();
         if (info == NULL)
@@ -423,6 +352,8 @@ DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, Category,           DuInstrumentInfo
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, RelativeVolume,     DuInstrumentInfo, InstrumentInfo, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, InstrType,          DuInstrumentInfo, InstrumentInfo, INSTRUMENT_TYPE, NUM_INSTR_TYPE)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, InstrVersion,       DuInstrumentInfo, InstrumentInfo, int, -1)
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, HardInstrVersion,   DuInstrumentInfo, InstrumentInfo, int, -1)
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, SoftInstrVersion,   DuInstrumentInfo, InstrumentInfo, int, -1)
 
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuSoundInfo, InstrumentInfo,  DuInstrumentInfo)
 
@@ -433,12 +364,9 @@ DU_KEY_ACCESSORS_OBJECT_IMPL(DuSoundInfo, PresetArray,     DuArray)
 
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuSoundInfo, Mixer,           DuMixer)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuSoundInfo, DistortionArray, DuArray)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSoundInfo, WahArray,        DuArray)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuSoundInfo, CompressorArray, DuArray)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuSoundInfo, EqualizerArray,  DuArray)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuSoundInfo, DelayArray,      DuArray)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuSoundInfo, ChorusArray,     DuArray)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSoundInfo, VibratoArray,    DuArray)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSoundInfo, AdsrArray,       DuArray)
 
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuSoundInfo, LedArray,        DuArray)

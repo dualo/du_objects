@@ -7,15 +7,12 @@
 
 #include <QJsonObject>
 
-#include "effects/duadsr.h"
 #include "effects/duchorus.h"
 #include "effects/ducompressor.h"
 #include "effects/dudelay.h"
 #include "effects/dudistortion.h"
 #include "effects/duequalizer.h"
 #include "effects/dumixer.h"
-#include "effects/duvibrato.h"
-#include "effects/duwah.h"
 
 DU_OBJECT_IMPL(DuInstrument)
 
@@ -27,13 +24,10 @@ DuInstrument::DuInstrument() :
 
     addChild(KeyMixer,          new DuMixer);
     addChild(KeyDistortion,     new DuDistortion);
-    addChild(KeyWah,            new DuWah);
     addChild(KeyCompressor,     new DuCompressor);
     addChild(KeyEqualizer,      new DuEqualizer);
     addChild(KeyDelay,          new DuDelay);
     addChild(KeyChorus,         new DuChorus);
-    addChild(KeyVibrato,        new DuVibrato);
-    addChild(KeyAdsr,           new DuAdsr);
 }
 
 DuInstrument::~DuInstrument()
@@ -98,18 +92,6 @@ DuInstrumentPtr DuInstrument::fromDuMusicBinary(const music_instr &du_instr)
     }
     instrument->setDistortion(distortion);
 
-    const DuWahPtr &wah =
-            DuWah::fromDuMusicBinary(du_instr.i_wah);
-    if (wah == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromDuMusicBinary():\n"
-                    << "failed to generate DuInstrument\n"
-                    << "the DuWah was not properly generated";
-
-        return DuInstrumentPtr();
-    }
-    instrument->setWah(wah);
-
     const DuCompressorPtr &compressor =
             DuCompressor::fromDuMusicBinary(du_instr.i_compressor);
     if (compressor == NULL)
@@ -158,30 +140,6 @@ DuInstrumentPtr DuInstrument::fromDuMusicBinary(const music_instr &du_instr)
     }
     instrument->setChorus(chorus);
 
-    const DuVibratoPtr &vibrato =
-            DuVibrato::fromDuMusicBinary(du_instr.i_vibrato);
-    if (vibrato == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromDuMusicBinary():\n"
-                    << "failed to generate DuInstrument\n"
-                    << "the DuVibrato was not properly generated";
-
-        return DuInstrumentPtr();
-    }
-    instrument->setVibrato(vibrato);
-
-    const DuAdsrPtr &adsr =
-            DuAdsr::fromDuMusicBinary(du_instr.i_adsr);
-    if (adsr == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromDuMusicBinary():\n"
-                    << "failed to generate DuInstrument\n"
-                    << "the DuAdsr was not properly generated";
-
-        return DuInstrumentPtr();
-    }
-    instrument->setAdsr(adsr);
-
     return instrument;
 }
 
@@ -192,20 +150,16 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
     QJsonValue jsonPreset       = jsonInstrument[KeyPreset];
     QJsonValue jsonMixer        = jsonInstrument[KeyMixer];
     QJsonValue jsonDistortion   = jsonInstrument[KeyDistortion];
-    QJsonValue jsonWah          = jsonInstrument[KeyWah];
     QJsonValue jsonCompressor   = jsonInstrument[KeyCompressor];
     QJsonValue jsonEqualizer    = jsonInstrument[KeyEqualizer];
     QJsonValue jsonDelay        = jsonInstrument[KeyDelay];
     QJsonValue jsonChorus       = jsonInstrument[KeyChorus];
-    QJsonValue jsonVibrato      = jsonInstrument[KeyVibrato];
-    QJsonValue jsonAdsr         = jsonInstrument[KeyAdsr];
 
     if (        !jsonInstrInfo.isObject()   ||  !jsonPreset.isObject()
             ||  !jsonMixer.isObject()       ||  !jsonDistortion.isObject()
-            ||  !jsonWah.isObject()         ||  !jsonCompressor.isObject()
+            ||  !jsonCompressor.isObject()
             ||  !jsonEqualizer.isObject()   ||  !jsonDelay.isObject()
-            ||  !jsonChorus.isObject()      ||  !jsonVibrato.isObject()
-            ||  !jsonAdsr.isObject())
+            ||  !jsonChorus.isObject())
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromJson():\n"
                     << "failed to generate DuInstrument\n"
@@ -269,19 +223,6 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
         return DuInstrumentPtr();
     }
 
-    const DuWahPtr &wah =
-            DuWah::fromJson(jsonWah.toObject());
-    if (wah != NULL)
-        instrument->setWah(wah);
-    else
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromJson():\n"
-                    << "failed to generate DuInstrument\n"
-                    << "the DuWah was not properly generated";
-
-        return DuInstrumentPtr();
-    }
-
     const DuCompressorPtr &compressor =
             DuCompressor::fromJson(jsonCompressor.toObject());
     if (compressor != NULL)
@@ -334,32 +275,6 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
         return DuInstrumentPtr();
     }
 
-    const DuVibratoPtr &vibrato =
-            DuVibrato::fromJson(jsonVibrato.toObject());
-    if (vibrato != NULL)
-        instrument->setVibrato(vibrato);
-    else
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromJson():\n"
-                    << "failed to generate DuInstrument\n"
-                    << "the DuVibrato was not properly generated";
-
-        return DuInstrumentPtr();
-    }
-
-    const DuAdsrPtr &adsr =
-            DuAdsr::fromJson(jsonAdsr.toObject());
-    if (adsr != NULL)
-        instrument->setAdsr(adsr);
-    else
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromJson():\n"
-                    << "failed to generate DuInstrument\n"
-                    << "the DuAdsr was not properly generated";
-
-        return DuInstrumentPtr();
-    }
-
 
     return instrument;
 }
@@ -397,13 +312,6 @@ QByteArray DuInstrument::toDuMusicBinary() const
     std::memcpy((char *)&(du_instrument.i_distortion),
                 distortion->toDuMusicBinary().constData(), distortion->size());
 
-    const DuWahConstPtr& wah = getWah();
-    if (wah == NULL)
-        return QByteArray();
-
-    std::memcpy((char *)&(du_instrument.i_wah),
-                wah->toDuMusicBinary().constData(), wah->size());
-
     const DuCompressorConstPtr& compressor = getCompressor();
     if (compressor == NULL)
         return QByteArray();
@@ -432,20 +340,6 @@ QByteArray DuInstrument::toDuMusicBinary() const
     std::memcpy((char *)&(du_instrument.i_chorus),
                 chorus->toDuMusicBinary().constData(), chorus->size());
 
-    const DuVibratoConstPtr& vibrato = getVibrato();
-    if (vibrato == NULL)
-        return QByteArray();
-
-    std::memcpy((char *)&(du_instrument.i_vibrato),
-                vibrato->toDuMusicBinary().constData(), vibrato->size());
-
-    const DuAdsrConstPtr& adsr = getAdsr();
-    if (adsr == NULL)
-        return QByteArray();
-
-    std::memcpy((char *)&(du_instrument.i_adsr),
-                adsr->toDuMusicBinary().constData(), adsr->size());
-
     return QByteArray((char *)&(du_instrument), size());
 }
 
@@ -460,10 +354,7 @@ DU_KEY_ACCESSORS_OBJECT_IMPL(DuInstrument, InstrumentInfo, DuInstrumentInfo)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuInstrument, Preset,         DuPreset)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuInstrument, Mixer,          DuMixer)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuInstrument, Distortion,     DuDistortion)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuInstrument, Wah,            DuWah)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuInstrument, Compressor,     DuCompressor)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuInstrument, Equalizer,      DuEqualizer)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuInstrument, Delay,          DuDelay)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuInstrument, Chorus,         DuChorus)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuInstrument, Vibrato,        DuVibrato)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuInstrument, Adsr,           DuAdsr)

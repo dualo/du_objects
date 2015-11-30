@@ -400,6 +400,18 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
     }
 
 
+    if (music->size() > MUSIC_SONG_SIZE + RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromJson():\n"
+                << "du-music size above max possible size"
+                << music->size()
+                << MUSIC_SONG_SIZE + RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE;
+
+        return DuMusicPtr();
+    }
+
+
     bool verif = true;
 
     verif = music->setTranspose(jsonTranspose.toInt()) ? verif : false;
@@ -471,6 +483,17 @@ DuMusicPtr DuMusic::fromMidi(const MidiConversionHelper &helper)
         }
     }
 
+    if (music->size() > MUSIC_SONG_SIZE + RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "DuMusic::fromMidiBinary():\n"
+                << "du-music size above max possible size"
+                << music->size()
+                << MUSIC_SONG_SIZE + RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE;
+
+        return DuMusicPtr();
+    }
+
     return music;
 }
 
@@ -497,6 +520,7 @@ bool DuMusic::upgrade(s_total_buffer &du_music)
         song.s_size = MUSIC_SONG_SIZE + (song.s_totalsample * MUSIC_SAMPLE_SIZE);
         song.s_metadata = 0;
         song.s_playhead = 0;
+        song.s_state = 0;
         song.s_transpose = RECORD_TRANSPOSEDEFAULT;
 
         song.s_reverb_preset = FX_REVERB_PRESET_DEFAULTVALUE;
@@ -510,6 +534,23 @@ bool DuMusic::upgrade(s_total_buffer &du_music)
         song.s_activ_gyro_P = 0;
         song.s_activ_gyro_R = 0;
         song.s_activ_gyro_Y = 0;
+
+        FX_reverb& reverb = song.s_reverb;
+        reverb.r_level          = FX_REVERB_LEVEL_DEFAULTVALUE;
+        reverb.r_directlevel    = FX_REVERB_DIRECTLEVEL_DEFAULTVALUE;
+        reverb.r_revsend        = FX_REVERB_REVSEND_DEFAULTVALUE;
+        reverb.r_tonegain       = FX_REVERB_TONEGAIN_DEFAULTVALUE;
+        reverb.r_tonefreq       = FX_REVERB_TONEFREQ_DEFAULTVALUE;
+        reverb.r_prehp          = FX_REVERB_PREHP_DEFAULTVALUE;
+        reverb.r_time           = FX_REVERB_TIME_DEFAULTVALUE;
+        reverb.r_echofeedback   = FX_REVERB_ECHOFEED_DEFAULTVALUE;
+        reverb.r_hdamp          = FX_REVERB_HDAMP_DEFAULTVALUE;
+        reverb.r_thresgate      = FX_REVERB_THRESGATE_DEFAULTVALUE;
+        reverb.r_predelaytime   = FX_REVERB_PREDELAYTIME_DEFAULTVALUE;
+
+        QByteArray tmpName(NAME_CARACT, (char)0x00);
+        tmpName.prepend(QStringLiteral(DEFAULT_EFFECTNAME).toUtf8());
+        std::memcpy(reverb.r_name, tmpName.data(), NAME_CARACT);
 
 
         for (i = 0; i < MUSIC_MAXTRACK; i++)
@@ -560,14 +601,11 @@ bool DuMusic::upgrade(s_total_buffer &du_music)
                 preset.s_direction_gyro_R = -1;
                 preset.s_direction_gyro_Y = -1;
 
-                preset.s_adsr_onoff = 0;
                 preset.s_compressor_onoff = 0;
                 preset.s_delay_onoff = 0;
                 preset.s_distortion_onoff = 0;
                 preset.s_eq_onoff = 0;
                 preset.s_chorus_onoff = 0;
-                preset.s_vibrato_onoff = 0;
-                preset.s_wah_onoff = 0;
 
                 preset.s_autopitch_rate = 0;
                 preset.s_autopitch_range = 127;
@@ -586,6 +624,12 @@ bool DuMusic::upgrade(s_total_buffer &du_music)
                 preset.s_multinote[1] = 0;
                 preset.s_multinote[2] = 0;
                 preset.s_multinote[3] = 0;
+
+                preset.s_adsr_attack    = FX_ADSR_ATTACK_DEFAULTVALUE;
+                preset.s_adsr_release   = FX_ADSR_RELEAS_DEFAULTVALUE;
+                preset.s_wah_type       = FX_WAH_FILTERTYPE_DEFAULTVALUE;
+                preset.s_wah_freq       = FX_WAH_FILTERFREQ_DEFAULTVALUE;
+                preset.s_wah_res        = FX_WAH_FILTERRES_DEFAULTVALUE;
 
                 // INSTR
                 s_instr& instr = loop.l_instr.i_instrument;
