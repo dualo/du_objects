@@ -11,7 +11,7 @@ DU_OBJECT(DuDate);
 class DuDate : public DuValue
 {
 public:
-    DuDate(const QDateTime& date = QDateTime());
+    explicit DuDate(const QDateTime& date = QDateTime());
 
     virtual DuObjectPtr clone() const;
 

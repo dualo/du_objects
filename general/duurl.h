@@ -9,7 +9,7 @@ DU_OBJECT(DuUrl);
 class DuUrl : public DuValue
 {
 public:
-    DuUrl(const QUrl &url = QUrl());
+    explicit DuUrl(const QUrl &url = QUrl());
 
     virtual DuObjectPtr clone() const;
 
