@@ -10,7 +10,7 @@ DU_OBJECT(DuDeviceList)
 class DuDeviceList : public DuList
 {
 public:
-    DuDeviceList(const DuDeviceConstPtr &device);
+    explicit DuDeviceList(const DuDeviceConstPtr &device);
 
     virtual DuObjectPtr clone() const;
 

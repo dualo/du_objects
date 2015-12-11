@@ -32,7 +32,7 @@ public:
         NameRole
     };
 
-    DuTimeSignatureModel(QObject *parent = 0);
+    explicit DuTimeSignatureModel(QObject *parent = 0);
 
     void addTimeSignature(const DuTimeSignature &timeSig);
 

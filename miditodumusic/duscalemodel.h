@@ -32,7 +32,7 @@ public:
         NameRole
     };
 
-    DuScaleModel(QObject *parent = 0);
+    explicit DuScaleModel(QObject *parent = 0);
 
     void addScale(const DuScale &scale);
 

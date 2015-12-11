@@ -9,7 +9,7 @@ DU_OBJECT(DuVersion)
 class DuVersion : public DuString
 {
 public:
-    DuVersion(const QString& version);
+    explicit DuVersion(const QString& version);
     DuVersion(int major = 0, int minor = 0, int patch = 0);
 
     virtual DuObjectPtr clone() const;

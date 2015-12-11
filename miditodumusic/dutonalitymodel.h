@@ -34,7 +34,7 @@ public:
         NameRole
     };
 
-    DuTonalityModel(QObject *parent = 0);
+    explicit DuTonalityModel(QObject *parent = 0);
 
     void addTonality(const DuTonality &tonality);
 
