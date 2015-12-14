@@ -317,8 +317,9 @@ QString DuSample::convertToMono(SndfileHandle &oldSoundFile)
         return QString();
     }
 
-    double oldFrames[oldSoundFile.channels() * oldSoundFile.frames()];
-    sf_count_t nbFramesRead = oldSoundFile.readf(oldFrames, oldSoundFile.frames());
+    const int oldNbFrames = oldSoundFile.channels() * oldSoundFile.frames();
+    QScopedArrayPointer<double> oldFrames(new double[oldNbFrames]);
+    sf_count_t nbFramesRead = oldSoundFile.readf(oldFrames.data(), oldSoundFile.frames());
     if (nbFramesRead != oldSoundFile.frames())
     {
         qCCritical(LOG_CAT_DU_OBJECT)
@@ -330,7 +331,8 @@ QString DuSample::convertToMono(SndfileHandle &oldSoundFile)
         return QString();
     }
 
-    double newFrames[newSoundFile.channels() * oldSoundFile.frames()];
+    const int newNbFrames = newSoundFile.channels() * oldSoundFile.frames();
+    QScopedArrayPointer<double> newFrames(new double[newNbFrames]);
     for (int i = 0; i < oldSoundFile.frames(); ++i)
     {
         newFrames[i] = 0;
@@ -342,7 +344,7 @@ QString DuSample::convertToMono(SndfileHandle &oldSoundFile)
         newFrames[i] /= oldSoundFile.channels();
     }
 
-    sf_count_t writtenFrames = newSoundFile.writef(newFrames, oldSoundFile.frames());
+    sf_count_t writtenFrames = newSoundFile.writef(newFrames.data(), oldSoundFile.frames());
     if (writtenFrames != oldSoundFile.frames())
     {
         qCCritical(LOG_CAT_DU_OBJECT)
@@ -406,8 +408,8 @@ QString DuSample::convertTo16bits(SndfileHandle &oldSoundFile)
         return QString();
     }
 
-    double frames[oldSoundFile.frames() * oldSoundFile.channels()];
-    sf_count_t nbFramesRead = oldSoundFile.readf(frames, oldSoundFile.frames());
+    QScopedArrayPointer<double> frames(new double(oldSoundFile.frames() * oldSoundFile.channels()));
+    sf_count_t nbFramesRead = oldSoundFile.readf(frames.data(), oldSoundFile.frames());
     if (nbFramesRead != oldSoundFile.frames())
     {
         qCCritical(LOG_CAT_DU_OBJECT)
@@ -419,7 +421,7 @@ QString DuSample::convertTo16bits(SndfileHandle &oldSoundFile)
         return QString();
     }
 
-    sf_count_t writtenFrames = newSoundFile.writef(frames, oldSoundFile.frames());
+    sf_count_t writtenFrames = newSoundFile.writef(frames.data(), oldSoundFile.frames());
     if (writtenFrames != oldSoundFile.frames())
     {
         qCCritical(LOG_CAT_DU_OBJECT)
