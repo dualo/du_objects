@@ -1,4 +1,13 @@
-macx {
+win32 {
+    INCLUDEPATH += $$PWD/libs/win/libsndfile/include
+    DEPENDPATH += $$PWD/libs/win/libsndfile/include
+
+    contains(QMAKE_TARGET.arch, x86_64) {
+        LIBS += -L$$PWD/libs/win/libsndfile/lib/x64 -L$$PWD/libs/win/libsndfile/bin/x64 -llibsndfile-1
+    } else {
+        LIBS += -L$$PWD/libs/win/libsndfile/lib/x86 -L$$PWD/libs/win/libsndfile/bin/x86 -llibsndfile-1
+    }
+} else:macx {
     INCLUDEPATH += $$PWD/libs/mac/libsndfile/include
     DEPENDPATH += $$PWD/libs/mac/libsndfile/include
 
