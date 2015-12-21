@@ -38,6 +38,11 @@ DuSample::DuSample() :
     addChild(KeyAmplitudeOscAmp, new DuNumeric(0x46, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
     addChild(KeyVolumeMixer2,    new DuNumeric(0xEFEF, 2, 0xFFFF, 0x0000));
 
+    addChild(KeyInit,            new DuNumeric(0x7F00, 2, 0xFFFF, 0x0000));
+    addChild(KeyAttack,          new DuNumeric(0x1FE3, 2, 0xFFFF, 0x0000));
+    addChild(KeyDecay,           new DuNumeric(0x5FE3, 2, 0xFFFF, 0x0000));
+    addChild(KeyRelease,         new DuNumeric(0x605A, 2, 0xFFFF, 0x0000));
+
     // Data
     addChild(KeyData,            new DuBinaryData);
 }
@@ -108,6 +113,11 @@ DuSamplePtr DuSample::fromBinary(const dream_ip& dreamIP,
 
     verif = sample->setAmplitudeOscAmp(dreamSP.amplitude_osc_amp) ? verif : false;
     verif = sample->setVolumeMixer2(dreamSP.volume_mixer2) ? verif : false;
+
+    verif = sample->setInit(dreamSP.init)       ? verif : false;
+    verif = sample->setAttack(dreamSP.attack)   ? verif : false;
+    verif = sample->setDecay(dreamSP.decay)     ? verif : false;
+    verif = sample->setRelease(dreamSP.release) ? verif : false;
 
     // Data
     verif = sample->setData(data) ? verif : false;
@@ -451,7 +461,7 @@ int DuSample::normalizeWaveType(int format)
 
     newFormat = majorFormat | subtype;
 
-    qCDebug(LOG_CAT_DU_OBJECT) << "New format =" + QString::number(newFormat, 16);
+    qCDebug(LOG_CAT_DU_OBJECT) << "New format =" << QString::number(newFormat, 16);
 
     return newFormat;
 }
@@ -565,10 +575,26 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress, uint32_t sampleOffset) con
         return QByteArray();
     data.volume_mixer2 = tmpNum;
 
-    data.unknown9 = 0x7F00;
-    data.unknown10 = 0x1FE3;
-    data.unknown11 = 0x5FE3;
-    data.unknown12 = 0x605A;
+    tmpNum = getInit();
+    if (tmpNum == -1)
+        return QByteArray();
+    data.init = (uint16_t) tmpNum;
+
+    tmpNum = getAttack();
+    if (tmpNum == -1)
+        return QByteArray();
+    data.attack = (uint16_t) tmpNum;
+
+    tmpNum = getDecay();
+    if (tmpNum == -1)
+        return QByteArray();
+    data.decay = (uint16_t) tmpNum;
+
+    tmpNum = getRelease();
+    if (tmpNum == -1)
+        return QByteArray();
+    data.release = (uint16_t) tmpNum;
+
     data.unknown13 = 0x0401;
     data.unknown14 = 0x0F00;
     data.unknown15 = 0x0015;
@@ -702,6 +728,11 @@ DU_KEY_ACCESSORS_IMPL(DuSample, LoopEnd,         Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuSample, AmplitudeOscAmp, Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuSample, VolumeMixer2,    Numeric, int, -1)
+
+DU_KEY_ACCESSORS_IMPL(DuSample, Init,            Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuSample, Attack,          Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuSample, Decay,           Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuSample, Release,         Numeric, int, -1)
 
 // Data
 DU_KEY_ACCESSORS_IMPL(DuSample, Data,           BinaryData, QByteArray, QByteArray())

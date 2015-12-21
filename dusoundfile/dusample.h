@@ -79,6 +79,11 @@ public:
     DU_KEY_ACCESSORS(AmplitudeOscAmp, int)
     DU_KEY_ACCESSORS(VolumeMixer2,    int)
 
+    DU_KEY_ACCESSORS(Init,            int)
+    DU_KEY_ACCESSORS(Attack,          int)
+    DU_KEY_ACCESSORS(Decay,           int)
+    DU_KEY_ACCESSORS(Release,         int)
+
     // Data
     DU_KEY_ACCESSORS(Data,            QByteArray)
 };
