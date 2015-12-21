@@ -12,7 +12,7 @@ DU_OBJECT_IMPL(DuInstrumentInfo)
 DuInstrumentInfo::DuInstrumentInfo() :
     DuContainer()
 {
-    addChild(KeyName, new DuString(NAME_CARACT));
+    addChild(KeyNameForDevice, new DuString(NAME_CARACT));
 
     addChild(KeyDreamProgramChange,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
@@ -78,7 +78,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrI
     DuInstrumentInfoPtr instrInfo(new DuInstrumentInfo);
     bool verif = true;
 
-    verif = instrInfo->setName(QString(QByteArray((char *)du_instrInfo.instr_name, NAME_CARACT))) ? verif : false;
+    verif = instrInfo->setNameForDevice(QString(QByteArray((char *)du_instrInfo.instr_name, NAME_CARACT))) ? verif : false;
 
     verif = instrInfo->setDreamProgramChange(du_instrInfo.instr_midi_pc) ? verif : false;
     verif = instrInfo->setMidiControlChange0(du_instrInfo.instr_midi_C0) ? verif : false;
@@ -113,23 +113,23 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrI
 
 DuInstrumentInfoPtr DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
 {
-    QJsonValue jsonName         = jsonInstrInfo[KeyName];
-    QJsonValue jsonProgChange   = jsonInstrInfo[KeyDreamProgramChange];
-    QJsonValue jsonCtrlChange   = jsonInstrInfo[KeyMidiControlChange0];
-    QJsonValue jsonKeyMap       = jsonInstrInfo[KeyKeyMapping];
-    QJsonValue jsonOctave       = jsonInstrInfo[KeyOctave];
-    QJsonValue jsonId           = jsonInstrInfo[KeyID];
-    QJsonValue jsonNoteOff      = jsonInstrInfo[KeyActiveNoteOff];
-    QJsonValue jsonCategory     = jsonInstrInfo[KeyCategory];
-    QJsonValue jsonRelVolume    = jsonInstrInfo[KeyRelativeVolume];
-    QJsonValue jsonType         = jsonInstrInfo[KeyInstrType];
-    QJsonValue jsonUserId       = jsonInstrInfo[KeyUserID];
+    QJsonValue jsonNameForDevice = jsonInstrInfo[KeyNameForDevice];
+    QJsonValue jsonProgChange    = jsonInstrInfo[KeyDreamProgramChange];
+    QJsonValue jsonCtrlChange    = jsonInstrInfo[KeyMidiControlChange0];
+    QJsonValue jsonKeyMap        = jsonInstrInfo[KeyKeyMapping];
+    QJsonValue jsonOctave        = jsonInstrInfo[KeyOctave];
+    QJsonValue jsonId            = jsonInstrInfo[KeyID];
+    QJsonValue jsonNoteOff       = jsonInstrInfo[KeyActiveNoteOff];
+    QJsonValue jsonCategory      = jsonInstrInfo[KeyCategory];
+    QJsonValue jsonRelVolume     = jsonInstrInfo[KeyRelativeVolume];
+    QJsonValue jsonType          = jsonInstrInfo[KeyInstrType];
+    QJsonValue jsonUserId        = jsonInstrInfo[KeyUserID];
 
-    if (        !jsonName.isString()        ||  !jsonProgChange.isDouble()
-            ||  !jsonCtrlChange.isDouble()  ||  !jsonKeyMap.isDouble()
-            ||  !jsonOctave.isDouble()      ||  !jsonId.isDouble()
-            ||  !jsonNoteOff.isDouble()     ||  !jsonCategory.isString()
-            ||  !jsonRelVolume.isDouble()   ||  !jsonType.isDouble()
+    if (        !jsonNameForDevice.isString() ||  !jsonProgChange.isDouble()
+            ||  !jsonCtrlChange.isDouble()    ||  !jsonKeyMap.isDouble()
+            ||  !jsonOctave.isDouble()        ||  !jsonId.isDouble()
+            ||  !jsonNoteOff.isDouble()       ||  !jsonCategory.isString()
+            ||  !jsonRelVolume.isDouble()     ||  !jsonType.isDouble()
             ||  !jsonUserId.isString())
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrumentInfo::fromJson():\n"
@@ -143,7 +143,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
     DuInstrumentInfoPtr instrInfo(new DuInstrumentInfo);
     bool verif = true;
 
-    verif = instrInfo->setName(jsonName.toString()) ? verif : false;
+    verif = instrInfo->setNameForDevice(jsonNameForDevice.toString()) ? verif : false;
 
     verif = instrInfo->setDreamProgramChange(jsonProgChange.toInt()) ? verif : false;
     verif = instrInfo->setMidiControlChange0(jsonCtrlChange.toInt()) ? verif : false;
@@ -178,7 +178,7 @@ bool DuInstrumentInfo::toStruct(s_instr& outStruct) const
     std::memcpy((char *)&(outStruct), QByteArray(size(), 0x00), size());
 
     QByteArray tmpName(NAME_CARACT, (char)0x00);
-    tmpStr = getName();
+    tmpStr = getNameForDevice();
     if (tmpStr.isNull())
         return false;
     tmpName.prepend(tmpStr.toUtf8());
@@ -311,7 +311,7 @@ int DuInstrumentInfo::size() const
 }
 
 
-DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, Name,               String, QString, QString())
+DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, NameForDevice,      String, QString, QString())
 
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, DreamProgramChange, Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, MidiControlChange0, Numeric, int, -1)

@@ -37,7 +37,7 @@ public:
 
     int size() const;
 
-    DU_KEY_ACCESSORS(Name,               QString)
+    DU_KEY_ACCESSORS(NameForDevice,      QString)
 
     DU_KEY_ACCESSORS(DreamProgramChange, int)
     DU_KEY_ACCESSORS(MidiControlChange0, int)

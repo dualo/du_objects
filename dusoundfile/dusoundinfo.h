@@ -26,7 +26,7 @@ public:
     virtual DuObjectConstPtr getChild(const QString &key) const override;
 
 public:
-    DU_KEY_ACCESSORS_IN_CHILD(Name,                 QString)
+    DU_KEY_ACCESSORS_IN_CHILD(NameForDevice,        QString)
     DU_KEY_ACCESSORS_IN_CHILD(DreamProgramChange,   int)
     DU_KEY_ACCESSORS_IN_CHILD(MidiControlChange0,   int)
     DU_KEY_ACCESSORS_IN_CHILD(KeyMapping,           int)
@@ -45,6 +45,8 @@ public:
 
     DU_KEY_ACCESSORS(PresetNum,  int) // editable
     DU_KEY_ACCESSORS(DisplayLed, int)
+
+    DU_KEY_ACCESSORS(Name,       QString)
 
     DU_KEY_ACCESSORS_OBJECT(PresetArray,     DuArray)
 

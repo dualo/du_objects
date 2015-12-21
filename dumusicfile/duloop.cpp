@@ -556,7 +556,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
     }
 
 
-    QString instrName = instrInfo->getName();
+    QString instrName = instrInfo->getNameForDevice();
 
     //TODO: change Dream program change for GM program change when possible
     //current code produces incorrect PCs

@@ -12,6 +12,7 @@
 
 #include "../general/duarray.h"
 #include "../general/dunumeric.h"
+#include "../general/dustring.h"
 
 #include <cstring>
 
@@ -21,6 +22,8 @@ DuSoundInfo::DuSoundInfo()
 
     addChild(KeyPresetNum,       new DuNumeric(0, NUMERIC_DEFAULT_SIZE, FX_NUM_PRESET_INTR, 0));
     addChild(KeyDisplayLed,      new DuNumeric(0xFF, NUMERIC_DEFAULT_SIZE, 0xFF, 0));
+
+    addChild(KeyName,            new DuString(SOUND_NAME_SIZE));
 
     addChild(KeyPresetArray,     new DuArray(FX_NUM_PRESET_INTR));
 
@@ -63,8 +66,9 @@ DuSoundInfoPtr DuSoundInfo::fromBinary(const struct_instr &data)
 
     bool verif = true;
 
-    verif = soundInfo->setPresetNum(data.s_presetnum)       ? verif : false;
-    verif = soundInfo->setDisplayLed(data.s_displayled)     ? verif : false;
+    verif = soundInfo->setPresetNum(data.s_presetnum)   ? verif : false;
+    verif = soundInfo->setDisplayLed(data.s_displayled) ? verif : false;
+    verif = soundInfo->setName(QString::fromUtf8((char*) data.s_complete_name, SOUND_NAME_SIZE)) ? verif : false;
 
     if (!verif)
     {
@@ -235,6 +239,13 @@ QByteArray DuSoundInfo::toBinary(uint32_t sampleAddress, uint8_t nbLayer, int nb
         return QByteArray();
     soundStruct.s_displayled = tmpInt;
 
+    QByteArray tmpName(SOUND_NAME_SIZE, (char)0x00);
+    QString tmpStr = getName();
+    if (tmpStr.isNull())
+        return QByteArray();
+    tmpName.prepend(tmpStr.toUtf8());
+    std::memcpy(soundStruct.s_complete_name, tmpName.constData(), SOUND_NAME_SIZE);
+
     const DuArrayConstPtr &presetArray = getPresetArray();
     if (presetArray == NULL)
         return QByteArray();
@@ -280,7 +291,7 @@ QByteArray DuSoundInfo::toBinary(uint32_t sampleAddress, uint8_t nbLayer, int nb
 
 DuObjectPtr DuSoundInfo::getChild(const QString &key)
 {
-    if (    key == KeyName               ||
+    if (    key == KeyNameForDevice      ||
             key == KeyDreamProgramChange ||
             key == KeyMidiControlChange0 ||
             key == KeyKeyMapping         ||
@@ -311,7 +322,7 @@ DuObjectPtr DuSoundInfo::getChild(const QString &key)
 
 DuObjectConstPtr DuSoundInfo::getChild(const QString &key) const
 {
-    if (    key == KeyName               ||
+    if (    key == KeyNameForDevice      ||
             key == KeyDreamProgramChange ||
             key == KeyMidiControlChange0 ||
             key == KeyKeyMapping         ||
@@ -340,7 +351,7 @@ DuObjectConstPtr DuSoundInfo::getChild(const QString &key) const
     }
 }
 
-DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, Name,               DuInstrumentInfo, InstrumentInfo, QString, QString())
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, NameForDevice,      DuInstrumentInfo, InstrumentInfo, QString, QString())
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, DreamProgramChange, DuInstrumentInfo, InstrumentInfo, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, MidiControlChange0, DuInstrumentInfo, InstrumentInfo, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, KeyMapping,         DuInstrumentInfo, InstrumentInfo, int, -1)
@@ -359,6 +370,8 @@ DU_KEY_ACCESSORS_OBJECT_IMPL(DuSoundInfo, InstrumentInfo,  DuInstrumentInfo)
 
 DU_KEY_ACCESSORS_IMPL(DuSoundInfo, PresetNum,  Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuSoundInfo, DisplayLed, Numeric, int, -1)
+
+DU_KEY_ACCESSORS_IMPL(DuSoundInfo, Name,       String,  QString, QString())
 
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuSoundInfo, PresetArray,     DuArray)
 

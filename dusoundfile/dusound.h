@@ -39,7 +39,7 @@ public:
     QString deviceSerialNumber() const;
     void setDeviceSerialNumber(const QString &deviceSerialNumber);
 
-    DU_KEY_ACCESSORS_IN_CHILD(Name,                 QString)
+    DU_KEY_ACCESSORS_IN_CHILD(NameForDevice,        QString)
     DU_KEY_ACCESSORS_IN_CHILD(DreamProgramChange,   int)
     DU_KEY_ACCESSORS_IN_CHILD(MidiControlChange0,   int)
     DU_KEY_ACCESSORS_IN_CHILD(KeyMapping,           int)
@@ -53,6 +53,8 @@ public:
     DU_KEY_ACCESSORS_IN_CHILD(InstrVersion,         int)
     DU_KEY_ACCESSORS_IN_CHILD(HardInstrVersion,     int)
     DU_KEY_ACCESSORS_IN_CHILD(SoftInstrVersion,     int)
+
+    DU_KEY_ACCESSORS_IN_CHILD(Name,                 QString)
 
     DU_KEY_ACCESSORS_OBJECT(Info,                   DuSoundInfo)
 

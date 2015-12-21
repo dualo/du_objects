@@ -345,7 +345,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
     }
 
 
-    qCDebug(LOG_CAT_DU_OBJECT) << "du-sound" << m3Infos->getName() << "has been successfully parsed";
+    qCDebug(LOG_CAT_DU_OBJECT) << "du-sound" << info->getName() << "has been successfully parsed";
 
     return sound;
 }
@@ -501,7 +501,7 @@ QByteArray DuSound::toBinary() const
 
 DuObjectPtr DuSound::getChild(const QString &key)
 {
-    if (    key == KeyName               ||
+    if (    key == KeyNameForDevice      ||
             key == KeyDreamProgramChange ||
             key == KeyMidiControlChange0 ||
             key == KeyKeyMapping         ||
@@ -514,7 +514,8 @@ DuObjectPtr DuSound::getChild(const QString &key)
             key == KeyInstrType          ||
             key == KeyInstrVersion       ||
             key == KeyHardInstrVersion   ||
-            key == KeySoftInstrVersion)
+            key == KeySoftInstrVersion   ||
+            key == KeyName)
     {
         DuSoundInfoPtr info = getInfo();
         if (info == NULL)
@@ -532,7 +533,7 @@ DuObjectPtr DuSound::getChild(const QString &key)
 
 DuObjectConstPtr DuSound::getChild(const QString &key) const
 {
-    if (    key == KeyName               ||
+    if (    key == KeyNameForDevice      ||
             key == KeyDreamProgramChange ||
             key == KeyMidiControlChange0 ||
             key == KeyKeyMapping         ||
@@ -545,7 +546,8 @@ DuObjectConstPtr DuSound::getChild(const QString &key) const
             key == KeyInstrType          ||
             key == KeyInstrVersion       ||
             key == KeyHardInstrVersion   ||
-            key == KeySoftInstrVersion)
+            key == KeySoftInstrVersion   ||
+            key == KeyName)
     {
         DuSoundInfoConstPtr info = getInfo();
         if (info == NULL)
@@ -601,7 +603,7 @@ void DuSound::setDeviceSerialNumber(const QString &deviceSerialNumber)
     m_deviceSerialNumber = deviceSerialNumber;
 }
 
-DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, Name,               DuSoundInfo, Info, QString, QString())
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, NameForDevice,      DuSoundInfo, Info, QString, QString())
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, DreamProgramChange, DuSoundInfo, Info, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, MidiControlChange0, DuSoundInfo, Info, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, KeyMapping,         DuSoundInfo, Info, int, -1)
@@ -615,6 +617,8 @@ DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, InstrType,          DuSoundInfo, Info, I
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, InstrVersion,       DuSoundInfo, Info, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, HardInstrVersion,   DuSoundInfo, Info, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, SoftInstrVersion,   DuSoundInfo, Info, int, -1)
+
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, Name, DuSoundInfo, Info, QString, QString())
 
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, Info,         DuSoundInfo)
 
