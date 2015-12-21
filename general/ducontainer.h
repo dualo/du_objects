@@ -20,7 +20,7 @@
         if (tmp == NULL) \
             return defaultReturn; \
          \
-        return (type)tmp->get ## dutype(); \
+        return static_cast<type>(tmp->get ## dutype()); \
     } \
     \
     bool className::set ## key(const type &value) \
