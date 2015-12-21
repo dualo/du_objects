@@ -105,11 +105,11 @@ DuSamplePtr DuSample::fromBinary(const dream_ip& dreamIP,
     }
     verif = sample->setUnityNote(unityNote) ? verif : false;
 
-    verif = sample->setLoopStart(loopStartDreamToReadable(dreamSP.loop_start_MSB, dreamSP.loop_start_LSB)) ? verif : false;
+    verif = sample->setLoopStart((int) loopStartDreamToReadable(dreamSP.loop_start_MSB, dreamSP.loop_start_LSB)) ? verif : false;
 
     verif = sample->setVolumeMixer1(volumeDreamToReadable(dreamSP.volume_mixer1)) ? verif : false;
 
-    verif = sample->setLoopEnd(loopEndDreamToReadable(dreamSP.loop_end_MSB, dreamSP.loop_end_LSB)) ? verif : false;
+    verif = sample->setLoopEnd((int) loopEndDreamToReadable(dreamSP.loop_end_MSB, dreamSP.loop_end_LSB)) ? verif : false;
 
     verif = sample->setAmplitudeOscAmp(dreamSP.amplitude_osc_amp) ? verif : false;
     verif = sample->setVolumeMixer2(dreamSP.volume_mixer2) ? verif : false;
@@ -173,7 +173,7 @@ DuSamplePtr DuSample::fromWav(QFile *input)
         return DuSamplePtr();
     }
 
-    unsigned int wavSize = soundFile.frames() * soundFile.channels();
+    qint64 wavSize = soundFile.frames() * soundFile.channels();
 
     // Convert stereo to mono
     if (soundFile.channels() == 2)
@@ -242,10 +242,10 @@ DuSamplePtr DuSample::fromWav(QFile *input)
     }
 
     /***** Checking Error *****/
-    int diff = (int) wavSize - wavFile.size();
+    qint64 diff = wavSize - wavFile.size();
     qCDebug(LOG_CAT_DU_OBJECT) << "Size wav = 0x" << QString::number(wavSize, 16) << "o / File Size = 0x" << QString::number(wavFile.size(), 16) << "o";
 
-    if (diff < (int) (-(wavFile.size() / 2))) //(-(CNT_MAX_FOR_WAV_SIZE*10))
+    if (diff < -(wavFile.size() / 2)) //(-(CNT_MAX_FOR_WAV_SIZE*10))
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "Size error : too far from the end of the file";
     }
@@ -271,7 +271,7 @@ DuSamplePtr DuSample::fromWav(QFile *input)
                                      << "calculated:" << wavSize << "o";
     }
 
-    QByteArray rawData = wavFileData.mid(dataKeywordIndex + 4 + 4, wavSize); // +4 for "data", +4 for size
+    QByteArray rawData = wavFileData.mid(dataKeywordIndex + 4 + 4, (int) wavSize); // +4 for "data", +4 for size
 
     DuSamplePtr sample(new DuSample);
 
@@ -327,7 +327,7 @@ QString DuSample::convertToMono(SndfileHandle &oldSoundFile)
         return QString();
     }
 
-    const int oldNbFrames = oldSoundFile.channels() * oldSoundFile.frames();
+    const qint64 oldNbFrames = oldSoundFile.channels() * oldSoundFile.frames();
     QScopedArrayPointer<double> oldFrames(new double[oldNbFrames]);
     sf_count_t nbFramesRead = oldSoundFile.readf(oldFrames.data(), oldSoundFile.frames());
     if (nbFramesRead != oldSoundFile.frames())
@@ -341,7 +341,7 @@ QString DuSample::convertToMono(SndfileHandle &oldSoundFile)
         return QString();
     }
 
-    const int newNbFrames = newSoundFile.channels() * oldSoundFile.frames();
+    const qint64 newNbFrames = newSoundFile.channels() * oldSoundFile.frames();
     QScopedArrayPointer<double> newFrames(new double[newNbFrames]);
     for (int i = 0; i < oldSoundFile.frames(); ++i)
     {
@@ -463,7 +463,7 @@ int DuSample::normalizeWaveType(int format)
 
     qCDebug(LOG_CAT_DU_OBJECT) << "New format =" << QString::number(newFormat, 16);
 
-    return newFormat;
+    return (int) newFormat;
 }
 
 QByteArray DuSample::ipBinary(uint8_t min_vel, uint8_t max_vel) const
@@ -479,14 +479,14 @@ QByteArray DuSample::ipBinary(uint8_t min_vel, uint8_t max_vel) const
     tmpNum = getStartNote() - 1;
     if (tmpNum == -1)
         return QByteArray();
-    dataStruct.start_note = tmpNum;
+    dataStruct.start_note = (uint8_t) tmpNum;
 
     dataStruct.max_vel = max_vel;
 
     tmpNum = getEndNote();
     if (tmpNum == -1)
         return QByteArray();
-    dataStruct.end_note = tmpNum;
+    dataStruct.end_note = (uint8_t) tmpNum;
 
     return QByteArray((char*)&dataStruct, INSTR_DREAM_IP_SIZE);
 }
@@ -502,22 +502,22 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress, uint32_t sampleOffset) con
     tmpNum = getAddress1();
     if (tmpNum == -1)
         return QByteArray();
-    data.address1 = tmpNum;
+    data.address1 = (uint16_t) tmpNum;
 
     SampleType tmpSampleType = getLoopType();
     if (tmpSampleType == Unknown)
         return QByteArray();
-    data.loopType = (uint16_t)tmpSampleType;
+    data.loopType = (uint16_t) tmpSampleType;
 
     tmpNum = getAddress2();
     if (tmpNum == -1)
         return QByteArray();
-    data.address2 = tmpNum;
+    data.address2 = (uint16_t) tmpNum;
 
     tmpNum = getAddress3();
     if (tmpNum == -1)
         return QByteArray();
-    data.address3 = tmpNum;
+    data.address3 = (uint16_t) tmpNum;
 
     data.unknown1 = 0xB5F0;
     data.unknown2 = 0x0814;
@@ -528,7 +528,7 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress, uint32_t sampleOffset) con
     tmpNum = getVolumeAmplifier();
     if (tmpNum == -1)
         return QByteArray();
-    data.volume_amplifier = tmpNum;
+    data.volume_amplifier = (uint8_t) tmpNum;
 
     data.unknown6 = 0x0081;
 
@@ -541,26 +541,26 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress, uint32_t sampleOffset) con
     if (tmpNum == -1)
         return QByteArray();
     if (tmpNum <= 64)
-        data.coarse_tune = 64 - tmpNum;
+        data.coarse_tune = (uint8_t) (64 - tmpNum);
     else // tmpNum > 64
-        data.coarse_tune = 320 - tmpNum;
+        data.coarse_tune = (uint8_t) (320 - tmpNum);
 
     tmpNum = getLoopStart();
     if (tmpNum == -1)
         return QByteArray();
-    loopStartReadableToDream(tmpNum, data.loop_start_MSB, data.loop_start_LSB);
+    loopStartReadableToDream((uint32_t) tmpNum, data.loop_start_MSB, data.loop_start_LSB);
 
     data.wav_address = wavAddressReadableToDream(sampleAddress, sampleOffset);
 
     tmpNum = volumeReadableToDream(getVolumeMixer1());
     if (tmpNum == -1)
         return QByteArray();
-    data.volume_mixer1 = tmpNum;
+    data.volume_mixer1 = (uint16_t) tmpNum;
 
     tmpNum = getLoopEnd();
     if (tmpNum == -1)
         return QByteArray();
-    loopEndReadableToDream(tmpNum, data.loop_end_MSB, data.loop_end_LSB);
+    loopEndReadableToDream((uint32_t) tmpNum, data.loop_end_MSB, data.loop_end_LSB);
 
     data.unknown7 = 0x7F0E;
     data.unknown8 = 0x06;
@@ -568,12 +568,12 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress, uint32_t sampleOffset) con
     tmpNum = getAmplitudeOscAmp();
     if (tmpNum == -1)
         return QByteArray();
-    data.amplitude_osc_amp = tmpNum;
+    data.amplitude_osc_amp = (uint8_t) tmpNum;
 
     tmpNum = getVolumeMixer2();
     if (tmpNum == -1)
         return QByteArray();
-    data.volume_mixer2 = tmpNum;
+    data.volume_mixer2 = (uint16_t) tmpNum;
 
     tmpNum = getInit();
     if (tmpNum == -1)
@@ -635,7 +635,7 @@ uint32_t DuSample::wavAddressReadableToDream(uint32_t readableValue, uint32_t sa
 
 uint32_t DuSample::loopStartDreamToReadable(uint16_t loopStartMSB, uint16_t loopStartLSB)
 {
-    uint32_t loopStart = (loopStartMSB << 16) | loopStartLSB;
+    uint32_t loopStart = (uint32_t) (loopStartMSB << 16) | (uint32_t) loopStartLSB;
     uint32_t reorderedLoopStart = 0;
     reorderedLoopStart |= ((0x000000FF & loopStart) - 0x00000001) << 24;
     reorderedLoopStart |=  (0x0000FF00 & loopStart) >> 8;
@@ -656,13 +656,13 @@ void DuSample::loopStartReadableToDream(uint32_t readableValue, uint16_t& outLoo
     uint16_t reorderedLoopStart_MSB = (0xFFFF0000 & reorderedLoopStart) >> 16;
     uint16_t reorderedLoopStart_LSB = (0x0000FFFF & reorderedLoopStart);
 
-    outLoopStartMSB = ((0x00FF & reorderedLoopStart_MSB) << 8) | ((0xFF00 & reorderedLoopStart_MSB) >> 8);
-    outLoopStartLSB = ((0x00FF & reorderedLoopStart_LSB) << 8) | ((0xFF00 & reorderedLoopStart_LSB) >> 8);
+    outLoopStartMSB = (uint16_t) ((0x00FF & reorderedLoopStart_MSB) << 8) | (uint16_t) ((0xFF00 & reorderedLoopStart_MSB) >> 8);
+    outLoopStartLSB = (uint16_t) ((0x00FF & reorderedLoopStart_LSB) << 8) | (uint16_t) ((0xFF00 & reorderedLoopStart_LSB) >> 8);
 }
 
 uint32_t DuSample::loopEndDreamToReadable(uint16_t loopEndMSB, uint16_t loopEndLSB)
 {
-    uint32_t loopEnd = (loopEndMSB << 16) | loopEndLSB;
+    uint32_t loopEnd = (uint32_t) (loopEndMSB << 16) | (uint32_t) loopEndLSB;
     uint32_t reorderedLoopEnd = 0;
     reorderedLoopEnd |= (0x000000FF & loopEnd) << 8;
     reorderedLoopEnd |= (0x0000FF00 & loopEnd) << 8;
@@ -683,8 +683,8 @@ void DuSample::loopEndReadableToDream(uint32_t readableValue, uint16_t& outLoopE
     uint16_t reorderedLoopEnd_MSB = (0xFFFF0000 & reorderedLoopEnd) >> 16;
     uint16_t reorderedLoopEnd_LSB = (0x0000FFFF & reorderedLoopEnd);
 
-    outLoopEndMSB = ((0x00FF & reorderedLoopEnd_MSB) << 8) | ((0xFF00 & reorderedLoopEnd_MSB) >> 8);
-    outLoopEndLSB = ((0x00FF & reorderedLoopEnd_LSB) << 8) | ((0xFF00 & reorderedLoopEnd_LSB) >> 8);
+    outLoopEndMSB = (uint16_t) ((0x00FF & reorderedLoopEnd_MSB) << 8) | (uint16_t) ((0xFF00 & reorderedLoopEnd_MSB) >> 8);
+    outLoopEndLSB = (uint16_t) ((0x00FF & reorderedLoopEnd_LSB) << 8) | (uint16_t) ((0xFF00 & reorderedLoopEnd_LSB) >> 8);
 }
 
 int DuSample::volumeDreamToReadable(uint16_t dreamValue)
@@ -697,8 +697,8 @@ int DuSample::volumeDreamToReadable(uint16_t dreamValue)
 
 uint16_t DuSample::volumeReadableToDream(int readableValue)
 {
-    uint8_t volumeRight = readableValue;
-    uint8_t volumeLeft  = readableValue + 1; // +1 for panning
+    uint8_t volumeRight = (uint8_t) readableValue;
+    uint8_t volumeLeft  = (uint8_t) readableValue + 1; // +1 for panning
 
     uint16_t dreamValue = (((uint16_t)volumeRight << 8) & 0xFF00) | ((uint16_t)volumeLeft & 0x00FF);
 
