@@ -1,7 +1,7 @@
 #ifndef DUINSTRUMENTINFO_H
 #define DUINSTRUMENTINFO_H
 
-#include "../../general/ducontainer.h"
+#include "../general/ducontainer.h"
 
 // TODO: Get this from external
 #ifndef SOUNDBANK_STARTADRESS

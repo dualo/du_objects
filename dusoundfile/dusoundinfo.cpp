@@ -1,14 +1,14 @@
 #include "dusoundinfo.h"
 
-#include "../dumusicfile/instrument/duinstrumentinfo.h"
-#include "../dumusicfile/instrument/dupreset.h"
+#include "../instrument/duinstrumentinfo.h"
+#include "../instrument/dupreset.h"
 
-#include "../dumusicfile/instrument/effects/duchorus.h"
-#include "../dumusicfile/instrument/effects/ducompressor.h"
-#include "../dumusicfile/instrument/effects/dudelay.h"
-#include "../dumusicfile/instrument/effects/dudistortion.h"
-#include "../dumusicfile/instrument/effects/duequalizer.h"
-#include "../dumusicfile/instrument/effects/dumixer.h"
+#include "../instrument/effects/duchorus.h"
+#include "../instrument/effects/ducompressor.h"
+#include "../instrument/effects/dudelay.h"
+#include "../instrument/effects/dudistortion.h"
+#include "../instrument/effects/duequalizer.h"
+#include "../instrument/effects/dumixer.h"
 
 #include "../general/duarray.h"
 #include "../general/dunumeric.h"

@@ -5,7 +5,7 @@
 #include "dusample.h"
 #include "dusoundinfo.h"
 
-#include "../dumusicfile/instrument/duinstrumentinfo.h"
+#include "../instrument/duinstrumentinfo.h"
 
 #include "../general/duarray.h"
 #include "../general/dubinarydata.h"

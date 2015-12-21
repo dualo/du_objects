@@ -4,7 +4,7 @@
 
 #include <QJsonObject>
 
-#include "instrument/effects/dumixer.h"
+#include "../instrument/effects/dumixer.h"
 
 #include "../general/dubinarydata.h"
 #include "../general/dunumeric.h"

@@ -1,7 +1,7 @@
 #ifndef DUEFFECTSETTINGS_H
 #define DUEFFECTSETTINGS_H
 
-#include "../../../general/ducontainer.h"
+#include "../../general/ducontainer.h"
 
 
 #define DEFAULT_EFFECTNAME      "off"

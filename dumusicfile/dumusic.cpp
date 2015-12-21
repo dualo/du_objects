@@ -5,9 +5,9 @@
 #include "dusonginfo.h"
 #include "dutrack.h"
 
-#include "instrument/ducontrollers.h"
+#include "../instrument/ducontrollers.h"
 
-#include "instrument/effects/dureverb.h"
+#include "../instrument/effects/dureverb.h"
 
 #include "../general/duarray.h"
 #include "../general/dunumeric.h"

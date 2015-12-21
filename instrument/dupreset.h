@@ -1,7 +1,7 @@
 #ifndef DUPRESET_H
 #define DUPRESET_H
 
-#include "../../general/ducontainer.h"
+#include "../general/ducontainer.h"
 
 
 #define PARAMS_NUMERIC_SIZE     2

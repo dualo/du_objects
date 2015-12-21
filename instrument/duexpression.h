@@ -1,7 +1,7 @@
 #ifndef DUEXPRESSION_H
 #define DUEXPRESSION_H
 
-#include "../../general/ducontainer.h"
+#include "../general/ducontainer.h"
 
 
 #define EXPRESSION_SIZE             12 + 8 + 1

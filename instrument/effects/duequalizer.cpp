@@ -4,8 +4,8 @@
 
 #include <QJsonObject>
 
-#include "../../../general/dunumeric.h"
-#include "../../../general/dustring.h"
+#include "../../general/dunumeric.h"
+#include "../../general/dustring.h"
 
 DU_OBJECT_IMPL(DuEqualizer)
 

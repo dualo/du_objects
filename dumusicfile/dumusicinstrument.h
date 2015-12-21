@@ -1,7 +1,7 @@
 #ifndef DUINSTRUMENT_H
 #define DUINSTRUMENT_H
 
-#include "../../general/ducontainer.h"
+#include "../general/ducontainer.h"
 
 
 DU_OBJECT(DuInstrumentInfo);
@@ -13,18 +13,18 @@ DU_OBJECT(DuEqualizer);
 DU_OBJECT(DuDelay);
 DU_OBJECT(DuChorus);
 
-DU_OBJECT(DuInstrument);
+DU_OBJECT(DuMusicInstrument);
 
-class DuInstrument : public DuContainer
+class DuMusicInstrument : public DuContainer
 {
 public:
-    explicit DuInstrument();
-    ~DuInstrument();
+    explicit DuMusicInstrument();
+    ~DuMusicInstrument();
 
     virtual DuObjectPtr clone() const;
 
-    static DuInstrumentPtr fromDuMusicBinary(const music_instr &du_instr);
-    static DuInstrumentPtr fromJson(const QJsonObject &jsonInstrument);
+    static DuMusicInstrumentPtr fromDuMusicBinary(const music_instr &du_instr);
+    static DuMusicInstrumentPtr fromJson(const QJsonObject &jsonInstrument);
 
     QByteArray toDuMusicBinary() const;
 

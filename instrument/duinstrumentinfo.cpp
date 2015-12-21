@@ -1,7 +1,7 @@
 #include "duinstrumentinfo.h"
 
-#include "../../general/dustring.h"
-#include "../../general/dunumeric.h"
+#include "../general/dustring.h"
+#include "../general/dunumeric.h"
 
 #include <cstring>
 
