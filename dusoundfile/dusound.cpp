@@ -294,7 +294,8 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
 
         DuLayerPtr layer = DuLayer::fromBinary(dreamIPArray.mid(sampleCpt, nbSamples),
                                                dreamSPArray.mid(sampleCpt, nbSamples),
-                                               sampleArray.mid(sampleCpt, nbSamples));
+                                               sampleArray.mid(sampleCpt, nbSamples),
+                                               sampleOffset);
         if (layer != NULL)
         {
             layerArray->append(layer);

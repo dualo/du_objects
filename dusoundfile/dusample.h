@@ -33,7 +33,8 @@ public:
 
     static DuSamplePtr fromBinary(const dream_ip &dreamIP,
                                   const dream_sp &dreamSP,
-                                  const QByteArray& data);
+                                  const QByteArray& data,
+                                  uint32_t sampleOffset);
     static DuSamplePtr fromWav(QFile *input);
 
     static QString convertToMono(SndfileHandle& oldSoundFile);
@@ -46,11 +47,11 @@ public:
     static uint32_t wavAddressDreamToReadable(uint32_t dreamValue, uint32_t sampleOffset);
     static uint32_t wavAddressReadableToDream(uint32_t readableValue, uint32_t sampleOffset);
 
-    static uint32_t loopStartDreamToReadable(uint16_t loopStartMSB, uint16_t loopStartLSB);
-    static void loopStartReadableToDream(uint32_t readableValue, uint16_t& outLoopStartMSB, uint16_t& outLoopStartLSB);
+    static uint32_t loopStartDreamToReadable(uint16_t loopStartMSB, uint16_t loopStartLSB, uint32_t sampleStartAddress);
+    static void loopStartReadableToDream(uint32_t readableValue, uint32_t sampleStartAddress, uint16_t& outLoopStartMSB, uint16_t& outLoopStartLSB);
 
-    static uint32_t loopEndDreamToReadable(uint16_t loopEndMSB, uint16_t loopEndLSB);
-    static void loopEndReadableToDream(uint32_t readableValue, uint16_t& outLoopEndMSB, uint16_t& outLoopEndLSB);
+    static uint32_t loopEndDreamToReadable(uint16_t loopEndMSB, uint16_t loopEndLSB, uint32_t sampleStartAddress);
+    static void loopEndReadableToDream(uint32_t readableValue, uint32_t sampleStartAddress, uint16_t& outLoopEndMSB, uint16_t& outLoopEndLSB);
 
     static int volumeDreamToReadable(uint16_t dreamValue);
     static uint16_t volumeReadableToDream(int readableValue);

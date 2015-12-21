@@ -20,7 +20,8 @@ public:
 
     static DuLayerPtr fromBinary(const QList<dream_ip> &dreamIPArray,
                                  const QVector<dream_sp> &dreamSPArray,
-                                 const QByteArrayList &sampleDataArray);
+                                 const QByteArrayList &sampleDataArray,
+                                 uint32_t sampleOffset);
 
     DU_KEY_ACCESSORS_OBJECT(SampleArray, DuArray)
 

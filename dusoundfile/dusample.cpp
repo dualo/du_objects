@@ -54,7 +54,8 @@ DuObjectPtr DuSample::clone() const
 
 DuSamplePtr DuSample::fromBinary(const dream_ip& dreamIP,
                                  const dream_sp& dreamSP,
-                                 const QByteArray& data)
+                                 const QByteArray& data,
+                                 uint32_t sampleOffset)
 {
     DuSamplePtr sample(new DuSample);
     bool verif = true;
@@ -105,11 +106,13 @@ DuSamplePtr DuSample::fromBinary(const dream_ip& dreamIP,
     }
     verif = sample->setUnityNote(unityNote) ? verif : false;
 
-    verif = sample->setLoopStart((int) loopStartDreamToReadable(dreamSP.loop_start_MSB, dreamSP.loop_start_LSB)) ? verif : false;
+    uint32_t sampleStartAddress = wavAddressDreamToReadable(dreamSP.wav_address, sampleOffset) + sampleOffset;
+
+    verif = sample->setLoopStart((int) loopStartDreamToReadable(dreamSP.loop_start_MSB, dreamSP.loop_start_LSB, sampleStartAddress)) ? verif : false;
 
     verif = sample->setVolumeMixer1(volumeDreamToReadable(dreamSP.volume_mixer1)) ? verif : false;
 
-    verif = sample->setLoopEnd((int) loopEndDreamToReadable(dreamSP.loop_end_MSB, dreamSP.loop_end_LSB)) ? verif : false;
+    verif = sample->setLoopEnd((int) loopEndDreamToReadable(dreamSP.loop_end_MSB, dreamSP.loop_end_LSB, sampleStartAddress)) ? verif : false;
 
     verif = sample->setAmplitudeOscAmp(dreamSP.amplitude_osc_amp) ? verif : false;
     verif = sample->setVolumeMixer2(dreamSP.volume_mixer2) ? verif : false;
@@ -548,7 +551,7 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress, uint32_t sampleOffset) con
     tmpNum = getLoopStart();
     if (tmpNum == -1)
         return QByteArray();
-    loopStartReadableToDream((uint32_t) tmpNum, data.loop_start_MSB, data.loop_start_LSB);
+    loopStartReadableToDream((uint32_t) tmpNum, sampleAddress + sampleOffset, data.loop_start_MSB, data.loop_start_LSB);
 
     data.wav_address = wavAddressReadableToDream(sampleAddress, sampleOffset);
 
@@ -560,7 +563,7 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress, uint32_t sampleOffset) con
     tmpNum = getLoopEnd();
     if (tmpNum == -1)
         return QByteArray();
-    loopEndReadableToDream((uint32_t) tmpNum, data.loop_end_MSB, data.loop_end_LSB);
+    loopEndReadableToDream((uint32_t) tmpNum, sampleAddress + sampleOffset, data.loop_end_MSB, data.loop_end_LSB);
 
     data.unknown7 = 0x7F0E;
     data.unknown8 = 0x06;
@@ -633,7 +636,7 @@ uint32_t DuSample::wavAddressReadableToDream(uint32_t readableValue, uint32_t sa
     return reorderedWavAddress;
 }
 
-uint32_t DuSample::loopStartDreamToReadable(uint16_t loopStartMSB, uint16_t loopStartLSB)
+uint32_t DuSample::loopStartDreamToReadable(uint16_t loopStartMSB, uint16_t loopStartLSB, uint32_t sampleStartAddress)
 {
     uint32_t loopStart = (uint32_t) (loopStartMSB << 16) | (uint32_t) loopStartLSB;
     uint32_t reorderedLoopStart = 0;
@@ -642,16 +645,18 @@ uint32_t DuSample::loopStartDreamToReadable(uint16_t loopStartMSB, uint16_t loop
     reorderedLoopStart |=  (0x00FF0000 & loopStart) >> 8;
     reorderedLoopStart |=  (0xFF000000 & loopStart) >> 8;
 
-    return reorderedLoopStart;
+    return (reorderedLoopStart - SOUNDBANK_STARTADRESS) * 2 - sampleStartAddress;
 }
 
-void DuSample::loopStartReadableToDream(uint32_t readableValue, uint16_t& outLoopStartMSB, uint16_t& outLoopStartLSB)
+void DuSample::loopStartReadableToDream(uint32_t readableValue, uint32_t sampleStartAddress, uint16_t& outLoopStartMSB, uint16_t& outLoopStartLSB)
 {
+    uint32_t readableValueOffseted = ((readableValue + sampleStartAddress) / 2) + SOUNDBANK_STARTADRESS;
+
     uint32_t reorderedLoopStart = 0;
-    reorderedLoopStart |=  (0x000000FF & readableValue) << 0;
-    reorderedLoopStart |=  (0x0000FF00 & readableValue) << 16;
-    reorderedLoopStart |=  (0x00FF0000 & readableValue) << 0;
-    reorderedLoopStart |= ((0xFF000000 & readableValue) + 0x01000000) >> 16;
+    reorderedLoopStart |=  (0x000000FF & readableValueOffseted) << 0;
+    reorderedLoopStart |=  (0x0000FF00 & readableValueOffseted) << 16;
+    reorderedLoopStart |=  (0x00FF0000 & readableValueOffseted) << 0;
+    reorderedLoopStart |= ((0xFF000000 & readableValueOffseted) + 0x01000000) >> 16;
 
     uint16_t reorderedLoopStart_MSB = (0xFFFF0000 & reorderedLoopStart) >> 16;
     uint16_t reorderedLoopStart_LSB = (0x0000FFFF & reorderedLoopStart);
@@ -660,7 +665,7 @@ void DuSample::loopStartReadableToDream(uint32_t readableValue, uint16_t& outLoo
     outLoopStartLSB = (uint16_t) ((0x00FF & reorderedLoopStart_LSB) << 8) | (uint16_t) ((0xFF00 & reorderedLoopStart_LSB) >> 8);
 }
 
-uint32_t DuSample::loopEndDreamToReadable(uint16_t loopEndMSB, uint16_t loopEndLSB)
+uint32_t DuSample::loopEndDreamToReadable(uint16_t loopEndMSB, uint16_t loopEndLSB, uint32_t sampleStartAddress)
 {
     uint32_t loopEnd = (uint32_t) (loopEndMSB << 16) | (uint32_t) loopEndLSB;
     uint32_t reorderedLoopEnd = 0;
@@ -669,16 +674,18 @@ uint32_t DuSample::loopEndDreamToReadable(uint16_t loopEndMSB, uint16_t loopEndL
     reorderedLoopEnd |= (0x00FF0000 & loopEnd) >> 16;
     reorderedLoopEnd |= (0xFF000000 & loopEnd) << 0;
 
-    return reorderedLoopEnd;
+    return (reorderedLoopEnd - SOUNDBANK_STARTADRESS) * 2 - sampleStartAddress;
 }
 
-void DuSample::loopEndReadableToDream(uint32_t readableValue, uint16_t& outLoopEndMSB, uint16_t& outLoopEndLSB)
+void DuSample::loopEndReadableToDream(uint32_t readableValue, uint32_t sampleStartAddress, uint16_t& outLoopEndMSB, uint16_t& outLoopEndLSB)
 {
+    uint32_t readableValueOffseted = ((readableValue + sampleStartAddress) / 2) + SOUNDBANK_STARTADRESS;
+
     uint32_t reorderedLoopEnd = 0;
-    reorderedLoopEnd |= (0x000000FF & readableValue) << 24;
-    reorderedLoopEnd |= (0x0000FF00 & readableValue) << 0;
-    reorderedLoopEnd |= (0x00FF0000 & readableValue) >> 16;
-    reorderedLoopEnd |= (0xFF000000 & readableValue) >> 8;
+    reorderedLoopEnd |= (0x000000FF & readableValueOffseted) << 24;
+    reorderedLoopEnd |= (0x0000FF00 & readableValueOffseted) << 0;
+    reorderedLoopEnd |= (0x00FF0000 & readableValueOffseted) >> 16;
+    reorderedLoopEnd |= (0xFF000000 & readableValueOffseted) >> 8;
 
     uint16_t reorderedLoopEnd_MSB = (0xFFFF0000 & reorderedLoopEnd) >> 16;
     uint16_t reorderedLoopEnd_LSB = (0x0000FFFF & reorderedLoopEnd);
