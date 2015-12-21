@@ -316,10 +316,7 @@ QString DuSample::convertToMono(SndfileHandle &oldSoundFile)
     SF_INSTRUMENT inst;
     if (oldSoundFile.command(SFC_GET_INSTRUMENT, &inst, sizeof(inst)) != SF_TRUE)
     {
-        qCCritical(LOG_CAT_DU_OBJECT)
-                << "Failed to convert to mono\n"
-                << "can't get instrument :" << oldSoundFile.strError();
-        return QString();
+        qCDebug(LOG_CAT_DU_OBJECT) << "No instrument info found";
     }
 
     if (newSoundFile.command(SFC_SET_INSTRUMENT, &inst, sizeof(inst)) != SF_TRUE)
@@ -407,10 +404,7 @@ QString DuSample::convertTo16bits(SndfileHandle &oldSoundFile)
     SF_INSTRUMENT inst;
     if (oldSoundFile.command(SFC_GET_INSTRUMENT, &inst, sizeof(inst)) != SF_TRUE)
     {
-        qCCritical(LOG_CAT_DU_OBJECT)
-                << "Failed to convert to 16 bits\n"
-                << "can't get instrument :" << oldSoundFile.strError();
-        return QString();
+        qCDebug(LOG_CAT_DU_OBJECT) << "No instrument info found";
     }
 
     if (newSoundFile.command(SFC_SET_INSTRUMENT, &inst, sizeof(inst)) != SF_TRUE)
@@ -421,7 +415,8 @@ QString DuSample::convertTo16bits(SndfileHandle &oldSoundFile)
         return QString();
     }
 
-    QScopedArrayPointer<double> frames(new double(oldSoundFile.frames() * oldSoundFile.channels()));
+    const qint64 oldNbFrames = oldSoundFile.channels() * oldSoundFile.frames();
+    QScopedArrayPointer<double> frames(new double[oldNbFrames]);
     sf_count_t nbFramesRead = oldSoundFile.readf(frames.data(), oldSoundFile.frames());
     if (nbFramesRead != oldSoundFile.frames())
     {
