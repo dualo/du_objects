@@ -15,9 +15,10 @@ class DuInstrumentInfo : public DuContainer
 {
 public:
     enum DreamFormat {
+        FORMAT_ERROR = -1,
         NO_FORMAT = 0,
         SDK_3000 = 1,
-        SDK_5000 = 2
+        SDK_5000 = 2,
     };
 
     explicit DuInstrumentInfo();

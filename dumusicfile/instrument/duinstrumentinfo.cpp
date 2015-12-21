@@ -46,7 +46,7 @@ DuInstrumentInfo::DuInstrumentInfo() :
 
     addChild(KeyDreamFormatId,
              new DuNumeric(NO_FORMAT, NUMERIC_DEFAULT_SIZE,
-                           SDK_5000, NO_FORMAT));
+                           SDK_5000, FORMAT_ERROR));
 
     addChild(KeyInstrType,
              new DuNumeric(INSTR_HARMONIC, NUMERIC_DEFAULT_SIZE,
@@ -234,7 +234,7 @@ bool DuInstrumentInfo::toStruct(s_instr& outStruct) const
     outStruct.instr_relvolume = tmpNum;
 
     DreamFormat tmpFormat = getDreamFormatId();
-    if (tmpFormat == NO_FORMAT)
+    if (tmpFormat == FORMAT_ERROR)
         return false;
     outStruct.format_id = (uint8_t)tmpFormat;
 
@@ -327,7 +327,7 @@ DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, Category,           String, QString, QSt
 
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, RelativeVolume,     Numeric, int, -1)
 
-DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, DreamFormatId,      Numeric, DuInstrumentInfo::DreamFormat, NO_FORMAT)
+DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, DreamFormatId,      Numeric, DuInstrumentInfo::DreamFormat, FORMAT_ERROR)
 
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, InstrType,          Numeric, INSTRUMENT_TYPE, NUM_INSTR_TYPE)
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, InstrVersion,       Numeric, int, -1)
