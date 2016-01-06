@@ -30,6 +30,10 @@ DuEffectSet::DuEffectSet() :
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0x01, 0x00));
 
+    addChild(KeyReverbOnOff,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0x01, 0x00));
+
 
     addChild(KeyMultinoteAct,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
@@ -123,6 +127,7 @@ DuEffectSetPtr DuEffectSet::fromDuMusicBinary(const preset_instr &du_preset)
     verif = effectSet->setDistortionOnOff(du_preset.s_distortion_onoff) ? verif : false;
     verif = effectSet->setEqualizerOnOff(du_preset.s_eq_onoff) ? verif : false;
     verif = effectSet->setChorusOnOff(du_preset.s_chorus_onoff) ? verif : false;
+    verif = effectSet->setReverbOnOff(du_preset.s_reverb_onoff) ? verif : false;
 
     verif = effectSet->setMultinoteAct(du_preset.s_multinote_act) ? verif : false;
     verif = effectSet->setMultinote(QByteArray((char *)du_preset.s_multinote, 4)) ? verif : false;
@@ -161,6 +166,7 @@ DuEffectSetPtr DuEffectSet::fromJson(const QJsonObject &jsonEffectSet)
     QJsonValue jsonDistoOnOff           = jsonEffectSet[KeyDistortionOnOff];
     QJsonValue jsonEqualOnOff           = jsonEffectSet[KeyEqualizerOnOff];
     QJsonValue jsonChorusOnOff          = jsonEffectSet[KeyChorusOnOff];
+    QJsonValue jsonReverbOnOff          = jsonEffectSet[KeyReverbOnOff];
 
     QJsonValue jsonMultinoteAct         = jsonEffectSet[KeyMultinoteAct];
     QJsonValue jsonMultinote            = jsonEffectSet[KeyMultinote];
@@ -185,7 +191,8 @@ DuEffectSetPtr DuEffectSet::fromJson(const QJsonObject &jsonEffectSet)
     if (        !jsonComprOnOff.isDouble()
             ||  !jsonDelayOnOff.isDouble()      ||  !jsonDistoOnOff.isDouble()
             ||  !jsonEqualOnOff.isDouble()      ||  !jsonChorusOnOff.isDouble()
-            
+            ||  !jsonReverbOnOff.isDouble()
+
             ||  !jsonMultinoteAct.isDouble()    ||  !jsonMultinote.isString()
             
             ||  !jsonPitch.isDouble()
@@ -215,6 +222,7 @@ DuEffectSetPtr DuEffectSet::fromJson(const QJsonObject &jsonEffectSet)
     verif = effectSet->setDistortionOnOff(jsonDistoOnOff.toInt()) ? verif : false;
     verif = effectSet->setEqualizerOnOff(jsonEqualOnOff.toInt()) ? verif : false;
     verif = effectSet->setChorusOnOff(jsonChorusOnOff.toInt()) ? verif : false;
+    verif = effectSet->setReverbOnOff(jsonReverbOnOff.toInt()) ? verif : false;
 
     verif = effectSet->setMultinoteAct(jsonMultinoteAct.toInt()) ? verif : false;
     verif = effectSet->setMultinote(jsonMultinote.toString().toUtf8()) ? verif : false;
@@ -280,6 +288,11 @@ QByteArray DuEffectSet::toDuMusicBinary() const
     if (tmpNum == -1)
         return QByteArray();
     du_effectset.s_chorus_onoff = tmpNum;
+
+    tmpNum = getReverbOnOff();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_effectset.s_reverb_onoff = tmpNum;
 
 
     tmpNum = getMultinoteAct();
@@ -381,6 +394,7 @@ DU_KEY_ACCESSORS_IMPL(DuEffectSet, DelayOnOff,        Numeric,      int,        
 DU_KEY_ACCESSORS_IMPL(DuEffectSet, DistortionOnOff,   Numeric,      int,        -1)
 DU_KEY_ACCESSORS_IMPL(DuEffectSet, EqualizerOnOff,    Numeric,      int,        -1)
 DU_KEY_ACCESSORS_IMPL(DuEffectSet, ChorusOnOff,       Numeric,      int,        -1)
+DU_KEY_ACCESSORS_IMPL(DuEffectSet, ReverbOnOff,       Numeric,      int,        -1)
 
 DU_KEY_ACCESSORS_IMPL(DuEffectSet, MultinoteAct,      Numeric,      int,        -1)
 DU_KEY_ACCESSORS_IMPL(DuEffectSet, Multinote,         BinaryData,   QByteArray, QByteArray())

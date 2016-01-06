@@ -32,6 +32,7 @@ public:
     DU_KEY_ACCESSORS(DistortionOnOff,   int)
     DU_KEY_ACCESSORS(EqualizerOnOff,    int)
     DU_KEY_ACCESSORS(ChorusOnOff,       int)
+    DU_KEY_ACCESSORS(ReverbOnOff,       int)
 
     DU_KEY_ACCESSORS(MultinoteAct,      int)
     DU_KEY_ACCESSORS(Multinote,         QByteArray)

@@ -55,6 +55,7 @@ public:
 
     DU_KEY_ACCESSORS(Leds,                  QByteArray)
 
+    DU_KEY_ACCESSORS(Swing,                 int)
     DU_KEY_ACCESSORS(Quantification,        int)
 };
 

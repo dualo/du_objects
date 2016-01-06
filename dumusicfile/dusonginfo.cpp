@@ -66,8 +66,13 @@ DuSongInfo::DuSongInfo() :
              new DuBinaryData(NUM_LED_VALUE));
 
 
+    addChild(KeySwing,
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0xFF, 0x00));
+
     addChild(KeyQuantification,
-             new DuNumeric(0x00));
+             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                           0xFF, 0x00));
 }
 
 DuSongInfo::~DuSongInfo()
@@ -117,6 +122,7 @@ DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
 
     verif = songInfo->setReverbPreset(du_song.s_reverb_preset) ? verif : false;
 
+    verif = songInfo->setSwing(du_song.s_swing) ? verif : false;
     verif = songInfo->setQuantification(du_song.s_quantification) ? verif : false;
 
     if (!verif)
@@ -148,6 +154,7 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
     QJsonValue jsonReverbPreset     = jsonSongInfo[KeyReverbPreset];
     QJsonValue jsonLeds             = jsonSongInfo[KeyLeds];
     QJsonValue jsonQuantif          = jsonSongInfo[KeyQuantification];
+    QJsonValue jsonSwing            = jsonSongInfo[KeySwing];
 
     if (        !jsonSongId.isDouble()      ||  !jsonSongName.isString()
             ||  !jsonSongVersion.isDouble()
@@ -158,7 +165,7 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
             ||  !jsonMixer.isObject()       ||  !jsonScale.isDouble()
             ||  !jsonTonality.isDouble()    ||  !jsonTimeSignature.isDouble()
             ||  !jsonLeds.isString()        ||  !jsonReverbPreset.isDouble()
-            ||  !jsonQuantif.isDouble())
+            ||  !jsonQuantif.isDouble()     ||  !jsonSwing.isDouble())
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuSongInfo::fromJson():\n"
@@ -193,6 +200,7 @@ DuSongInfoPtr DuSongInfo::fromJson(const QJsonObject &jsonSongInfo)
 
     verif = songInfo->setReverbPreset(jsonReverbPreset.toInt()) ? verif : false;
 
+    verif = songInfo->setSwing(jsonSwing.toInt()) ? verif : false;
     verif = songInfo->setQuantification(jsonQuantif.toInt()) ? verif : false;
 
     if (!verif)
@@ -249,6 +257,7 @@ DuSongInfoPtr DuSongInfo::fromMidi(const MidiConversionHelper &helper)
 
 //    verif = songInfo->setLeds() ? verif : false;
 
+    verif = songInfo->setSwing(0) ? verif : false;
     verif = songInfo->setQuantification(0) ? verif : false;
 
     if (!verif)
@@ -363,6 +372,11 @@ QByteArray DuSongInfo::toDuMusicBinary() const
     du_songinfo.s_reverb_preset = tmpNum;
 
 
+    tmpNum = getSwing();
+    if (tmpNum == -1)
+        return QByteArray();
+    du_songinfo.s_swing = tmpNum;
+
     tmpNum = getQuantification();
     if (tmpNum == -1)
         return QByteArray();
@@ -413,4 +427,5 @@ DU_KEY_ACCESSORS_IMPL(DuSongInfo, ReverbPreset,          Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuSongInfo, Leds,                  BinaryData, QByteArray, QByteArray())
 
+DU_KEY_ACCESSORS_IMPL(DuSongInfo, Swing,                 Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuSongInfo, Quantification,        Numeric, int, -1)
