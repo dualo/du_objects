@@ -380,6 +380,7 @@ void MidiConversionHelper::setSelectedInstr(int index, int instrumentIndex)
     Q_UNUSED(instrumentIndex);
     //TODO
 //    selectedInstruments[index] = ;
+    Q_UNUSED(instrumentIndex);
 }
 
 
