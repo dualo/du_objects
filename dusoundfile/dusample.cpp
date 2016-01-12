@@ -608,7 +608,8 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress, uint32_t sampleOffset) con
     data.unknown21 = 0x0000;
 
     data.unknown22 = 0x0002;
-    data.unknown23 = 0x00000000;
+
+    data.size_wav = sizeWavReadableToDream(getData().size());
 
     return QByteArray((char*)&data, INSTR_DREAM_SP_SIZE);
 }
@@ -708,6 +709,16 @@ uint16_t DuSample::volumeReadableToDream(int readableValue)
     uint16_t dreamValue = (((uint16_t)volumeRight << 8) & 0xFF00) | ((uint16_t)volumeLeft & 0x00FF);
 
     return dreamValue;
+}
+
+int DuSample::sizeWavDreamToReadable(uint32_t dreamValue)
+{
+    return (int) dreamValue * 2;
+}
+
+uint32_t DuSample::sizeWavReadableToDream(int readableValue)
+{
+    return (uint32_t) readableValue / 2;
 }
 
 // Intrument Parameters

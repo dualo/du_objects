@@ -56,6 +56,9 @@ public:
     static int volumeDreamToReadable(uint16_t dreamValue);
     static uint16_t volumeReadableToDream(int readableValue);
 
+    static int sizeWavDreamToReadable(uint32_t dreamValue);
+    static uint32_t sizeWavReadableToDream(int readableValue);
+
     // Intrument Parameters
     DU_KEY_ACCESSORS(StartNote,       int)
     DU_KEY_ACCESSORS(EndNote,         int)
