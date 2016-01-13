@@ -79,7 +79,8 @@ HEADERS += \
     $$PWD/dusoundfile/dunote.h \
     $$PWD/dusoundfile/dusoundinfo.h \
     $$PWD/dusoundfile/dulayer.h \
-    $$PWD/dusoundfile/dusample.h
+    $$PWD/dusoundfile/dusample.h \
+    $$PWD/general/duboolean.h
 
 SOURCES += \
     $$PWD/du-touch/parameters/instr_mapping.c \
@@ -135,7 +136,8 @@ SOURCES += \
     $$PWD/dusoundfile/dusoundinfo.cpp \
     $$PWD/miditodumusic/duscalemodel.cpp \
     $$PWD/dusoundfile/dulayer.cpp \
-    $$PWD/dusoundfile/dusample.cpp
+    $$PWD/dusoundfile/dusample.cpp \
+    $$PWD/general/duboolean.cpp
     
 DISTFILES += \
     $$PWD/miditodumusic/defaultmaps.json
