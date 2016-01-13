@@ -31,7 +31,8 @@ DuSample::DuSample() :
 
     addChild(KeyLoopStart,       new DuNumeric(0));
 
-    addChild(KeyVolumeMixer1,    new DuNumeric(0xEE, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
+    addChild(KeyVolumeMixer1,    new DuNumeric(0x7F, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
+    addChild(KeyIsOneShot,       new DuNumeric(0x01, NUMERIC_DEFAULT_SIZE, 0x01, 0x00));
 
     addChild(KeyLoopEnd,         new DuNumeric(0));
 
@@ -111,6 +112,7 @@ DuSamplePtr DuSample::fromBinary(const dream_ip& dreamIP,
     verif = sample->setLoopStart((int) loopStartDreamToReadable(dreamSP.loop_start_MSB, dreamSP.loop_start_LSB, sampleStartAddress)) ? verif : false;
 
     verif = sample->setVolumeMixer1(volumeDreamToReadable(dreamSP.volume_mixer1)) ? verif : false;
+    verif = sample->setIsOneShot(isOneShotDreamToReadable(dreamSP.volume_mixer1)) ? verif : false;
 
     verif = sample->setLoopEnd((int) loopEndDreamToReadable(dreamSP.loop_end_MSB, dreamSP.loop_end_LSB, sampleStartAddress)) ? verif : false;
 
@@ -553,7 +555,7 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress, uint32_t sampleOffset) con
 
     data.wav_address = wavAddressReadableToDream(sampleAddress, sampleOffset);
 
-    tmpNum = volumeReadableToDream(getVolumeMixer1());
+    tmpNum = volumeReadableToDream(getVolumeMixer1(), getIsOneShot());
     if (tmpNum == -1)
         return QByteArray();
     data.volume_mixer1 = (uint16_t) tmpNum;
@@ -695,16 +697,23 @@ void DuSample::loopEndReadableToDream(uint32_t readableValue, uint32_t sampleSta
 
 int DuSample::volumeDreamToReadable(uint16_t dreamValue)
 {
-    uint8_t volumeRight = (dreamValue >> 8) & 0xFF;
+    uint8_t volumeRight = (dreamValue >> 9) & 0x7F;
 //    uint8_t volumeLeft  = dreamValue & 0xFF;
 
     return volumeRight;
 }
 
-uint16_t DuSample::volumeReadableToDream(int readableValue)
+int DuSample::isOneShotDreamToReadable(uint16_t dreamValue)
 {
-    uint8_t volumeRight = (uint8_t) readableValue;
-    uint8_t volumeLeft  = (uint8_t) readableValue + 1; // +1 for panning
+    uint8_t isOneShot = (dreamValue >> 8) & 0x01;
+
+    return isOneShot;
+}
+
+uint16_t DuSample::volumeReadableToDream(int volume, int isOneShot)
+{
+    uint8_t volumeRight = (uint8_t) ((volume << 1) | isOneShot);
+    uint8_t volumeLeft  = (uint8_t) ((volume << 1) | 0x01);
 
     uint16_t dreamValue = (((uint16_t)volumeRight << 8) & 0xFF00) | ((uint16_t)volumeLeft & 0x00FF);
 
@@ -739,6 +748,7 @@ DU_KEY_ACCESSORS_IMPL(DuSample, UnityNote,       Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuSample, LoopStart,       Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuSample, VolumeMixer1,    Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuSample, IsOneShot,       Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuSample, LoopEnd,         Numeric, int, -1)
 

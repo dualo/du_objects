@@ -54,7 +54,8 @@ public:
     static void loopEndReadableToDream(uint32_t readableValue, uint32_t sampleStartAddress, uint16_t& outLoopEndMSB, uint16_t& outLoopEndLSB);
 
     static int volumeDreamToReadable(uint16_t dreamValue);
-    static uint16_t volumeReadableToDream(int readableValue);
+    static int isOneShotDreamToReadable(uint16_t dreamValue);
+    static uint16_t volumeReadableToDream(int volume, int isOneShot);
 
     static int sizeWavDreamToReadable(uint32_t dreamValue);
     static uint32_t sizeWavReadableToDream(int readableValue);
@@ -77,6 +78,7 @@ public:
     DU_KEY_ACCESSORS(LoopStart,       int)
 
     DU_KEY_ACCESSORS(VolumeMixer1,    int)
+    DU_KEY_ACCESSORS(IsOneShot,       int)
 
     DU_KEY_ACCESSORS(LoopEnd,         int)
 
