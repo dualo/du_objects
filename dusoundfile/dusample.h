@@ -1,7 +1,7 @@
 #ifndef DUSAMPLE_H
 #define DUSAMPLE_H
 
-#include <du_objects/general/ducontainer.h>
+#include "../general/ducontainer.h"
 
 #include <QFile>
 

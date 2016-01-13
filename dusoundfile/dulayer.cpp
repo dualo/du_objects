@@ -2,8 +2,8 @@
 
 #include "dusample.h"
 
-#include <du_objects/general/duarray.h>
-#include <du_objects/general/dunumeric.h>
+#include "../general/duarray.h"
+#include "../general/dunumeric.h"
 
 DU_OBJECT_IMPL(DuLayer)
 

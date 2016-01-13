@@ -1,7 +1,7 @@
 #include "dusample.h"
 
-#include <du_objects/general/dubinarydata.h>
-#include <du_objects/general/dunumeric.h>
+#include "../general/dubinarydata.h"
+#include "../general/dunumeric.h"
 
 #include <QFile>
 #include <QStandardPaths>

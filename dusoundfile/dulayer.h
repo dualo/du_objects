@@ -1,7 +1,7 @@
 #ifndef DULAYER_H
 #define DULAYER_H
 
-#include <du_objects/general/ducontainer.h>
+#include "../general/ducontainer.h"
 
 #if QT_VERSION < 0x050400
 typedef QList<QByteArray> QByteArrayList;
