@@ -53,6 +53,21 @@ public:
     static uint32_t loopEndDreamToReadable(uint16_t loopEndMSB, uint16_t loopEndLSB, uint32_t sampleStartAddress);
     static void loopEndReadableToDream(uint32_t readableValue, uint32_t sampleStartAddress, uint16_t& outLoopEndMSB, uint16_t& outLoopEndLSB);
 
+    static int initLevelDreamToReadable(uint16_t dreamValue);
+    static uint16_t initReadableToDream(int level);
+
+    static int attackRateDreamToReadable(uint16_t dreamValue);
+    static int attackLevelDreamToReadable(uint16_t dreamValue);
+    static uint16_t attackReadableToDream(int rate, int level);
+
+    static int decayRateDreamToReadable(uint16_t dreamValue);
+    static int decayLevelDreamToReadable(uint16_t dreamValue);
+    static uint16_t decayReadableToDream(int rate, int level);
+
+    static int releaseRateDreamToReadable(uint16_t dreamValue);
+    static int releaseLevelDreamToReadable(uint16_t dreamValue);
+    static uint16_t releaseReadableToDream(int rate, int level);
+
     static int volumeDreamToReadable(uint16_t dreamValue);
     static int isOneShotDreamToReadable(uint16_t dreamValue);
     static uint16_t volumeReadableToDream(int volume, int isOneShot);
@@ -85,10 +100,13 @@ public:
     DU_KEY_ACCESSORS(AmplitudeOscAmp, int)
     DU_KEY_ACCESSORS(VolumeMixer2,    int)
 
-    DU_KEY_ACCESSORS(Init,            int)
-    DU_KEY_ACCESSORS(Attack,          int)
-    DU_KEY_ACCESSORS(Decay,           int)
-    DU_KEY_ACCESSORS(Release,         int)
+    DU_KEY_ACCESSORS(InitLevel,       int)
+    DU_KEY_ACCESSORS(AttackRate,      int)
+    DU_KEY_ACCESSORS(AttackLevel,     int)
+    DU_KEY_ACCESSORS(DecayRate,       int)
+    DU_KEY_ACCESSORS(DecayLevel,      int)
+    DU_KEY_ACCESSORS(ReleaseRate,     int)
+    DU_KEY_ACCESSORS(ReleaseLevel,    int)
 
     // Data
     DU_KEY_ACCESSORS(Data,            QByteArray)

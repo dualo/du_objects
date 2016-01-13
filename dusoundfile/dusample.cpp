@@ -39,10 +39,13 @@ DuSample::DuSample() :
     addChild(KeyAmplitudeOscAmp, new DuNumeric(0x46, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
     addChild(KeyVolumeMixer2,    new DuNumeric(0xEFEF, 2, 0xFFFF, 0x0000));
 
-    addChild(KeyInit,            new DuNumeric(0x7F00, 2, 0xFFFF, 0x0000));
-    addChild(KeyAttack,          new DuNumeric(0x1FE3, 2, 0xFFFF, 0x0000));
-    addChild(KeyDecay,           new DuNumeric(0x5FE3, 2, 0xFFFF, 0x0000));
-    addChild(KeyRelease,         new DuNumeric(0x605A, 2, 0xFFFF, 0x0000));
+    addChild(KeyInitLevel,       new DuNumeric(127, NUMERIC_DEFAULT_SIZE, 127, 0));
+    addChild(KeyAttackRate,      new DuNumeric(99,  NUMERIC_DEFAULT_SIZE, 127, 0));
+    addChild(KeyAttackLevel,     new DuNumeric(63,  NUMERIC_DEFAULT_SIZE, 63,  0));
+    addChild(KeyDecayRate,       new DuNumeric(99,  NUMERIC_DEFAULT_SIZE, 99,  0));
+    addChild(KeyDecayLevel,      new DuNumeric(63,  NUMERIC_DEFAULT_SIZE, 63,  0));
+    addChild(KeyReleaseRate,     new DuNumeric(90,  NUMERIC_DEFAULT_SIZE, 99,  0));
+    addChild(KeyReleaseLevel,    new DuNumeric(0,   NUMERIC_DEFAULT_SIZE, 63,  0));
 
     // Data
     addChild(KeyData,            new DuBinaryData);
@@ -119,10 +122,13 @@ DuSamplePtr DuSample::fromBinary(const dream_ip& dreamIP,
     verif = sample->setAmplitudeOscAmp(dreamSP.amplitude_osc_amp) ? verif : false;
     verif = sample->setVolumeMixer2(dreamSP.volume_mixer2) ? verif : false;
 
-    verif = sample->setInit(dreamSP.init)       ? verif : false;
-    verif = sample->setAttack(dreamSP.attack)   ? verif : false;
-    verif = sample->setDecay(dreamSP.decay)     ? verif : false;
-    verif = sample->setRelease(dreamSP.release) ? verif : false;
+    verif = sample->setInitLevel(initLevelDreamToReadable(dreamSP.init))            ? verif : false;
+    verif = sample->setAttackRate(attackRateDreamToReadable(dreamSP.attack))        ? verif : false;
+    verif = sample->setAttackLevel(attackLevelDreamToReadable(dreamSP.attack))      ? verif : false;
+    verif = sample->setDecayRate(decayRateDreamToReadable(dreamSP.decay))           ? verif : false;
+    verif = sample->setDecayLevel(decayLevelDreamToReadable(dreamSP.decay))         ? verif : false;
+    verif = sample->setReleaseRate(releaseRateDreamToReadable(dreamSP.release))     ? verif : false;
+    verif = sample->setReleaseLevel(releaseLevelDreamToReadable(dreamSP.release))   ? verif : false;
 
     // Data
     verif = sample->setData(data) ? verif : false;
@@ -578,22 +584,22 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress, uint32_t sampleOffset) con
         return QByteArray();
     data.volume_mixer2 = (uint16_t) tmpNum;
 
-    tmpNum = getInit();
+    tmpNum = initReadableToDream(getInitLevel());
     if (tmpNum == -1)
         return QByteArray();
     data.init = (uint16_t) tmpNum;
 
-    tmpNum = getAttack();
+    tmpNum = attackReadableToDream(getAttackRate(), getAttackLevel());
     if (tmpNum == -1)
         return QByteArray();
     data.attack = (uint16_t) tmpNum;
 
-    tmpNum = getDecay();
+    tmpNum = decayReadableToDream(getDecayRate(), getDecayLevel());
     if (tmpNum == -1)
         return QByteArray();
     data.decay = (uint16_t) tmpNum;
 
-    tmpNum = getRelease();
+    tmpNum = releaseReadableToDream(getReleaseRate(), getReleaseLevel());
     if (tmpNum == -1)
         return QByteArray();
     data.release = (uint16_t) tmpNum;
@@ -695,6 +701,83 @@ void DuSample::loopEndReadableToDream(uint32_t readableValue, uint32_t sampleSta
     outLoopEndLSB = (uint16_t) ((0x00FF & reorderedLoopEnd_LSB) << 8) | (uint16_t) ((0xFF00 & reorderedLoopEnd_LSB) >> 8);
 }
 
+int DuSample::initLevelDreamToReadable(uint16_t dreamValue)
+{
+    return qFromBigEndian(dreamValue);
+}
+
+uint16_t DuSample::initReadableToDream(int level)
+{
+    return qToBigEndian((uint16_t) level);
+}
+
+int DuSample::attackRateDreamToReadable(uint16_t dreamValue)
+{
+    return (qFromBigEndian(dreamValue) >> 8) & 0x7F;
+}
+
+int DuSample::attackLevelDreamToReadable(uint16_t dreamValue)
+{
+    uint8_t LSB = ((qFromBigEndian(dreamValue) >> 8) >> 7) & 0x01;
+    uint8_t MSB = qFromBigEndian(dreamValue) & 0x1F;
+
+    return (LSB | (MSB << 1)) & 0xFF;
+}
+
+uint16_t DuSample::attackReadableToDream(int rate, int level)
+{
+    uint8_t LSB = ((level >> 1) & 0x1F);
+    uint8_t MSB = ((level << 7) & 0x80) | (rate & 0x7F);
+
+    return qToBigEndian((uint16_t) (((uint16_t) MSB << 8) | LSB));
+}
+
+int DuSample::decayRateDreamToReadable(uint16_t dreamValue)
+{
+    return (qFromBigEndian(dreamValue) >> 8) & 0x7F;
+}
+
+int DuSample::decayLevelDreamToReadable(uint16_t dreamValue)
+{
+    uint8_t LSB = ((qFromBigEndian(dreamValue) >> 8) >> 7) & 0x01;
+    uint8_t MSB = qFromBigEndian(dreamValue) & 0x1F;
+
+    return (LSB | (MSB << 1)) & 0xFF;
+}
+
+uint16_t DuSample::decayReadableToDream(int rate, int level)
+{
+    uint8_t code = level == 0 ? 4 : 2;
+
+    uint8_t LSB = ((code << 5) & 0xE0) | ((level >> 1) & 0x1F);
+    uint8_t MSB = ((level << 7) & 0x80) | (rate & 0x7F);
+
+    return qToBigEndian((uint16_t) (((uint16_t) MSB << 8) | LSB));
+}
+
+int DuSample::releaseRateDreamToReadable(uint16_t dreamValue)
+{
+    return (qFromBigEndian(dreamValue) >> 8) & 0x7F;
+}
+
+int DuSample::releaseLevelDreamToReadable(uint16_t dreamValue)
+{
+    uint8_t LSB = ((qFromBigEndian(dreamValue) >> 8) >> 7) & 0x01;
+    uint8_t MSB = qFromBigEndian(dreamValue) & 0x1F;
+
+    return (LSB | (MSB << 1)) & 0xFF;
+}
+
+uint16_t DuSample::releaseReadableToDream(int rate, int level)
+{
+    uint8_t code = 3;
+
+    uint8_t LSB = ((code << 5) & 0x70) | ((level >> 1) & 0x1F);
+    uint8_t MSB = ((level << 7) & 0x80) | (rate & 0x7F);
+
+    return qToBigEndian((uint16_t) (((uint16_t) MSB << 8) | LSB));
+}
+
 int DuSample::volumeDreamToReadable(uint16_t dreamValue)
 {
     uint8_t volumeRight = (dreamValue >> 9) & 0x7F;
@@ -755,10 +838,13 @@ DU_KEY_ACCESSORS_IMPL(DuSample, LoopEnd,         Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuSample, AmplitudeOscAmp, Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuSample, VolumeMixer2,    Numeric, int, -1)
 
-DU_KEY_ACCESSORS_IMPL(DuSample, Init,            Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuSample, Attack,          Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuSample, Decay,           Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuSample, Release,         Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuSample, InitLevel,       Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuSample, AttackRate,      Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuSample, AttackLevel,     Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuSample, DecayRate,       Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuSample, DecayLevel,      Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuSample, ReleaseRate,     Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuSample, ReleaseLevel,    Numeric, int, -1)
 
 // Data
 DU_KEY_ACCESSORS_IMPL(DuSample, Data,           BinaryData, QByteArray, QByteArray())
