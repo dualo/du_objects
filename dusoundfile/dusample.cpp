@@ -1,6 +1,7 @@
 #include "dusample.h"
 
 #include "../general/dubinarydata.h"
+#include "../general/duboolean.h"
 #include "../general/dunumeric.h"
 
 #include <QFile>
@@ -32,7 +33,7 @@ DuSample::DuSample() :
     addChild(KeyLoopStart,       new DuNumeric(0));
 
     addChild(KeyVolumeMixer1,    new DuNumeric(0x7F, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
-    addChild(KeyIsOneShot,       new DuNumeric(0x01, NUMERIC_DEFAULT_SIZE, 0x01, 0x00));
+    addChild(KeyIsOneShot,       new DuBoolean(true));
 
     addChild(KeyLoopEnd,         new DuNumeric(0));
 
@@ -786,16 +787,16 @@ int DuSample::volumeDreamToReadable(uint16_t dreamValue)
     return volumeRight;
 }
 
-int DuSample::isOneShotDreamToReadable(uint16_t dreamValue)
+bool DuSample::isOneShotDreamToReadable(uint16_t dreamValue)
 {
     uint8_t isOneShot = (dreamValue >> 8) & 0x01;
 
-    return isOneShot;
+    return isOneShot == 1;
 }
 
-uint16_t DuSample::volumeReadableToDream(int volume, int isOneShot)
+uint16_t DuSample::volumeReadableToDream(int volume, bool isOneShot)
 {
-    uint8_t volumeRight = (uint8_t) ((volume << 1) | isOneShot);
+    uint8_t volumeRight = (uint8_t) ((volume << 1) | (isOneShot ? 1 : 0));
     uint8_t volumeLeft  = (uint8_t) ((volume << 1) | 0x01);
 
     uint16_t dreamValue = (((uint16_t)volumeRight << 8) & 0xFF00) | ((uint16_t)volumeLeft & 0x00FF);
@@ -831,7 +832,7 @@ DU_KEY_ACCESSORS_IMPL(DuSample, UnityNote,       Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuSample, LoopStart,       Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuSample, VolumeMixer1,    Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuSample, IsOneShot,       Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuSample, IsOneShot,       Boolean, bool, false)
 
 DU_KEY_ACCESSORS_IMPL(DuSample, LoopEnd,         Numeric, int, -1)
 

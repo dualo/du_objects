@@ -69,8 +69,8 @@ public:
     static uint16_t releaseReadableToDream(int rate, int level);
 
     static int volumeDreamToReadable(uint16_t dreamValue);
-    static int isOneShotDreamToReadable(uint16_t dreamValue);
-    static uint16_t volumeReadableToDream(int volume, int isOneShot);
+    static bool isOneShotDreamToReadable(uint16_t dreamValue);
+    static uint16_t volumeReadableToDream(int volume, bool isOneShot);
 
     static int sizeWavDreamToReadable(uint32_t dreamValue);
     static uint32_t sizeWavReadableToDream(int readableValue);
@@ -93,7 +93,7 @@ public:
     DU_KEY_ACCESSORS(LoopStart,       int)
 
     DU_KEY_ACCESSORS(VolumeMixer1,    int)
-    DU_KEY_ACCESSORS(IsOneShot,       int)
+    DU_KEY_ACCESSORS(IsOneShot,       bool)
 
     DU_KEY_ACCESSORS(LoopEnd,         int)
 
