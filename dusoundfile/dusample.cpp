@@ -27,6 +27,8 @@ DuSample::DuSample() :
 
     addChild(KeyVolumeAmplifier, new DuNumeric(0xFF, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
 
+    addChild(KeyPitchShifted,    new DuBoolean(true));
+
     addChild(KeyFineTune,        new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 100, 0x00));
     addChild(KeyUnityNote,       new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
 
@@ -76,6 +78,8 @@ DuSamplePtr DuSample::fromBinary(const dream_ip& dreamIP,
     verif = sample->setAddress3(dreamSP.address3) ? verif : false;
 
     verif = sample->setVolumeAmplifier(dreamSP.volume_amplifier) ? verif : false;
+
+    verif = sample->setPitchShifted(dreamSP.unknown6 == 0x0081);
 
     int convertedFineTune = -1;
     for (int i = 0; i < 100; ++i)
@@ -540,7 +544,7 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress, uint32_t sampleOffset) con
         return QByteArray();
     data.volume_amplifier = (uint8_t) tmpNum;
 
-    data.unknown6 = 0x0081;
+    data.unknown6 = getPitchShifted() ? 0x0081 : 0x00E1;
 
     tmpNum = getFineTune();
     if (tmpNum == -1 || tmpNum >= 100)
@@ -825,6 +829,8 @@ DU_KEY_ACCESSORS_IMPL(DuSample, Address2,        Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuSample, Address3,        Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuSample, VolumeAmplifier, Numeric, int, -1)
+
+DU_KEY_ACCESSORS_IMPL(DuSample, PitchShifted,    Boolean, bool, false)
 
 DU_KEY_ACCESSORS_IMPL(DuSample, FineTune,        Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuSample, UnityNote,       Numeric, int, -1)

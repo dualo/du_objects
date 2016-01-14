@@ -87,6 +87,8 @@ public:
 
     DU_KEY_ACCESSORS(VolumeAmplifier, int)
 
+    DU_KEY_ACCESSORS(PitchShifted,    bool)
+
     DU_KEY_ACCESSORS(FineTune,        int)
     DU_KEY_ACCESSORS(UnityNote,       int)
 
