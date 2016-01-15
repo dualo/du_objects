@@ -163,6 +163,7 @@ DuReverbPtr DuReverb::fromJson(const QJsonObject &jsonReverb)
 QByteArray DuReverb::toDuMusicBinary() const
 {
     FX_reverb du_reverb;
+    std::memset((char*)&du_reverb, 0, size());
 
     QString tmpStr;
     int tmpNum = 0;

@@ -269,8 +269,7 @@ QByteArray DuEffectSet::toDuMusicBinary() const
 
     int tmpNum = 0;
 
-    QByteArray tmpClear(size(), (char)0x00);
-    std::memcpy((char *)&(du_effectset) + EFFECTSET_PRESET_OFFSET, tmpClear.data(), size());
+    std::memset((char*)&du_effectset + EFFECTSET_PRESET_OFFSET, 0, size());
 
 
     tmpNum = getCompressorOnOff();

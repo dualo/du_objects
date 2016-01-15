@@ -484,7 +484,7 @@ QByteArray DuSample::ipBinary(uint8_t min_vel, uint8_t max_vel) const
 {
     dream_ip dataStruct;
 
-    std::memcpy((char*)&dataStruct, QByteArray(INSTR_DREAM_IP_SIZE, 0x00), INSTR_DREAM_IP_SIZE);
+    std::memset((char*)&dataStruct, 0, INSTR_DREAM_IP_SIZE);
 
     int tmpNum = 0;
 
@@ -509,7 +509,7 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress, uint32_t sampleOffset) con
 {
     dream_sp data;
 
-    std::memcpy((char*)&data, QByteArray(INSTR_DREAM_SP_SIZE, 0x00), INSTR_DREAM_SP_SIZE);
+    std::memset((char*)&data, 0, INSTR_DREAM_SP_SIZE);
 
     int tmpNum = 0;
 

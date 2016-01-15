@@ -49,6 +49,7 @@ DuNotePtr DuNote::fromBinary(const s_note &data)
 QByteArray DuNote::toDuMusicBinary() const
 {
     s_note data;
+    std::memset((char*)&data, 0, size());
 
     QString tmpStr;
     int tmpNum = 0;

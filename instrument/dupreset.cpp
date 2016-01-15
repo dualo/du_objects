@@ -147,8 +147,7 @@ QByteArray DuPreset::toDuMusicBinary() const
     QByteArray tmpPreset;
     tmpPreset.clear();
 
-    QByteArray tmpClear(size(), (char)0x00);
-    std::memcpy((char *)&(du_preset), tmpClear.data(), size());
+    std::memset((char*)&du_preset, 0, size());
 
 
     const DuExpressionConstPtr &expression = getExpression();

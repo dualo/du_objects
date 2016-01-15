@@ -134,6 +134,7 @@ DuDelayPtr DuDelay::fromJson(const QJsonObject &jsonDelay)
 QByteArray DuDelay::toDuMusicBinary() const
 {
     FX_delay du_delay;
+    std::memset((char*)&du_delay, 0, size());
 
     QString tmpStr;
     int tmpNum = 0;

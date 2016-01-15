@@ -222,7 +222,7 @@ QByteArray DuSoundInfo::toBinary(uint32_t sampleAddress, uint8_t nbLayer, int nb
     int tmpInt;
 
     struct_instr soundStruct;
-    std::memcpy((char*)&soundStruct, QByteArray(size(), 0), size());
+    std::memset((char*)&soundStruct, 0, size());
 
     const DuInstrumentInfoConstPtr &m3infos = getInstrumentInfo();
     if (m3infos == NULL)

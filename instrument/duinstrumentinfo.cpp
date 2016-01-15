@@ -175,7 +175,7 @@ bool DuInstrumentInfo::toStruct(s_instr& outStruct) const
     QString tmpStr;
     int tmpNum = 0;
 
-    std::memcpy((char *)&(outStruct), QByteArray(size(), 0x00), size());
+    std::memset((char*)&outStruct, 0, size());
 
     QByteArray tmpName(NAME_CARACT, (char)0x00);
     tmpStr = getNameForDevice();

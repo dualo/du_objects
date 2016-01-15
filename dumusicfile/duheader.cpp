@@ -146,8 +146,7 @@ QByteArray DuHeader::toDuMusicBinary() const
     QString tmpStr;
     int tmpNum = 0;
 
-    QByteArray tmpClear(MUSIC_SONG_SIZE, (char)0x00);
-    std::memcpy((char *)&(du_header), tmpClear.data(), MUSIC_SONG_SIZE);
+    std::memset((char*)&du_header, 0, MUSIC_SONG_SIZE);
 
     tmpNum = getFileVersion();
     if (tmpNum == -1)
@@ -155,7 +154,7 @@ QByteArray DuHeader::toDuMusicBinary() const
     du_header.s_version_music = tmpNum;
 
 
-    tmpClear = QByteArray(HEADER_NAME_SIZE, char(0x00));
+    QByteArray tmpClear(HEADER_NAME_SIZE, char(0x00));
 
     tmpArray = tmpClear;
     tmpStr = getOriginalSerialNumber();

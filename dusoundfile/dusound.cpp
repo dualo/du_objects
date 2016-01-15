@@ -410,6 +410,7 @@ QByteArray DuSound::toBinary() const
 
     // HEADER
     s_instr_header soundHeader;
+    std::memset((char*)&soundHeader, 0, INSTR_HEADER_SIZE);
 
     soundHeader.KW_INST = 0x54534E49;
     soundHeader.KW_META = 0x4154454D;

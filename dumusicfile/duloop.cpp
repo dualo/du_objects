@@ -412,8 +412,7 @@ QByteArray DuLoop::toDuMusicBinary() const
 
     int tmpNum = 0;
 
-    QByteArray tmpClear(size(), (char)0x00);
-    std::memcpy((char *)&(du_loop), tmpClear.data(), size());
+    std::memset((char*)&du_loop, 0, size());
 
 
     const DuMusicInstrumentConstPtr &instrument = getInstrument();

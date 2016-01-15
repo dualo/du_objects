@@ -244,6 +244,7 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
 QByteArray DuEvent::toDuMusicBinary() const
 {
     music_sample du_sample;
+    std::memset((char*)&du_sample, 0, size());
 
     int tmpNum = 0;
     int tmpKbrd = 0;
