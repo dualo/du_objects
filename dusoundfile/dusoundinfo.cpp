@@ -217,7 +217,7 @@ DuSoundInfoPtr DuSoundInfo::fromBinary(const struct_instr &data)
     return soundInfo;
 }
 
-QByteArray DuSoundInfo::toBinary(uint32_t sampleAddress, uint8_t nbLayer, int nbSamples, uint32_t sampleSize) const
+QByteArray DuSoundInfo::toBinary(uint8_t nbLayer, int nbSamples, uint32_t sampleSize) const
 {
     int tmpInt;
 
@@ -227,7 +227,7 @@ QByteArray DuSoundInfo::toBinary(uint32_t sampleAddress, uint8_t nbLayer, int nb
     const DuInstrumentInfoConstPtr &m3infos = getInstrumentInfo();
     if (m3infos == NULL)
         return QByteArray();
-    std::memcpy((char*)&(soundStruct.s_instrument), m3infos->toBinary(sampleAddress, nbLayer, nbSamples, sampleSize).constData(), m3infos->size());
+    std::memcpy((char*)&(soundStruct.s_instrument), m3infos->toBinary(nbLayer, nbSamples, sampleSize).constData(), m3infos->size());
 
     tmpInt = getPresetNum();
     if (tmpInt == -1)

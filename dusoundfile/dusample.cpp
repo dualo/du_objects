@@ -61,8 +61,7 @@ DuObjectPtr DuSample::clone() const
 
 DuSamplePtr DuSample::fromBinary(const dream_ip& dreamIP,
                                  const dream_sp& dreamSP,
-                                 const QByteArray& data,
-                                 uint32_t sampleOffset)
+                                 const QByteArray& data)
 {
     DuSamplePtr sample(new DuSample);
     bool verif = true;
@@ -115,7 +114,7 @@ DuSamplePtr DuSample::fromBinary(const dream_ip& dreamIP,
     }
     verif = sample->setUnityNote(unityNote) ? verif : false;
 
-    uint32_t sampleStartAddress = wavAddressDreamToReadable(dreamSP.wav_address, sampleOffset) + sampleOffset;
+    uint32_t sampleStartAddress = wavAddressDreamToReadable(dreamSP.wav_address);
 
     verif = sample->setLoopStart((int) loopStartDreamToReadable(dreamSP.loop_start_MSB, dreamSP.loop_start_LSB, sampleStartAddress)) ? verif : false;
 
@@ -505,7 +504,7 @@ QByteArray DuSample::ipBinary(uint8_t min_vel, uint8_t max_vel) const
     return QByteArray((char*)&dataStruct, INSTR_DREAM_IP_SIZE);
 }
 
-QByteArray DuSample::spBinary(uint32_t sampleAddress, uint32_t sampleOffset) const
+QByteArray DuSample::spBinary(uint32_t sampleAddress) const
 {
     dream_sp data;
 
@@ -562,9 +561,9 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress, uint32_t sampleOffset) con
     tmpNum = getLoopStart();
     if (tmpNum == -1)
         return QByteArray();
-    loopStartReadableToDream((uint32_t) tmpNum, sampleAddress + sampleOffset, data.loop_start_MSB, data.loop_start_LSB);
+    loopStartReadableToDream((uint32_t) tmpNum, sampleAddress, data.loop_start_MSB, data.loop_start_LSB);
 
-    data.wav_address = wavAddressReadableToDream(sampleAddress, sampleOffset);
+    data.wav_address = wavAddressReadableToDream(sampleAddress);
 
     tmpNum = volumeReadableToDream(getVolumeMixer1(), getIsOneShot());
     if (tmpNum == -1)
@@ -574,7 +573,7 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress, uint32_t sampleOffset) con
     tmpNum = getLoopEnd();
     if (tmpNum == -1)
         return QByteArray();
-    loopEndReadableToDream((uint32_t) tmpNum, sampleAddress + sampleOffset, data.loop_end_MSB, data.loop_end_LSB);
+    loopEndReadableToDream((uint32_t) tmpNum, sampleAddress, data.loop_end_MSB, data.loop_end_LSB);
 
     data.unknown7 = 0x7F0E;
     data.unknown8 = 0x06;
@@ -627,19 +626,19 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress, uint32_t sampleOffset) con
     return QByteArray((char*)&data, INSTR_DREAM_SP_SIZE);
 }
 
-uint32_t DuSample::wavAddressDreamToReadable(uint32_t dreamValue, uint32_t sampleOffset)
+uint32_t DuSample::wavAddressDreamToReadable(uint32_t dreamValue)
 {
     uint32_t reorderedWavAddress = 0;
     reorderedWavAddress |= (0x000000FF & dreamValue) << 0;
     reorderedWavAddress |= (0x0000FF00 & dreamValue) << 16;
     reorderedWavAddress |= (0x00FF0000 & dreamValue) >> 8;
     reorderedWavAddress |= (0xFF000000 & dreamValue) >> 8;
-    return (reorderedWavAddress - SOUNDBANK_STARTADRESS) * 2 - sampleOffset;
+    return (reorderedWavAddress - SOUNDBANK_STARTADRESS) * 2;
 }
 
-uint32_t DuSample::wavAddressReadableToDream(uint32_t readableValue, uint32_t sampleOffset)
+uint32_t DuSample::wavAddressReadableToDream(uint32_t readableValue)
 {
-    uint32_t tmpNum = ((readableValue + sampleOffset) / 2) + SOUNDBANK_STARTADRESS;
+    uint32_t tmpNum = (readableValue / 2) + SOUNDBANK_STARTADRESS;
     uint32_t reorderedWavAddress = 0;
     reorderedWavAddress |= (0x000000FF & tmpNum) << 0;
     reorderedWavAddress |= (0x0000FF00 & tmpNum) << 8;

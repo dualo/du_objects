@@ -3,11 +3,6 @@
 
 #include "../general/ducontainer.h"
 
-// TODO: Get this from external
-#ifndef SOUNDBANK_STARTADRESS
-#define SOUNDBANK_STARTADRESS 0x10000
-#endif
-
 
 DU_OBJECT(DuInstrumentInfo);
 
@@ -31,10 +26,7 @@ public:
 
     bool toStruct(s_instr& outStruct) const;
     QByteArray toDuMusicBinary() const;
-    QByteArray toBinary(uint32_t sampleAddress, uint8_t nbLayer, int nbSamples, uint32_t sampleSize) const;
-
-    static uint32_t sampleAddressDreamToReadable(uint32_t dreamValue);
-    static uint32_t sampleAddressReadableToDream(uint32_t readableValue);
+    QByteArray toBinary(uint8_t nbLayer, int nbSamples, uint32_t sampleSize) const;
 
     int size() const;
 

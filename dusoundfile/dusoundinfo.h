@@ -20,7 +20,7 @@ public:
 
     static DuSoundInfoPtr fromBinary(const struct_instr& data);
 
-    QByteArray toBinary(uint32_t sampleAddress, uint8_t nbLayer, int nbSamples, uint32_t sampleSize) const;
+    QByteArray toBinary(uint8_t nbLayer, int nbSamples, uint32_t sampleSize) const;
 
     virtual DuObjectPtr getChild(const QString &key) override;
     virtual DuObjectConstPtr getChild(const QString &key) const override;

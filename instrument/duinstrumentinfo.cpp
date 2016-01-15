@@ -273,15 +273,13 @@ QByteArray DuInstrumentInfo::toDuMusicBinary() const
 }
 
 
-QByteArray DuInstrumentInfo::toBinary(uint32_t sampleAddress, uint8_t nbLayer, int nbSamples, uint32_t sampleSize) const
+QByteArray DuInstrumentInfo::toBinary(uint8_t nbLayer, int nbSamples, uint32_t sampleSize) const
 {
     s_instr du_instrumentinfo;
     if (!toStruct(du_instrumentinfo))
     {
         return QByteArray();
     }
-
-    du_instrumentinfo.sample_address = sampleAddressReadableToDream(sampleAddress);
 
     du_instrumentinfo.nb_layer = nbLayer;
 
@@ -293,17 +291,6 @@ QByteArray DuInstrumentInfo::toBinary(uint32_t sampleAddress, uint8_t nbLayer, i
 
     return QByteArray((char *)&(du_instrumentinfo), size());
 }
-
-uint32_t DuInstrumentInfo::sampleAddressDreamToReadable(uint32_t dreamValue)
-{
-    return (dreamValue - SOUNDBANK_STARTADRESS) * 2;
-}
-
-uint32_t DuInstrumentInfo::sampleAddressReadableToDream(uint32_t readableValue)
-{
-    return (readableValue / 2) + SOUNDBANK_STARTADRESS;
-}
-
 
 int DuInstrumentInfo::size() const
 {

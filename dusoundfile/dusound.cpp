@@ -163,8 +163,6 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
         return DuSoundPtr();
     }
 
-    uint32_t sampleOffset = DuInstrumentInfo::sampleAddressDreamToReadable(soundStruct.s_instrument.sample_address);
-
     int nbLayers = soundStruct.s_instrument.nb_layer;
 
     QList<uint8_t> nbSamplesPerLayerArray;
@@ -230,7 +228,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
     {
         const dream_sp& currentSampleParam = dreamSPArray[i];
 
-        int currentWavAddress = (int) DuSample::wavAddressDreamToReadable(currentSampleParam.wav_address, sampleOffset);
+        int currentWavAddress = (int) DuSample::wavAddressDreamToReadable(currentSampleParam.wav_address);
 
         int sampleSize = DuSample::sizeWavDreamToReadable(currentSampleParam.size_wav);
         if (sampleSize <= 0)
@@ -267,8 +265,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
 
         DuLayerPtr layer = DuLayer::fromBinary(dreamIPArray.mid(sampleCpt, nbSamples),
                                                dreamSPArray.mid(sampleCpt, nbSamples),
-                                               sampleArray.mid(sampleCpt, nbSamples),
-                                               sampleOffset);
+                                               sampleArray.mid(sampleCpt, nbSamples));
         if (layer != NULL)
         {
             layerArray->append(layer);
@@ -342,8 +339,6 @@ QByteArray DuSound::toBinary() const
 {
     QByteArray data;
 
-    uint32_t sampleOffset = 0;
-
     const DuArrayConstPtr& layerArray = getLayerArray();
     if (layerArray == NULL)
         return QByteArray();
@@ -400,7 +395,7 @@ QByteArray DuSound::toBinary() const
                 return QByteArray();
 
             dreamIPData += sample->ipBinary(layer->getMinVelocity() - 1, layer->getMaxVelocity());
-            dreamSPData += sample->spBinary(sampleAddress, sampleOffset);
+            dreamSPData += sample->spBinary(sampleAddress);
             dreamSamplesData += sample->getData();
 
             sampleAddress += sample->getData().size();
@@ -458,7 +453,7 @@ QByteArray DuSound::toBinary() const
     if (info == NULL)
         return QByteArray();
 
-    data += info->toBinary(sampleOffset, nbLayer, totalNbSamples, totalSampleSize);
+    data += info->toBinary(nbLayer, totalNbSamples, totalSampleSize);
     data += QByteArray(INTR_STRUCT_ALIGN, 0);
 
     data += ipHeader;

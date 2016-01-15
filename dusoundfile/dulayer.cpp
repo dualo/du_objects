@@ -23,8 +23,7 @@ DuObjectPtr DuLayer::clone() const
 
 DuLayerPtr DuLayer::fromBinary(const QList<dream_ip>& dreamIPArray,
                                const QVector<dream_sp>& dreamSPArray,
-                               const QByteArrayList& sampleDataArray,
-                               uint32_t sampleOffset)
+                               const QByteArrayList& sampleDataArray)
 {
     DuLayerPtr layer(new DuLayer);
 
@@ -63,7 +62,7 @@ DuLayerPtr DuLayer::fromBinary(const QList<dream_ip>& dreamIPArray,
             return DuLayerPtr();
         }
 
-        DuSamplePtr sample = DuSample::fromBinary(dreamIPArray[i], dreamSPArray[i], sampleDataArray[i], sampleOffset);
+        DuSamplePtr sample = DuSample::fromBinary(dreamIPArray[i], dreamSPArray[i], sampleDataArray[i]);
         if (sample != NULL)
         {
             sampleArray->append(sample);

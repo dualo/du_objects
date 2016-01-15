@@ -33,8 +33,7 @@ public:
 
     static DuSamplePtr fromBinary(const dream_ip &dreamIP,
                                   const dream_sp &dreamSP,
-                                  const QByteArray& data,
-                                  uint32_t sampleOffset);
+                                  const QByteArray& data);
     static DuSamplePtr fromWav(QFile *input);
 
     static QString convertToMono(SndfileHandle& oldSoundFile);
@@ -42,10 +41,10 @@ public:
     static int normalizeWaveType(int format);
 
     QByteArray ipBinary(uint8_t min_vel, uint8_t max_vel) const;
-    QByteArray spBinary(uint32_t sampleAddress, uint32_t sampleOffset) const;
+    QByteArray spBinary(uint32_t sampleAddress) const;
 
-    static uint32_t wavAddressDreamToReadable(uint32_t dreamValue, uint32_t sampleOffset);
-    static uint32_t wavAddressReadableToDream(uint32_t readableValue, uint32_t sampleOffset);
+    static uint32_t wavAddressDreamToReadable(uint32_t dreamValue);
+    static uint32_t wavAddressReadableToDream(uint32_t readableValue);
 
     static uint32_t loopStartDreamToReadable(uint16_t loopStartMSB, uint16_t loopStartLSB, uint32_t sampleStartAddress);
     static void loopStartReadableToDream(uint32_t readableValue, uint32_t sampleStartAddress, uint16_t& outLoopStartMSB, uint16_t& outLoopStartLSB);
