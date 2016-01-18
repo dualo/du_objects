@@ -16,11 +16,17 @@ public:
     // DuObject interface
 public:
     virtual DuObjectPtr clone() const override;
+
     virtual QByteArray toDuMusicBinary() const override;
     virtual QByteArray toMidiBinary() const override;
     virtual QJsonValue toJson() const override;
     virtual QHttpPart toHttpPart(const QString &name) const override;
+
     virtual QDebug debugPrint(QDebug dbg) const override;
+
+    // DuValue interface
+public:
+    virtual QVariant checkValue(const QVariant &value, bool &success) override;
 };
 
 #endif // DUBOOLEAN_H

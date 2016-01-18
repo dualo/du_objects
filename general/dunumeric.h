@@ -18,15 +18,6 @@ public:
                        int minValue, int defaultValue);
     virtual ~DuNumeric();
 
-    virtual DuObjectPtr clone() const;
-
-    QByteArray toDuMusicBinary() const;
-    virtual QByteArray toMidiBinary() const;
-    QJsonValue toJson() const;
-
-    QHttpPart toHttpPart(const QString &name) const;
-    virtual QDebug debugPrint(QDebug dbg) const;
-
     int getNumeric() const;
     bool setNumeric(int value);
 
@@ -38,6 +29,21 @@ public:
 
     int getMin() const;
     bool setMin(int value);
+
+    // DuObject interface
+public:
+    virtual DuObjectPtr clone() const override;
+
+    virtual QByteArray toDuMusicBinary() const override;
+    virtual QByteArray toMidiBinary() const override;
+    virtual QJsonValue toJson() const override;
+    virtual QHttpPart toHttpPart(const QString &name) const override;
+
+    virtual QDebug debugPrint(QDebug dbg) const override;
+
+    // DuValue interface
+public:
+    virtual QVariant checkValue(const QVariant &value, bool &success) override;
 
 private:
     int defaultValue;

@@ -11,15 +11,21 @@ class DuUrl : public DuValue
 public:
     explicit DuUrl(const QUrl &url = QUrl());
 
-    virtual DuObjectPtr clone() const;
-
-    QByteArray toDuMusicBinary() const;
-    QJsonValue toJson() const;
-
-    QDebug debugPrint(QDebug dbg) const;
-
     QUrl getUrl() const;
     bool setUrl(const QUrl &url);
+
+    // DuObject interface
+public:
+    virtual DuObjectPtr clone() const override;
+
+    virtual QByteArray toDuMusicBinary() const override;
+    virtual QJsonValue toJson() const override;
+
+    virtual QDebug debugPrint(QDebug dbg) const override;
+
+    // DuValue interface
+public:
+    virtual QVariant checkValue(const QVariant &value, bool &success) override;
 };
 
 #endif // DUURL_H

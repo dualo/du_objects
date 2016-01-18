@@ -17,7 +17,8 @@ public:
     virtual int size() const;
 
     const QVariant &getValue() const;
-    void setValue(const QVariant &value);
+    bool setValue(const QVariant &value);
+    virtual QVariant checkValue(const QVariant &value, bool &success);
 
     int getMaxSize() const;
     void setMaxSize(int value);

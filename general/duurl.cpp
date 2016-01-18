@@ -37,6 +37,19 @@ QDebug DuUrl::debugPrint(QDebug dbg) const
     return dbg.space();
 }
 
+QVariant DuUrl::checkValue(const QVariant &value, bool &success)
+{
+    if (!value.canConvert<QUrl>())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "value is not of type QUrl:" << value;
+        success = false;
+        return QVariant();
+    }
+
+    success = true;
+    return value;
+}
+
 QUrl DuUrl::getUrl() const
 {
     return getValue().toUrl();
@@ -44,6 +57,5 @@ QUrl DuUrl::getUrl() const
 
 bool DuUrl::setUrl(const QUrl &url)
 {
-    setValue(url);
-    return true;
+    return setValue(url);
 }

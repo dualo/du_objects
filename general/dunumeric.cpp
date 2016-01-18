@@ -133,6 +133,41 @@ QDebug DuNumeric::debugPrint(QDebug dbg) const
     return dbg.space();
 }
 
+QVariant DuNumeric::checkValue(const QVariant &value, bool &success)
+{
+    if (!value.canConvert<int>())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "value is not of type int:" << value;
+        success = false;
+        return QVariant();
+    }
+
+    int convertedValue = value.toInt();
+
+    if (convertedValue < minValue)
+    {
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << convertedValue << "below" << minValue
+                << "and could not be set\n"
+                << minValue << "was set instead";
+
+        success = false;
+        return minValue;
+    }
+    else if (convertedValue > maxValue)
+    {
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << convertedValue << "above" << maxValue
+                << "and could not be set\n"
+                << maxValue << "was set instead";
+
+        success = false;
+        return maxValue;
+    }
+
+    success = true;
+    return value;
+}
 
 int DuNumeric::getNumeric() const
 {
@@ -141,31 +176,7 @@ int DuNumeric::getNumeric() const
 
 bool DuNumeric::setNumeric(int value)
 {
-    if (value < minValue)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuNumeric::setNumeric():\n"
-                   << value << "below" << minValue
-                   << "and could not be set\n"
-                   << minValue << "was set instead";
-
-        setValue(minValue);
-        return false;
-    }
-    else if (value > maxValue)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuNumeric::setNumeric():\n"
-                   << value << "above" << maxValue
-                   << "and could not be set\n"
-                   << maxValue << "was set instead";
-
-        setValue(maxValue);
-        return false;
-    }
-    else
-    {
-        setValue(value);
-        return true;
-    }
+    return setValue(value);
 }
 
 
@@ -178,9 +189,9 @@ bool DuNumeric::setDefault(int value)
 {
     if (value > maxValue || value < minValue)
     {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuNumeric::setDefault():\n"
-                   << value << "not comprised between"
-                   << minValue << "and" << maxValue;
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << value << "not comprised between"
+                << minValue << "and" << maxValue;
 
         return false;
     }
