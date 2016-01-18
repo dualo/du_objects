@@ -38,6 +38,19 @@ QDebug DuDate::debugPrint(QDebug dbg) const
     return dbg.space();
 }
 
+QVariant DuDate::checkValue(const QVariant &value, bool &success)
+{
+    if (!value.canConvert<QDateTime>())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "value is not of type QDateTime:" << value;
+        success = false;
+        return QVariant();
+    }
+
+    success = true;
+    return value;
+}
+
 QDateTime DuDate::getDate() const
 {
     return getValue().toDateTime();
@@ -45,6 +58,5 @@ QDateTime DuDate::getDate() const
 
 bool DuDate::setDate(const QDateTime &date)
 {
-    setValue(date);
-    return true;
+    return setValue(date);
 }

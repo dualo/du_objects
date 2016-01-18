@@ -13,14 +13,21 @@ class DuDate : public DuValue
 public:
     explicit DuDate(const QDateTime& date = QDateTime());
 
-    virtual DuObjectPtr clone() const;
-
-    QByteArray toDuMusicBinary() const;
-    QJsonValue toJson() const;
-    QDebug debugPrint(QDebug dbg) const;
-
     QDateTime getDate() const;
     bool setDate(const QDateTime& date);
+
+    // DuObject interface
+public:
+    virtual DuObjectPtr clone() const override;
+
+    virtual QByteArray toDuMusicBinary() const override;
+    virtual QJsonValue toJson() const override;
+
+    virtual QDebug debugPrint(QDebug dbg) const override;
+
+    // DuValue interface
+public:
+    virtual QVariant checkValue(const QVariant &value, bool &success) override;
 };
 
 #endif // DUDATE_H

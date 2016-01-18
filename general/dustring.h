@@ -13,17 +13,23 @@ public:
     explicit DuString(int maxSize = -1);
     virtual ~DuString();
 
-    virtual DuObjectPtr clone() const;
-
-    QByteArray toDuMusicBinary() const;
-    QByteArray toMidiBinary() const;
-    QJsonValue toJson() const;
-
-    QHttpPart toHttpPart(const QString &name) const;
-    virtual QDebug debugPrint(QDebug dbg) const;
-
     QString getString() const;
     bool setString(const QString &value);
+
+    // DuObject interface
+public:
+    virtual DuObjectPtr clone() const override;
+
+    virtual QByteArray toDuMusicBinary() const override;
+    virtual QByteArray toMidiBinary() const override;
+    virtual QJsonValue toJson() const override;
+    virtual QHttpPart toHttpPart(const QString &name) const override;
+
+    virtual QDebug debugPrint(QDebug dbg) const override;
+
+    // DuValue interface
+public:
+    virtual QVariant checkValue(const QVariant &value, bool &success) override;
 };
 
 #endif // DUSTRING_H

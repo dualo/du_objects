@@ -78,6 +78,32 @@ QDebug DuString::debugPrint(QDebug dbg) const
     return dbg.space();
 }
 
+QVariant DuString::checkValue(const QVariant &value, bool &success)
+{
+    if (!value.canConvert<QString>())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "value is not of type QString:" << value;
+        success = false;
+        return QVariant();
+    }
+
+    const QString& convertedValue = value.toString();
+
+    int size = getMaxSize();
+    if (size != -1 && convertedValue.size() > size)
+    {
+        qCWarning(LOG_CAT_DU_OBJECT)
+                   << "the byte array was longer than the"
+                   << "maximum size" << size
+                   << "and was truncated before being set";
+
+        success = false;
+        return convertedValue.left(size).toUtf8();
+    }
+
+    success = true;
+    return convertedValue.toUtf8();
+}
 
 QString DuString::getString() const
 {
@@ -96,18 +122,5 @@ QString DuString::getString() const
 
 bool DuString::setString(const QString &value)
 {
-    int size = getMaxSize();
-    if (getMaxSize() != -1 && value.size() > size)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuString::setString()\n"
-                   << "the byte array was longer than the"
-                   << "maximum size" << size
-                   << "and was truncated before being set";
-
-        setValue(value.left(size).toUtf8());
-        return false;
-    }
-
-    setValue(value.toUtf8());
-    return true;
+    return setValue(value);
 }

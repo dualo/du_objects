@@ -38,12 +38,44 @@ QJsonValue DuBinaryData::toJson() const
     return QJsonValue(getBinaryData().data());
 }
 
+QDebug DuBinaryData::debugPrint(QDebug dbg) const
+{
+    dbg.nospace() << "DuBinaryData(" << getBinaryData().toHex() << ")";
+
+    return dbg.space();
+}
 
 int DuBinaryData::size() const
 {
     return getBinaryData().size();
 }
 
+QVariant DuBinaryData::checkValue(const QVariant &value, bool &success)
+{
+    if (!value.canConvert<QByteArray>())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "value is not of type QByteArray:" << value;
+        success = false;
+        return QVariant();
+    }
+
+    const QByteArray& convertedValue = value.toByteArray();
+
+    int size = getMaxSize();
+    if (size != -1 && convertedValue.size() > size)
+    {
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << "the byte array was longer than the"
+                << "maximum size" << size
+                << "and was truncated before being set";
+
+        success = false;
+        return convertedValue.left(size);
+    }
+
+    success = true;
+    return value;
+}
 
 const QByteArray DuBinaryData::getBinaryData() const
 {
@@ -53,20 +85,7 @@ const QByteArray DuBinaryData::getBinaryData() const
 
 bool DuBinaryData::setBinaryData(const QByteArray &value)
 {
-    int size = getMaxSize();
-    if (size != -1 && value.size() > size)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuBinaryData::setData():\n"
-                   << "the byte array was longer than the"
-                   << "maximum size" << size
-                   << "and was truncated before being set";
-
-        setValue(value.left(size));
-        return false;
-    }
-
-    setValue(value);
-    return true;
+    return setValue(value);
 }
 
 const QByteArray DuBinaryData::getData() const

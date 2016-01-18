@@ -13,14 +13,6 @@ public:
     explicit DuBinaryData(int maxSize = -1);
     virtual ~DuBinaryData();
 
-    virtual DuObjectPtr clone() const;
-
-    QByteArray toDuMusicBinary() const;
-    QByteArray toMidiBinary() const;
-    QJsonValue toJson() const;
-
-    int size() const;
-
     const QByteArray getBinaryData() const;
     bool setBinaryData(const QByteArray &value);
 
@@ -38,6 +30,22 @@ public:
 
 protected:
     QByteArray data();
+
+    // DuObject interface
+public:
+    virtual DuObjectPtr clone() const override;
+
+    virtual QByteArray toDuMusicBinary() const override;
+    virtual QByteArray toMidiBinary() const override;
+    virtual QJsonValue toJson() const override;
+
+    virtual QDebug debugPrint(QDebug dbg) const override;
+
+    virtual int size() const override;
+
+    // DuValue interface
+public:
+    virtual QVariant checkValue(const QVariant &value, bool &success) override;
 };
 
 #endif // DUBINARYDATA_H

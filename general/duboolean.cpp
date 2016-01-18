@@ -44,6 +44,19 @@ QDebug DuBoolean::debugPrint(QDebug dbg) const
     return dbg.space();
 }
 
+QVariant DuBoolean::checkValue(const QVariant &value, bool &success)
+{
+    if (!value.canConvert<bool>())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "value is not of type bool:" << value;
+        success = false;
+        return QVariant();
+    }
+
+    success = true;
+    return value;
+}
+
 bool DuBoolean::getBoolean() const
 {
     return getValue().toBool();
@@ -51,6 +64,5 @@ bool DuBoolean::getBoolean() const
 
 bool DuBoolean::setBoolean(bool value)
 {
-    setValue(value);
-    return true;
+    return setValue(value);
 }

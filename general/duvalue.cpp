@@ -33,9 +33,17 @@ const QVariant &DuValue::getValue() const
     return value;
 }
 
-void DuValue::setValue(const QVariant &value)
+bool DuValue::setValue(const QVariant &value)
 {
-    this->value = value;
+    bool success = false;
+    this->value = checkValue(value, success);
+    return success;
+}
+
+QVariant DuValue::checkValue(const QVariant &value, bool& success)
+{
+    success = true;
+    return value;
 }
 
 int DuValue::getMaxSize() const
