@@ -1,5 +1,7 @@
 #include "dumixer.h"
 
+#include <cstring>
+
 #include <QJsonObject>
 
 DU_OBJECT_IMPL(DuMixer)

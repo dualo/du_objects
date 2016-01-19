@@ -1,5 +1,7 @@
 #include "duevent.h"
 
+#include <cstring>
+
 #include <QJsonObject>
 
 
