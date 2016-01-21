@@ -17,70 +17,70 @@ DuEffectSet::DuEffectSet() :
 {
     addChild(KeyCompressorOnOff,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x01, 0x00));
+                           0xFF, 0x00));
 
     addChild(KeyDelayOnOff,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x01, 0x00));
+                           0xFF, 0x00));
 
     addChild(KeyDistortionOnOff,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x01, 0x00));
+                           0xFF, 0x00));
 
     addChild(KeyEqualizerOnOff,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x01, 0x00));
+                           0xFF, 0x00));
 
     addChild(KeyChorusOnOff,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x01, 0x00));
+                           0xFF, 0x00));
 
 
     addChild(KeyMultinoteAct,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
+                           0xFF, 0x00));
 
     addChild(KeyMultinote, new DuArray(4));
 
 
     addChild(KeyPitch,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(0x40, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
 
     addChild(KeyAutopitchRate,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
+                           0x07, 0x00));
 
     addChild(KeyAutopitchRange,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(0x7F, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
 
     addChild(KeyTremoloRate,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
+                           0x07, 0x00));
 
     addChild(KeyTremoloRange,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(0x7F, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
 
     addChild(KeyAutopanRate,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
+                           0x07, 0x00));
 
     addChild(KeyAutopanRange,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(0x7F, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
 
     addChild(KeyAutowahRate,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
+                           0x07, 0x00));
 
     addChild(KeyAutowahRange,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(0x7F, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
 
@@ -133,7 +133,7 @@ DuEffectSetPtr DuEffectSet::fromDuMusicBinary(const preset_instr &du_preset)
     DuArrayPtr multinoteArray(new DuArray);
     for (int i = 0; i < 4; ++i)
     {
-        multinoteArray->append(DuNumericPtr(new DuNumeric(du_preset.s_multinote[i], NUMERIC_DEFAULT_SIZE, 0xFF, 0x00, 0x00)));
+        multinoteArray->append(DuNumericPtr(new DuNumeric(du_preset.s_multinote[i], NUMERIC_DEFAULT_SIZE, 0x7F, 0x00, 0x00)));
     }
     effectSet->setMultinote(multinoteArray);
 

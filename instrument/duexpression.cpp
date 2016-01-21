@@ -56,33 +56,33 @@ DuExpression::DuExpression() :
 
 
     addChild(KeyCompressorPreset,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
+             new DuNumeric(FX_COMP_PRESET_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
+                           FX_NUM_FX_INTR - 1, 0x00));
 
     addChild(KeyDelayPreset,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
+             new DuNumeric(FX_DELAY_PRESET_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
+                           FX_NUM_FX_INTR - 1, 0x00));
 
     addChild(KeyDistortionPreset,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
+             new DuNumeric(FX_DISTO_PRESET_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
+                           FX_NUM_FX_INTR - 1, 0x00));
 
     addChild(KeyEqualizerPreset,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
+             new DuNumeric(FX_PEQ_PRESET_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
+                           FX_NUM_FX_INTR - 1, 0x00));
 
     addChild(KeyChorusPreset,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
+             new DuNumeric(FX_CHORUS_PRESET_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
+                           FX_NUM_FX_INTR - 1, 0x00));
 
 
     addChild(KeyArpeggiatorType,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
+                           0x08, 0x00));
 
     addChild(KeyArpeggiatorBeat,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
+                           0x07, 0x00));
 }
 
 DuExpression::~DuExpression()

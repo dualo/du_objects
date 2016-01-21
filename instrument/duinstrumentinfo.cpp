@@ -24,37 +24,35 @@ DuInstrumentInfo::DuInstrumentInfo() :
 
     addChild(KeyKeyMapping,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x04, 0x00));
+                           INSTRUMENT_MAPPING_MAX, 0x00));
 
     addChild(KeyOctave,
              new DuNumeric(MAIN_OCTAVE_DEFAULT, NUMERIC_DEFAULT_SIZE,
                            MAIN_OCTAVE_MAX, MAIN_OCTAVE_MIN));
 
-    addChild(KeyUserID, new DuNumeric(0));
+    addChild(KeyUserID, new DuNumeric(0)); //TODO: get user id
 
-    addChild(KeyID, new DuNumeric(0));
+    addChild(KeyID, new DuNumeric(0)); //TODO: generate new id
 
     addChild(KeyActiveNoteOff,
              new DuNumeric(0x01, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
+                           0xFF, 0x00));
 
     addChild(KeyCategory, new DuString(NAME_CARACT));
 
     addChild(KeyRelativeVolume,
-             new DuNumeric(0x40, NUMERIC_DEFAULT_SIZE,
-                           0xFF, 0x00));
+             new DuNumeric(0x7F, NUMERIC_DEFAULT_SIZE,
+                           0x7F, 0x00));
 
     addChild(KeyDreamFormatId,
              new DuNumeric(NO_FORMAT, NUMERIC_DEFAULT_SIZE,
-                           SDK_5000, FORMAT_ERROR));
+                           SDK_5000, FORMAT_ERROR)); //TODO: delete that
 
     addChild(KeyInstrType,
              new DuNumeric(INSTR_HARMONIC, NUMERIC_DEFAULT_SIZE,
-                           NUM_INSTR_TYPE, INSTR_HARMONIC));
+                           NUM_INSTR_TYPE - 1, INSTR_HARMONIC));
 
-    addChild(KeyInstrVersion,
-             new DuNumeric(0, NUMERIC_DEFAULT_SIZE,
-                           0xFF, 0x00));
+    addChild(KeyInstrVersion, new DuNumeric(0));
 
     addChild(KeyHardInstrVersion,
              new DuNumeric(0x0000, 2, 0xFFFF, 0x0000));

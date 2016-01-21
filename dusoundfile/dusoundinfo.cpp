@@ -21,7 +21,7 @@ DuSoundInfo::DuSoundInfo()
     addChild(KeyInstrumentInfo,  new DuInstrumentInfo);
 
     addChild(KeyPresetNum,       new DuNumeric(0, NUMERIC_DEFAULT_SIZE, FX_NUM_PRESET_INTR, 0));
-    addChild(KeyDisplayLed,      new DuNumeric(0xFF, NUMERIC_DEFAULT_SIZE, 0xFF, 0));
+    addChild(KeyDisplayLed,      new DuNumeric(0, NUMERIC_DEFAULT_SIZE, 0xFF, 0));
 
     addChild(KeyName,            new DuString(SOUND_NAME_SIZE));
 
@@ -199,7 +199,7 @@ DuSoundInfoPtr DuSoundInfo::fromBinary(const struct_instr &data)
     DuArrayPtr ledsArray(new DuArray);
     for (int i = 0; i < NUM_LED_VALUE; ++i)
     {
-        DuNumericPtr leds(new DuNumeric(data.s_leds[i], NUMERIC_DEFAULT_SIZE, 0xFF, 0x000, 0));
+        DuNumericPtr leds(new DuNumeric(data.s_leds[i], NUMERIC_DEFAULT_SIZE, 0xFF, 0x00, 0));
         if (leds != NULL)
         {
             ledsArray->append(leds);

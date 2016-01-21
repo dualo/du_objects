@@ -25,27 +25,27 @@ DuControllers::DuControllers() :
                            DIRECTIONGYRO_MAXVALUE, DIRECTIONGYRO_MINVALUE));
 
     addChild(KeyActiveAftertouch,
-             new DuNumeric(0x00, CONTROLS_NUMERIC_SIZE,
+             new DuNumeric(0x0000, CONTROLS_NUMERIC_SIZE,
                            0xFFFF, 0x0000));
 
     addChild(KeyActiveSliderL,
-             new DuNumeric(0x00, CONTROLS_NUMERIC_SIZE,
+             new DuNumeric(0x0000, CONTROLS_NUMERIC_SIZE,
                            0xFFFF, 0x0000));
 
     addChild(KeyActiveSliderR,
-             new DuNumeric(0x00, CONTROLS_NUMERIC_SIZE,
+             new DuNumeric(0x0000, CONTROLS_NUMERIC_SIZE,
                            0xFFFF, 0x0000));
 
     addChild(KeyActiveGyroP,
-             new DuNumeric(0x00, CONTROLS_NUMERIC_SIZE,
+             new DuNumeric(0x0000, CONTROLS_NUMERIC_SIZE,
                            0xFFFF, 0x0000));
 
     addChild(KeyActiveGyroR,
-             new DuNumeric(0x00, CONTROLS_NUMERIC_SIZE,
+             new DuNumeric(0x0000, CONTROLS_NUMERIC_SIZE,
                            0xFFFF, 0x0000));
 
     addChild(KeyActiveGyroY,
-             new DuNumeric(0x00, CONTROLS_NUMERIC_SIZE,
+             new DuNumeric(0x0000, CONTROLS_NUMERIC_SIZE,
                            0xFFFF, 0x0000));
 }
 
