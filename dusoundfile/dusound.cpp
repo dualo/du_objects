@@ -339,6 +339,17 @@ QByteArray DuSound::toBinary() const
 {
     QByteArray data;
 
+    data += headerIpSpSamplesBinary();
+    data += mappingBinary();
+    data += metadataBinary();
+
+    return data;
+}
+
+QByteArray DuSound::headerIpSpSamplesBinary() const
+{
+    QByteArray data;
+
     const DuArrayConstPtr& layerArray = getLayerArray();
     if (layerArray == NULL)
         return QByteArray();
@@ -461,11 +472,17 @@ QByteArray DuSound::toBinary() const
     data += dreamSPData;
     data += dreamSamplesData;
 
-    data += getMapping()->toDuMusicBinary();
-
-    data += getMetadata()->toDuMusicBinary();
-
     return data;
+}
+
+QByteArray DuSound::mappingBinary() const
+{
+    return getMapping()->toDuMusicBinary();
+}
+
+QByteArray DuSound::metadataBinary() const
+{
+    return getMetadata()->toDuMusicBinary();
 }
 
 DuObjectPtr DuSound::getChild(const QString &key)

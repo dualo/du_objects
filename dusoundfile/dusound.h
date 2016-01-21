@@ -23,6 +23,9 @@ public:
     static DuSoundPtr fromBinary(QIODevice *input);
 
     QByteArray toBinary() const;
+    QByteArray headerIpSpSamplesBinary() const;
+    QByteArray mappingBinary() const;
+    QByteArray metadataBinary() const;
 
     virtual DuObjectPtr getChild(const QString &key) override;
     virtual DuObjectConstPtr getChild(const QString &key) const override;
