@@ -25,16 +25,42 @@ DuSoundInfo::DuSoundInfo()
 
     addChild(KeyName,            new DuString(SOUND_NAME_SIZE));
 
-    addChild(KeyPresetArray,     new DuArray(FX_NUM_PRESET_INTR));
-
     addChild(KeyMixer,           new DuMixer);
-    addChild(KeyDistortionArray, new DuArray(FX_NUM_FX_INTR));
-    addChild(KeyCompressorArray, new DuArray(FX_NUM_FX_INTR));
-    addChild(KeyEqualizerArray,  new DuArray(FX_NUM_FX_INTR));
-    addChild(KeyDelayArray,      new DuArray(FX_NUM_FX_INTR));
-    addChild(KeyChorusArray,     new DuArray(FX_NUM_FX_INTR));
 
-    addChild(KeyLedArray,        new DuArray(NUM_LED_VALUE));
+    DuArrayPtr presetArray(new DuArray(FX_NUM_PRESET_INTR));
+    for (int i = 0; i < FX_NUM_PRESET_INTR; ++i)
+        presetArray->append(new DuPreset);
+    addChild(KeyPresetArray, presetArray);
+
+    DuArrayPtr distortionArray(new DuArray(FX_NUM_FX_INTR));
+    for (int i = 0; i < FX_NUM_FX_INTR; ++i)
+        distortionArray->append(new DuDistortion);
+    addChild(KeyDistortionArray, distortionArray);
+
+    DuArrayPtr compressorArray(new DuArray(FX_NUM_FX_INTR));
+    for (int i = 0; i < FX_NUM_FX_INTR; ++i)
+        compressorArray->append(new DuCompressor);
+    addChild(KeyCompressorArray, compressorArray);
+
+    DuArrayPtr equalizerArray(new DuArray(FX_NUM_FX_INTR));
+    for (int i = 0; i < FX_NUM_FX_INTR; ++i)
+        equalizerArray->append(new DuEqualizer);
+    addChild(KeyEqualizerArray, equalizerArray);
+
+    DuArrayPtr delayArray(new DuArray(FX_NUM_FX_INTR));
+    for (int i = 0; i < FX_NUM_FX_INTR; ++i)
+        delayArray->append(new DuDelay);
+    addChild(KeyDelayArray, delayArray);
+
+    DuArrayPtr chorusArray(new DuArray(FX_NUM_FX_INTR));
+    for (int i = 0; i < FX_NUM_FX_INTR; ++i)
+        chorusArray->append(new DuChorus);
+    addChild(KeyChorusArray, chorusArray);
+
+    DuArrayPtr ledArray(new DuArray(NUM_LED_VALUE));
+    for (int i = 0; i < NUM_LED_VALUE; ++i)
+        ledArray->append(new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
+    addChild(KeyLedArray, ledArray);
 }
 
 DuObjectPtr DuSoundInfo::clone() const

@@ -40,7 +40,11 @@ DuEffectSet::DuEffectSet() :
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                            0xFF, 0x00));
 
-    addChild(KeyMultinote, new DuArray(4));
+    DuArrayPtr multinoteArray(new DuArray(4));
+    for (int i = 0; i < 4; ++i)
+        multinoteArray->append(new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
+                                             0x7F, 0x00));
+    addChild(KeyMultinote, multinoteArray);
 
 
     addChild(KeyPitch,
@@ -130,10 +134,10 @@ DuEffectSetPtr DuEffectSet::fromDuMusicBinary(const preset_instr &du_preset)
 
     verif = effectSet->setMultinoteAct(du_preset.s_multinote_act) ? verif : false;
 
-    DuArrayPtr multinoteArray(new DuArray);
+    DuArrayPtr multinoteArray(new DuArray(4));
     for (int i = 0; i < 4; ++i)
     {
-        multinoteArray->append(DuNumericPtr(new DuNumeric(du_preset.s_multinote[i], NUMERIC_DEFAULT_SIZE, 0x7F, 0x00, 0x00)));
+        multinoteArray->append(new DuNumeric(du_preset.s_multinote[i], NUMERIC_DEFAULT_SIZE, 0x7F, 0x00, 0x00));
     }
     effectSet->setMultinote(multinoteArray);
 

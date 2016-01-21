@@ -31,6 +31,7 @@ public:
     void setMaxSize(int value);
 
     bool append(const DuObjectPtr &element);
+    bool append(DuObject* element);
     void insert(int index, const DuObjectPtr &element);
 
     void removeAt(int index);
