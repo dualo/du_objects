@@ -16,11 +16,11 @@ DuMixer::DuMixer() :
                            FX_MIX_INGAIN_MAXVALUE, FX_MIX_INGAIN_MINVALUE));
 
     addChild(KeyLowCutFilterFrequency,
-             new DuNumeric(FX_MIX_LCFREQ_MINVALUE, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(FX_MIX_LCFREQ_MAXVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_MIX_LCFREQ_MAXVALUE, FX_MIX_LCFREQ_MINVALUE));
 
     addChild(KeyHighCutFilterFrequency,
-             new DuNumeric(FX_MIX_HCFREQ_MAXVALUE, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(FX_MIX_HCFREQ_MINVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_MIX_HCFREQ_MAXVALUE, FX_MIX_HCFREQ_MINVALUE));
 
     addChild(KeyOutputLevel,
