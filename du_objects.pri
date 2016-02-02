@@ -108,5 +108,5 @@ SOURCES += \
     $$PWD/miditodumusic/duscalemodel.cpp \
     $$PWD/general/duboolean.cpp
     
-DISTFILES += \
-    $$PWD/miditodumusic/defaultmaps.json
+RESOURCES += \
+    $$PWD/miditodumusic/midiresources.qrc

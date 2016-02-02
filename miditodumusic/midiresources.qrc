@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>defaultmaps.json</file>
+    </qresource>
+</RCC>
