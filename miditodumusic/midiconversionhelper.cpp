@@ -329,7 +329,7 @@ int MidiConversionHelper::findIndexes(int trackIndex, int loopIndex) const
 }
 
 
-const DuMidiTrackPtr MidiConversionHelper::getMidiTrack(int index) const
+DuMidiTrackPtr MidiConversionHelper::getMidiTrack(int index) const
 {
     if (index >= selectedTracks.count())
         return DuMidiTrackPtr();
@@ -355,7 +355,7 @@ void MidiConversionHelper::setSelectedTrack(int index, int midiTrackIndex)
 }
 
 
-const DuMusicInstrumentPtr MidiConversionHelper::getInstrument(int index) const
+DuMusicInstrumentPtr MidiConversionHelper::getInstrument(int index) const
 {
     if (index >= selectedInstruments.count())
         return DuMusicInstrumentPtr();
