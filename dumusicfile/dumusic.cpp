@@ -465,6 +465,7 @@ DuMusicPtr DuMusic::fromMidi(const MidiConversionHelper &helper)
 
     //TODO: generate DuHeader (maybe)
 
+    DuArrayPtr trackArray(new DuArray(MUSIC_MAXTRACK));
     for (int i = 0; i < MUSIC_MAXTRACK; i++)
     {
         const DuTrackPtr &track = DuTrack::fromMidi(helper, i);
@@ -477,7 +478,7 @@ DuMusicPtr DuMusic::fromMidi(const MidiConversionHelper &helper)
 
             return DuMusicPtr();
         }
-        if (!music->appendTrack(track))
+        if (!trackArray->append(track))
         {
             qCCritical(LOG_CAT_DU_OBJECT)
                     << "DuMusic::fromMidi():\n"
@@ -487,6 +488,7 @@ DuMusicPtr DuMusic::fromMidi(const MidiConversionHelper &helper)
             return DuMusicPtr();
         }
     }
+    music->setTracks(trackArray);
 
     if (music->size() > MUSIC_SONG_SIZE + RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE)
     {

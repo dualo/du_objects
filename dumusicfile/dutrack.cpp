@@ -203,7 +203,7 @@ DuTrackPtr DuTrack::fromMidi(const MidiConversionHelper &helper, int trackIndex)
         return DuTrackPtr();
     }
 
-    const DuTrackPtr track(new DuTrack);
+    DuTrackPtr track(new DuTrack);
     bool verif = true;
 
     verif = track->setChannel(MUSIC_MAXTRACK - trackIndex) ? verif : false;
@@ -215,13 +215,14 @@ DuTrackPtr DuTrack::fromMidi(const MidiConversionHelper &helper, int trackIndex)
                                      << "an attribute was not properly set";
     }
 
+    DuArrayPtr loopsArray(new DuArray(MUSIC_MAXLAYER));
     for (int i = 0; i < MUSIC_MAXLAYER; i++)
     {
         int index = helper.findIndexes(trackIndex, i);
 
         if (index == -1)
         {
-            if (!track->appendLoop(DuLoopPtr(new DuLoop)))
+            if (!loopsArray->append(DuLoopPtr(new DuLoop)))
             {
                 qCCritical(LOG_CAT_DU_OBJECT)
                         << "DuTrack::fromMidi():\n"
@@ -231,7 +232,6 @@ DuTrackPtr DuTrack::fromMidi(const MidiConversionHelper &helper, int trackIndex)
                 return DuTrackPtr();
             }
         }
-
         else
         {
             const DuLoopPtr &loop = DuLoop::fromMidi(helper, index);
@@ -244,7 +244,7 @@ DuTrackPtr DuTrack::fromMidi(const MidiConversionHelper &helper, int trackIndex)
 
                 return DuTrackPtr();
             }
-            if (!track->appendLoop(loop))
+            if (!loopsArray->append(loop))
             {
                 qCCritical(LOG_CAT_DU_OBJECT)
                         << "DuTrack::fromMidi():\n"
@@ -255,6 +255,8 @@ DuTrackPtr DuTrack::fromMidi(const MidiConversionHelper &helper, int trackIndex)
             }
         }
     }
+
+    track->setLoops(loopsArray);
 
     return track;
 }
