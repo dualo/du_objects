@@ -139,5 +139,5 @@ SOURCES += \
     $$PWD/dusoundfile/dusample.cpp \
     $$PWD/general/duboolean.cpp
     
-DISTFILES += \
-    $$PWD/miditodumusic/defaultmaps.json
+RESOURCES += \
+    $$PWD/miditodumusic/midiresources.qrc
