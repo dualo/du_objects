@@ -24,6 +24,8 @@ public:
     DU_KEY_ACCESSORS(Note,         int)
     DU_KEY_ACCESSORS(Name,         QString)
     DU_KEY_ACCESSORS(CategoryName, QString)
+
+    static const int drumMapping[];
 };
 
 #endif // DUNOTE_H
