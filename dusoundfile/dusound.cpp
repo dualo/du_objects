@@ -286,7 +286,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
     if (soundHeader.mapping_addr != 0)
     {
         DuArrayPtr mapping(new DuArray);
-        for (int i = 0; i < MAPPING_SIZE; i += S_NOTE_SIZE)
+        for (uint i = 0; i < MAPPING_SIZE; i += S_NOTE_SIZE)
         {
             s_note note;
             std::memcpy((char*)&note, &data.data()[soundHeader.mapping_addr + i], S_NOTE_SIZE);
@@ -393,9 +393,9 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
 
         int nbSamples = samples->count();
 
-        ipHeader[i * 2] = nbSamples;
+        ipHeader[i * 2] = (char) nbSamples;
         if (i == 0)
-            ipHeader[(i * 2) + 1] = nbLayer;
+            ipHeader[(i * 2) + 1] = (char) nbLayer;
         else
             ipHeader[(i * 2) + 1] = 0;
 
@@ -405,8 +405,8 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
             if (sample == NULL)
                 return QByteArray();
 
-            dreamIPData += sample->ipBinary(layer->getMinVelocity() - 1, layer->getMaxVelocity());
-            dreamSPData += sample->spBinary(sampleAddress);
+            dreamIPData += sample->ipBinary((uint8_t) layer->getMinVelocity() - 1, (uint8_t) layer->getMaxVelocity());
+            dreamSPData += sample->spBinary((uint32_t) sampleAddress);
             dreamSamplesData += sample->getData();
 
             sampleAddress += sample->getData().size();
@@ -421,10 +421,10 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
     soundHeader.KW_INST = 0x54534E49;
     soundHeader.KW_META = 0x4154454D;
 
-    soundHeader.full_size = size();
+    soundHeader.full_size = (uint32_t) size();
 
-    soundHeader.HW_version = getHardInstrVersion();
-    soundHeader.SW_version = getSoftInstrVersion();
+    soundHeader.HW_version = (uint16_t) getHardInstrVersion();
+    soundHeader.SW_version = (uint16_t) getSoftInstrVersion();
 
     int mappingAddr = 0;
     const DuArrayConstPtr& mapping = getMapping();
@@ -436,7 +436,7 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
         mappingAddr = INSTR_NB_SAMPLES_PER_LAYER_ADDRESS + 2 * nbLayer + (INSTR_DREAM_IP_SIZE + INSTR_DREAM_SP_SIZE) * totalNbSamples + totalSampleSize;
     }
 
-    soundHeader.mapping_addr = mappingAddr;
+    soundHeader.mapping_addr = (uint32_t) mappingAddr;
 
     int metadataAddr = 0;
     const DuArrayConstPtr& metadata = getMetadata();
@@ -455,7 +455,7 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
         }
     }
 
-    soundHeader.meta_addr = metadataAddr;
+    soundHeader.meta_addr = (uint32_t) metadataAddr;
 
     data.append((char*)&soundHeader, INSTR_HEADER_SIZE);
 
@@ -464,7 +464,7 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
     if (info == NULL)
         return QByteArray();
 
-    data += info->toBinary(nbLayer, totalNbSamples, totalSampleSize);
+    data += info->toBinary((uint8_t) nbLayer, totalNbSamples, (uint32_t) totalSampleSize);
     data += QByteArray(INTR_STRUCT_ALIGN, 0);
 
     data += ipHeader;

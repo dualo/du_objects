@@ -16,8 +16,7 @@ public:
         SDK_5000 = 2,
     };
 
-    explicit DuInstrumentInfo();
-    ~DuInstrumentInfo();
+    DuInstrumentInfo();
 
     virtual DuObjectPtr clone() const;
 

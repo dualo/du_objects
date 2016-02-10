@@ -61,10 +61,6 @@ DuInstrumentInfo::DuInstrumentInfo() :
              new DuNumeric(0x0000, 2, 0xFFFF, 0x0000));
 }
 
-DuInstrumentInfo::~DuInstrumentInfo()
-{
-}
-
 DuObjectPtr DuInstrumentInfo::clone() const
 {
     return DuInstrumentInfoPtr(new DuInstrumentInfo(*this));
@@ -84,8 +80,8 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrI
     verif = instrInfo->setKeyMapping(du_instrInfo.instr_key_map) ? verif : false;
     verif = instrInfo->setOctave(du_instrInfo.instr_octave) ? verif : false;
 
-    verif = instrInfo->setUserID(du_instrInfo.instr_user_id) ? verif : false;
-    verif = instrInfo->setID(du_instrInfo.instr_id) ? verif : false;
+    verif = instrInfo->setUserID((int) du_instrInfo.instr_user_id) ? verif : false;
+    verif = instrInfo->setID((int) du_instrInfo.instr_id) ? verif : false;
 
     verif = instrInfo->setActiveNoteOff(du_instrInfo.instr_noteoff) ? verif : false;
 
@@ -96,7 +92,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrI
     verif = instrInfo->setDreamFormatId((DreamFormat)du_instrInfo.format_id) ? verif : false;
 
     verif = instrInfo->setInstrType((INSTRUMENT_TYPE)du_instrInfo.instr_type) ? verif : false;
-    verif = instrInfo->setInstrVersion(du_instrInfo.instr_version) ? verif : false;
+    verif = instrInfo->setInstrVersion((int) du_instrInfo.instr_version) ? verif : false;
     verif = instrInfo->setHardInstrVersion(du_instrInfo.HW_instr_version) ? verif : false;
     verif = instrInfo->setSoftInstrVersion(du_instrInfo.SW_instr_version) ? verif : false;
 
@@ -173,7 +169,7 @@ bool DuInstrumentInfo::toStruct(s_instr& outStruct) const
     QString tmpStr;
     int tmpNum = 0;
 
-    std::memset((char*)&outStruct, 0, size());
+    std::memset((char*)&outStruct, 0, (size_t) size());
 
     QByteArray tmpName(NAME_CARACT, (char)0x00);
     tmpStr = getNameForDevice();
@@ -186,37 +182,37 @@ bool DuInstrumentInfo::toStruct(s_instr& outStruct) const
     tmpNum = getDreamProgramChange();
     if (tmpNum == -1)
         return false;
-    outStruct.instr_midi_pc = tmpNum;
+    outStruct.instr_midi_pc = (uint8_t) tmpNum;
 
     tmpNum = getMidiControlChange0();
     if (tmpNum == -1)
         return false;
-    outStruct.instr_midi_C0 = tmpNum;
+    outStruct.instr_midi_C0 = (uint8_t) tmpNum;
 
     tmpNum = getKeyMapping();
     if (tmpNum == -1)
         return false;
-    outStruct.instr_key_map = tmpNum;
+    outStruct.instr_key_map = (uint8_t) tmpNum;
 
     tmpNum = getOctave();
     if (tmpNum == -1)
         return false;
-    outStruct.instr_octave = tmpNum;
+    outStruct.instr_octave = (uint8_t) tmpNum;
 
     tmpNum = getUserID();
     if (tmpNum == -1)
         return false;
-    outStruct.instr_user_id = tmpNum;
+    outStruct.instr_user_id = (uint32_t) tmpNum;
 
     tmpNum = getID();
     if (tmpNum == -1)
         return false;
-    outStruct.instr_id = tmpNum;
+    outStruct.instr_id = (uint32_t) tmpNum;
 
     tmpNum = getActiveNoteOff();
     if (tmpNum == -1)
         return false;
-    outStruct.instr_noteoff = tmpNum;
+    outStruct.instr_noteoff = (uint8_t) tmpNum;
 
     QByteArray tmpCategory(NAME_CARACT, (char)0x00);
     tmpStr = getCategory();
@@ -229,7 +225,7 @@ bool DuInstrumentInfo::toStruct(s_instr& outStruct) const
     tmpNum = getRelativeVolume();
     if (tmpNum == -1)
         return false;
-    outStruct.instr_relvolume = tmpNum;
+    outStruct.instr_relvolume = (uint8_t) tmpNum;
 
     DreamFormat tmpFormat = getDreamFormatId();
     if (tmpFormat == FORMAT_ERROR)
@@ -244,17 +240,17 @@ bool DuInstrumentInfo::toStruct(s_instr& outStruct) const
     tmpNum = getInstrVersion();
     if (tmpNum == -1)
         return false;
-    outStruct.instr_version = tmpNum;
+    outStruct.instr_version = (uint32_t) tmpNum;
 
     tmpNum = getHardInstrVersion();
     if (tmpNum == -1)
         return false;
-    outStruct.HW_instr_version = tmpNum;
+    outStruct.HW_instr_version = (uint16_t) tmpNum;
 
     tmpNum = getSoftInstrVersion();
     if (tmpNum == -1)
         return false;
-    outStruct.SW_instr_version = tmpNum;
+    outStruct.SW_instr_version = (uint16_t) tmpNum;
 
     return true;
 }
@@ -281,9 +277,9 @@ QByteArray DuInstrumentInfo::toBinary(uint8_t nbLayer, int nbSamples, uint32_t s
 
     du_instrumentinfo.nb_layer = nbLayer;
 
-    du_instrumentinfo.ip_size = nbLayer * 2 + nbSamples * INSTR_DREAM_IP_SIZE;
+    du_instrumentinfo.ip_size = (uint16_t) nbLayer * 2 + (uint16_t) nbSamples * INSTR_DREAM_IP_SIZE;
 
-    du_instrumentinfo.sp_size = nbSamples * INSTR_DREAM_SP_SIZE;
+    du_instrumentinfo.sp_size = (uint16_t) nbSamples * INSTR_DREAM_SP_SIZE;
 
     du_instrumentinfo.sample_size = sampleSize;
 
