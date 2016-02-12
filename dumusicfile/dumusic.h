@@ -19,10 +19,9 @@ DU_OBJECT(DuMusic);
 class DuMusic : public DuContainer
 {
 public:
-    explicit DuMusic();
-    ~DuMusic();
+    DuMusic();
 
-    virtual DuObjectPtr clone() const;
+    virtual DuObjectPtr clone() const override;
 
     static DuMusicPtr fromDuMusicBinary(s_total_buffer &du_music, int fileSize);
     static DuMusicPtr fromBinary(const QByteArray &data);
@@ -34,10 +33,10 @@ public:
 
     static DuMusicPtr fromMidi(const MidiConversionHelper &helper);
 
-    QByteArray toDuMusicBinary() const;
-    QByteArray toMidiBinary() const;
+    QByteArray toDuMusicBinary() const override;
+    QByteArray toMidiBinary() const override;
 
-    int size() const;
+    int size() const override;
     bool isEmpty() const;
 
     int databaseId() const;
