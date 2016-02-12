@@ -907,6 +907,61 @@ QByteArray DuMusic::toMidiBinary() const
     return midiFile->toMidiBinary();
 }
 
+DuObjectPtr DuMusic::getChild(const QString &key)
+{
+    if (key == KeySongName)
+    {
+        DuSongInfoPtr info = getSongInfo();
+        if (info == NULL)
+        {
+            return DuObjectPtr();
+        }
+
+        return info->getChild(key);
+    }
+    else if (key == KeyFileVersion)
+    {
+        DuHeaderPtr header = getHeader();
+        if (header == NULL)
+        {
+            return DuObjectPtr();
+        }
+
+        return header->getChild(key);
+    }
+    else
+    {
+        return DuContainer::getChild(key);
+    }
+}
+
+DuObjectConstPtr DuMusic::getChild(const QString &key) const
+{
+    if (key == KeySongName)
+    {
+        DuSongInfoConstPtr info = getSongInfo();
+        if (info == NULL)
+        {
+            return DuObjectPtr();
+        }
+
+        return info->getChild(key);
+    }
+    else if (key == KeyFileVersion)
+    {
+        DuHeaderConstPtr header = getHeader();
+        if (header == NULL)
+        {
+            return DuObjectPtr();
+        }
+
+        return header->getChild(key);
+    }
+    else
+    {
+        return DuContainer::getChild(key);
+    }
+}
 
 int DuMusic::size() const
 {
@@ -969,53 +1024,8 @@ void DuMusic::setLists(const QStringList &lists)
     m_lists = lists;
 }
 
-QString DuMusic::getSongName() const
-{
-    const DuSongInfoConstPtr &songInfo = getSongInfo();
-
-    if (songInfo == NULL)
-    {
-        return QString();
-    }
-
-    return songInfo->getSongName();
-}
-
-bool DuMusic::setSongName(const QString &value)
-{
-    const DuSongInfoPtr &songInfo = getSongInfo();
-
-    if (songInfo == NULL)
-    {
-        return false;
-    }
-
-    return songInfo->setSongName(value);
-}
-
-int DuMusic::getFileVersion() const
-{
-    const DuHeaderConstPtr &header = getHeader();
-
-    if (header == NULL)
-    {
-        return -1;
-    }
-
-    return header->getFileVersion();
-}
-
-bool DuMusic::setFileVersion(int value)
-{
-    const DuHeaderPtr &header = getHeader();
-
-    if (header == NULL)
-    {
-        return false;
-    }
-
-    return header->setFileVersion(value);
-}
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuMusic, SongName,    DuSongInfo, SongInfo, QString, QString())
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuMusic, FileVersion, DuHeader,   Header,   int, -1)
 
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusic, Header,      DuHeader)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusic, Controllers, DuControllers)

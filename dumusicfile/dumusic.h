@@ -32,6 +32,9 @@ public:
     QByteArray toDuMusicBinary() const override;
     QByteArray toMidiBinary() const override;
 
+    virtual DuObjectPtr getChild(const QString &key) override;
+    virtual DuObjectConstPtr getChild(const QString &key) const override;
+
     int size() const override;
     bool isEmpty() const;
 
@@ -41,11 +44,8 @@ public:
     QStringList lists() const;
     void setLists(const QStringList &lists);
 
-    QString getSongName() const;
-    bool setSongName(const QString &value);
-
-    int getFileVersion() const;
-    bool setFileVersion(int value);
+    DU_KEY_ACCESSORS_IN_CHILD(SongName,     QString)
+    DU_KEY_ACCESSORS_IN_CHILD(FileVersion,  int)
 
     DU_KEY_ACCESSORS_OBJECT(Header,      DuHeader)
     DU_KEY_ACCESSORS_OBJECT(Controllers, DuControllers)
