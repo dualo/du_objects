@@ -2,7 +2,7 @@
 
 #include "ducontrollers.h"
 #include "dueffectset.h"
-#include "duexpression.h"
+#include "duexpressionparam.h"
 
 #include <cstring>
 
@@ -14,7 +14,7 @@ DU_OBJECT_IMPL(DuPreset)
 DuPreset::DuPreset() :
     DuContainer()
 {
-    addChild(KeyExpression, new DuExpression);
+    addChild(KeyExpressionParam, new DuExpressionParam);
 
     addChild(KeyControllers, new DuControllers);
 
@@ -35,15 +35,15 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
 {
     DuPresetPtr preset(new DuPreset);
 
-    const DuExpressionPtr &expression =
-            DuExpression::fromDuMusicBinary(du_preset);
-    if (expression != NULL)
-        preset->setExpression(expression);
+    const DuExpressionParamPtr &expressionParam =
+            DuExpressionParam::fromDuMusicBinary(du_preset);
+    if (expressionParam != NULL)
+        preset->setExpressionParam(expressionParam);
     else
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuPreset::fromDuMusicBinary():\n"
                     << "failed to generate DuPreset\n"
-                    << "the DuExpression was not properly generated";
+                    << "the DuExpressionParam was not properly generated";
 
         return DuPresetPtr();
     }
@@ -80,11 +80,11 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
 
 DuPresetPtr DuPreset::fromJson(const QJsonObject &jsonPreset)
 {
-    QJsonValue jsonExpression       = jsonPreset[KeyExpression];
+    QJsonValue jsonExpressionParam  = jsonPreset[KeyExpressionParam];
     QJsonValue jsonControllers      = jsonPreset[KeyControllers];
     QJsonValue jsonEffectSet        = jsonPreset[KeyEffectSet];
 
-    if (        !jsonExpression.isObject()      ||  !jsonControllers.isObject()
+    if (        !jsonExpressionParam.isObject() ||  !jsonControllers.isObject()
             ||  !jsonEffectSet.isObject())
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuPreset::fromJson():\n"
@@ -97,15 +97,15 @@ DuPresetPtr DuPreset::fromJson(const QJsonObject &jsonPreset)
 
     DuPresetPtr preset(new DuPreset);
 
-    const DuExpressionPtr &expression =
-            DuExpression::fromJson(jsonExpression.toObject());
-    if (expression != NULL)
-        preset->setExpression(expression);
+    const DuExpressionParamPtr &expressionParam =
+            DuExpressionParam::fromJson(jsonExpressionParam.toObject());
+    if (expressionParam != NULL)
+        preset->setExpressionParam(expressionParam);
     else
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuPreset::fromJson():\n"
                     << "failed to generate DuPreset\n"
-                    << "the DuExpression was not properly generated";
+                    << "the DuExpressionParam was not properly generated";
 
         return DuPresetPtr();
     }
@@ -150,11 +150,11 @@ QByteArray DuPreset::toDuMusicBinary() const
     std::memset((char*)&du_preset, 0, size());
 
 
-    const DuExpressionConstPtr &expression = getExpression();
-    if (expression == NULL)
+    const DuExpressionParamConstPtr &expressionParam = getExpressionParam();
+    if (expressionParam == NULL)
         return QByteArray();
-    const QByteArray &expressionArray = expression->toDuMusicBinary();
-    if (expressionArray.isNull())
+    const QByteArray &expressionParamArray = expressionParam->toDuMusicBinary();
+    if (expressionParamArray.isNull())
         return QByteArray();
 
     const DuControllersConstPtr &controllers = getControllers();
@@ -171,7 +171,7 @@ QByteArray DuPreset::toDuMusicBinary() const
     if (effecSetArray.isNull())
         return QByteArray();
 
-    tmpPreset = expressionArray + controllersArray + effecSetArray;
+    tmpPreset = expressionParamArray + controllersArray + effecSetArray;
 
     std::memcpy(&(du_preset), tmpPreset.data(), size());
 
@@ -186,6 +186,6 @@ int DuPreset::size() const
 }
 
 
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuPreset, Expression,  DuExpression)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuPreset, ExpressionParam,  DuExpressionParam)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuPreset, Controllers, DuControllers)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuPreset, EffectSet,   DuEffectSet)

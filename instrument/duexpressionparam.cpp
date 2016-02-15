@@ -1,4 +1,4 @@
-#include "duexpression.h"
+#include "duexpressionparam.h"
 
 #include "../du-touch/parameters/controler_parameters_mng.h"
 
@@ -9,9 +9,9 @@
 #include "../general/dunumeric.h"
 
 
-DU_OBJECT_IMPL(DuExpression)
+DU_OBJECT_IMPL(DuExpressionParam)
 
-DuExpression::DuExpression() :
+DuExpressionParam::DuExpressionParam() :
     DuContainer()
 {
     addChild(KeyVolume,
@@ -85,20 +85,20 @@ DuExpression::DuExpression() :
                            0x07, 0x00));
 }
 
-DuExpression::~DuExpression()
+DuExpressionParam::~DuExpressionParam()
 {
 }
 
 
-DuObjectPtr DuExpression::clone() const
+DuObjectPtr DuExpressionParam::clone() const
 {
-    return DuExpressionPtr(new DuExpression(*this));
+    return DuExpressionParamPtr(new DuExpressionParam(*this));
 }
 
 
-DuExpressionPtr DuExpression::fromDuMusicBinary(const preset_instr &du_preset)
+DuExpressionParamPtr DuExpressionParam::fromDuMusicBinary(const preset_instr &du_preset)
 {
-    DuExpressionPtr expression(new DuExpression);
+    DuExpressionParamPtr expression(new DuExpressionParam);
     bool verif = true;
 
     verif = expression->setVolume(du_preset.s_volume) ? verif : false;
@@ -124,7 +124,7 @@ DuExpressionPtr DuExpression::fromDuMusicBinary(const preset_instr &du_preset)
 
     if (!verif)
     {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuExpression::fromDuMusicBinary():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuExpressionParam::fromDuMusicBinary():\n"
                    << "an attribute was not properly set";
     }
 
@@ -132,7 +132,7 @@ DuExpressionPtr DuExpression::fromDuMusicBinary(const preset_instr &du_preset)
 }
 
 
-DuExpressionPtr DuExpression::fromJson(const QJsonObject &jsonExpression)
+DuExpressionParamPtr DuExpressionParam::fromJson(const QJsonObject &jsonExpression)
 {
     QJsonValue jsonVolume       = jsonExpression[KeyVolume];
     QJsonValue jsonPanning      = jsonExpression[KeyPanning];
@@ -166,15 +166,15 @@ DuExpressionPtr DuExpression::fromJson(const QJsonObject &jsonExpression)
 
             || !jsonArpeggiatorType.isDouble()  || !jsonArpeggiatorBeat.isDouble())
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuExpression::fromJson():\n"
-                    << "failed to generate DuExpression\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuExpressionParam::fromJson():\n"
+                    << "failed to generate DuExpressionParam\n"
                     << "a json key did not contain the proper type";
 
-        return DuExpressionPtr();
+        return DuExpressionParamPtr();
     }
 
 
-    DuExpressionPtr expression(new DuExpression);
+    DuExpressionParamPtr expression(new DuExpressionParam);
     bool verif = true;
 
     verif = expression->setVolume(jsonVolume.toInt()) ? verif : false;
@@ -200,7 +200,7 @@ DuExpressionPtr DuExpression::fromJson(const QJsonObject &jsonExpression)
 
     if (!verif)
     {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuExpression::fromJson():\n"
+        qCWarning(LOG_CAT_DU_OBJECT) << "DuExpressionParam::fromJson():\n"
                    << "an attribute was not properly set";
     }
 
@@ -208,7 +208,7 @@ DuExpressionPtr DuExpression::fromJson(const QJsonObject &jsonExpression)
 }
 
 
-QByteArray DuExpression::toDuMusicBinary() const
+QByteArray DuExpressionParam::toDuMusicBinary() const
 {
     preset_instr du_expression;
 
@@ -309,29 +309,29 @@ QByteArray DuExpression::toDuMusicBinary() const
 }
 
 
-int DuExpression::size() const
+int DuExpressionParam::size() const
 {
     return EXPRESSION_SIZE;
 }
 
 
-DU_KEY_ACCESSORS_IMPL(DuExpression, Volume,                Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpression, Panning,               Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpression, Octave,                Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpression, SendToReverb,          Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpressionParam, Volume,                Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpressionParam, Panning,               Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpressionParam, Octave,                Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpressionParam, SendToReverb,          Numeric, int, -1)
 
-DU_KEY_ACCESSORS_IMPL(DuExpression, PortamentoOnOff,       Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpression, PortamentoControl,     Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpression, PortamentoTime,        Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpression, Expression,            Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpression, PitchBendSensitivity,  Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpression, KeyCurve,              Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpressionParam, PortamentoOnOff,       Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpressionParam, PortamentoControl,     Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpressionParam, PortamentoTime,        Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpressionParam, Expression,            Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpressionParam, PitchBendSensitivity,  Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpressionParam, KeyCurve,              Numeric, int, -1)
 
-DU_KEY_ACCESSORS_IMPL(DuExpression, CompressorPreset,      Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpression, DelayPreset,           Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpression, DistortionPreset,      Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpression, EqualizerPreset,       Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpression, ChorusPreset,          Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpressionParam, CompressorPreset,      Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpressionParam, DelayPreset,           Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpressionParam, DistortionPreset,      Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpressionParam, EqualizerPreset,       Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpressionParam, ChorusPreset,          Numeric, int, -1)
 
-DU_KEY_ACCESSORS_IMPL(DuExpression, ArpeggiatorType,       Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpression, ArpeggiatorBeat,       Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpressionParam, ArpeggiatorType,       Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuExpressionParam, ArpeggiatorBeat,       Numeric, int, -1)

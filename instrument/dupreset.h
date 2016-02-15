@@ -9,7 +9,7 @@
 
 DU_OBJECT(DuControllers);
 DU_OBJECT(DuEffectSet);
-DU_OBJECT(DuExpression);
+DU_OBJECT(DuExpressionParam);
 
 DU_OBJECT(DuPreset);
 
@@ -28,9 +28,9 @@ public:
 
     int size() const;
 
-    DU_KEY_ACCESSORS_OBJECT(Expression,  DuExpression)
-    DU_KEY_ACCESSORS_OBJECT(Controllers, DuControllers)
-    DU_KEY_ACCESSORS_OBJECT(EffectSet,   DuEffectSet)
+    DU_KEY_ACCESSORS_OBJECT(ExpressionParam,    DuExpressionParam)
+    DU_KEY_ACCESSORS_OBJECT(Controllers,        DuControllers)
+    DU_KEY_ACCESSORS_OBJECT(EffectSet,          DuEffectSet)
 };
 
 #endif // DUPRESET_H

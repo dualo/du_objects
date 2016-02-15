@@ -1,5 +1,5 @@
-#ifndef DUEXPRESSION_H
-#define DUEXPRESSION_H
+#ifndef DUEXPRESSIONPARAM_H
+#define DUEXPRESSIONPARAM_H
 
 #include "../general/ducontainer.h"
 
@@ -8,18 +8,18 @@
 #define EXPRESSION_PRESET_OFFSET    0
 
 
-DU_OBJECT(DuExpression);
+DU_OBJECT(DuExpressionParam);
 
-class DuExpression : public DuContainer
+class DuExpressionParam : public DuContainer
 {
 public:
-    explicit DuExpression();
-    ~DuExpression();
+    explicit DuExpressionParam();
+    ~DuExpressionParam();
 
     virtual DuObjectPtr clone() const;
 
-    static DuExpressionPtr fromDuMusicBinary(const preset_instr &du_preset);
-    static DuExpressionPtr fromJson(const QJsonObject &jsonExpression);
+    static DuExpressionParamPtr fromDuMusicBinary(const preset_instr &du_preset);
+    static DuExpressionParamPtr fromJson(const QJsonObject &jsonExpression);
 
     QByteArray toDuMusicBinary() const;
 
@@ -47,4 +47,4 @@ public:
     DU_KEY_ACCESSORS(ArpeggiatorBeat,       int)
 };
 
-#endif // DUEXPRESSION_H
+#endif // DUEXPRESSIONPARAM_H

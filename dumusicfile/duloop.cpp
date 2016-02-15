@@ -11,7 +11,7 @@
 #include "../general/duarray.h"
 #include "../general/dunumeric.h"
 
-#include "../instrument/duexpression.h"
+#include "../instrument/duexpressionparam.h"
 #include "../instrument/duinstrumentinfo.h"
 #include "../instrument/dupreset.h"
 
@@ -293,13 +293,13 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int midiTrackInde
         return DuLoopPtr();
     }
 
-    const DuExpressionConstPtr &presetExpr = instrPreset->getExpression();
+    const DuExpressionParamConstPtr &presetExpr = instrPreset->getExpressionParam();
     if (presetExpr == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuLoop::fromMidi():\n"
                 << "failed to generate DuLoop\n"
-                << "DuExpression is NULL";
+                << "DuExpressionParam is NULL";
 
         return DuLoopPtr();
     }
@@ -515,12 +515,12 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
         return DuMidiTrackPtr();
     }
 
-    const DuExpressionConstPtr &presetExpr = instrPreset->getExpression();
+    const DuExpressionParamConstPtr &presetExpr = instrPreset->getExpressionParam();
     if (presetExpr == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuLoop::toDuMidiTrack():\n"
-                << "DuExpression is NULL";
+                << "DuExpressionParam is NULL";
 
         return DuMidiTrackPtr();
     }
