@@ -314,24 +314,6 @@ int DuExpressionParam::size() const
     return EXPRESSION_SIZE;
 }
 
-
-DU_KEY_ACCESSORS_IMPL(DuExpressionParam, Volume,                Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpressionParam, Panning,               Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpressionParam, Octave,                Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpressionParam, SendToReverb,          Numeric, int, -1)
-
-DU_KEY_ACCESSORS_IMPL(DuExpressionParam, PortamentoOnOff,       Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpressionParam, PortamentoControl,     Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpressionParam, PortamentoTime,        Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpressionParam, Expression,            Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpressionParam, PitchBendSensitivity,  Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpressionParam, KeyCurve,              Numeric, int, -1)
-
-DU_KEY_ACCESSORS_IMPL(DuExpressionParam, CompressorPreset,      Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpressionParam, DelayPreset,           Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpressionParam, DistortionPreset,      Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpressionParam, EqualizerPreset,       Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpressionParam, ChorusPreset,          Numeric, int, -1)
-
-DU_KEY_ACCESSORS_IMPL(DuExpressionParam, ArpeggiatorType,       Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuExpressionParam, ArpeggiatorBeat,       Numeric, int, -1)
+#define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS_IMPL(DuExpressionParam, key, dutype, type, defaultReturn)
+    DuExpressionParam_Children
+#undef X

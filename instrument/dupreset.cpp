@@ -1,9 +1,5 @@
 #include "dupreset.h"
 
-#include "ducontrollers.h"
-#include "dueffectset.h"
-#include "duexpressionparam.h"
-
 #include <cstring>
 
 #include <QJsonObject>
@@ -189,3 +185,18 @@ int DuPreset::size() const
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuPreset, ExpressionParam,  DuExpressionParam)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuPreset, Controllers, DuControllers)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuPreset, EffectSet,   DuEffectSet)
+
+// ExpressionParam
+#define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuPreset, key, DuExpressionParam, ExpressionParam, type, defaultReturn)
+    DuExpressionParam_Children
+#undef X
+
+// Controllers
+#define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuPreset, key, DuControllers, Controllers, type, defaultReturn)
+    DuControllers_Children
+#undef X
+
+// EffectSet
+#define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuPreset, key, DuEffectSet, EffectSet, type, defaultReturn)
+    DuEffectSet_Children
+#undef X

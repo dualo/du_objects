@@ -7,6 +7,32 @@
 #define EFFECTSET_SIZE              8 + 11 + 5 + 9 + 59
 #define EFFECTSET_PRESET_OFFSET     36
 
+#define DuEffectSet_Children \
+    X(CompressorOnOff, Numeric, int, -1) \
+    X(DelayOnOff,      Numeric, int, -1) \
+    X(DistortionOnOff, Numeric, int, -1) \
+    X(EqualizerOnOff,  Numeric, int, -1) \
+    X(ChorusOnOff,     Numeric, int, -1) \
+    \
+    X(MultinoteAct,    Numeric, int, -1) \
+    \
+    X(Pitch,           Numeric, int, -1) \
+    \
+    X(AutopitchRate,   Numeric, int, -1) \
+    X(AutopitchRange,  Numeric, int, -1) \
+    X(TremoloRate,     Numeric, int, -1) \
+    X(TremoloRange,    Numeric, int, -1) \
+    X(AutopanRate,     Numeric, int, -1) \
+    X(AutopanRange,    Numeric, int, -1) \
+    X(AutowahRate,     Numeric, int, -1) \
+    X(AutowahRange,    Numeric, int, -1) \
+    \
+    X(AdsrAttack,      Numeric, int, -1) \
+    X(AdsrRelease,     Numeric, int, -1) \
+    X(WahType,         Numeric, int, -1) \
+    X(WahFrequency,    Numeric, int, -1) \
+    X(WahResonance,    Numeric, int, -1)
+
 DU_OBJECT(DuArray);
 
 DU_OBJECT(DuEffectSet);
@@ -26,31 +52,11 @@ public:
 
     int size() const;
 
-    DU_KEY_ACCESSORS(CompressorOnOff,   int)
-    DU_KEY_ACCESSORS(DelayOnOff,        int)
-    DU_KEY_ACCESSORS(DistortionOnOff,   int)
-    DU_KEY_ACCESSORS(EqualizerOnOff,    int)
-    DU_KEY_ACCESSORS(ChorusOnOff,       int)
+#define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS(key, type)
+    DuEffectSet_Children
+#undef X
 
-    DU_KEY_ACCESSORS(MultinoteAct,      int)
     DU_KEY_ACCESSORS_OBJECT(Multinote,  DuArray)
-
-    DU_KEY_ACCESSORS(Pitch,             int)
-
-    DU_KEY_ACCESSORS(AutopitchRate,     int)
-    DU_KEY_ACCESSORS(AutopitchRange,    int)
-    DU_KEY_ACCESSORS(TremoloRate,       int)
-    DU_KEY_ACCESSORS(TremoloRange,      int)
-    DU_KEY_ACCESSORS(AutopanRate,       int)
-    DU_KEY_ACCESSORS(AutopanRange,      int)
-    DU_KEY_ACCESSORS(AutowahRate,       int)
-    DU_KEY_ACCESSORS(AutowahRange,      int)
-
-    DU_KEY_ACCESSORS(AdsrAttack,        int)
-    DU_KEY_ACCESSORS(AdsrRelease,       int)
-    DU_KEY_ACCESSORS(WahType,           int)
-    DU_KEY_ACCESSORS(WahFrequency,      int)
-    DU_KEY_ACCESSORS(WahResonance,      int)
 };
 
 #endif // DUEFFECTSET_H

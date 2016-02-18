@@ -395,29 +395,8 @@ int DuEffectSet::size() const
     return EFFECTSET_SIZE;
 }
 
+#define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS_IMPL(DuEffectSet, key, dutype, type, defaultReturn)
+    DuEffectSet_Children
+#undef X
 
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, CompressorOnOff,   Numeric,      int,        -1)
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, DelayOnOff,        Numeric,      int,        -1)
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, DistortionOnOff,   Numeric,      int,        -1)
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, EqualizerOnOff,    Numeric,      int,        -1)
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, ChorusOnOff,       Numeric,      int,        -1)
-
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, MultinoteAct,      Numeric,      int,        -1)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuEffectSet, Multinote, DuArray)
-
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, Pitch,             Numeric,      int,        -1)
-
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, AutopitchRate,     Numeric,      int,        -1)
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, AutopitchRange,    Numeric,      int,        -1)
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, TremoloRate,       Numeric,      int,        -1)
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, TremoloRange,      Numeric,      int,        -1)
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, AutopanRate,       Numeric,      int,        -1)
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, AutopanRange,      Numeric,      int,        -1)
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, AutowahRate,       Numeric,      int,        -1)
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, AutowahRange,      Numeric,      int,        -1)
-
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, AdsrAttack,        Numeric,      int,        -1)
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, AdsrRelease,       Numeric,      int,        -1)
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, WahType,           Numeric,      int,        -1)
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, WahFrequency,      Numeric,      int,        -1)
-DU_KEY_ACCESSORS_IMPL(DuEffectSet, WahResonance,      Numeric,      int,        -1)

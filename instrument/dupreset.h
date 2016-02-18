@@ -3,13 +3,13 @@
 
 #include "../general/ducontainer.h"
 
+#include "ducontrollers.h"
+#include "dueffectset.h"
+#include "duexpressionparam.h"
+
 
 #define PARAMS_NUMERIC_SIZE     2
 
-
-DU_OBJECT(DuControllers);
-DU_OBJECT(DuEffectSet);
-DU_OBJECT(DuExpressionParam);
 
 DU_OBJECT(DuPreset);
 
@@ -31,6 +31,21 @@ public:
     DU_KEY_ACCESSORS_OBJECT(ExpressionParam,    DuExpressionParam)
     DU_KEY_ACCESSORS_OBJECT(Controllers,        DuControllers)
     DU_KEY_ACCESSORS_OBJECT(EffectSet,          DuEffectSet)
+
+    // ExpressionParam
+#define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS_IN_CHILD(key, type)
+    DuExpressionParam_Children
+#undef X
+
+    // Controllers
+#define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS_IN_CHILD(key, type)
+    DuControllers_Children
+#undef X
+
+    // EffectSet
+#define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS_IN_CHILD(key, type)
+    DuEffectSet_Children
+#undef X
 };
 
 #endif // DUPRESET_H

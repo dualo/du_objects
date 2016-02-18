@@ -7,6 +7,27 @@
 #define EXPRESSION_SIZE             12 + 8 + 1
 #define EXPRESSION_PRESET_OFFSET    0
 
+#define DuExpressionParam_Children \
+    X(Volume,               Numeric, int, -1) \
+    X(Panning,              Numeric, int, -1) \
+    X(Octave,               Numeric, int, -1) \
+    X(SendToReverb,         Numeric, int, -1) \
+     \
+    X(PortamentoOnOff,      Numeric, int, -1) \
+    X(PortamentoControl,    Numeric, int, -1) \
+    X(PortamentoTime,       Numeric, int, -1) \
+    X(Expression,           Numeric, int, -1) \
+    X(PitchBendSensitivity, Numeric, int, -1) \
+    X(KeyCurve,             Numeric, int, -1) \
+     \
+    X(CompressorPreset,     Numeric, int, -1) \
+    X(DelayPreset,          Numeric, int, -1) \
+    X(DistortionPreset,     Numeric, int, -1) \
+    X(EqualizerPreset,      Numeric, int, -1) \
+    X(ChorusPreset,         Numeric, int, -1) \
+     \
+    X(ArpeggiatorType,      Numeric, int, -1) \
+    X(ArpeggiatorBeat,      Numeric, int, -1)
 
 DU_OBJECT(DuExpressionParam);
 
@@ -25,26 +46,9 @@ public:
 
     int size() const;
 
-    DU_KEY_ACCESSORS(Volume,                int)
-    DU_KEY_ACCESSORS(Panning,               int)
-    DU_KEY_ACCESSORS(Octave,                int)
-    DU_KEY_ACCESSORS(SendToReverb,          int)
-
-    DU_KEY_ACCESSORS(PortamentoOnOff,       int)
-    DU_KEY_ACCESSORS(PortamentoControl,     int)
-    DU_KEY_ACCESSORS(PortamentoTime,        int)
-    DU_KEY_ACCESSORS(Expression,            int)
-    DU_KEY_ACCESSORS(PitchBendSensitivity,  int)
-    DU_KEY_ACCESSORS(KeyCurve,              int)
-
-    DU_KEY_ACCESSORS(CompressorPreset,      int)
-    DU_KEY_ACCESSORS(DelayPreset,           int)
-    DU_KEY_ACCESSORS(DistortionPreset,      int)
-    DU_KEY_ACCESSORS(EqualizerPreset,       int)
-    DU_KEY_ACCESSORS(ChorusPreset,          int)
-
-    DU_KEY_ACCESSORS(ArpeggiatorType,       int)
-    DU_KEY_ACCESSORS(ArpeggiatorBeat,       int)
+#define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS(key, type)
+    DuExpressionParam_Children
+#undef X
 };
 
 #endif // DUEXPRESSIONPARAM_H

@@ -13,6 +13,19 @@
 
 #define CONTROLS_NUMERIC_SIZE           2
 
+#define DuControllers_Children \
+    X(DirectionGyroP,   Numeric, int, 0) \
+    X(DirectionGyroR,   Numeric, int, 0) \
+    X(DirectionGyroY,   Numeric, int, 0) \
+     \
+    X(ActiveAftertouch, Numeric, int, -1) \
+    X(ActiveSliderL,    Numeric, int, -1) \
+    X(ActiveSliderR,    Numeric, int, -1) \
+     \
+    X(ActiveGyroP,      Numeric, int, -1) \
+    X(ActiveGyroR,      Numeric, int, -1) \
+    X(ActiveGyroY,      Numeric, int, -1)
+
 
 DU_OBJECT(DuControllers);
 
@@ -32,17 +45,9 @@ public:
 
     int size() const;
 
-    DU_KEY_ACCESSORS(DirectionGyroP,   int)
-    DU_KEY_ACCESSORS(DirectionGyroR,   int)
-    DU_KEY_ACCESSORS(DirectionGyroY,   int)
-
-    DU_KEY_ACCESSORS(ActiveAftertouch, int)
-    DU_KEY_ACCESSORS(ActiveSliderL,    int)
-    DU_KEY_ACCESSORS(ActiveSliderR,    int)
-
-    DU_KEY_ACCESSORS(ActiveGyroP,      int)
-    DU_KEY_ACCESSORS(ActiveGyroR,      int)
-    DU_KEY_ACCESSORS(ActiveGyroY,      int)
+#define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS(key, type)
+    DuControllers_Children
+#undef X
 };
 
 #endif // DUCONTROLLERS_H
