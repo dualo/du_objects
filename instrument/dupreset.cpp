@@ -181,6 +181,106 @@ int DuPreset::size() const
     return PRESET_STRUCT_SIZE;
 }
 
+DuObjectPtr DuPreset::getChild(const QString &key)
+{
+    if (false
+        #define X(_key, dutype, type, defaultReturn) || key == Key ## _key
+            DuExpressionParam_Children
+        #undef X
+            )
+    {
+        DuExpressionParamPtr expressionParam = getExpressionParam();
+        if (expressionParam == NULL)
+        {
+            return DuObjectPtr();
+        }
+
+        return expressionParam->getChild(key);
+    }
+    else if (false
+         #define X(_key, dutype, type, defaultReturn) || key == Key ## _key
+             DuControllers_Children
+         #undef X
+             )
+    {
+        DuControllersPtr controllers = getControllers();
+        if (controllers == NULL)
+        {
+            return DuObjectPtr();
+        }
+
+        return controllers->getChild(key);
+    }
+    else if (false
+         #define X(_key, dutype, type, defaultReturn) || key == Key ## _key
+             DuEffectSet_Children
+         #undef X
+             )
+    {
+        DuEffectSetPtr effectSetParam = getEffectSet();
+        if (effectSetParam == NULL)
+        {
+            return DuObjectPtr();
+        }
+
+        return effectSetParam->getChild(key);
+    }
+    else
+    {
+        return DuContainer::getChild(key);
+    }
+}
+
+DuObjectConstPtr DuPreset::getChild(const QString &key) const
+{
+    if (false
+        #define X(_key, dutype, type, defaultReturn) || key == Key ## _key
+            DuExpressionParam_Children
+        #undef X
+            )
+    {
+        DuExpressionParamConstPtr expressionParam = getExpressionParam();
+        if (expressionParam == NULL)
+        {
+            return DuObjectPtr();
+        }
+
+        return expressionParam->getChild(key);
+    }
+    else if (false
+         #define X(_key, dutype, type, defaultReturn) || key == Key ## _key
+             DuControllers_Children
+         #undef X
+             )
+    {
+        DuControllersConstPtr controllers = getControllers();
+        if (controllers == NULL)
+        {
+            return DuObjectPtr();
+        }
+
+        return controllers->getChild(key);
+    }
+    else if (false
+         #define X(_key, dutype, type, defaultReturn) || key == Key ## _key
+             DuEffectSet_Children
+         #undef X
+             )
+    {
+        DuEffectSetConstPtr effectSetParam = getEffectSet();
+        if (effectSetParam == NULL)
+        {
+            return DuObjectPtr();
+        }
+
+        return effectSetParam->getChild(key);
+    }
+    else
+    {
+        return DuContainer::getChild(key);
+    }
+}
+
 
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuPreset, ExpressionParam,  DuExpressionParam)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuPreset, Controllers, DuControllers)
