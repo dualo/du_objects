@@ -15,8 +15,8 @@ class DuSoundInfo : public DuContainer
 public:
     DuSoundInfo();
 
-    virtual DuObjectPtr clone() const;
-    virtual int size() const;
+    virtual DuObjectPtr clone() const override;
+    virtual int size() const override;
 
     static DuSoundInfoPtr fromBinary(const struct_instr& data);
 
