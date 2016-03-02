@@ -67,8 +67,8 @@ public:
 
     QPair<int, int> getIndexes(int index) const;
 
-    const DuMidiTrackPtr getMidiTrack(int index) const;
-    const DuInstrumentPtr getInstrument(int index) const;
+    DuMidiTrackPtr getMidiTrack(int index) const;
+    DuInstrumentPtr getInstrument(int index) const;
 
     int getKeyboardFromMidi(int key) const;
     static int percuFromMidi(int gmKey, int mapIndex);
