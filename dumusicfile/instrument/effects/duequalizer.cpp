@@ -163,6 +163,7 @@ DuEqualizerPtr DuEqualizer::fromJson(const QJsonObject &jsonEqualizer)
 QByteArray DuEqualizer::toDuMusicBinary() const
 {
     FX_equalizer du_equalizer;
+    std::memset((char*)&du_equalizer, 0, size());
 
     QString tmpStr;
     int tmpNum = 0;

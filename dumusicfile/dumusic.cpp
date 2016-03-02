@@ -661,8 +661,7 @@ QByteArray DuMusic::toDuMusicBinary() const
     if (musicSize == -1)
         return QByteArray();
 
-    QByteArray tmpClear(musicSize, (char)0x00);
-    std::memcpy((char *)(du_music.data()), tmpClear.data(), musicSize);
+    std::memset((char*)du_music.data(), 0, musicSize);
 
 
     const DuHeaderConstPtr &header = getHeader();

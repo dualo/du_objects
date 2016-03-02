@@ -272,6 +272,7 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
 QByteArray DuInstrument::toDuMusicBinary() const
 {
     music_instr du_instrument;
+    std::memset((char*)&du_instrument, 0, size());
 
 
     const DuInstrumentInfoConstPtr& instrInfo = getInstrumentInfo();

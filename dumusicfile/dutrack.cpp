@@ -252,8 +252,7 @@ QByteArray DuTrack::toDuMusicBinary() const
 
     int tmpNum = 0;
 
-    QByteArray tmpClear(size(), (char)0x00);
-    std::memcpy((char *)&(du_track), tmpClear.data(), size());
+    std::memset((char*)&du_track, 0, size());
 
 
     const DuArrayConstPtr &loops = getLoops();

@@ -126,6 +126,7 @@ DuMixerPtr DuMixer::fromJson(const QJsonObject &jsonMixer)
 QByteArray DuMixer::toDuMusicBinary() const
 {
     FX_mix du_mixer;
+    std::memset((char*)&du_mixer, 0, size());
     int tmp = 0;
 
 

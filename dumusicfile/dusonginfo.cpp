@@ -279,8 +279,7 @@ QByteArray DuSongInfo::toDuMusicBinary() const
     QString tmpStr;
     int tmpNum = 0;
 
-    QByteArray tmpClear(MUSIC_SONG_SIZE, (char)0x00);
-    std::memcpy((char *)&(du_songinfo), tmpClear.data(), MUSIC_SONG_SIZE);
+    std::memset((char*)&du_songinfo, 0, MUSIC_SONG_SIZE);
 
 
     const DuMixerConstPtr &mixer = getMixer();
@@ -293,7 +292,7 @@ QByteArray DuSongInfo::toDuMusicBinary() const
     std::memcpy(&(du_songinfo.s_mix), mixerArray.data(), FX_MIX_SIZE);
 
 
-    tmpClear = QByteArray(MUSIC_SONG_NAME_SIZE, char(0x00));
+    QByteArray tmpClear(MUSIC_SONG_NAME_SIZE, char(0x00));
 
     tmpArray = tmpClear;
     tmpStr = getSongName();

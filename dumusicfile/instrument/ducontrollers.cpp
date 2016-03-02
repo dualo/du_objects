@@ -169,8 +169,7 @@ QByteArray DuControllers::toDuMusicBinary() const
 
     int tmpNum = 0;
 
-    QByteArray tmpClear(MUSIC_SONG_SIZE, (char)0x00);
-    std::memcpy((char *)&(du_controllers), tmpClear.data(), MUSIC_SONG_SIZE);
+    std::memset((char*)&du_controllers, 0, MUSIC_SONG_SIZE);
 
 
     tmpNum = getDirectionGyroP();
