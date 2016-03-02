@@ -45,7 +45,7 @@ class DuSound : public DuBinaryData //TODO: inherit from DuContainer
 public:
     DuSound();
 
-    virtual DuObjectPtr clone() const;
+    virtual DuObjectPtr clone() const override;
 
     static DuSoundPtr fromBinary(const QByteArray &data);
     static DuSoundPtr fromBinary(QIODevice *input);

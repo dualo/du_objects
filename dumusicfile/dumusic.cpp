@@ -44,10 +44,6 @@ DuMusic::DuMusic() :
                            0xFF, 0x00));
 }
 
-DuMusic::~DuMusic()
-{
-}
-
 DuObjectPtr DuMusic::clone() const
 {
     return DuMusicPtr(new DuMusic(*this));
