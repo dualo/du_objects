@@ -86,6 +86,7 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
                 << "an attribute was not properly set";
     }
 
+    DuArrayPtr eventsArray(new DuArray(RECORD_SAMPLEBUFFERSIZE));
     for (int i = 0; i < du_loop.l_numsample; i++)
     {
         const DuEventPtr &event = DuEvent::fromDuMusicBinary(du_sample[i]);
@@ -98,7 +99,7 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
 
             return DuLoopPtr();
         }
-        if (!loop->appendEvent(event))
+        if (!eventsArray->append(event))
         {
             qCCritical(LOG_CAT_DU_OBJECT)
                     << "DuLoop::fromDuMusicBinary():\n"
@@ -108,6 +109,7 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
             return DuLoopPtr();
         }
     }
+    loop->setEvents(eventsArray);
 
     return loop;
 }

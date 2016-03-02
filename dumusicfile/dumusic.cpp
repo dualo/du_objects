@@ -24,7 +24,10 @@ DuMusic::DuMusic() :
     addChild(KeyReverb, new DuReverb);
 
 
-    addChild(KeyTracks, new DuArray(MUSIC_MAXTRACK));
+    DuArrayPtr trackArray(new DuArray(MUSIC_MAXTRACK));
+    for (int i = 0; i < MUSIC_MAXTRACK; ++i)
+        trackArray->append(new DuTrack);
+    addChild(KeyTracks, trackArray);
 
 
     addChild(KeyTranspose,
@@ -169,6 +172,7 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
     }
 
 
+    DuArrayPtr trackArray(new DuArray(MUSIC_MAXTRACK));
     for (int i = 0; i < MUSIC_MAXTRACK; i++)
     {
         const DuTrackPtr &track =
@@ -184,7 +188,7 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
 
             return DuMusicPtr();
         }
-        if (!music->appendTrack(track))
+        if (!trackArray->append(track))
         {
             qCCritical(LOG_CAT_DU_OBJECT)
                     << "DuMusic::fromDuMusicBinary():\n"
@@ -194,6 +198,7 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
             return DuMusicPtr();
         }
     }
+    music->setTracks(trackArray);
 
     if (music->size() > MUSIC_SONG_SIZE + RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE)
     {

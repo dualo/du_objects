@@ -40,7 +40,7 @@ QByteArray DuArray::toDuMusicBinary() const
 
     if (array.isEmpty())
     {
-        return QByteArray("");
+        return QByteArray();
     }
 
     QListIterator<DuObjectPtr> i(array);
@@ -197,6 +197,11 @@ bool DuArray::append(const DuObjectPtr &element)
 
     array.append(element);
     return true;
+}
+
+bool DuArray::append(DuObject *element)
+{
+    return append(DuObjectPtr(element));
 }
 
 void DuArray::insert(int index, const DuObjectPtr &element)

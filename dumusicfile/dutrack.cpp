@@ -18,7 +18,10 @@ DuTrack::DuTrack() :
              new DuNumeric(0, NUMERIC_DEFAULT_SIZE,
                            MUSIC_MAXLAYER - 1, 0));
 
-    addChild(KeyLoops, new DuArray(MUSIC_MAXLAYER));
+    DuArrayPtr loopsArray(new DuArray(MUSIC_MAXLAYER));
+    for (int i = 0; i < MUSIC_MAXLAYER; ++i)
+        loopsArray->append(new DuLoop);
+    addChild(KeyLoops, loopsArray);
 }
 
 DuTrack::~DuTrack()
@@ -46,6 +49,8 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
         qCWarning(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
                                      << "an attribute was not properly set";
     }
+
+    DuArrayPtr loopsArray(new DuArray(MUSIC_MAXLAYER));
 
     for (int i = 0; i < MUSIC_MAXLAYER; i++)
     {
@@ -99,7 +104,7 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
             return DuTrackPtr();
         }
 
-        if (!track->appendLoop(loop))
+        if (!loopsArray->append(loop))
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
                                           << "failed to generate DuTrack\n"
@@ -108,6 +113,8 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
             return DuTrackPtr();
         }
     }
+
+    track->setLoops(loopsArray);
 
     return track;
 }
