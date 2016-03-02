@@ -52,7 +52,8 @@ HEADERS += \
     $$PWD/duprofile.h \
     $$PWD/dusoundfile/dusound.h \
     $$PWD/miditodumusic/duscalemodel.h \
-    $$PWD/du-touch/parameters/controler_parameters_mng.h
+    $$PWD/du-touch/parameters/controler_parameters_mng.h \
+    $$PWD/general/duboolean.h
 
 SOURCES += \
     $$PWD/du-touch/parameters/instr_mapping.c \
@@ -104,7 +105,8 @@ SOURCES += \
     $$PWD/dudevicelist.cpp \
     $$PWD/duprofile.cpp \
     $$PWD/dusoundfile/dusound.cpp \
-    $$PWD/miditodumusic/duscalemodel.cpp
+    $$PWD/miditodumusic/duscalemodel.cpp \
+    $$PWD/general/duboolean.cpp
     
 DISTFILES += \
     $$PWD/miditodumusic/defaultmaps.json
