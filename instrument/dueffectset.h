@@ -13,6 +13,7 @@
     X(DistortionOnOff, Numeric, int, -1) \
     X(EqualizerOnOff,  Numeric, int, -1) \
     X(ChorusOnOff,     Numeric, int, -1) \
+    X(ReverbOnOff,     Numeric, int, -1) \
     \
     X(MultinoteAct,    Numeric, int, -1) \
     \
