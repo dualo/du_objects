@@ -1,13 +1,14 @@
 #ifndef DUPRESET_H
 #define DUPRESET_H
 
-#include "duexpression.h"
-#include "ducontrollers.h"
-#include "dueffectset.h"
+#include "../general/ducontainer.h"
 
 
 #define PARAMS_NUMERIC_SIZE     2
 
+DU_OBJECT(DuControllers)
+DU_OBJECT(DuEffectSet)
+DU_OBJECT(DuExpression)
 
 DU_OBJECT(DuPreset)
 

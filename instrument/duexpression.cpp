@@ -1,10 +1,12 @@
 #include "duexpression.h"
 
-#include "../../du-touch/parameters/controler_parameters_mng.h"
+#include "../du-touch/parameters/controler_parameters_mng.h"
 
 #include <cstring>
 
 #include <QJsonObject>
+
+#include "../general/dunumeric.h"
 
 
 DU_OBJECT_IMPL(DuExpression)

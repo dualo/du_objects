@@ -1,9 +1,19 @@
 #include "duloop.h"
 
+#include "duevent.h"
+#include "dumusicinstrument.h"
+
 #include <cstring>
 
 #include <QJsonArray>
 #include <QJsonObject>
+
+#include "../general/duarray.h"
+#include "../general/dunumeric.h"
+
+#include "../instrument/duexpression.h"
+#include "../instrument/dupreset.h"
+#include "../instrument/duinstrumentinfo.h"
 
 
 DU_OBJECT_IMPL(DuLoop)
@@ -32,7 +42,7 @@ DuLoop::DuLoop() :
              new DuNumeric(0));
 
 
-    addChild(KeyInstrument, new DuInstrument());
+    addChild(KeyInstrument, new DuMusicInstrument());
 
     addChild(KeyEvents, new DuArray(RECORD_SAMPLEBUFFERSIZE));
 }
@@ -58,8 +68,8 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
     DuLoopPtr loop(new DuLoop);
     bool verif = true;
 
-    const DuInstrumentPtr &instrument =
-            DuInstrument::fromDuMusicBinary(du_loop.l_instr);
+    const DuMusicInstrumentPtr &instrument =
+            DuMusicInstrument::fromDuMusicBinary(du_loop.l_instr);
     if (instrument != NULL)
         loop->setInstrument(instrument);
     else
@@ -67,7 +77,7 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuLoop::fromDuMusicBinary():\n"
                 << "failed to generate DuLoop\n"
-                << "the DuInstrument was not properly generated";
+                << "the DuMusicInstrument was not properly generated";
 
         return DuLoopPtr();
     }
@@ -156,15 +166,15 @@ DuLoopPtr DuLoop::fromJson(const QJsonObject &jsonLoop)
         return DuLoopPtr();
     }
 
-    const DuInstrumentPtr &instrument =
-            DuInstrument::fromJson(jsonInstrument.toObject());
+    const DuMusicInstrumentPtr &instrument =
+            DuMusicInstrument::fromJson(jsonInstrument.toObject());
     if (instrument != NULL)
         loop->setInstrument(instrument);
     else
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuLoop::fromJson():\n"
                     << "failed to generate DuLoop\n"
-                    << "the DuInstrument was not properly generated";
+                    << "the DuMusicInstrument was not properly generated";
 
         return DuLoopPtr();
     }
@@ -244,13 +254,13 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int midiTrackInde
     }
 
 
-    const DuInstrumentPtr &instrument = helper.getInstrument(midiTrackIndex);
+    const DuMusicInstrumentPtr &instrument = helper.getInstrument(midiTrackIndex);
     if (instrument == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuLoop::fromMidi():\n"
                 << "failed to generate DuLoop\n"
-                << "DuInstrument is NULL";
+                << "DuMusicInstrument is NULL";
 
         return DuLoopPtr();
     }
@@ -401,7 +411,7 @@ QByteArray DuLoop::toDuMusicBinary() const
     std::memset((char*)&du_loop, 0, size());
 
 
-    const DuInstrumentConstPtr &instrument = getInstrument();
+    const DuMusicInstrumentConstPtr &instrument = getInstrument();
     if (instrument == NULL)
         return QByteArray();
 
@@ -469,12 +479,12 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
     }
 
 
-    const DuInstrumentConstPtr &instrument = getInstrument();
+    const DuMusicInstrumentConstPtr &instrument = getInstrument();
     if (instrument == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuLoop::toDuMidiTrack():\n"
-                << "DuInstrument is NULL";
+                << "DuMusicInstrument is NULL";
 
         return DuMidiTrackPtr();
     }
@@ -705,7 +715,7 @@ DU_KEY_ACCESSORS_IMPL(DuLoop, MidiOutChannel,   Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuLoop, SaveLoopTimer,    Numeric, int, -1)
 
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuLoop, Instrument, DuInstrument)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuLoop, Instrument, DuMusicInstrument)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuLoop, Events,     DuArray)
 
 

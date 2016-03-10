@@ -13,6 +13,17 @@
 #include <QFileInfo>
 #include <QJsonDocument>
 
+#include "../general/duarray.h"
+
+#include "../midifile/dumidichannelevent.h"
+#include "../midifile/dumidifile.h"
+#include "../midifile/dumidimetaevent.h"
+#include "../midifile/dumiditrack.h"
+
+#include "../dumusicfile/dumusicinstrument.h"
+
+#include "../instrument/duinstrumentinfo.h"
+
 
 MidiConversionHelper::MidiConversionHelper(QObject *parent) :
     QObject(parent),
@@ -270,7 +281,7 @@ void MidiConversionHelper::addSelection(int trackNum, int loopNum)
 {
     selectedIndexes.append(QPair<int, int>(trackNum, loopNum));
     selectedTracks.append(DuMidiTrackPtr());
-    selectedInstruments.append(DuInstrumentPtr());
+    selectedInstruments.append(DuMusicInstrumentPtr());
 }
 
 void MidiConversionHelper::removeSelectionAt(int index)
@@ -342,16 +353,16 @@ void MidiConversionHelper::setSelectedTrack(int index, int midiTrackIndex)
 }
 
 
-DuInstrumentPtr MidiConversionHelper::getInstrument(int index) const
+DuMusicInstrumentPtr MidiConversionHelper::getInstrument(int index) const
 {
     if (index >= selectedInstruments.count())
-        return DuInstrumentPtr();
+        return DuMusicInstrumentPtr();
 
     return selectedInstruments[index];
 }
 
 void MidiConversionHelper::setSelectedInstr(int index,
-                                            const DuInstrumentPtr &instrument)
+                                            const DuMusicInstrumentPtr &instrument)
 {
     if (index >= selectedInstruments.count())
         return;

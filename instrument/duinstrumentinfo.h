@@ -1,9 +1,12 @@
 #ifndef DUINSTRUMENTINFO_H
 #define DUINSTRUMENTINFO_H
 
-#include "../../general/ducontainer.h"
-#include "../../general/dustring.h"
-#include "../../general/dunumeric.h"
+#include "../general/ducontainer.h"
+
+// TODO: Get this from external
+#ifndef SOUNDBANK_STARTADRESS
+#define SOUNDBANK_STARTADRESS 0x10000
+#endif
 
 
 DU_OBJECT(DuInstrumentInfo)

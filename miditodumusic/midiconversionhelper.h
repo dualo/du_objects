@@ -2,7 +2,7 @@
 #define MIDICONVERSIONHELPER_H
 
 #include "../midifile/dumidifile.h"
-#include "../dumusicfile/instrument/duinstrument.h"
+#include "../dumusicfile/dumusicinstrument.h"
 
 #include "dumidikeymapper.h"
 
@@ -13,6 +13,10 @@
 #include "duscalemodel.h"
 #include "dutonalitymodel.h"
 
+class DuMidiKeyMapper;
+DU_OBJECT(DuMusicInstrument);
+DU_OBJECT(DuMidiFile);
+DU_OBJECT(DuMidiTrack);
 
 class MidiConversionHelper : public QObject
 {
@@ -68,7 +72,7 @@ public:
     QPair<int, int> getIndexes(int index) const;
 
     DuMidiTrackPtr getMidiTrack(int index) const;
-    DuInstrumentPtr getInstrument(int index) const;
+    DuMusicInstrumentPtr getInstrument(int index) const;
 
     int getKeyboardFromMidi(int key) const;
     static int percuFromMidi(int gmKey, int mapIndex);
@@ -102,7 +106,7 @@ public slots:
     void setSelectedTrack(int index, const DuMidiTrackPtr &midiTrack);
     void setSelectedTrack(int index, int midiTrackIndex);
 
-    void setSelectedInstr(int index, const DuInstrumentPtr &instrument);
+    void setSelectedInstr(int index, const DuMusicInstrumentPtr &instrument);
     void setSelectedInstr(int index, int instrumentIndex);
 
     bool importMidiFile(const DuMidiFilePtr &midiFile);
@@ -166,7 +170,7 @@ private:
     QList<QPair<int, int> > selectedIndexes;
 
     QList<DuMidiTrackPtr> selectedTracks;
-    QList<DuInstrumentPtr> selectedInstruments;
+    QList<DuMusicInstrumentPtr> selectedInstruments;
 
     QStringList midiScaleBoxModel;
 

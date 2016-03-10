@@ -2,7 +2,12 @@
 
 #include <cstring>
 
+#include <QJsonArray>
 #include <QJsonObject>
+
+#include "../general/duarray.h"
+#include "../general/dubinarydata.h"
+#include "../general/dunumeric.h"
 
 
 DU_OBJECT_IMPL(DuEffectSet)

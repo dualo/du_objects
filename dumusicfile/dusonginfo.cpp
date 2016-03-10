@@ -4,6 +4,14 @@
 
 #include <QJsonObject>
 
+#include "../instrument/effects/dumixer.h"
+
+#include "../general/dubinarydata.h"
+#include "../general/dunumeric.h"
+#include "../general/dustring.h"
+
+#include "../miditodumusic/midiconversionhelper.h"
+
 
 DU_OBJECT_IMPL(DuSongInfo)
 

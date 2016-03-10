@@ -1,28 +1,30 @@
 #ifndef DUINSTRUMENT_H
 #define DUINSTRUMENT_H
 
-#include "duinstrumentinfo.h"
-#include "dupreset.h"
-#include "effects/dumixer.h"
-#include "effects/dudistortion.h"
-#include "effects/ducompressor.h"
-#include "effects/duequalizer.h"
-#include "effects/dudelay.h"
-#include "effects/duchorus.h"
+#include "../general/ducontainer.h"
 
 
-DU_OBJECT(DuInstrument)
+DU_OBJECT(DuInstrumentInfo);
+DU_OBJECT(DuPreset);
+DU_OBJECT(DuMixer);
+DU_OBJECT(DuDistortion);
+DU_OBJECT(DuCompressor);
+DU_OBJECT(DuEqualizer);
+DU_OBJECT(DuDelay);
+DU_OBJECT(DuChorus);
 
-class DuInstrument : public DuContainer
+DU_OBJECT(DuMusicInstrument);
+
+class DuMusicInstrument : public DuContainer
 {
 public:
-    explicit DuInstrument();
-    ~DuInstrument();
+    explicit DuMusicInstrument();
+    ~DuMusicInstrument();
 
     virtual DuObjectPtr clone() const;
 
-    static DuInstrumentPtr fromDuMusicBinary(const music_instr &du_instr);
-    static DuInstrumentPtr fromJson(const QJsonObject &jsonInstrument);
+    static DuMusicInstrumentPtr fromDuMusicBinary(const music_instr &du_instr);
+    static DuMusicInstrumentPtr fromJson(const QJsonObject &jsonInstrument);
 
     QByteArray toDuMusicBinary() const;
 

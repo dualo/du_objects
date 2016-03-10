@@ -19,20 +19,20 @@ HEADERS += \
     $$PWD/dumusicfile/dutrack.h \
     $$PWD/dumusicfile/duloop.h \
     $$PWD/dumusicfile/duevent.h \
-    $$PWD/dumusicfile/instrument/duinstrument.h \
-    $$PWD/dumusicfile/instrument/duinstrumentinfo.h \
-    $$PWD/dumusicfile/instrument/dupreset.h \
-    $$PWD/dumusicfile/instrument/duexpression.h \
-    $$PWD/dumusicfile/instrument/ducontrollers.h \
-    $$PWD/dumusicfile/instrument/dueffectset.h \
-    $$PWD/dumusicfile/instrument/effects/duchorus.h \
-    $$PWD/dumusicfile/instrument/effects/ducompressor.h \
-    $$PWD/dumusicfile/instrument/effects/dudelay.h \
-    $$PWD/dumusicfile/instrument/effects/dudistortion.h \
-    $$PWD/dumusicfile/instrument/effects/dueffectsettings.h \
-    $$PWD/dumusicfile/instrument/effects/duequalizer.h \
-    $$PWD/dumusicfile/instrument/effects/dumixer.h \
-    $$PWD/dumusicfile/instrument/effects/dureverb.h \
+    $$PWD/dumusicfile/dumusicinstrument.h \
+    $$PWD/instrument/duinstrumentinfo.h \
+    $$PWD/instrument/dupreset.h \
+    $$PWD/instrument/duexpression.h \
+    $$PWD/instrument/ducontrollers.h \
+    $$PWD/instrument/dueffectset.h \
+    $$PWD/instrument/effects/duchorus.h \
+    $$PWD/instrument/effects/ducompressor.h \
+    $$PWD/instrument/effects/dudelay.h \
+    $$PWD/instrument/effects/dudistortion.h \
+    $$PWD/instrument/effects/dueffectsettings.h \
+    $$PWD/instrument/effects/duequalizer.h \
+    $$PWD/instrument/effects/dumixer.h \
+    $$PWD/instrument/effects/dureverb.h \
     $$PWD/midifile/dumidivariablelength.h \
     $$PWD/midifile/dumidistatus.h \
     $$PWD/midifile/dumidibasicevent.h \
@@ -73,20 +73,20 @@ SOURCES += \
     $$PWD/dumusicfile/dutrack.cpp \
     $$PWD/dumusicfile/duloop.cpp \
     $$PWD/dumusicfile/duevent.cpp \
-    $$PWD/dumusicfile/instrument/duinstrument.cpp \
-    $$PWD/dumusicfile/instrument/duinstrumentinfo.cpp \
-    $$PWD/dumusicfile/instrument/dupreset.cpp \
-    $$PWD/dumusicfile/instrument/duexpression.cpp \
-    $$PWD/dumusicfile/instrument/ducontrollers.cpp \
-    $$PWD/dumusicfile/instrument/dueffectset.cpp \
-    $$PWD/dumusicfile/instrument/effects/duchorus.cpp \
-    $$PWD/dumusicfile/instrument/effects/ducompressor.cpp \
-    $$PWD/dumusicfile/instrument/effects/dudelay.cpp \
-    $$PWD/dumusicfile/instrument/effects/dudistortion.cpp \
-    $$PWD/dumusicfile/instrument/effects/dueffectsettings.cpp \
-    $$PWD/dumusicfile/instrument/effects/duequalizer.cpp \
-    $$PWD/dumusicfile/instrument/effects/dumixer.cpp \
-    $$PWD/dumusicfile/instrument/effects/dureverb.cpp \
+    $$PWD/dumusicfile/dumusicinstrument.cpp \
+    $$PWD/instrument/duinstrumentinfo.cpp \
+    $$PWD/instrument/dupreset.cpp \
+    $$PWD/instrument/duexpression.cpp \
+    $$PWD/instrument/ducontrollers.cpp \
+    $$PWD/instrument/dueffectset.cpp \
+    $$PWD/instrument/effects/duchorus.cpp \
+    $$PWD/instrument/effects/ducompressor.cpp \
+    $$PWD/instrument/effects/dudelay.cpp \
+    $$PWD/instrument/effects/dudistortion.cpp \
+    $$PWD/instrument/effects/dueffectsettings.cpp \
+    $$PWD/instrument/effects/duequalizer.cpp \
+    $$PWD/instrument/effects/dumixer.cpp \
+    $$PWD/instrument/effects/dureverb.cpp \
     $$PWD/midifile/dumidivariablelength.cpp \
     $$PWD/midifile/dumidistatus.cpp \
     $$PWD/midifile/dumidibasicevent.cpp \

@@ -1,12 +1,22 @@
-#include "duinstrument.h"
+#include "dumusicinstrument.h"
 
 #include <cstring>
 
 #include <QJsonObject>
 
-DU_OBJECT_IMPL(DuInstrument)
+#include "../instrument/duinstrumentinfo.h"
+#include "../instrument/dupreset.h"
 
-DuInstrument::DuInstrument() :
+#include "../instrument/effects/duchorus.h"
+#include "../instrument/effects/ducompressor.h"
+#include "../instrument/effects/dudelay.h"
+#include "../instrument/effects/dudistortion.h"
+#include "../instrument/effects/duequalizer.h"
+#include "../instrument/effects/dumixer.h"
+
+DU_OBJECT_IMPL(DuMusicInstrument)
+
+DuMusicInstrument::DuMusicInstrument() :
     DuContainer()
 {
     addChild(KeyInstrumentInfo, new DuInstrumentInfo);
@@ -20,29 +30,29 @@ DuInstrument::DuInstrument() :
     addChild(KeyChorus,         new DuChorus);
 }
 
-DuInstrument::~DuInstrument()
+DuMusicInstrument::~DuMusicInstrument()
 {
 }
 
-DuObjectPtr DuInstrument::clone() const
+DuObjectPtr DuMusicInstrument::clone() const
 {
-    return DuInstrumentPtr(new DuInstrument(*this));
+    return DuMusicInstrumentPtr(new DuMusicInstrument(*this));
 }
 
 
-DuInstrumentPtr DuInstrument::fromDuMusicBinary(const music_instr &du_instr)
+DuMusicInstrumentPtr DuMusicInstrument::fromDuMusicBinary(const music_instr &du_instr)
 {
-    DuInstrumentPtr instrument(new DuInstrument);
+    DuMusicInstrumentPtr instrument(new DuMusicInstrument);
 
     const DuInstrumentInfoPtr &instrInfo =
             DuInstrumentInfo::fromDuMusicBinary(du_instr.i_instrument);
     if (instrInfo == NULL)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromDuMusicBinary():\n"
-                    << "failed to generate DuInstrument\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromDuMusicBinary():\n"
+                    << "failed to generate DuMusicInstrument\n"
                     << "the DuInstrumentInfo was not properly generated";
 
-        return DuInstrumentPtr();
+        return DuMusicInstrumentPtr();
     }
     instrument->setInstrumentInfo(instrInfo);
 
@@ -50,11 +60,11 @@ DuInstrumentPtr DuInstrument::fromDuMusicBinary(const music_instr &du_instr)
             DuPreset::fromDuMusicBinary(du_instr.i_preset);
     if (preset == NULL)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromDuMusicBinary():\n"
-                    << "failed to generate DuInstrument\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromDuMusicBinary():\n"
+                    << "failed to generate DuMusicInstrument\n"
                     << "the DuPreset was not properly generated";
 
-        return DuInstrumentPtr();
+        return DuMusicInstrumentPtr();
     }
     instrument->setPreset(preset);
 
@@ -62,11 +72,11 @@ DuInstrumentPtr DuInstrument::fromDuMusicBinary(const music_instr &du_instr)
             DuMixer::fromDuMusicBinary(du_instr.i_mix);
     if (mixer == NULL)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromDuMusicBinary():\n"
-                    << "failed to generate DuInstrument\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromDuMusicBinary():\n"
+                    << "failed to generate DuMusicInstrument\n"
                     << "the DuMixer was not properly generated";
 
-        return DuInstrumentPtr();
+        return DuMusicInstrumentPtr();
     }
     instrument->setMixer(mixer);
 
@@ -74,11 +84,11 @@ DuInstrumentPtr DuInstrument::fromDuMusicBinary(const music_instr &du_instr)
             DuDistortion::fromDuMusicBinary(du_instr.i_distortion);
     if (distortion == NULL)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromDuMusicBinary():\n"
-                    << "failed to generate DuInstrument\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromDuMusicBinary():\n"
+                    << "failed to generate DuMusicInstrument\n"
                     << "the DuDistortion was not properly generated";
 
-        return DuInstrumentPtr();
+        return DuMusicInstrumentPtr();
     }
     instrument->setDistortion(distortion);
 
@@ -86,11 +96,11 @@ DuInstrumentPtr DuInstrument::fromDuMusicBinary(const music_instr &du_instr)
             DuCompressor::fromDuMusicBinary(du_instr.i_compressor);
     if (compressor == NULL)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromDuMusicBinary():\n"
-                    << "failed to generate DuInstrument\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromDuMusicBinary():\n"
+                    << "failed to generate DuMusicInstrument\n"
                     << "the DuCompressor was not properly generated";
 
-        return DuInstrumentPtr();
+        return DuMusicInstrumentPtr();
     }
     instrument->setCompressor(compressor);
 
@@ -98,11 +108,11 @@ DuInstrumentPtr DuInstrument::fromDuMusicBinary(const music_instr &du_instr)
             DuEqualizer::fromDuMusicBinary(du_instr.i_equalizer);
     if (equalizer == NULL)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromDuMusicBinary():\n"
-                    << "failed to generate DuInstrument\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromDuMusicBinary():\n"
+                    << "failed to generate DuMusicInstrument\n"
                     << "the DuEqualizer was not properly generated";
 
-        return DuInstrumentPtr();
+        return DuMusicInstrumentPtr();
     }
     instrument->setEqualizer(equalizer);
 
@@ -110,11 +120,11 @@ DuInstrumentPtr DuInstrument::fromDuMusicBinary(const music_instr &du_instr)
             DuDelay::fromDuMusicBinary(du_instr.i_delay);
     if (delay == NULL)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromDuMusicBinary():\n"
-                    << "failed to generate DuInstrument\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromDuMusicBinary():\n"
+                    << "failed to generate DuMusicInstrument\n"
                     << "the DuDelay was not properly generated";
 
-        return DuInstrumentPtr();
+        return DuMusicInstrumentPtr();
     }
     instrument->setDelay(delay);
 
@@ -122,11 +132,11 @@ DuInstrumentPtr DuInstrument::fromDuMusicBinary(const music_instr &du_instr)
             DuChorus::fromDuMusicBinary(du_instr.i_chorus);
     if (chorus == NULL)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromDuMusicBinary():\n"
-                    << "failed to generate DuInstrument\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromDuMusicBinary():\n"
+                    << "failed to generate DuMusicInstrument\n"
                     << "the DuChorus was not properly generated";
 
-        return DuInstrumentPtr();
+        return DuMusicInstrumentPtr();
     }
     instrument->setChorus(chorus);
 
@@ -134,7 +144,7 @@ DuInstrumentPtr DuInstrument::fromDuMusicBinary(const music_instr &du_instr)
 }
 
 
-DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
+DuMusicInstrumentPtr DuMusicInstrument::fromJson(const QJsonObject &jsonInstrument)
 {
     QJsonValue jsonInstrInfo    = jsonInstrument[KeyInstrumentInfo];
     QJsonValue jsonPreset       = jsonInstrument[KeyPreset];
@@ -151,15 +161,15 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
             ||  !jsonEqualizer.isObject()   ||  !jsonDelay.isObject()
             ||  !jsonChorus.isObject())
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromJson():\n"
-                    << "failed to generate DuInstrument\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromJson():\n"
+                    << "failed to generate DuMusicInstrument\n"
                     << "a json key did not contain the proper type";
 
-        return DuInstrumentPtr();
+        return DuMusicInstrumentPtr();
     }
 
 
-    DuInstrumentPtr instrument(new DuInstrument);
+    DuMusicInstrumentPtr instrument(new DuMusicInstrument);
 
     const DuInstrumentInfoPtr &instrInfo =
             DuInstrumentInfo::fromJson(jsonInstrInfo.toObject());
@@ -167,11 +177,11 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
         instrument->setInstrumentInfo(instrInfo);
     else
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromJson():\n"
-                    << "failed to generate DuInstrument\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromJson():\n"
+                    << "failed to generate DuMusicInstrument\n"
                     << "the DuInstrumentInfo was not properly generated";
 
-        return DuInstrumentPtr();
+        return DuMusicInstrumentPtr();
     }
 
     const DuPresetPtr &preset =
@@ -180,11 +190,11 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
         instrument->setPreset(preset);
     else
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromJson():\n"
-                    << "failed to generate DuInstrument\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromJson():\n"
+                    << "failed to generate DuMusicInstrument\n"
                     << "the DuPreset was not properly generated";
 
-        return DuInstrumentPtr();
+        return DuMusicInstrumentPtr();
     }
 
     const DuMixerPtr &mixer =
@@ -193,11 +203,11 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
         instrument->setMixer(mixer);
     else
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromJson():\n"
-                    << "failed to generate DuInstrument\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromJson():\n"
+                    << "failed to generate DuMusicInstrument\n"
                     << "the DuMixer was not properly generated";
 
-        return DuInstrumentPtr();
+        return DuMusicInstrumentPtr();
     }
 
     const DuDistortionPtr &distortion =
@@ -206,11 +216,11 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
         instrument->setDistortion(distortion);
     else
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromJson():\n"
-                    << "failed to generate DuInstrument\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromJson():\n"
+                    << "failed to generate DuMusicInstrument\n"
                     << "the DuDistortion was not properly generated";
 
-        return DuInstrumentPtr();
+        return DuMusicInstrumentPtr();
     }
 
     const DuCompressorPtr &compressor =
@@ -219,11 +229,11 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
         instrument->setCompressor(compressor);
     else
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromJson():\n"
-                    << "failed to generate DuInstrument\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromJson():\n"
+                    << "failed to generate DuMusicInstrument\n"
                     << "the DuCompressor was not properly generated";
 
-        return DuInstrumentPtr();
+        return DuMusicInstrumentPtr();
     }
 
     const DuEqualizerPtr &equalizer =
@@ -232,11 +242,11 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
         instrument->setEqualizer(equalizer);
     else
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromJson():\n"
-                    << "failed to generate DuInstrument\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromJson():\n"
+                    << "failed to generate DuMusicInstrument\n"
                     << "the DuEqualizer was not properly generated";
 
-        return DuInstrumentPtr();
+        return DuMusicInstrumentPtr();
     }
 
     const DuDelayPtr &delay =
@@ -245,11 +255,11 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
         instrument->setDelay(delay);
     else
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromJson():\n"
-                    << "failed to generate DuInstrument\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromJson():\n"
+                    << "failed to generate DuMusicInstrument\n"
                     << "the DuDelay was not properly generated";
 
-        return DuInstrumentPtr();
+        return DuMusicInstrumentPtr();
     }
 
     const DuChorusPtr &chorus =
@@ -258,18 +268,18 @@ DuInstrumentPtr DuInstrument::fromJson(const QJsonObject &jsonInstrument)
         instrument->setChorus(chorus);
     else
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrument::fromJson():\n"
-                    << "failed to generate DuInstrument\n"
+        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromJson():\n"
+                    << "failed to generate DuMusicInstrument\n"
                     << "the DuChorus was not properly generated";
 
-        return DuInstrumentPtr();
+        return DuMusicInstrumentPtr();
     }
 
 
     return instrument;
 }
 
-QByteArray DuInstrument::toDuMusicBinary() const
+QByteArray DuMusicInstrument::toDuMusicBinary() const
 {
     music_instr du_instrument;
     std::memset((char*)&du_instrument, 0, size());
@@ -335,17 +345,17 @@ QByteArray DuInstrument::toDuMusicBinary() const
 }
 
 
-int DuInstrument::size() const
+int DuMusicInstrument::size() const
 {
     return MUSIC_INSTRU_SIZE;
 }
 
 
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuInstrument, InstrumentInfo, DuInstrumentInfo)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuInstrument, Preset,         DuPreset)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuInstrument, Mixer,          DuMixer)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuInstrument, Distortion,     DuDistortion)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuInstrument, Compressor,     DuCompressor)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuInstrument, Equalizer,      DuEqualizer)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuInstrument, Delay,          DuDelay)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuInstrument, Chorus,         DuChorus)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusicInstrument, InstrumentInfo, DuInstrumentInfo)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusicInstrument, Preset,         DuPreset)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusicInstrument, Mixer,          DuMixer)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusicInstrument, Distortion,     DuDistortion)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusicInstrument, Compressor,     DuCompressor)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusicInstrument, Equalizer,      DuEqualizer)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusicInstrument, Delay,          DuDelay)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusicInstrument, Chorus,         DuChorus)

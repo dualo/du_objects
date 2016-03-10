@@ -5,6 +5,11 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+#include "../general/duarray.h"
+#include "../general/dunumeric.h"
+
+#include "../miditodumusic/midiconversionhelper.h"
+
 DU_OBJECT_IMPL(DuTrack)
 
 DuTrack::DuTrack() :

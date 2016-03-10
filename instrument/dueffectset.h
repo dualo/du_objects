@@ -1,9 +1,7 @@
 #ifndef DUEFFECTSET_H
 #define DUEFFECTSET_H
 
-#include "../../general/ducontainer.h"
-#include "../../general/dunumeric.h"
-#include "../../general/dubinarydata.h"
+#include "../general/ducontainer.h"
 
 
 #define EFFECTSET_SIZE              8 + 11 + 5 + 9 + 59

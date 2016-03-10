@@ -1,12 +1,16 @@
 #ifndef DULOOP_H
 #define DULOOP_H
 
-#include "../general/duarray.h"
-#include "instrument/duinstrument.h"
-#include "duevent.h"
+#include "../general/ducontainer.h"
 
 
-DU_OBJECT(DuLoop)
+class MidiConversionHelper;
+DU_OBJECT(DuArray);
+DU_OBJECT(DuEvent);
+DU_OBJECT(DuMusicInstrument);
+DU_OBJECT(DuMidiTrack);
+
+DU_OBJECT(DuLoop);
 
 class DuLoop : public DuContainer
 {
@@ -33,7 +37,7 @@ DU_KEY_ACCESSORS(MidiOutChannel,   int)
 
 DU_KEY_ACCESSORS(SaveLoopTimer,    int)
 
-DU_KEY_ACCESSORS_OBJECT(Instrument, DuInstrument)
+DU_KEY_ACCESSORS_OBJECT(Instrument, DuMusicInstrument)
 DU_KEY_ACCESSORS_OBJECT(Events,     DuArray)
 
 public:

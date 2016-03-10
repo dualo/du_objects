@@ -1,8 +1,7 @@
 #ifndef DUCONTROLLERS_H
 #define DUCONTROLLERS_H
 
-#include "../../general/ducontainer.h"
-#include "../../general/dunumeric.h"
+#include "../general/ducontainer.h"
 
 
 #define CONTROLLERS_SIZE                    15

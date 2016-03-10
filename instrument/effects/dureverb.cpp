@@ -4,6 +4,9 @@
 
 #include <QJsonObject>
 
+#include "../../general/dunumeric.h"
+#include "../../general/dustring.h"
+
 
 DuReverb::DuReverb()
 {
