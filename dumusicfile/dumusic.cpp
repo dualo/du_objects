@@ -619,7 +619,7 @@ bool DuMusic::upgrade(s_total_buffer &du_music)
                 preset.s_wah_res        = FX_WAH_FILTERRES_DEFAULTVALUE;
 
                 // INSTR
-                s_instr& instr = loop.l_instr.i_instrument;
+                info_instr& instr = loop.l_instr.i_instrument;
 
                 if (instr.instr_key_map)
                     instr.instr_type = INSTR_PERCU;
