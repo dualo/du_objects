@@ -18,10 +18,14 @@ include(../du_objects.pri)
 
 SOURCES += \
     main.cpp \
-    tst_dumusictest.cpp
+    tst_dumusictest.cpp \
+    tst_dueffectstest.cpp \
+    tst_dupresettest.cpp
 
 HEADERS += \
-    tst_dumusictest.h
+    tst_dumusictest.h \
+    tst_dueffectstest.h \
+    tst_dupresettest.h
 
 DEFINES += SRCDIR=\\\"$$PWD/..\\\"
 
