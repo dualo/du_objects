@@ -151,71 +151,69 @@ QByteArray DuHeader::toDuMusicBinary() const
     du_header.s_version_music = tmpNum;
 
 
-    QByteArray tmpClear(HEADER_NAME_SIZE, char(0x00));
-
-    tmpArray = tmpClear;
+    tmpArray.fill(0x00, HEADER_NAME_SIZE);
     tmpStr = getOriginalSerialNumber();
     if (tmpStr.isNull())
         return QByteArray();
     tmpArray.prepend(tmpStr.toUtf8());
 
-    std::memcpy(du_header.s_original_sn, tmpArray.data(), HEADER_NAME_SIZE);
+    std::memcpy(du_header.s_original_sn, tmpArray.constData(), HEADER_NAME_SIZE);
 
-    tmpArray = tmpClear;
+    tmpArray.fill(0x00, HEADER_NAME_SIZE);
     tmpStr = getOriginalName();
     if (tmpStr.isNull())
         return QByteArray();
     tmpArray.prepend(tmpStr.toUtf8());
 
-    std::memcpy(du_header.s_original_name, tmpArray.data(), HEADER_NAME_SIZE);
+    std::memcpy(du_header.s_original_name, tmpArray.constData(), HEADER_NAME_SIZE);
 
-    tmpArray = tmpClear;
+    tmpArray.fill(0x00, HEADER_NAME_SIZE);
     tmpStr = getOriginalUser();
     if (tmpStr.isNull())
         return QByteArray();
     tmpArray.prepend(tmpStr.toUtf8());
 
-    std::memcpy(du_header.s_original_user, tmpArray.data(), HEADER_NAME_SIZE);
+    std::memcpy(du_header.s_original_user, tmpArray.constData(), HEADER_NAME_SIZE);
 
-    tmpArray = tmpClear;
+    tmpArray.fill(0x00, HEADER_NAME_SIZE);
     tmpStr = getOriginalUserId();
     if (tmpStr.isNull())
         return QByteArray();
     tmpArray.prepend(tmpStr.toUtf8());
 
-    std::memcpy(du_header.s_original_userid, tmpArray.data(), HEADER_NAME_SIZE);
+    std::memcpy(du_header.s_original_userid, tmpArray.constData(), HEADER_NAME_SIZE);
 
-    tmpArray = tmpClear;
+    tmpArray.fill(0x00, HEADER_NAME_SIZE);
     tmpStr = getLastModifSerialNumber();
     if (tmpStr.isNull())
         return QByteArray();
     tmpArray.prepend(tmpStr.toUtf8());
 
-    std::memcpy(du_header.s_modif_sn, tmpArray.data(), HEADER_NAME_SIZE);
+    std::memcpy(du_header.s_modif_sn, tmpArray.constData(), HEADER_NAME_SIZE);
 
-    tmpArray = tmpClear;
+    tmpArray.fill(0x00, HEADER_NAME_SIZE);
     tmpStr = getLastModifName();
     if (tmpStr.isNull())
         return QByteArray();
     tmpArray.prepend(tmpStr.toUtf8());
 
-    std::memcpy(du_header.s_modif_name, tmpArray.data(), HEADER_NAME_SIZE);
+    std::memcpy(du_header.s_modif_name, tmpArray.constData(), HEADER_NAME_SIZE);
 
-    tmpArray = tmpClear;
+    tmpArray.fill(0x00, HEADER_NAME_SIZE);
     tmpStr = getLastModifUser();
     if (tmpStr.isNull())
         return QByteArray();
     tmpArray.prepend(tmpStr.toUtf8());
 
-    std::memcpy(du_header.s_modif_user, tmpArray.data(), HEADER_NAME_SIZE);
+    std::memcpy(du_header.s_modif_user, tmpArray.constData(), HEADER_NAME_SIZE);
 
-    tmpArray = tmpClear;
+    tmpArray.fill(0x00, HEADER_NAME_SIZE);
     tmpStr = getLastModifUserId();
     if (tmpStr.isNull())
         return QByteArray();
     tmpArray.prepend(tmpStr.toUtf8());
 
-    std::memcpy(du_header.s_modif_userid, tmpArray.data(), HEADER_NAME_SIZE);
+    std::memcpy(du_header.s_modif_userid, tmpArray.constData(), HEADER_NAME_SIZE);
 
 
     tmpNum = getSize();
