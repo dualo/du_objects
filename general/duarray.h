@@ -11,7 +11,9 @@ DU_OBJECT_TEMPLATE(DuArray)
 template <class T>
 class DuArray : public DuObject
 {
+#if QT_VERSION >= 0x050500
     static_assert(std::is_base_of<DuObject, T>::value, "DuArray requires DuObject derived type");
+#endif
 
 public:
     explicit DuArray(int maxSize = -1);
