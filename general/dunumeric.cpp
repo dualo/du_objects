@@ -164,6 +164,16 @@ QVariant DuNumeric::checkValue(const QVariant &value, bool &success)
         success = false;
         return maxValue;
     }
+    else if (m_forbiddenValues.contains(convertedValue))
+    {
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << convertedValue << "is a forbidden value"
+                << "and could not be set\n"
+                << defaultValue << "was set instead";
+
+        success = false;
+        return defaultValue;
+    }
 
     success = true;
     return value;
@@ -240,5 +250,26 @@ bool DuNumeric::setMin(int value)
     }
 
     minValue = value;
+    return true;
+}
+
+QVector<int> DuNumeric::forbiddenValues() const
+{
+    return m_forbiddenValues;
+}
+
+bool DuNumeric::setForbiddenValues(const QVector<int> &forbiddenValues)
+{
+    if (forbiddenValues.contains(getNumeric()) || forbiddenValues.contains(defaultValue))
+    {
+        qCWarning(LOG_CAT_DU_OBJECT)
+                << forbiddenValues << "contains" << getNumeric()
+                << "or" << defaultValue
+                << "and was not set";
+
+        return false;
+    }
+
+    m_forbiddenValues = forbiddenValues;
     return true;
 }

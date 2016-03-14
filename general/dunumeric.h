@@ -30,6 +30,9 @@ public:
     int getMin() const;
     bool setMin(int value);
 
+    QVector<int> forbiddenValues() const;
+    bool setForbiddenValues(const QVector<int>& forbiddenValues);
+
     // DuObject interface
 public:
     virtual DuObjectPtr clone() const override;
@@ -49,6 +52,7 @@ private:
     int defaultValue;
     int maxValue;
     int minValue;
+    QVector<int> m_forbiddenValues;
 };
 
 #endif // DUNUMERIC_H
