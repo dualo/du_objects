@@ -11,7 +11,7 @@
 #define KEY_MIDITRACK_EVENTS    QStringLiteral("Events")
 
 
-DU_OBJECT(DuArray)
+DU_OBJECT_TEMPLATE(DuArray)
 DU_OBJECT(DuMidiBasicEvent)
 
 DU_OBJECT(DuMidiTrack)
@@ -32,9 +32,9 @@ public:
 
     int size() const;
 
-    DuArrayPtr getEvents();
-    DuArrayConstPtr getEvents() const;
-    void setEvents(const DuArrayPtr &array);
+    DuArrayPtr<DuMidiBasicEvent> getEvents();
+    DuArrayConstPtr<DuMidiBasicEvent> getEvents() const;
+    void setEvents(const DuArrayPtr<DuMidiBasicEvent> &array);
 
     bool appendEvent(const DuMidiBasicEventPtr &event);
 

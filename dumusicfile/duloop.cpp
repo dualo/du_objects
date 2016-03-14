@@ -49,7 +49,7 @@ DuLoop::DuLoop() :
 
     addChild(KeyInstrument, new DuMusicInstrument());
 
-    addChild(KeyEvents, new DuArray(RECORD_SAMPLEBUFFERSIZE));
+    addChild(KeyEvents, new DuArray<DuEvent>(RECORD_SAMPLEBUFFERSIZE));
 }
 
 DuLoop::~DuLoop()
@@ -101,7 +101,7 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
                 << "an attribute was not properly set";
     }
 
-    DuArrayPtr eventsArray(new DuArray(RECORD_SAMPLEBUFFERSIZE));
+    DuArrayPtr<DuEvent> eventsArray(new DuArray<DuEvent>(RECORD_SAMPLEBUFFERSIZE));
     for (int i = 0; i < du_loop.l_numsample; i++)
     {
         const DuEventPtr &event = DuEvent::fromDuMusicBinary(du_sample[i]);
@@ -236,7 +236,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int midiTrackInde
         return DuLoopPtr();
     }
 
-    const DuArrayPtr &midiEvents = midiTrack->getEvents();
+    const DuArrayPtr<DuMidiBasicEvent> &midiEvents = midiTrack->getEvents();
     if (midiEvents == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
@@ -569,7 +569,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
 
 
     DuMidiTrackPtr midiTrack(new DuMidiTrack);
-    DuArrayPtr midiEvents(new DuArray);
+    DuArrayPtr<DuMidiBasicEvent> midiEvents(new DuArray<DuMidiBasicEvent>);
 
     quint32 prevTime = 0;
     quint8 prevType = 0;
@@ -610,7 +610,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
     }
 
 
-    const DuArrayConstPtr &events = getEvents();
+    const DuArrayConstPtr<DuEvent> &events = getEvents();
     if (events == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
@@ -700,7 +700,8 @@ DU_KEY_ACCESSORS_IMPL(DuLoop, MidiOutChannel,   Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuLoop, SaveLoopTimer,    Numeric, int, -1)
 
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuLoop, Instrument, DuMusicInstrument)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuLoop, Events,     DuArray)
+
+DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuLoop, Events, DuArray, DuEvent)
 
 
 int DuLoop::eventsSize() const
@@ -715,7 +716,7 @@ int DuLoop::eventsSize() const
 
 int DuLoop::countEvents() const
 {
-    const DuArrayConstPtr &tmp = getEvents();
+    const DuArrayConstPtr<DuEvent> &tmp = getEvents();
 
     if (tmp == NULL)
         return -1;
@@ -725,7 +726,7 @@ int DuLoop::countEvents() const
 
 bool DuLoop::appendEvent(const DuEventPtr &event)
 {
-    const DuArrayPtr &tmp = getEvents();
+    const DuArrayPtr<DuEvent> &tmp = getEvents();
 
     if (tmp == NULL)
         return false;

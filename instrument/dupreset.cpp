@@ -114,7 +114,7 @@ DuPreset::DuPreset() :
     // led marks
     addChild(KeyDisplayLed, new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
 
-    DuArrayPtr ledArray(new DuArray(NUM_LED_VALUE));
+    DuArrayPtr<DuNumeric> ledArray(new DuArray<DuNumeric>(NUM_LED_VALUE));
     for (int i = 0; i < NUM_LED_VALUE; ++i)
         ledArray->append(new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
     addChild(KeyLedArray, ledArray);
@@ -155,7 +155,7 @@ DuPreset::DuPreset() :
     // multi-note
     addChild(KeyMultinoteAct, new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
 
-    DuArrayPtr multinoteArray(new DuArray(4));
+    DuArrayPtr<DuNumeric> multinoteArray(new DuArray<DuNumeric>(4));
     for (int i = 0; i < 4; ++i)
         multinoteArray->append(new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
                                              0x7F, 0x00));
@@ -205,7 +205,7 @@ DuPreset::DuPreset() :
     addChild(KeyEqualizer,  new DuEqualizer);
     addChild(KeyDelay,      new DuDelay);
 
-    DuArrayPtr chorusArray(new DuArray(3));
+    DuArrayPtr<DuChorus> chorusArray(new DuArray<DuChorus>(3));
     for (int i = 0; i < 3; ++i)
         chorusArray->append(new DuChorus);
     addChild(KeyChorusArray, chorusArray);
@@ -257,7 +257,7 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
     // led marks
     verif = preset->setDisplayLed(du_preset.s_displayled) ? verif : false;
 
-    DuArrayPtr ledsArray(new DuArray(NUM_LED_VALUE));
+    DuArrayPtr<DuNumeric> ledsArray(new DuArray<DuNumeric>(NUM_LED_VALUE));
     for (int i = 0; i < NUM_LED_VALUE; ++i)
     {
         DuNumericPtr leds(new DuNumeric(du_preset.s_leds[i], NUMERIC_DEFAULT_SIZE, 0xFF, 0x00, 0));
@@ -288,7 +288,7 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
     // multi-note
     verif = preset->setMultinoteAct(du_preset.s_multinote_act) ? verif : false;
 
-    DuArrayPtr multinoteArray(new DuArray(4));
+    DuArrayPtr<DuNumeric> multinoteArray(new DuArray<DuNumeric>(4));
     for (int i = 0; i < 4; ++i)
     {
         multinoteArray->append(new DuNumeric(du_preset.s_multinote[i], NUMERIC_DEFAULT_SIZE, 0x7F, 0x00, 0x00));
@@ -380,7 +380,7 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
     }
     preset->setDelay(delay);
 
-    DuArrayPtr chorusArray(new DuArray(3));
+    DuArrayPtr<DuChorus> chorusArray(new DuArray<DuChorus>(3));
     for (int i = 0; i < 3; ++i)
     {
         const DuChorusPtr &chorus = DuChorus::fromDuMusicBinary(du_preset.s_chorus[i]);
@@ -551,7 +551,7 @@ QByteArray DuPreset::toDuMusicBinary() const
         return QByteArray();
     du_preset.s_displayled = (uint8_t) tmpNum;
 
-    const DuArrayConstPtr &ledsArray = getLedArray();
+    const DuArrayConstPtr<DuNumeric> &ledsArray = getLedArray();
     if (ledsArray == NULL)
         return QByteArray();
     std::memcpy((char*)&(du_preset.s_leds), ledsArray->toDuMusicBinary().constData(), (size_t) ledsArray->size());
@@ -604,7 +604,7 @@ QByteArray DuPreset::toDuMusicBinary() const
         return QByteArray();
     du_preset.s_multinote_act = (uint8_t) tmpNum;
 
-    const DuArrayConstPtr &multinoteArray = getMultinote();
+    const DuArrayConstPtr<DuNumeric> &multinoteArray = getMultinote();
     if (multinoteArray == NULL)
         return QByteArray();
     std::memcpy(du_preset.s_multinote, multinoteArray->toDuMusicBinary().constData(), (size_t) multinoteArray->size());
@@ -733,7 +733,7 @@ QByteArray DuPreset::toDuMusicBinary() const
         return QByteArray();
     std::memcpy((char *)&(du_preset.s_delay), delay->toDuMusicBinary().constData(), (size_t) delay->size());
 
-    const DuArrayConstPtr &chorusArray = getChorusArray();
+    const DuArrayConstPtr<DuChorus> &chorusArray = getChorusArray();
     if (chorusArray == NULL)
         return QByteArray();
     std::memcpy((char*)&(du_preset.s_chorus), chorusArray->toDuMusicBinary().constData(), (size_t) chorusArray->size());
@@ -751,6 +751,8 @@ int DuPreset::size() const
 
 #define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS_IMPL(DuPreset, key, dutype, type, defaultReturn)
 #define X_OBJECT(key, dutype) DU_KEY_ACCESSORS_OBJECT_IMPL(DuPreset, key, dutype)
+#define X_OBJECT_TEMPLATE(key, dutype, tpltype) DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuPreset, key, dutype, tpltype)
 DuPreset_Children
+#undef X_OBJECT_TEMPLATE
 #undef X_OBJECT
 #undef X

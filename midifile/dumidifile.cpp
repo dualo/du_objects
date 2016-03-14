@@ -18,7 +18,7 @@ DuMidiFile::DuMidiFile() :
 
     addChild(KEY_MIDIFILE_DIVISION, new DuNumeric(DUMUSIC_DIVISION, 2, 0xFFFF, 0x0000));
 
-    addChild(KEY_MIDIFILE_TRACKS,   new DuArray());
+    addChild(KEY_MIDIFILE_TRACKS,   new DuArray<DuMidiTrack>());
 }
 
 DuMidiFile::~DuMidiFile()
@@ -186,19 +186,19 @@ bool DuMidiFile::setDivision(quint16 value)
 }
 
 
-DuArrayPtr DuMidiFile::getTracks()
+DuArrayPtr<DuMidiTrack> DuMidiFile::getTracks()
 {
-    return getChildAs<DuArray>(KEY_MIDIFILE_TRACKS);
+    return getChildAs< DuArray<DuMidiTrack> >(KEY_MIDIFILE_TRACKS);
 }
 
-DuArrayConstPtr DuMidiFile::getTracks() const
+DuArrayConstPtr<DuMidiTrack> DuMidiFile::getTracks() const
 {
-    return getChildAs<DuArray>(KEY_MIDIFILE_TRACKS);
+    return getChildAs< DuArray<DuMidiTrack> >(KEY_MIDIFILE_TRACKS);
 }
 
 DuMidiTrackPtr DuMidiFile::getTrackAt(int index)
 {
-    const DuArrayPtr &tracks = getTracks();
+    const DuArrayPtr<DuMidiTrack> &tracks = getTracks();
     if (tracks == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
@@ -244,14 +244,14 @@ DuMidiTrackPtr DuMidiFile::getTrackAt(int index)
     return track;
 }
 
-void DuMidiFile::setTracks(const DuArrayPtr &array)
+void DuMidiFile::setTracks(const DuArrayPtr<DuMidiTrack> &array)
 {
     addChild(KEY_MIDIFILE_TRACKS, array);
 }
 
 bool DuMidiFile::appendTrack(const DuMidiTrackPtr &track)
 {
-    DuArrayPtr tmp = getChildAs<DuArray>(KEY_MIDIFILE_TRACKS);
+    DuArrayPtr<DuMidiTrack> tmp = getChildAs< DuArray<DuMidiTrack> >(KEY_MIDIFILE_TRACKS);
 
     if (tmp == NULL)
         return false;
@@ -261,7 +261,7 @@ bool DuMidiFile::appendTrack(const DuMidiTrackPtr &track)
 
 bool DuMidiFile::appendTracks(const QVector<DuMidiTrackPtr> &tracks)
 {
-    DuArrayPtr tmp = getChildAs<DuArray>(KEY_MIDIFILE_TRACKS);
+    DuArrayPtr<DuMidiTrack> tmp = getChildAs< DuArray<DuMidiTrack> >(KEY_MIDIFILE_TRACKS);
 
     if (tmp == NULL)
         return false;

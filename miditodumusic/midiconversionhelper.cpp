@@ -194,7 +194,7 @@ QVector<DuMidiTrackPtr> MidiConversionHelper::getTracks()
     QVector<DuMidiTrackPtr> trackList;
     trackList.clear();
 
-    const DuArrayPtr tracks = selectedFile->getTracks();
+    const DuArrayPtr<DuMidiTrack> tracks = selectedFile->getTracks();
     if (tracks == NULL)
         return QVector<DuMidiTrackPtr>();
 
@@ -229,7 +229,7 @@ int MidiConversionHelper::getMidiChannel(int index) const
 
     const DuMidiTrackPtr &midiTrack = selectedTracks[index];
 
-    const DuArrayPtr &midiEvents = midiTrack->getEvents();
+    const DuArrayPtr<DuMidiBasicEvent> &midiEvents = midiTrack->getEvents();
     if (midiEvents == NULL)
         return -1;
 
@@ -625,7 +625,7 @@ bool MidiConversionHelper::filterMetaEvents()
     bool keySigFound = false;
     bool titleFound = false;
 
-    const DuArrayPtr &midiTracks = selectedFile->getTracks();
+    const DuArrayPtr<DuMidiTrack> &midiTracks = selectedFile->getTracks();
     if (midiTracks == NULL)
         return false;
 
@@ -645,7 +645,7 @@ bool MidiConversionHelper::filterMetaEvents()
         if (midiTrack == NULL)
             return false;
 
-        const DuArrayPtr &midiEvents = midiTrack->getEvents();
+        const DuArrayPtr<DuMidiBasicEvent> &midiEvents = midiTrack->getEvents();
         if (midiEvents == NULL)
             return false;
 

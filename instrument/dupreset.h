@@ -36,7 +36,7 @@
     X(PortamentoTime,       Numeric, int, -1) \
     \
     X(DisplayLed,           Numeric, int, -1) \
-    X_OBJECT(LedArray, DuArray) \
+    X_OBJECT_TEMPLATE(LedArray, DuArray, DuNumeric) \
     \
     X(Pitch,                Numeric, int, -1) \
     X(PitchBendSensitivity, Numeric, int, -1) \
@@ -49,7 +49,7 @@
     X(WahResonance,         Numeric, int, -1) \
     \
     X(MultinoteAct,         Numeric, int, -1) \
-    X_OBJECT(Multinote,     DuArray) \
+    X_OBJECT_TEMPLATE(Multinote, DuArray, DuNumeric) \
     \
     X(ArpeggiatorType,      Numeric, int, -1) \
     X(ArpeggiatorBeat,      Numeric, int, -1) \
@@ -79,16 +79,17 @@
     X_OBJECT(Compressor,    DuCompressor) \
     X_OBJECT(Equalizer,     DuEqualizer) \
     X_OBJECT(Delay,         DuDelay) \
-    X_OBJECT(ChorusArray,   DuArray)
+    X_OBJECT_TEMPLATE(ChorusArray, DuArray, DuChorus)
 
 
-DU_OBJECT(DuArray);
+DU_OBJECT_TEMPLATE(DuArray);
 DU_OBJECT(DuMixer);
 DU_OBJECT(DuDistortion);
 DU_OBJECT(DuCompressor);
 DU_OBJECT(DuEqualizer);
 DU_OBJECT(DuDelay);
 DU_OBJECT(DuChorus);
+DU_OBJECT(DuNumeric);
 
 DU_OBJECT(DuPreset)
 
@@ -108,7 +109,9 @@ public:
 
 #define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS(key, type)
 #define X_OBJECT(key, dutype) DU_KEY_ACCESSORS_OBJECT(key, dutype)
+#define X_OBJECT_TEMPLATE(key, dutype, tpltype) DU_KEY_ACCESSORS_OBJECT_TEMPLATE(key, dutype, tpltype)
     DuPreset_Children
+#undef X_OBJECT_TEMPLATE
 #undef X_OBJECT
 #undef X
 };

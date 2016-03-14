@@ -59,6 +59,32 @@
     \
     const QString className::Key ## key = QStringLiteral(#key);
 
+
+#define DU_KEY_ACCESSORS_OBJECT_TEMPLATE(key, dutype, tpltype) \
+    dutype ## ConstPtr<tpltype> get ## key() const; \
+    dutype ## Ptr<tpltype> get ## key(); \
+    void set ## key(const dutype ## Ptr<tpltype> &value); \
+    static const QString Key ## key;
+
+#define DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(className, key, dutype, tpltype) \
+    dutype ## ConstPtr<tpltype> className::get ## key() const \
+    { \
+        return getChildAs< dutype<tpltype> >(QStringLiteral(#key)); \
+    } \
+    \
+    void className::set ## key(const dutype ## Ptr<tpltype> &value) \
+    { \
+        addChild(QStringLiteral(#key), value); \
+    } \
+    \
+    dutype ## Ptr<tpltype> className::get ## key() \
+    { \
+        return getChildAs< dutype<tpltype> >(QStringLiteral(#key)); \
+    } \
+    \
+    const QString className::Key ## key = QStringLiteral(#key);
+
+
 #define DU_KEY_ACCESSORS_IN_CHILD(key, type) \
     type get ## key() const; \
     bool set ## key(const type& value); \

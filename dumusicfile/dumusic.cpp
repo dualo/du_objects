@@ -1,5 +1,6 @@
 #include "dumusic.h"
 
+#include "duevent.h"
 #include "dutrack.h"
 
 #include <cstring>
@@ -114,7 +115,7 @@ DuMusic::DuMusic() :
     addChild(KeyReverbPreset, new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
     addChild(KeyReverb,       new DuReverb);
 
-    DuArrayPtr trackArray(new DuArray(MUSIC_MAXTRACK));
+    DuArrayPtr<DuTrack> trackArray(new DuArray<DuTrack>(MUSIC_MAXTRACK));
     for (int i = 0; i < MUSIC_MAXTRACK; ++i)
         trackArray->append(new DuTrack);
     addChild(KeyTracks, trackArray);
@@ -249,7 +250,7 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
     music->setReverb(reverb);
 
 
-    DuArrayPtr trackArray(new DuArray(MUSIC_MAXTRACK));
+    DuArrayPtr<DuTrack> trackArray(new DuArray<DuTrack>(MUSIC_MAXTRACK));
     for (int i = 0; i < MUSIC_MAXTRACK; ++i)
     {
         const DuTrackPtr &track = DuTrack::fromDuMusicBinary(local_song.s_track[i],
@@ -445,7 +446,7 @@ DuMusicPtr DuMusic::fromMidi(const MidiConversionHelper &helper)
 
     //TODO: generate DuHeader (maybe)
 
-    DuArrayPtr trackArray(new DuArray(MUSIC_MAXTRACK));
+    DuArrayPtr<DuTrack> trackArray(new DuArray<DuTrack>(MUSIC_MAXTRACK));
     for (int i = 0; i < MUSIC_MAXTRACK; i++)
     {
         const DuTrackPtr &track = DuTrack::fromMidi(helper, i);
@@ -752,7 +753,7 @@ QByteArray DuMusic::toDuMusicBinary() const
     std::memcpy(&(local_song.s_reverb), reverbArray.constData(), (size_t) reverbArray.size());
 
 
-    const DuArrayConstPtr &tracks = getTracks();
+    const DuArrayConstPtr<DuTrack> &tracks = getTracks();
     if (tracks == NULL)
         return QByteArray();
     const QByteArray &tracksArray = tracks->toDuMusicBinary();
@@ -773,7 +774,7 @@ QByteArray DuMusic::toDuMusicBinary() const
         if (track == NULL)
             return QByteArray();
 
-        const DuArrayConstPtr &loops = track->getLoops();
+        const DuArrayConstPtr<DuLoop> &loops = track->getLoops();
         if (loops == NULL)
             return QByteArray();
 
@@ -797,7 +798,7 @@ QByteArray DuMusic::toDuMusicBinary() const
             else
                 tmp_loop->l_adress = 0;
 
-            const DuArrayConstPtr &events = loop->getEvents();
+            const DuArrayConstPtr<DuEvent> &events = loop->getEvents();
             if (events == NULL)
                 return QByteArray();
             tmpLocalBuffer.append(events->toDuMusicBinary());
@@ -817,7 +818,7 @@ QByteArray DuMusic::toDuMusicBinary() const
 
 QByteArray DuMusic::toMidiBinary() const
 {
-    const DuArrayConstPtr &tracks = getTracks();
+    const DuArrayConstPtr<DuTrack> &tracks = getTracks();
     if (tracks == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
@@ -937,7 +938,7 @@ int DuMusic::size() const
     int eventsSize = 0;
     int tmpSize = 0;
 
-    const DuArrayConstPtr &tracks = getTracks();
+    const DuArrayConstPtr<DuTrack> &tracks = getTracks();
     if (tracks == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "KEY_MUSIC_TRACKS is NULL";
@@ -947,7 +948,7 @@ int DuMusic::size() const
     int count = tracks->count();
     for (int i = 0; i < count; i++)
     {
-        const DuTrackConstPtr &track = tracks->atAs<DuTrack>(i);
+        const DuTrackConstPtr &track = tracks->at(i);
         if (track == NULL)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "track" << i << "is NULL";
@@ -995,7 +996,7 @@ void DuMusic::setLists(const QStringList &lists)
 
 bool DuMusic::appendTrack(const DuTrackPtr &track)
 {
-    DuArrayPtr tmp = getChildAs<DuArray>(KeyTracks);
+    DuArrayPtr<DuTrack> tmp = getChildAs< DuArray<DuTrack> >(KeyTracks);
 
     if (tmp == NULL)
         return false;
@@ -1005,6 +1006,8 @@ bool DuMusic::appendTrack(const DuTrackPtr &track)
 
 #define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS_IMPL(DuMusic, key, dutype, type, defaultReturn)
 #define X_OBJECT(key, dutype) DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusic, key, dutype)
+#define X_OBJECT_TEMPLATE(key, dutype, tpltype) DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuMusic, key, dutype, tpltype)
 DuMusic_Children
+#undef X_OBJECT_TEMPLATE
 #undef X_OBJECT
 #undef X

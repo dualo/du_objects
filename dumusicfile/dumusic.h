@@ -58,12 +58,12 @@
     X(ReverbPreset,          Numeric, int, -1) \
     X_OBJECT(Reverb, DuReverb) \
     \
-    X_OBJECT(Tracks, DuArray)
+    X_OBJECT_TEMPLATE(Tracks, DuArray, DuTrack)
 
 
 class MidiConversionHelper;
 class QIODevice;
-DU_OBJECT(DuArray)
+DU_OBJECT_TEMPLATE(DuArray)
 DU_OBJECT(DuMixer)
 DU_OBJECT(DuReverb)
 DU_OBJECT(DuTrack)
@@ -99,7 +99,9 @@ public:
 
 #define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS(key, type)
 #define X_OBJECT(key, dutype) DU_KEY_ACCESSORS_OBJECT(key, dutype)
+#define X_OBJECT_TEMPLATE(key, dutype, tpltype) DU_KEY_ACCESSORS_OBJECT_TEMPLATE(key, dutype, tpltype)
     DuMusic_Children
+#undef X_OBJECT_TEMPLATE
 #undef X_OBJECT
 #undef X
 

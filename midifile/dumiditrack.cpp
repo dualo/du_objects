@@ -16,7 +16,7 @@ DU_OBJECT_IMPL(DuMidiTrack)
 DuMidiTrack::DuMidiTrack() :
     DuContainer()
 {
-    addChild(KEY_MIDITRACK_EVENTS, new DuArray());
+    addChild(KEY_MIDITRACK_EVENTS, new DuArray<DuMidiBasicEvent>());
 }
 
 DuMidiTrack::~DuMidiTrack()
@@ -166,7 +166,7 @@ QJsonValue DuMidiTrack::toJson() const
 
 int DuMidiTrack::size() const
 {
-    const DuArrayConstPtr &events = getChildAs<DuArray>(KEY_MIDITRACK_EVENTS);
+    const DuArrayConstPtr<DuMidiBasicEvent> &events = getChildAs< DuArray<DuMidiBasicEvent> >(KEY_MIDITRACK_EVENTS);
 
     if (events == NULL)
         return -1;
@@ -175,24 +175,24 @@ int DuMidiTrack::size() const
 }
 
 
-DuArrayPtr DuMidiTrack::getEvents()
+DuArrayPtr<DuMidiBasicEvent> DuMidiTrack::getEvents()
 {
-    return getChildAs<DuArray>(KEY_MIDITRACK_EVENTS);
+    return getChildAs< DuArray<DuMidiBasicEvent> >(KEY_MIDITRACK_EVENTS);
 }
 
-DuArrayConstPtr DuMidiTrack::getEvents() const
+DuArrayConstPtr<DuMidiBasicEvent> DuMidiTrack::getEvents() const
 {
-    return getChildAs<DuArray>(KEY_MIDITRACK_EVENTS);
+    return getChildAs< DuArray<DuMidiBasicEvent> >(KEY_MIDITRACK_EVENTS);
 }
 
-void DuMidiTrack::setEvents(const DuArrayPtr &array)
+void DuMidiTrack::setEvents(const DuArrayPtr<DuMidiBasicEvent> &array)
 {
     addChild(KEY_MIDITRACK_EVENTS, array);
 }
 
 bool DuMidiTrack::appendEvent(const DuMidiBasicEventPtr &event)
 {
-    DuArrayPtr tmp = getChildAs<DuArray>(KEY_MIDITRACK_EVENTS);
+    DuArrayPtr<DuMidiBasicEvent> tmp = getChildAs< DuArray<DuMidiBasicEvent> >(KEY_MIDITRACK_EVENTS);
 
     if (tmp == NULL)
         return false;

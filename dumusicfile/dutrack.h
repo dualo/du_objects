@@ -31,7 +31,7 @@ public:
 
     DU_KEY_ACCESSORS(Channel, int)
     DU_KEY_ACCESSORS(CurrentLoop, int)
-    DU_KEY_ACCESSORS_OBJECT(Loops, DuArray)
+    DU_KEY_ACCESSORS_OBJECT_TEMPLATE(Loops, DuArray, DuLoop)
 
 public:
     bool appendLoop(const DuLoopPtr &loop);

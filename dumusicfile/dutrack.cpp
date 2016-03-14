@@ -23,7 +23,7 @@ DuTrack::DuTrack() :
              new DuNumeric(0, NUMERIC_DEFAULT_SIZE,
                            MUSIC_MAXLAYER - 1, 0));
 
-    DuArrayPtr loopsArray(new DuArray(MUSIC_MAXLAYER));
+    DuArrayPtr<DuLoop> loopsArray(new DuArray<DuLoop>(MUSIC_MAXLAYER));
     for (int i = 0; i < MUSIC_MAXLAYER; ++i)
         loopsArray->append(new DuLoop);
     addChild(KeyLoops, loopsArray);
@@ -55,7 +55,7 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
                                      << "an attribute was not properly set";
     }
 
-    DuArrayPtr loopsArray(new DuArray(MUSIC_MAXLAYER));
+    DuArrayPtr<DuLoop> loopsArray(new DuArray<DuLoop>(MUSIC_MAXLAYER));
 
     for (int i = 0; i < MUSIC_MAXLAYER; i++)
     {
@@ -213,7 +213,7 @@ DuTrackPtr DuTrack::fromMidi(const MidiConversionHelper &helper, int trackIndex)
                                      << "an attribute was not properly set";
     }
 
-    DuArrayPtr loopsArray(new DuArray(MUSIC_MAXLAYER));
+    DuArrayPtr<DuLoop> loopsArray(new DuArray<DuLoop>(MUSIC_MAXLAYER));
     for (int i = 0; i < MUSIC_MAXLAYER; i++)
     {
         int index = helper.findIndexes(trackIndex, i);
@@ -269,7 +269,7 @@ QByteArray DuTrack::toDuMusicBinary() const
     std::memset((char*)&du_track, 0, size());
 
 
-    const DuArrayConstPtr &loops = getLoops();
+    const DuArrayConstPtr<DuLoop> &loops = getLoops();
     if (loops == NULL)
         return QByteArray();
 
@@ -302,7 +302,7 @@ QByteArray DuTrack::toDuMusicBinary() const
 QVector<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef,
                                                     int transpose) const
 {
-    const DuArrayConstPtr &loops = getLoops();
+    const DuArrayConstPtr<DuLoop> &loops = getLoops();
     if (loops == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
@@ -355,11 +355,11 @@ int DuTrack::size() const
 
 DU_KEY_ACCESSORS_IMPL(DuTrack, Channel,     Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuTrack, CurrentLoop, Numeric, int, -1)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuTrack, Loops, DuArray)
+DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuTrack, Loops, DuArray, DuLoop)
 
 bool DuTrack::appendLoop(const DuLoopPtr &loop)
 {
-    const DuArrayPtr &tmp = getLoops();
+    const DuArrayPtr<DuLoop> &tmp = getLoops();
 
     if (tmp == NULL)
         return false;
@@ -373,14 +373,14 @@ int DuTrack::eventsSize() const
     int eventsSize = 0;
     int tmpSize = 0;
 
-    const DuArrayConstPtr &loops = getLoops();
+    const DuArrayConstPtr<DuLoop> &loops = getLoops();
     if (loops == NULL)
         return -1;
 
     int count = loops->count();
     for (int i = 0; i < count; i++)
     {
-        const DuLoopConstPtr &loop = loops->atAs<DuLoop>(i);
+        const DuLoopConstPtr &loop = loops->at(i);
         if (loop == NULL)
             return -1;
 

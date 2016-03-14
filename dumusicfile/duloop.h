@@ -5,7 +5,7 @@
 
 
 class MidiConversionHelper;
-DU_OBJECT(DuArray);
+DU_OBJECT_TEMPLATE(DuArray);
 DU_OBJECT(DuEvent);
 DU_OBJECT(DuMusicInstrument);
 DU_OBJECT(DuMidiTrack);
@@ -38,7 +38,8 @@ DU_KEY_ACCESSORS(MidiOutChannel,   int)
 DU_KEY_ACCESSORS(SaveLoopTimer,    int)
 
 DU_KEY_ACCESSORS_OBJECT(Instrument, DuMusicInstrument)
-DU_KEY_ACCESSORS_OBJECT(Events,     DuArray)
+
+DU_KEY_ACCESSORS_OBJECT_TEMPLATE(Events, DuArray, DuEvent)
 
 public:
     int eventsSize() const;

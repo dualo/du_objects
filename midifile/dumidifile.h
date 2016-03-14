@@ -17,7 +17,7 @@
 #define KEY_MIDIFILE_TRACKS     QStringLiteral("Tracks")
 
 
-DU_OBJECT(DuArray)
+DU_OBJECT_TEMPLATE(DuArray)
 DU_OBJECT(DuMidiTrack)
 
 DU_OBJECT(DuMidiFile)
@@ -45,11 +45,11 @@ public:
     int getDivision() const;
     bool setDivision(quint16 value);
 
-    DuArrayPtr getTracks();
-    DuArrayConstPtr getTracks() const;
+    DuArrayPtr<DuMidiTrack> getTracks();
+    DuArrayConstPtr<DuMidiTrack> getTracks() const;
     DuMidiTrackPtr getTrackAt(int index);
 
-    void setTracks(const DuArrayPtr &array);
+    void setTracks(const DuArrayPtr<DuMidiTrack> &array);
     bool appendTrack(const DuMidiTrackPtr &track);
     bool appendTracks(const QVector<DuMidiTrackPtr> &tracks);
 };

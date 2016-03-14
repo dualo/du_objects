@@ -58,7 +58,6 @@ SOURCES += \
     $$PWD/du-touch/parameters/instr_mapping.c \
     $$PWD/general/duobject.cpp \
     $$PWD/general/ducontainer.cpp \
-    $$PWD/general/duarray.cpp \
     $$PWD/general/duvalue.cpp \
     $$PWD/general/dubinarydata.cpp \
     $$PWD/general/dunumeric.cpp \
