@@ -2,27 +2,75 @@
 
 #include <QtTest>
 
+#include <dumusicfile/duevent.h>
+#include <dumusicfile/duloop.h>
 #include <dumusicfile/dumusic.h>
+#include <dumusicfile/dutrack.h>
+
+#include <general/duarray.h>
 
 DuMusicTest::DuMusicTest() :
     QObject()
 {
 }
 
-void DuMusicTest::testInOut()
+void DuMusicTest::testEventInOut()
 {
-    DuMusicPtr musicObj(new DuMusic);
-    QByteArray musicData = musicObj->toDuMusicBinary();
-    DuMusicPtr fromBinaryMusic = DuMusic::fromBinary(musicData);
-    QByteArray toBinaryMusicData = fromBinaryMusic->toDuMusicBinary();
+    DuEventPtr obj(new DuEvent);
+    QByteArray data = obj->toDuMusicBinary();
 
-    QCOMPARE(musicData.size(), toBinaryMusicData.size());
-    QCOMPARE(musicData, toBinaryMusicData);
+    music_sample dataStruct;
+    std::memcpy((char*)&dataStruct, data.constData(), (size_t) data.size());
+    DuEventPtr fromBinaryObj = DuEvent::fromDuMusicBinary(dataStruct);
+    QByteArray toBinaryData = fromBinaryObj->toDuMusicBinary();
+
+    QCOMPARE(data.size(), toBinaryData.size());
+    QCOMPARE(data, toBinaryData);
 }
 
-void DuMusicTest::testJsonInOut()
+void DuMusicTest::testEventJsonInOut()
+{
+    DuEventPtr obj(new DuEvent);
+    QJsonValue data = obj->toJson();
+    QVERIFY(!data.isNull());
+    QVERIFY(!data.isUndefined());
+    QVERIFY(data.isObject());
+
+    DuEventPtr fromJsonObj = DuEvent::fromJson(data.toObject());
+    QJsonValue toJsonData = fromJsonObj->toJson();
+    QVERIFY(!toJsonData.isNull());
+    QVERIFY(!toJsonData.isUndefined());
+    QVERIFY(toJsonData.isObject());
+
+    QCOMPARE(data, toJsonData);
+}
+
+void DuMusicTest::testMusicInOut()
 {
     DuMusicPtr obj(new DuMusic);
+
+    DuLoopPtr loop = obj->getTracks()->at(0)->getLoops()->at(0);
+    DuEventPtr event(new DuEvent);
+    loop->appendEvent(event);
+    loop->setState(REC_STOP);
+
+    QByteArray data = obj->toDuMusicBinary();
+    DuMusicPtr fromBinaryObj = DuMusic::fromBinary(data);
+    QByteArray toBinaryData = fromBinaryObj->toDuMusicBinary();
+
+    QCOMPARE(data.size(), toBinaryData.size());
+    QCOMPARE(data, toBinaryData);
+}
+
+void DuMusicTest::testMusicJsonInOut()
+{
+    DuMusicPtr obj(new DuMusic);
+
+    DuLoopPtr loop = obj->getTracks()->at(0)->getLoops()->at(0);
+    DuEventPtr event(new DuEvent);
+    loop->appendEvent(event);
+    loop->setState(REC_STOP);
+
     QJsonValue data = obj->toJson();
     QVERIFY(!data.isNull());
     QVERIFY(!data.isUndefined());
