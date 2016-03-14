@@ -14,7 +14,7 @@ public:
     explicit DuValue(const QVariant &value, int maxSize = -1);
     virtual ~DuValue();
 
-    virtual int size() const;
+    virtual int size() const override;
 
     const QVariant &getValue() const;
     bool setValue(const QVariant &value);
@@ -23,7 +23,7 @@ public:
     int getMaxSize() const;
     void setMaxSize(int value);
 
-    QDebug debugPrint(QDebug dbg) const;
+    QDebug debugPrint(QDebug dbg) const override;
 
 protected:
     QVariant &getValue();

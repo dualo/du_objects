@@ -100,15 +100,15 @@ protected:
     explicit DuContainer(const DuContainer &other);
 
 public:
-    virtual DuObjectPtr clone() const;
+    virtual DuObjectPtr clone() const override;
 
-    virtual QByteArray toDuMusicBinary() const;
-    virtual QJsonValue toJson() const;
-
+    virtual QByteArray toDuMusicBinary() const override;
+    virtual QJsonValue toJson() const override;
     virtual QHttpMultiPart* toHttpMultiPart(const QByteArray &boundary) const;
-    QDebug debugPrint(QDebug dbg) const;
 
-    virtual int size() const;
+    QDebug debugPrint(QDebug dbg) const override;
+
+    virtual int size() const override;
 
     QStringList keys() const;
 

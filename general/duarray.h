@@ -17,15 +17,15 @@ protected:
     explicit DuArray(const DuArray &other);
 
 public:
-    virtual DuObjectPtr clone() const;
+    virtual DuObjectPtr clone() const override;
 
-    QByteArray toDuMusicBinary() const;
-    QByteArray toMidiBinary() const;
-    QJsonValue toJson() const;
+    virtual QByteArray toDuMusicBinary() const override;
+    virtual QByteArray toMidiBinary() const override;
+    virtual QJsonValue toJson() const override;
 
-    int size() const;
+    virtual int size() const override;
 
-    QDebug debugPrint(QDebug dbg) const;
+    virtual QDebug debugPrint(QDebug dbg) const override;
 
     int getMaxSize() const;
     void setMaxSize(int value);
