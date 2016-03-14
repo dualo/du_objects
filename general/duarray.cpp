@@ -121,6 +121,56 @@ QJsonValue DuArray::toJson() const
     return QJsonValue(jsonArray);
 }
 
+bool DuArray::parseJson(const QJsonValue &jsonValue)
+{
+    if (jsonValue.isNull())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "jsonValue is null:" << jsonValue;
+        return false;
+    }
+
+    if (jsonValue.isUndefined())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "jsonValue is undefined:" << jsonValue;
+        return false;
+    }
+
+    if (!jsonValue.isArray())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "jsonValue is not an array:" << jsonValue;
+        return false;
+    }
+
+    const QJsonArray& jsonArray = jsonValue.toArray();
+
+    int size = array.size();
+    if (jsonArray.size() != size)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "Number of elements in json array (" << jsonArray.size() << ")"
+                                      << "different from number of elements in DuArray (" << size << ")";
+        return false;
+    }
+
+    for (int i = 0; i < size; ++i)
+    {
+        const DuObjectPtr& obj = array.at(i);
+        if (obj == NULL)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "DuObject at index" << i << "is null:" << obj;
+            return false;
+        }
+
+        const QJsonValue& value = jsonArray.at(i);
+        if (!obj->parseJson(value))
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "DuObject at index" << i
+                                          << "failed to parse json value" << value;
+            return false;
+        }
+    }
+
+    return true;
+}
 
 int DuArray::size() const
 {

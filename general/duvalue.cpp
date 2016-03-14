@@ -1,5 +1,7 @@
 #include "duvalue.h"
 
+#include <QJsonValue>
+
 
 DU_OBJECT_IMPL(DuValue)
 
@@ -21,6 +23,22 @@ DuValue::~DuValue()
 {
 }
 
+bool DuValue::parseJson(const QJsonValue &jsonValue)
+{
+    if (jsonValue.isNull())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "jsonValue is null:" << jsonValue;
+        return false;
+    }
+
+    if (jsonValue.isUndefined())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "jsonValue is undefined:" << jsonValue;
+        return false;
+    }
+
+    return setValue(jsonValue.toVariant());
+}
 
 int DuValue::size() const
 {

@@ -14,6 +14,8 @@ public:
     explicit DuValue(const QVariant &value, int maxSize = -1);
     virtual ~DuValue();
 
+    virtual bool parseJson(const QJsonValue &jsonValue) override;
+
     virtual int size() const override;
 
     const QVariant &getValue() const;

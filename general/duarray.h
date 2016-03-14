@@ -23,6 +23,8 @@ public:
     virtual QByteArray toMidiBinary() const override;
     virtual QJsonValue toJson() const override;
 
+    virtual bool parseJson(const QJsonValue &jsonValue) override;
+
     virtual int size() const override;
 
     virtual QDebug debugPrint(QDebug dbg) const override;

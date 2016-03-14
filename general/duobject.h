@@ -54,6 +54,8 @@ public:
     virtual QJsonValue toJson() const = 0;
     virtual QHttpPart toHttpPart(const QString &name) const;
 
+    virtual bool parseJson(const QJsonValue &jsonValue) = 0;
+
     virtual QDebug debugPrint(QDebug dbg) const;
 
     virtual int size() const = 0;

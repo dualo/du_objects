@@ -106,6 +106,8 @@ public:
     virtual QJsonValue toJson() const override;
     virtual QHttpMultiPart* toHttpMultiPart(const QByteArray &boundary) const;
 
+    virtual bool parseJson(const QJsonValue &jsonValue) override;
+
     QDebug debugPrint(QDebug dbg) const override;
 
     virtual int size() const override;
