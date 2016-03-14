@@ -11,6 +11,7 @@ public:
 
 private slots:
     void testInOut();
+    void testJsonInOut();
 };
 
 #endif // DUMUSICTEST_H

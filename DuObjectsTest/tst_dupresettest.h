@@ -13,6 +13,7 @@ public:
 
 private slots:
     void testPresetInOut();
+    void testPresetJsonInOut();
 };
 
 #endif // DUPRESETTEST_H

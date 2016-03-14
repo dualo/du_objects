@@ -31,6 +31,23 @@ void DuEffectsTest::testMixerInOut()
     QCOMPARE(data, toBinaryData);
 }
 
+void DuEffectsTest::testMixerJsonInOut()
+{
+    DuMixerPtr obj(new DuMixer);
+    QJsonValue data = obj->toJson();
+    QVERIFY(!data.isNull());
+    QVERIFY(!data.isUndefined());
+    QVERIFY(data.isObject());
+
+    DuMixerPtr fromJsonObj = DuMixer::fromJson(data.toObject());
+    QJsonValue toJsonData = fromJsonObj->toJson();
+    QVERIFY(!toJsonData.isNull());
+    QVERIFY(!toJsonData.isUndefined());
+    QVERIFY(toJsonData.isObject());
+
+    QCOMPARE(data, toJsonData);
+}
+
 void DuEffectsTest::testDistortionInOut()
 {
     DuDistortionPtr obj(new DuDistortion);
@@ -45,6 +62,23 @@ void DuEffectsTest::testDistortionInOut()
 
     QCOMPARE(data.size(), toBinaryData.size());
     QCOMPARE(data, toBinaryData);
+}
+
+void DuEffectsTest::testDistortionJsonInOut()
+{
+    DuDistortionPtr obj(new DuDistortion);
+    QJsonValue data = obj->toJson();
+    QVERIFY(!data.isNull());
+    QVERIFY(!data.isUndefined());
+    QVERIFY(data.isObject());
+
+    DuDistortionPtr fromJsonObj = DuDistortion::fromJson(data.toObject());
+    QJsonValue toJsonData = fromJsonObj->toJson();
+    QVERIFY(!toJsonData.isNull());
+    QVERIFY(!toJsonData.isUndefined());
+    QVERIFY(toJsonData.isObject());
+
+    QCOMPARE(data, toJsonData);
 }
 
 void DuEffectsTest::testCompressorInOut()
@@ -63,6 +97,23 @@ void DuEffectsTest::testCompressorInOut()
     QCOMPARE(data, toBinaryData);
 }
 
+void DuEffectsTest::testCompressorJsonInOut()
+{
+    DuCompressorPtr obj(new DuCompressor);
+    QJsonValue data = obj->toJson();
+    QVERIFY(!data.isNull());
+    QVERIFY(!data.isUndefined());
+    QVERIFY(data.isObject());
+
+    DuCompressorPtr fromJsonObj = DuCompressor::fromJson(data.toObject());
+    QJsonValue toJsonData = fromJsonObj->toJson();
+    QVERIFY(!toJsonData.isNull());
+    QVERIFY(!toJsonData.isUndefined());
+    QVERIFY(toJsonData.isObject());
+
+    QCOMPARE(data, toJsonData);
+}
+
 void DuEffectsTest::testEqualizerInOut()
 {
     DuEqualizerPtr obj(new DuEqualizer);
@@ -77,6 +128,23 @@ void DuEffectsTest::testEqualizerInOut()
 
     QCOMPARE(data.size(), toBinaryData.size());
     QCOMPARE(data, toBinaryData);
+}
+
+void DuEffectsTest::testEqualizerJsonInOut()
+{
+    DuEqualizerPtr obj(new DuEqualizer);
+    QJsonValue data = obj->toJson();
+    QVERIFY(!data.isNull());
+    QVERIFY(!data.isUndefined());
+    QVERIFY(data.isObject());
+
+    DuEqualizerPtr fromJsonObj = DuEqualizer::fromJson(data.toObject());
+    QJsonValue toJsonData = fromJsonObj->toJson();
+    QVERIFY(!toJsonData.isNull());
+    QVERIFY(!toJsonData.isUndefined());
+    QVERIFY(toJsonData.isObject());
+
+    QCOMPARE(data, toJsonData);
 }
 
 void DuEffectsTest::testDelayInOut()
@@ -95,6 +163,23 @@ void DuEffectsTest::testDelayInOut()
     QCOMPARE(data, toBinaryData);
 }
 
+void DuEffectsTest::testDelayJsonInOut()
+{
+    DuDelayPtr obj(new DuDelay);
+    QJsonValue data = obj->toJson();
+    QVERIFY(!data.isNull());
+    QVERIFY(!data.isUndefined());
+    QVERIFY(data.isObject());
+
+    DuDelayPtr fromJsonObj = DuDelay::fromJson(data.toObject());
+    QJsonValue toJsonData = fromJsonObj->toJson();
+    QVERIFY(!toJsonData.isNull());
+    QVERIFY(!toJsonData.isUndefined());
+    QVERIFY(toJsonData.isObject());
+
+    QCOMPARE(data, toJsonData);
+}
+
 void DuEffectsTest::testChorusInOut()
 {
     DuChorusPtr obj(new DuChorus);
@@ -109,4 +194,21 @@ void DuEffectsTest::testChorusInOut()
 
     QCOMPARE(data.size(), toBinaryData.size());
     QCOMPARE(data, toBinaryData);
+}
+
+void DuEffectsTest::testChorusJsonInOut()
+{
+    DuChorusPtr obj(new DuChorus);
+    QJsonValue data = obj->toJson();
+    QVERIFY(!data.isNull());
+    QVERIFY(!data.isUndefined());
+    QVERIFY(data.isObject());
+
+    DuChorusPtr fromJsonObj = DuChorus::fromJson(data.toObject());
+    QJsonValue toJsonData = fromJsonObj->toJson();
+    QVERIFY(!toJsonData.isNull());
+    QVERIFY(!toJsonData.isUndefined());
+    QVERIFY(toJsonData.isObject());
+
+    QCOMPARE(data, toJsonData);
 }

@@ -19,3 +19,20 @@ void DuMusicTest::testInOut()
     QCOMPARE(musicData.size(), toBinaryMusicData.size());
     QCOMPARE(musicData, toBinaryMusicData);
 }
+
+void DuMusicTest::testJsonInOut()
+{
+    DuMusicPtr obj(new DuMusic);
+    QJsonValue data = obj->toJson();
+    QVERIFY(!data.isNull());
+    QVERIFY(!data.isUndefined());
+    QVERIFY(data.isObject());
+
+    DuMusicPtr fromJsonObj = DuMusic::fromJson(data.toObject());
+    QJsonValue toJsonData = fromJsonObj->toJson();
+    QVERIFY(!toJsonData.isNull());
+    QVERIFY(!toJsonData.isUndefined());
+    QVERIFY(toJsonData.isObject());
+
+    QCOMPARE(data, toJsonData);
+}

@@ -25,3 +25,20 @@ void DuPresetTest::testPresetInOut()
     QCOMPARE(presetData.size(), toBinaryPresetData.size());
     QCOMPARE(presetData, toBinaryPresetData);
 }
+
+void DuPresetTest::testPresetJsonInOut()
+{
+    DuPresetPtr obj(new DuPreset);
+    QJsonValue data = obj->toJson();
+    QVERIFY(!data.isNull());
+    QVERIFY(!data.isUndefined());
+    QVERIFY(data.isObject());
+
+    DuPresetPtr fromJsonObj = DuPreset::fromJson(data.toObject());
+    QJsonValue toJsonData = fromJsonObj->toJson();
+    QVERIFY(!toJsonData.isNull());
+    QVERIFY(!toJsonData.isUndefined());
+    QVERIFY(toJsonData.isObject());
+
+    QCOMPARE(data, toJsonData);
+}
