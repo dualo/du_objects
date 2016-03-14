@@ -1,11 +1,16 @@
 #ifndef DUTRACK_H
 #define DUTRACK_H
 
-#include "duloop.h"
+#include "../general/ducontainer.h"
 
 
 #define TRACK_DUMMY_SIZE        2
 
+
+class MidiConversionHelper;
+DU_OBJECT_TEMPLATE(DuArray)
+DU_OBJECT(DuLoop)
+DU_OBJECT(DuMidiTrack)
 
 DU_OBJECT(DuTrack)
 

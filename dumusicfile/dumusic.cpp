@@ -1,6 +1,7 @@
 #include "dumusic.h"
 
 #include "duevent.h"
+#include "duloop.h"
 #include "dutrack.h"
 
 #include <cstring>

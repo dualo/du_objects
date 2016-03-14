@@ -1,5 +1,7 @@
 #include "dutrack.h"
 
+#include "duloop.h"
+
 #include <cstring>
 
 #include <QJsonArray>
