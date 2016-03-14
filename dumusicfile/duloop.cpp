@@ -11,7 +11,6 @@
 #include "../general/duarray.h"
 #include "../general/dunumeric.h"
 
-#include "../instrument/duexpression.h"
 #include "../instrument/dupreset.h"
 #include "../instrument/duinstrumentinfo.h"
 
@@ -293,17 +292,6 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int midiTrackInde
         return DuLoopPtr();
     }
 
-    const DuExpressionConstPtr &presetExpr = instrPreset->getExpression();
-    if (presetExpr == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT)
-                << "DuLoop::fromMidi():\n"
-                << "failed to generate DuLoop\n"
-                << "DuExpression is NULL";
-
-        return DuLoopPtr();
-    }
-
 
     int instrKeyMap = instrInfo->getKeyMapping();
     if (instrKeyMap == -1)
@@ -316,7 +304,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int midiTrackInde
         return DuLoopPtr();
     }
 
-    int presetOctave = presetExpr->getOctave();
+    int presetOctave = instrPreset->getOctave();
     if (presetOctave == -1)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
@@ -515,16 +503,6 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
         return DuMidiTrackPtr();
     }
 
-    const DuExpressionConstPtr &presetExpr = instrPreset->getExpression();
-    if (presetExpr == NULL)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT)
-                << "DuLoop::toDuMidiTrack():\n"
-                << "DuExpression is NULL";
-
-        return DuMidiTrackPtr();
-    }
-
 
     int instrKeyMap = instrInfo->getKeyMapping();
     if (instrKeyMap == -1)
@@ -546,7 +524,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
         return DuMidiTrackPtr();
     }
 
-    int presetOctave = presetExpr->getOctave();
+    int presetOctave = instrPreset->getOctave();
     if (presetOctave == -1)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
