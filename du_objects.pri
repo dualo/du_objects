@@ -50,7 +50,9 @@ HEADERS += \
     $$PWD/dusoundfile/dusound.h \
     $$PWD/miditodumusic/duscalemodel.h \
     $$PWD/du-touch/parameters/controler_parameters_mng.h \
-    $$PWD/general/duboolean.h
+    $$PWD/general/duboolean.h \
+    $$PWD/du-touch/parameters/old_sound_parameters_mng.h \
+    $$PWD/du-touch/parameters/music_migration.h
 
 SOURCES += \
     $$PWD/du-touch/parameters/instr_mapping.c \
@@ -100,7 +102,8 @@ SOURCES += \
     $$PWD/duprofile.cpp \
     $$PWD/dusoundfile/dusound.cpp \
     $$PWD/miditodumusic/duscalemodel.cpp \
-    $$PWD/general/duboolean.cpp
+    $$PWD/general/duboolean.cpp \
+    $$PWD/du-touch/parameters/music_migration.c
     
 RESOURCES += \
     $$PWD/miditodumusic/midiresources.qrc
