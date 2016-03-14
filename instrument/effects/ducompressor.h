@@ -29,7 +29,6 @@ public:
     DU_KEY_ACCESSORS(Ratio,       int)
     DU_KEY_ACCESSORS(Boost,       int)
     DU_KEY_ACCESSORS(KneeType,    int)
-    DU_KEY_ACCESSORS(EffectName,  QString)
 };
 
 #endif // DUCOMPRESSOR_H

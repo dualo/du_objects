@@ -55,9 +55,6 @@ DuEqualizer::DuEqualizer() :
     addChild(KeyHighMidBandQualityFactor,
              new DuNumeric(FX_PEQ_HMBQ_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_PEQ_HMBQ_MAXVALUE, FX_PEQ_HMBQ_MINVALUE));
-
-    addChild(KeyEffectName,
-             new DuString(QStringLiteral(DEFAULT_EFFECTNAME), NAME_CARACT));
 }
 
 DuEqualizer::~DuEqualizer()
@@ -90,9 +87,6 @@ DuEqualizerPtr DuEqualizer::fromDuMusicBinary(const FX_equalizer& du_equalizer)
     verif = equalizer->setLowMidBandQualityFactor(du_equalizer.e_lowmidbandQ) ? verif : false;
     verif = equalizer->setHighMidBandQualityFactor(du_equalizer.e_highmidbandQ) ? verif : false;
 
-    equalizer->setEffectName(
-            QString(QByteArray((char *)du_equalizer.e_name, NAME_CARACT)));
-
     if (!verif)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "DuEqualizer::fromDuMusicBinary():\n"
@@ -116,14 +110,13 @@ DuEqualizerPtr DuEqualizer::fromJson(const QJsonObject &jsonEqualizer)
     QJsonValue jsonHighFreq     = jsonEqualizer[KeyHighBandFrequency];
     QJsonValue jsonLoMidQual    = jsonEqualizer[KeyLowMidBandQualityFactor];
     QJsonValue jsonHiMidQual    = jsonEqualizer[KeyHighMidBandQualityFactor];
-    QJsonValue jsonEffectName   = jsonEqualizer[KeyEffectName];
 
     if (        !jsonOnOff.isDouble()       ||  !jsonLowGain.isDouble()
             ||  !jsonLoMidGain.isDouble()   ||  !jsonHiMidGain.isDouble()
             ||  !jsonHighGain.isDouble()    ||  !jsonLowFreq.isDouble()
             ||  !jsonLoMidFreq.isDouble()   ||  !jsonHiMidFreq.isDouble()
             ||  !jsonHighFreq.isDouble()    ||  !jsonLoMidQual.isDouble()
-            ||  !jsonHiMidQual.isDouble()   ||  !jsonEffectName.isString())
+            ||  !jsonHiMidQual.isDouble())
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuEqualizer::fromJson():\n"
                     << "failed to generate DuEqualizer\n"
@@ -150,8 +143,6 @@ DuEqualizerPtr DuEqualizer::fromJson(const QJsonObject &jsonEqualizer)
 
     verif = equalizer->setLowMidBandQualityFactor(jsonLoMidQual.toInt()) ? verif : false;
     verif = equalizer->setHighMidBandQualityFactor(jsonHiMidQual.toInt()) ? verif : false;
-
-    verif = equalizer->setEffectName(jsonEffectName.toString()) ? verif : false;
 
     if (!verif)
     {
@@ -228,15 +219,6 @@ QByteArray DuEqualizer::toDuMusicBinary() const
     du_equalizer.e_highmidbandQ = tmpNum;
 
 
-    QByteArray tmpName(NAME_CARACT, (char)0x00);
-    tmpStr = getEffectName();
-    if (tmpStr.isNull())
-        return QByteArray();
-    tmpName.prepend(tmpStr.toUtf8());
-
-    std::memcpy(du_equalizer.e_name, tmpName.data(), NAME_CARACT);
-
-
     return QByteArray((char *)&(du_equalizer), size());
 }
 
@@ -258,4 +240,3 @@ DU_KEY_ACCESSORS_IMPL(DuEqualizer, HighMidBandFrequency,     Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuEqualizer, HighBandFrequency,        Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuEqualizer, LowMidBandQualityFactor,  Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuEqualizer, HighMidBandQualityFactor, Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuEqualizer, EffectName,               String, QString, QString())

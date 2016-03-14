@@ -29,7 +29,6 @@ public:
     DU_KEY_ACCESSORS(LowPassFilterResonance, int)
     DU_KEY_ACCESSORS(PostGain,               int)
     DU_KEY_ACCESSORS(Drive,                  int)
-    DU_KEY_ACCESSORS(EffectName,             QString)
 };
 
 #endif // DUDISTORTION_H

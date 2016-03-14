@@ -29,7 +29,6 @@ public:
     DU_KEY_ACCESSORS(EffectTime,       int)
     DU_KEY_ACCESSORS(Feedback,         int)
     DU_KEY_ACCESSORS(HDAmp,            int)
-    DU_KEY_ACCESSORS(EffectName,       QString)
 };
 
 #endif // DUDELAY_H

@@ -32,7 +32,6 @@ public:
     DU_KEY_ACCESSORS(ModulationRate,               int)
     DU_KEY_ACCESSORS(TremoloShape,                 int)
     DU_KEY_ACCESSORS(RotarySpeed,                  int)
-    DU_KEY_ACCESSORS(EffectName,                   QString)
 };
 
 #endif // DUCHORUS_H

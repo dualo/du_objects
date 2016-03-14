@@ -33,7 +33,6 @@ public:
     DU_KEY_ACCESSORS(HighBandFrequency,        int)
     DU_KEY_ACCESSORS(LowMidBandQualityFactor,  int)
     DU_KEY_ACCESSORS(HighMidBandQualityFactor, int)
-    DU_KEY_ACCESSORS(EffectName,               QString)
 };
 
 #endif // DUEQUALIZER_H
