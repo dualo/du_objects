@@ -1,5 +1,12 @@
 #include "dumidifile.h"
 
+#include "dumiditrack.h"
+
+#include "../general/duarray.h"
+#include "../general/dunumeric.h"
+
+#include <QDataStream>
+
 
 
 DU_OBJECT_IMPL(DuMidiFile)

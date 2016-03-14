@@ -2,10 +2,10 @@
 #define DUEVENT_H
 
 #include "../general/ducontainer.h"
-#include "../general/dunumeric.h"
 
-#include "../miditodumusic/midiconversionhelper.h"
 
+class MidiConversionHelper;
+DU_OBJECT(DuMidiChannelEvent)
 
 DU_OBJECT(DuEvent)
 

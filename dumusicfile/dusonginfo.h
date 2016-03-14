@@ -2,10 +2,6 @@
 #define DUSONGINFO_H
 
 #include "../general/ducontainer.h"
-#include "../general/dunumeric.h"
-#include "../general/dustring.h"
-
-#include "../miditodumusic/midiconversionhelper.h"
 
 
 #define SONGINFO_SIZE       8 + MUSIC_SONG_NAME_SIZE + 20 + NUM_LED_VALUE + FX_MIX_SIZE
@@ -13,6 +9,8 @@
 
 //NOTE: the 2 #define above could be replaced if dummy sizes were defined
 
+class MidiConversionHelper;
+DU_OBJECT(DuMixer)
 
 DU_OBJECT(DuSongInfo)
 

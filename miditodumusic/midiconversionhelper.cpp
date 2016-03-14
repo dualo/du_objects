@@ -20,6 +20,8 @@
 #include "../midifile/dumidimetaevent.h"
 #include "../midifile/dumiditrack.h"
 
+#include "../miditodumusic/dumidikeymapper.h"
+
 #include "../dumusicfile/dumusicinstrument.h"
 
 #include "../instrument/duinstrumentinfo.h"
