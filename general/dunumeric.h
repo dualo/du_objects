@@ -12,7 +12,7 @@ DU_OBJECT(DuNumeric)
 class DuNumeric : public DuValue
 {
 public:
-    explicit DuNumeric(int value);
+    explicit DuNumeric(int value = 0);
     explicit DuNumeric(int defaultValue, int byteSize, int maxValue, int minValue);
     explicit DuNumeric(int value, int byteSize, int maxValue,
                        int minValue, int defaultValue);
