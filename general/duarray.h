@@ -199,32 +199,31 @@ bool DuArray<T>::parseJson(const QJsonValue &jsonValue)
 
     const QJsonArray& jsonArray = jsonValue.toArray();
 
-    int size = array.size();
-    if (size == 0)
-    {
-        size = jsonArray.size();
-    }
-    else if (jsonArray.size() != size)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Number of elements in json array (" << jsonArray.size() << ")"
-                                      << "different from number of elements in DuArray (" << size << ")";
-        return false;
-    }
+    int originalSize = array.size();
+    int size = jsonArray.size();
 
     for (int i = 0; i < size; ++i)
     {
-        const QSharedPointer<T>& obj = array.at(i);
-        if (obj == NULL)
+        QSharedPointer<T> obj;
+        if (i < originalSize)
         {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuObject at index" << i << "is null:" << obj;
-            return false;
+            obj = array.at(i);
+        }
+        else
+        {
+            obj = QSharedPointer<T>(new T);
+            if (!append(obj))
+            {
+                qCCritical(LOG_CAT_DU_OBJECT) << "Failed to append object at index" << i;
+                return false;
+            }
         }
 
         const QJsonValue& value = jsonArray.at(i);
         if (!obj->parseJson(value))
         {
-            qCCritical(LOG_CAT_DU_OBJECT) << "DuObject at index" << i
-                                          << "failed to parse json value" << value;
+            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to parse json value" << value
+                                          << "at index" << i << "in json array";
             return false;
         }
     }
