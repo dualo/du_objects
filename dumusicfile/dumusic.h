@@ -63,7 +63,11 @@
 
 class MidiConversionHelper;
 class QIODevice;
+#ifdef Q_OS_WIN
+#include "../general/duarray.h"
+#else
 DU_OBJECT_TEMPLATE(DuArray)
+#endif
 DU_OBJECT(DuMixer)
 DU_OBJECT(DuReverb)
 DU_OBJECT(DuTrack)

@@ -17,7 +17,11 @@
 #define KEY_MIDIFILE_TRACKS     QStringLiteral("Tracks")
 
 
+#ifdef Q_OS_WIN
+#include "../general/duarray.h"
+#else
 DU_OBJECT_TEMPLATE(DuArray)
+#endif
 DU_OBJECT(DuMidiTrack)
 
 DU_OBJECT(DuMidiFile)

@@ -5,7 +5,11 @@
 
 
 class MidiConversionHelper;
+#ifdef Q_OS_WIN
+#include "../general/duarray.h"
+#else
 DU_OBJECT_TEMPLATE(DuArray);
+#endif
 DU_OBJECT(DuEvent);
 DU_OBJECT(DuMusicInstrument);
 DU_OBJECT(DuMidiTrack);

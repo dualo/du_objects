@@ -11,7 +11,11 @@
 #define KEY_MIDITRACK_EVENTS    QStringLiteral("Events")
 
 
+#ifdef Q_OS_WIN
+#include "../general/duarray.h"
+#else
 DU_OBJECT_TEMPLATE(DuArray)
+#endif
 DU_OBJECT(DuMidiBasicEvent)
 
 DU_OBJECT(DuMidiTrack)

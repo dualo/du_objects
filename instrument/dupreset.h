@@ -82,7 +82,11 @@
     X_OBJECT_TEMPLATE(ChorusArray, DuArray, DuChorus)
 
 
+#ifdef Q_OS_WIN
+#include "../general/duarray.h"
+#else
 DU_OBJECT_TEMPLATE(DuArray);
+#endif
 DU_OBJECT(DuMixer);
 DU_OBJECT(DuDistortion);
 DU_OBJECT(DuCompressor);
