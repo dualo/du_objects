@@ -18,7 +18,6 @@ public:
     virtual DuObjectPtr clone() const;
 
     static DuMusicInstrumentPtr fromDuMusicBinary(const music_instr &du_instr);
-    static DuMusicInstrumentPtr fromJson(const QJsonObject &jsonInstrument);
 
     QByteArray toDuMusicBinary() const;
 

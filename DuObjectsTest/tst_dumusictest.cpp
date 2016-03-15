@@ -36,7 +36,8 @@ void DuMusicTest::testEventJsonInOut()
     QVERIFY(!data.isUndefined());
     QVERIFY(data.isObject());
 
-    DuEventPtr fromJsonObj = DuEvent::fromJson(data.toObject());
+    DuEventPtr fromJsonObj(new DuEvent);
+    QVERIFY(fromJsonObj->parseJson(data.toObject()));
     QJsonValue toJsonData = fromJsonObj->toJson();
     QVERIFY(!toJsonData.isNull());
     QVERIFY(!toJsonData.isUndefined());

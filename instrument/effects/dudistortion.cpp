@@ -77,53 +77,6 @@ DuDistortionPtr DuDistortion::fromDuMusicBinary(const FX_distortion &du_distorti
 }
 
 
-DuDistortionPtr DuDistortion::fromJson(const QJsonObject &jsonDistortion)
-{
-    QJsonValue jsonOnOff        = jsonDistortion[KeyOnOff];
-    QJsonValue jsonPreGain      = jsonDistortion[KeyPreGain];
-    QJsonValue jsonEffectType   = jsonDistortion[KeyEffectType];
-    QJsonValue jsonLoPassFreq   = jsonDistortion[KeyLowPassFilterFrequency];
-    QJsonValue jsonLoPassRes    = jsonDistortion[KeyLowPassFilterResonance];
-    QJsonValue jsonPostGain     = jsonDistortion[KeyPostGain];
-    QJsonValue jsonDrive        = jsonDistortion[KeyDrive];
-
-    if (        !jsonOnOff.isDouble()       ||  !jsonPreGain.isDouble()
-            ||  !jsonEffectType.isDouble()  ||  !jsonLoPassFreq.isDouble()
-            ||  !jsonLoPassRes.isDouble()   ||  !jsonPostGain.isDouble()
-            ||  !jsonDrive.isDouble())
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuDistortion::fromJson():\n"
-                    << "failed to generate DuDistortion\n"
-                    << "a json key did not contain the proper type";
-
-        return DuDistortionPtr();
-    }
-
-
-    DuDistortionPtr distortion(new DuDistortion);
-    bool verif = true;
-
-    verif = distortion->setOnOff(jsonOnOff.toInt()) ? verif : false;
-
-    verif = distortion->setPreGain(jsonPreGain.toInt()) ? verif : false;
-    verif = distortion->setEffectType(jsonEffectType.toInt()) ? verif : false;
-
-    verif = distortion->setLowPassFilterFrequency(jsonLoPassFreq.toInt()) ? verif : false;
-    verif = distortion->setLowPassFilterResonance(jsonLoPassRes.toInt()) ? verif : false;
-
-    verif = distortion->setPostGain(jsonPostGain.toInt()) ? verif : false;
-    verif = distortion->setDrive(jsonDrive.toInt()) ? verif : false;
-
-    if (!verif)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuDistortion::fromJson():\n"
-                   << "an attribute was not properly set";
-    }
-
-    return distortion;
-}
-
-
 QByteArray DuDistortion::toDuMusicBinary() const
 {
     FX_distortion du_distortion;

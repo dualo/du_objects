@@ -79,53 +79,6 @@ DuMixerPtr DuMixer::fromDuMusicBinary(const FX_mix &du_mixer)
     return mixer;
 }
 
-DuMixerPtr DuMixer::fromJson(const QJsonObject &jsonMixer)
-{
-    QJsonValue jsonInputGain    = jsonMixer[KeyInputGain];
-    QJsonValue jsonLoCutFreq    = jsonMixer[KeyLowCutFilterFrequency];
-    QJsonValue jsonHiCutFreq    = jsonMixer[KeyHighCutFilterFrequency];
-    QJsonValue jsonOutputLvl    = jsonMixer[KeyOutputLevel];
-    QJsonValue jsonPanning      = jsonMixer[KeyOutputPanning];
-    QJsonValue jsonFrontRear    = jsonMixer[KeyOutputFrontRear];
-    QJsonValue jsonToReverb     = jsonMixer[KeySendToReverb];
-    QJsonValue jsonToChorus     = jsonMixer[KeySendToChorus];
-
-    if (        !jsonInputGain.isDouble()   ||  !jsonLoCutFreq.isDouble()
-            ||  !jsonHiCutFreq.isDouble()   ||  !jsonOutputLvl.isDouble()
-            ||  !jsonPanning.isDouble()     ||  !jsonFrontRear.isDouble()
-            ||  !jsonToReverb.isDouble()    ||  !jsonToChorus.isDouble())
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMixer::fromJson():\n"
-                    << "failed to generate DuMixer\n"
-                    << "a json key did not contain the proper type";
-
-        return DuMixerPtr();
-    }
-
-
-    DuMixerPtr mixer(new DuMixer);
-    bool verif = true;
-
-    verif = mixer->setInputGain(jsonInputGain.toInt()) ? verif : false;
-    verif = mixer->setLowCutFilterFrequency(jsonLoCutFreq.toInt()) ? verif : false;
-    verif = mixer->setHighCutFilterFrequency(jsonHiCutFreq.toInt()) ? verif : false;
-
-    verif = mixer->setOutputLevel(jsonOutputLvl.toInt()) ? verif : false;
-    verif = mixer->setOutputPanning(jsonPanning.toInt()) ? verif : false;
-    verif = mixer->setOutputFrontRear(jsonFrontRear.toInt()) ? verif : false;
-
-    verif = mixer->setSendToReverb(jsonToReverb.toInt()) ? verif : false;
-    verif = mixer->setSendToChorus(jsonToChorus.toInt()) ? verif : false;
-
-    if (!verif)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuMixer::fromJson():\n"
-                   << "an attribute was not properly set";
-    }
-
-    return mixer;
-}
-
 
 QByteArray DuMixer::toDuMusicBinary() const
 {

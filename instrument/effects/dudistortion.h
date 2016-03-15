@@ -15,7 +15,6 @@ public:
     virtual DuObjectPtr clone() const;
 
     static DuDistortionPtr fromDuMusicBinary(const FX_distortion &du_distortion);
-    static DuDistortionPtr fromJson(const QJsonObject &jsonDistortion);
 
     QByteArray toDuMusicBinary() const;
 

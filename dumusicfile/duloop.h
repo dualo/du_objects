@@ -26,7 +26,6 @@ public:
 
     static DuLoopPtr fromDuMusicBinary(const music_loop &du_loop,
                                        const music_sample *du_sample);
-    static DuLoopPtr fromJson(const QJsonObject &jsonLoop);
     static DuLoopPtr fromMidi(const MidiConversionHelper &helper, int midiTrackIndex);
 
     QByteArray toDuMusicBinary() const;

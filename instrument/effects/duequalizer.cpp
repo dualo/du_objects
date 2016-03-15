@@ -97,63 +97,6 @@ DuEqualizerPtr DuEqualizer::fromDuMusicBinary(const FX_equalizer& du_equalizer)
 }
 
 
-DuEqualizerPtr DuEqualizer::fromJson(const QJsonObject &jsonEqualizer)
-{
-    QJsonValue jsonOnOff        = jsonEqualizer[KeyOnOff];
-    QJsonValue jsonLowGain      = jsonEqualizer[KeyLowBandGain];
-    QJsonValue jsonLoMidGain    = jsonEqualizer[KeyLowMidBandGain];
-    QJsonValue jsonHiMidGain    = jsonEqualizer[KeyHighMidBandGain];
-    QJsonValue jsonHighGain     = jsonEqualizer[KeyHighBandGain];
-    QJsonValue jsonLowFreq      = jsonEqualizer[KeyLowBandFrequency];
-    QJsonValue jsonLoMidFreq    = jsonEqualizer[KeyLowMidBandFrequency];
-    QJsonValue jsonHiMidFreq    = jsonEqualizer[KeyHighMidBandFrequency];
-    QJsonValue jsonHighFreq     = jsonEqualizer[KeyHighBandFrequency];
-    QJsonValue jsonLoMidQual    = jsonEqualizer[KeyLowMidBandQualityFactor];
-    QJsonValue jsonHiMidQual    = jsonEqualizer[KeyHighMidBandQualityFactor];
-
-    if (        !jsonOnOff.isDouble()       ||  !jsonLowGain.isDouble()
-            ||  !jsonLoMidGain.isDouble()   ||  !jsonHiMidGain.isDouble()
-            ||  !jsonHighGain.isDouble()    ||  !jsonLowFreq.isDouble()
-            ||  !jsonLoMidFreq.isDouble()   ||  !jsonHiMidFreq.isDouble()
-            ||  !jsonHighFreq.isDouble()    ||  !jsonLoMidQual.isDouble()
-            ||  !jsonHiMidQual.isDouble())
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuEqualizer::fromJson():\n"
-                    << "failed to generate DuEqualizer\n"
-                    << "a json key did not contain the proper type";
-
-        return DuEqualizerPtr();
-    }
-
-
-    DuEqualizerPtr equalizer(new DuEqualizer);
-    bool verif = true;
-
-    verif = equalizer->setOnOff(jsonOnOff.toInt()) ? verif : false;
-
-    verif = equalizer->setLowBandGain(jsonLowGain.toInt()) ? verif : false;
-    verif = equalizer->setLowMidBandGain(jsonLoMidGain.toInt()) ? verif : false;
-    verif = equalizer->setHighMidBandGain(jsonHiMidGain.toInt()) ? verif : false;
-    verif = equalizer->setHighBandGain(jsonHighGain.toInt()) ? verif : false;
-
-    verif = equalizer->setLowBandFrequency(jsonLowFreq.toInt()) ? verif : false;
-    verif = equalizer->setLowMidBandFrequency(jsonLoMidFreq.toInt()) ? verif : false;
-    verif = equalizer->setHighMidBandFrequency(jsonHiMidFreq.toInt()) ? verif : false;
-    verif = equalizer->setHighBandFrequency(jsonHighFreq.toInt()) ? verif : false;
-
-    verif = equalizer->setLowMidBandQualityFactor(jsonLoMidQual.toInt()) ? verif : false;
-    verif = equalizer->setHighMidBandQualityFactor(jsonHiMidQual.toInt()) ? verif : false;
-
-    if (!verif)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuEqualizer::fromJson():\n"
-                   << "an attribute was not properly set";
-    }
-
-    return equalizer;
-}
-
-
 QByteArray DuEqualizer::toDuMusicBinary() const
 {
     FX_equalizer du_equalizer;

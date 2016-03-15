@@ -75,52 +75,6 @@ DuCompressorPtr DuCompressor::fromDuMusicBinary(const FX_compressor &du_compress
     return compressor;
 }
 
-
-DuCompressorPtr DuCompressor::fromJson(const QJsonObject &jsonCompressor)
-{
-    QJsonValue jsonOnOff        = jsonCompressor[KeyOnOff];
-    QJsonValue jsonAttTime      = jsonCompressor[KeyAttackTime];
-    QJsonValue jsonRelTime      = jsonCompressor[KeyReleaseTime];
-    QJsonValue jsonThreshold    = jsonCompressor[KeyThreshold];
-    QJsonValue jsonRatio        = jsonCompressor[KeyRatio];
-    QJsonValue jsonBoost        = jsonCompressor[KeyBoost];
-    QJsonValue jsonKneeType     = jsonCompressor[KeyKneeType];
-
-    if (        !jsonOnOff.isDouble()       ||  !jsonAttTime.isDouble()
-            ||  !jsonRelTime.isDouble()     ||  !jsonThreshold.isDouble()
-            ||  !jsonRatio.isDouble()       ||  !jsonBoost.isDouble()
-            ||  !jsonKneeType.isDouble())
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuCompressor::fromJson():\n"
-                    << "failed to generate DuCompressor\n"
-                    << "a json key did not contain the proper type";
-
-        return DuCompressorPtr();
-    }
-
-
-    DuCompressorPtr compressor(new DuCompressor);
-    bool verif = true;
-
-    verif = compressor->setOnOff(jsonOnOff.toInt()) ? verif : false;
-
-    verif = compressor->setAttackTime(jsonAttTime.toInt()) ? verif : false;
-    verif = compressor->setReleaseTime(jsonRelTime.toInt()) ? verif : false;
-    verif = compressor->setThreshold(jsonThreshold.toInt()) ? verif : false;
-
-    verif = compressor->setRatio(jsonRatio.toInt()) ? verif : false;
-    verif = compressor->setBoost(jsonBoost.toInt()) ? verif : false;
-    verif = compressor->setKneeType(jsonKneeType.toInt()) ? verif : false;
-
-    if (!verif)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuCompressor::fromJson():\n"
-                   << "an attribute was not properly set";
-    }
-
-    return compressor;
-}
-
 QByteArray DuCompressor::toDuMusicBinary() const
 {
     FX_compressor du_compressor;

@@ -91,59 +91,6 @@ DuChorusPtr DuChorus::fromDuMusicBinary(const FX_chorus &du_chorus)
 }
 
 
-DuChorusPtr DuChorus::fromJson(const QJsonObject &jsonChorus)
-{
-    QJsonValue jsonMode         = jsonChorus[KeyMode];
-    QJsonValue jsonEffectLvl    = jsonChorus[KeyEffectLevel];
-    QJsonValue jsonDelayTime    = jsonChorus[KeyDelayTime];
-    QJsonValue jsonFeedback     = jsonChorus[KeyFeedback];
-    QJsonValue jsonHiPassFreq   = jsonChorus[KeyInputHighPassFilterFrequency];
-    QJsonValue jsonHDAmp        = jsonChorus[KeyHDAmp];
-    QJsonValue jsonModDepth     = jsonChorus[KeyModulationDepth];
-    QJsonValue jsonModRate      = jsonChorus[KeyModulationRate];
-    QJsonValue jsonTremShape    = jsonChorus[KeyTremoloShape];
-    QJsonValue jsonRotSpeed     = jsonChorus[KeyRotarySpeed];
-
-    if (        !jsonMode.isDouble()        ||  !jsonEffectLvl.isDouble()
-            ||  !jsonDelayTime.isDouble()   ||  !jsonFeedback.isDouble()
-            ||  !jsonHiPassFreq.isDouble()  ||  !jsonHDAmp.isDouble()
-            ||  !jsonModDepth.isDouble()    ||  !jsonModRate.isDouble()
-            ||  !jsonTremShape.isDouble()   ||  !jsonRotSpeed.isDouble())
-    {
-
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuChorus::fromJson():\n"
-                    << "failed to generate DuChorus\n"
-                    << "a json key did not contain the proper type";
-
-        return DuChorusPtr();
-    }
-
-
-    DuChorusPtr chorus(new DuChorus);
-    bool verif = true;
-
-    verif = chorus->setMode(jsonMode.toInt()) ? verif : false;
-    verif = chorus->setEffectLevel(jsonEffectLvl.toInt()) ? verif : false;
-    verif = chorus->setDelayTime(jsonDelayTime.toInt()) ? verif : false;
-    verif = chorus->setFeedback(jsonFeedback.toInt()) ? verif : false;
-    verif = chorus->setInputHighPassFilterFrequency(jsonHiPassFreq.toInt()) ? verif : false;
-    verif = chorus->setHDAmp(jsonHDAmp.toInt()) ? verif : false;
-
-    verif = chorus->setModulationDepth(jsonModDepth.toInt()) ? verif : false;
-    verif = chorus->setModulationRate(jsonModRate.toInt()) ? verif : false;
-    verif = chorus->setTremoloShape(jsonTremShape.toInt()) ? verif : false;
-    verif = chorus->setRotarySpeed(jsonRotSpeed.toInt()) ? verif : false;
-
-    if (!verif)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuChorus::fromJson():\n"
-                   << "an attribute was not properly set";
-    }
-
-    return chorus;
-}
-
-
 QByteArray DuChorus::toDuMusicBinary() const
 {
     FX_chorus du_chorus;

@@ -57,53 +57,6 @@ DuMusicInstrumentPtr DuMusicInstrument::fromDuMusicBinary(const music_instr &du_
     return instrument;
 }
 
-
-DuMusicInstrumentPtr DuMusicInstrument::fromJson(const QJsonObject &jsonInstrument)
-{
-    QJsonValue jsonInstrInfo    = jsonInstrument[KeyInstrumentInfo];
-    QJsonValue jsonPreset       = jsonInstrument[KeyPreset];
-
-    if (!jsonInstrInfo.isObject() || !jsonPreset.isObject())
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromJson():\n"
-                    << "failed to generate DuMusicInstrument\n"
-                    << "a json key did not contain the proper type";
-
-        return DuMusicInstrumentPtr();
-    }
-
-
-    DuMusicInstrumentPtr instrument(new DuMusicInstrument);
-
-    const DuInstrumentInfoPtr &instrInfo =
-            DuInstrumentInfo::fromJson(jsonInstrInfo.toObject());
-    if (instrInfo != NULL)
-        instrument->setInstrumentInfo(instrInfo);
-    else
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromJson():\n"
-                    << "failed to generate DuMusicInstrument\n"
-                    << "the DuInstrumentInfo was not properly generated";
-
-        return DuMusicInstrumentPtr();
-    }
-
-    const DuPresetPtr &preset =
-            DuPreset::fromJson(jsonPreset.toObject());
-    if (preset != NULL)
-        instrument->setPreset(preset);
-    else
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromJson():\n"
-                    << "failed to generate DuMusicInstrument\n"
-                    << "the DuPreset was not properly generated";
-
-        return DuMusicInstrumentPtr();
-    }
-
-    return instrument;
-}
-
 QByteArray DuMusicInstrument::toDuMusicBinary() const
 {
     music_instr du_instrument;

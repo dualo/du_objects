@@ -93,66 +93,6 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const info_instr &du_ins
 }
 
 
-DuInstrumentInfoPtr DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
-{
-    QJsonValue jsonName         = jsonInstrInfo[KeyName];
-    QJsonValue jsonProgChange   = jsonInstrInfo[KeyDreamProgramChange];
-    QJsonValue jsonCtrlChange   = jsonInstrInfo[KeyMidiControlChange0];
-    QJsonValue jsonKeyMap       = jsonInstrInfo[KeyKeyMapping];
-    QJsonValue jsonOctave       = jsonInstrInfo[KeyOctave];
-    QJsonValue jsonId           = jsonInstrInfo[KeyID];
-    QJsonValue jsonNoteOff      = jsonInstrInfo[KeyActiveNoteOff];
-    QJsonValue jsonCategory     = jsonInstrInfo[KeyCategory];
-    QJsonValue jsonRelVolume    = jsonInstrInfo[KeyRelativeVolume];
-    QJsonValue jsonType         = jsonInstrInfo[KeyType];
-    QJsonValue jsonUserId       = jsonInstrInfo[KeyUserID];
-
-    if (        !jsonName.isString()        ||  !jsonProgChange.isDouble()
-            ||  !jsonCtrlChange.isDouble()  ||  !jsonKeyMap.isDouble()
-            ||  !jsonOctave.isDouble()      ||  !jsonId.isDouble()
-            ||  !jsonNoteOff.isDouble()     ||  !jsonCategory.isString()
-            ||  !jsonRelVolume.isDouble()   ||  !jsonType.isDouble()
-            ||  !jsonUserId.isString())
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrumentInfo::fromJson():\n"
-                    << "failed to generate DuInstrumentInfo\n"
-                    << "a json key did not contain the proper type";
-
-        return DuInstrumentInfoPtr();
-    }
-
-
-    DuInstrumentInfoPtr instrInfo(new DuInstrumentInfo);
-    bool verif = true;
-
-    verif = instrInfo->setName(jsonName.toString()) ? verif : false;
-
-    verif = instrInfo->setDreamProgramChange(jsonProgChange.toInt()) ? verif : false;
-    verif = instrInfo->setMidiControlChange0(jsonCtrlChange.toInt()) ? verif : false;
-
-    verif = instrInfo->setKeyMapping(jsonKeyMap.toInt()) ? verif : false;
-    verif = instrInfo->setOctave(jsonOctave.toInt()) ? verif : false;
-    verif = instrInfo->setID(jsonId.toInt()) ? verif : false;
-
-    verif = instrInfo->setActiveNoteOff(jsonNoteOff.toInt()) ? verif : false;
-    verif = instrInfo->setCategory(jsonCategory.toString()) ? verif : false;
-
-    verif = instrInfo->setRelativeVolume(jsonRelVolume.toInt()) ? verif : false;
-
-    verif = instrInfo->setType(jsonType.toInt()) ? verif : false;
-
-    verif = instrInfo->setUserID(jsonUserId.toString()) ? verif : false;
-
-    if (!verif)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuInstrumentInfo::fromJson():\n"
-                   << "an attribute was not properly set";
-    }
-
-    return instrInfo;
-}
-
-
 QByteArray DuInstrumentInfo::toDuMusicBinary() const
 {
     info_instr du_instrumentinfo;

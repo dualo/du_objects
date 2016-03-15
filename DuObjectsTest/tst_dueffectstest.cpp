@@ -39,7 +39,8 @@ void DuEffectsTest::testMixerJsonInOut()
     QVERIFY(!data.isUndefined());
     QVERIFY(data.isObject());
 
-    DuMixerPtr fromJsonObj = DuMixer::fromJson(data.toObject());
+    DuMixerPtr fromJsonObj(new DuMixer);
+    QVERIFY(fromJsonObj->parseJson(data.toObject()));
     QJsonValue toJsonData = fromJsonObj->toJson();
     QVERIFY(!toJsonData.isNull());
     QVERIFY(!toJsonData.isUndefined());
@@ -72,7 +73,8 @@ void DuEffectsTest::testDistortionJsonInOut()
     QVERIFY(!data.isUndefined());
     QVERIFY(data.isObject());
 
-    DuDistortionPtr fromJsonObj = DuDistortion::fromJson(data.toObject());
+    DuDistortionPtr fromJsonObj(new DuDistortion);
+    QVERIFY(fromJsonObj->parseJson(data.toObject()));
     QJsonValue toJsonData = fromJsonObj->toJson();
     QVERIFY(!toJsonData.isNull());
     QVERIFY(!toJsonData.isUndefined());
@@ -105,7 +107,8 @@ void DuEffectsTest::testCompressorJsonInOut()
     QVERIFY(!data.isUndefined());
     QVERIFY(data.isObject());
 
-    DuCompressorPtr fromJsonObj = DuCompressor::fromJson(data.toObject());
+    DuCompressorPtr fromJsonObj(new DuCompressor);
+    QVERIFY(fromJsonObj->parseJson(data.toObject()));
     QJsonValue toJsonData = fromJsonObj->toJson();
     QVERIFY(!toJsonData.isNull());
     QVERIFY(!toJsonData.isUndefined());
@@ -138,7 +141,8 @@ void DuEffectsTest::testEqualizerJsonInOut()
     QVERIFY(!data.isUndefined());
     QVERIFY(data.isObject());
 
-    DuEqualizerPtr fromJsonObj = DuEqualizer::fromJson(data.toObject());
+    DuEqualizerPtr fromJsonObj(new DuEqualizer);
+    QVERIFY(fromJsonObj->parseJson(data.toObject()));
     QJsonValue toJsonData = fromJsonObj->toJson();
     QVERIFY(!toJsonData.isNull());
     QVERIFY(!toJsonData.isUndefined());
@@ -171,7 +175,8 @@ void DuEffectsTest::testDelayJsonInOut()
     QVERIFY(!data.isUndefined());
     QVERIFY(data.isObject());
 
-    DuDelayPtr fromJsonObj = DuDelay::fromJson(data.toObject());
+    DuDelayPtr fromJsonObj(new DuDelay);
+    QVERIFY(fromJsonObj->parseJson(data.toObject()));
     QJsonValue toJsonData = fromJsonObj->toJson();
     QVERIFY(!toJsonData.isNull());
     QVERIFY(!toJsonData.isUndefined());
@@ -204,7 +209,8 @@ void DuEffectsTest::testChorusJsonInOut()
     QVERIFY(!data.isUndefined());
     QVERIFY(data.isObject());
 
-    DuChorusPtr fromJsonObj = DuChorus::fromJson(data.toObject());
+    DuChorusPtr fromJsonObj(new DuChorus);
+    QVERIFY(fromJsonObj->parseJson(data.toObject()));
     QJsonValue toJsonData = fromJsonObj->toJson();
     QVERIFY(!toJsonData.isNull());
     QVERIFY(!toJsonData.isUndefined());

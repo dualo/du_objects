@@ -76,53 +76,6 @@ DuDelayPtr DuDelay::fromDuMusicBinary(const FX_delay &du_delay)
 }
 
 
-DuDelayPtr DuDelay::fromJson(const QJsonObject &jsonDelay)
-{
-    QJsonValue jsonOnOff        = jsonDelay[KeyOnOff];
-    QJsonValue jsonMode         = jsonDelay[KeyMode];
-    QJsonValue jsonLoPassFilt   = jsonDelay[KeyPreLowPassFilter];
-    QJsonValue jsonEffectLvl    = jsonDelay[KeyEffectLevel];
-    QJsonValue jsonEffectTime   = jsonDelay[KeyEffectTime];
-    QJsonValue jsonFeedback     = jsonDelay[KeyFeedback];
-    QJsonValue jsonHDAmp        = jsonDelay[KeyHDAmp];
-
-    if (        !jsonOnOff.isDouble()       ||  !jsonMode.isDouble()
-            ||  !jsonLoPassFilt.isDouble()  ||  !jsonEffectLvl.isDouble()
-            ||  !jsonEffectTime.isDouble()  ||  !jsonFeedback.isDouble()
-            ||  !jsonHDAmp.isDouble())
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuDelay::fromJson():\n"
-                    << "failed to generate DuDelay\n"
-                    << "a json key did not contain the proper type";
-
-        return DuDelayPtr();
-    }
-
-
-    DuDelayPtr delay(new DuDelay);
-    bool verif = true;
-
-    verif = delay->setOnOff(jsonOnOff.toInt()) ? verif : false;
-
-    verif = delay->setMode(jsonMode.toInt()) ? verif : false;
-    verif = delay->setPreLowPassFilter(jsonLoPassFilt.toInt()) ? verif : false;
-
-    verif = delay->setEffectLevel(jsonEffectLvl.toInt()) ? verif : false;
-    verif = delay->setEffectTime(jsonEffectTime.toInt()) ? verif : false;
-
-    verif = delay->setFeedback(jsonFeedback.toInt()) ? verif : false;
-    verif = delay->setHDAmp(jsonHDAmp.toInt()) ? verif : false;
-
-    if (!verif)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuDelay::fromJson():\n"
-                   << "an attribute was not properly set";
-    }
-
-    return delay;
-}
-
-
 QByteArray DuDelay::toDuMusicBinary() const
 {
     FX_delay du_delay;
