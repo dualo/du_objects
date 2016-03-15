@@ -39,8 +39,6 @@ DU_KEY_ACCESSORS(DurationModifier, int)
 DU_KEY_ACCESSORS(ScoreDisplay,     int)
 DU_KEY_ACCESSORS(MidiOutChannel,   int)
 
-DU_KEY_ACCESSORS(SaveLoopTimer,    int)
-
 DU_KEY_ACCESSORS_OBJECT(Instrument, DuMusicInstrument)
 
 DU_KEY_ACCESSORS_OBJECT_TEMPLATE(Events, DuArray, DuEvent)
