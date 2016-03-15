@@ -14,7 +14,6 @@ HEADERS += \
     $$PWD/general/dudate.h \
     $$PWD/general/duurl.h \
     $$PWD/dumusicfile/dumusic.h \
-    $$PWD/dumusicfile/duheader.h \
     $$PWD/dumusicfile/dusonginfo.h \
     $$PWD/dumusicfile/dutrack.h \
     $$PWD/dumusicfile/duloop.h \
@@ -66,7 +65,6 @@ SOURCES += \
     $$PWD/general/dudate.cpp \
     $$PWD/general/duurl.cpp \
     $$PWD/dumusicfile/dumusic.cpp \
-    $$PWD/dumusicfile/duheader.cpp \
     $$PWD/dumusicfile/dusonginfo.cpp \
     $$PWD/dumusicfile/dutrack.cpp \
     $$PWD/dumusicfile/duloop.cpp \
