@@ -342,7 +342,7 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
 
     if (!verif)
     {
-        qCWarning(LOG_CAT_DU_OBJECT) << "KEY_MUSIC_TRANSPOSE was not properly set";
+        qCWarning(LOG_CAT_DU_OBJECT) << "An attribute was not properly set";
     }
 
 
