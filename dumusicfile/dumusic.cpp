@@ -76,6 +76,13 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
                 << "upgrade failed";
     }
 
+    if (du_music.local_song.s_version_music > VERSION_MUSIC)
+    {
+        DuMusicPtr music(new DuMusic);
+        music->setFileVersion((int)du_music.local_song.s_version_music);
+        return music;
+    }
+
 
     uint fileSampleSize = fileSize - MUSIC_SONG_SIZE;
 
