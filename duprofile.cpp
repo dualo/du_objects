@@ -74,12 +74,20 @@ DuProfilePtr DuProfile::fromJson(const QJsonObject &jsonProfile, int recursionLe
     QJsonArray array = jsonProfile.value(QStringLiteral("device_list")).toArray();
     for (QJsonArray::iterator it = array.begin(); it != array.end(); ++it)
     {
-        QString serial = (*it).toObject().value(QStringLiteral("dutouch_serial")).toString();
-        QString name = (*it).toObject().value(QStringLiteral("dutouch_name")).toString();
-        QString firmware = (*it).toObject().value(QStringLiteral("firmware")).toString();
-        QString firmwareUpdateDate = (*it).toObject().value(QStringLiteral("firmware_update_date")).toString();
-        QString soundbank = (*it).toObject().value(QStringLiteral("soundbank")).toString();
-        QString soundbankUpdateDate = (*it).toObject().value(QStringLiteral("soundbank_update_date")).toString();
+        const QJsonValueRef& value = (*it);
+        if (!value.isObject())
+        {
+            continue;
+        }
+
+        const QJsonObject& object = value.toObject();
+        const QString& serial               = object.value(QStringLiteral("dutouch_serial")).toString();
+        const QString& name                 = object.value(QStringLiteral("dutouch_name")).toString();
+        const QString& firmware             = object.value(QStringLiteral("firmware")).toString();
+        const QString& firmwareUpdateDate   = object.value(QStringLiteral("firmware_update_date")).toString();
+        const QString& soundbank            = object.value(QStringLiteral("soundbank")).toString();
+        const QString& soundbankUpdateDate  = object.value(QStringLiteral("soundbank_update_date")).toString();
+        const QString& dissocScheduled      = object.value(QStringLiteral("dissociation_scheduled")).toString();
 
         DuTouchPtr device(new DuTouch);
         device->setSerialNumber(serial);
@@ -93,6 +101,7 @@ DuProfilePtr DuProfile::fromJson(const QJsonObject &jsonProfile, int recursionLe
         device->setUpdateDate(QDateTime::fromString(firmwareUpdateDate, QStringLiteral("yyyy-MM-dd HH:mm:ss")));
         device->setSoundbankVersion(soundbank);
         device->setSoundbankUpdateDate(QDateTime::fromString(soundbankUpdateDate, QStringLiteral("yyyy-MM-dd HH:mm:ss")));
+        device->setDissocScheduled(dissocScheduled == QStringLiteral("yes"));
 
         list->append(device);
     }

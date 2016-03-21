@@ -31,10 +31,11 @@ public:
     bool getBusy() const;
     void setBusy(bool value);
 
-    DU_KEY_ACCESSORS(SerialNumber, QString)
-    DU_KEY_ACCESSORS(Name,         QString)
-    DU_KEY_ACCESSORS(Owner,        QString)
-    DU_KEY_ACCESSORS(OwnerId,      int)
+    DU_KEY_ACCESSORS(SerialNumber,    QString)
+    DU_KEY_ACCESSORS(Name,            QString)
+    DU_KEY_ACCESSORS(Owner,           QString)
+    DU_KEY_ACCESSORS(OwnerId,         int)
+    DU_KEY_ACCESSORS(DissocScheduled, bool)
 
     DU_KEY_ACCESSORS_OBJECT(Version, DuVersion)
 

@@ -1,5 +1,6 @@
 #include "dudevice.h"
 
+#include "general/duboolean.h"
 #include "general/dudate.h"
 #include "general/dunumeric.h"
 #include "general/dustring.h"
@@ -14,13 +15,14 @@ DuDevice::DuDevice() :
     connected(false),
     busy(false)
 {
-    addChild(KeySerialNumber,  new DuString);
-    addChild(KeyName,          new DuString);
-    addChild(KeyOwner,         new DuString);
-    addChild(KeyOwnerId,       new DuNumeric(0));
+    addChild(KeySerialNumber,    new DuString);
+    addChild(KeyName,            new DuString);
+    addChild(KeyOwner,           new DuString);
+    addChild(KeyOwnerId,         new DuNumeric(0));
+    addChild(KeyDissocScheduled, new DuBoolean(false));
 
-    addChild(KeyVersion,       new DuVersion());
-    addChild(KeyUpdateDate,    new DuDate());
+    addChild(KeyVersion,         new DuVersion());
+    addChild(KeyUpdateDate,      new DuDate());
 }
 
 DuObjectPtr DuDevice::clone() const
@@ -97,10 +99,11 @@ void DuDevice::setBusy(bool value)
     busy = value;
 }
 
-DU_KEY_ACCESSORS_IMPL(DuDevice, SerialNumber, String, QString, QString())
-DU_KEY_ACCESSORS_IMPL(DuDevice, Name,         String, QString, QString())
-DU_KEY_ACCESSORS_IMPL(DuDevice, Owner,        String, QString, QString())
-DU_KEY_ACCESSORS_IMPL(DuDevice, OwnerId,      Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuDevice, SerialNumber,    String, QString, QString())
+DU_KEY_ACCESSORS_IMPL(DuDevice, Name,            String, QString, QString())
+DU_KEY_ACCESSORS_IMPL(DuDevice, Owner,           String, QString, QString())
+DU_KEY_ACCESSORS_IMPL(DuDevice, OwnerId,         Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuDevice, DissocScheduled, Boolean, bool, false)
 
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuDevice, Version, DuVersion)
 
