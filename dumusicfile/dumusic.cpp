@@ -29,7 +29,8 @@ DU_OBJECT_IMPL(DuMusic)
 
 DuMusic::DuMusic() :
     DuContainer(),
-    m_databaseId(-1)
+    m_databaseId(-1),
+    m_indexInDevice(-1)
 {
     addChild(KeyHeader, new DuHeader);
 
@@ -1045,6 +1046,26 @@ QStringList DuMusic::lists() const
 void DuMusic::setLists(const QStringList &lists)
 {
     m_lists = lists;
+}
+
+int DuMusic::indexInDevice() const
+{
+    return m_indexInDevice;
+}
+
+void DuMusic::setIndexInDevice(int indexInDevice)
+{
+    m_indexInDevice = indexInDevice;
+}
+
+QString DuMusic::deviceSerialNumber() const
+{
+    return m_deviceSerialNumber;
+}
+
+void DuMusic::setDeviceSerialNumber(const QString &deviceSerialNumber)
+{
+    m_deviceSerialNumber = deviceSerialNumber;
 }
 
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuMusic, SongName,    DuSongInfo, SongInfo, QString, QString())

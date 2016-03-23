@@ -48,6 +48,12 @@ public:
     QStringList lists() const;
     void setLists(const QStringList &lists);
 
+    int indexInDevice() const;
+    void setIndexInDevice(int indexInDevice);
+
+    QString deviceSerialNumber() const;
+    void setDeviceSerialNumber(const QString &deviceSerialNumber);
+
     DU_KEY_ACCESSORS_IN_CHILD(SongName,     QString)
     DU_KEY_ACCESSORS_IN_CHILD(FileVersion,  int)
 
@@ -68,6 +74,9 @@ public:
 private:
     int m_databaseId;
     QStringList m_lists;
+
+    int m_indexInDevice;
+    QString m_deviceSerialNumber;
 };
 
 Q_DECLARE_METATYPE(DuMusicPtr)
