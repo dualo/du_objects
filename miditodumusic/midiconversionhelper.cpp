@@ -560,47 +560,14 @@ void MidiConversionHelper::importMidiFromFile()
 
 void MidiConversionHelper::importMapsFromFile()
 {
-    QSettings settings;
-    QString mapperName = settings.contains(QStringLiteral("midi/lastMapper")) ?
-                settings.value(QStringLiteral("midi/lastMapper")).toString() :
-                QString();
-
-    if (mapperName.isNull())
-    {
-        QFileDialog::Options options = 0;
-        #if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
-        options = QFileDialog::DontUseNativeDialog;
-        #endif
-
-        QString dir =
-                QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-        mapperName = QFileDialog::getOpenFileName(NULL,
-                                                  tr("Import mapper"),
-                                                  dir,
-                                                  tr("JSON (*.json)"),
-                                                  0,
-                                                  options);
-        if (mapperName.isEmpty())
-        {
-            setMapsValid(false);
-            return;
-        }
-    }
-
-    settings.setValue(QStringLiteral("midi/lastMapper"), mapperName);
-
-
-    QFile *mapsInput = new QFile(mapperName);
-    if (!mapsInput->open(QIODevice::ReadOnly))
+    QFile mapsInput(":/defaultmaps.json");
+    if (!mapsInput.open(QIODevice::ReadOnly))
     {
         setMapsValid(false);
         return;
     }
 
-    const QJsonObject &jsonMaps =
-            QJsonDocument::fromJson(mapsInput->readAll()).object();
-
-    mapsInput->close();
+    const QJsonObject &jsonMaps = QJsonDocument::fromJson(mapsInput.readAll()).object();
 
     populateMapper(jsonMaps);
 }
