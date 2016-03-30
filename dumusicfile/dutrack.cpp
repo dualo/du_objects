@@ -167,6 +167,7 @@ DuTrackPtr DuTrack::fromJson(const QJsonObject &jsonTrack)
         return DuTrackPtr();
     }
 
+    DuArrayPtr loopsArray(new DuArray(MUSIC_MAXLAYER));
     for (int i = 0; i < jsonLoopArray.count(); i++)
     {
         const DuLoopPtr &loop = DuLoop::fromJson(jsonLoopArray[i].toObject());
@@ -174,19 +175,20 @@ DuTrackPtr DuTrack::fromJson(const QJsonObject &jsonTrack)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromJson():\n"
                                           << "failed to generate DuTrack\n"
-                                          << "a DuLoop was not properly generated";
+                                          << "the DuLoop" << i << "was not properly generated";
 
             return DuTrackPtr();
         }
-        if (!track->appendLoop(loop))
+        if (!loopsArray->append(loop))
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromJson():\n"
                                           << "failed to generate DuTrack\n"
-                                          << "a DuLoop was not properly appended";
+                                          << "the DuLoop" << i << "was not properly appended";
 
             return DuTrackPtr();
         }
     }
+    track->setLoops(loopsArray);
 
     return track;
 }

@@ -124,7 +124,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
             ||  !jsonOctave.isDouble()        ||  !jsonId.isDouble()
             ||  !jsonNoteOff.isDouble()       ||  !jsonCategory.isString()
             ||  !jsonRelVolume.isDouble()     ||  !jsonType.isDouble()
-            ||  !jsonUserId.isString())
+            ||  !jsonUserId.isDouble())
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrumentInfo::fromJson():\n"
                     << "failed to generate DuInstrumentInfo\n"

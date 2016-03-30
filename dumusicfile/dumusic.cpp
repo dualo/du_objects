@@ -384,6 +384,7 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
         return DuMusicPtr();
     }
 
+    DuArrayPtr trackArray(new DuArray(MUSIC_MAXTRACK));
     for (int i = 0; i < jsonTrackArray.count(); i++)
     {
         const DuTrackPtr &track =
@@ -393,20 +394,21 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
             qCCritical(LOG_CAT_DU_OBJECT)
                     << "DuMusic::fromJson():\n"
                     << "failed to generate DuMusic\n"
-                    << "a DuTrack was not properly generated";
+                    << "the DuTrack" << i << "was not properly generated";
 
             return DuMusicPtr();
         }
-        if (!music->appendTrack(track))
+        if (!trackArray->append(track))
         {
             qCCritical(LOG_CAT_DU_OBJECT)
                     << "DuMusic::fromJson():\n"
                     << "failed to generate DuMusic\n"
-                    << "a DuTrack was not properly appended";
+                    << "the DuTrack" << i << "was not properly appended";
 
             return DuMusicPtr();
         }
     }
+    music->setTracks(trackArray);
 
 
     if (music->size() > MUSIC_SONG_SIZE + RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE)

@@ -207,7 +207,7 @@ DuEffectSetPtr DuEffectSet::fromJson(const QJsonObject &jsonEffectSet)
             ||  !jsonEqualOnOff.isDouble()      ||  !jsonChorusOnOff.isDouble()
             ||  !jsonReverbOnOff.isDouble()
 
-            ||  !jsonMultinoteAct.isDouble()    ||  !jsonMultinote.isString()
+            ||  !jsonMultinoteAct.isDouble()    ||  !jsonMultinote.isArray()
             
             ||  !jsonPitch.isDouble()
             
