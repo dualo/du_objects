@@ -8,8 +8,7 @@
 #include <QDebug>
 
 
-DuMidiKeyMapper::DuMidiKeyMapper(QObject *parent) :
-    QObject(parent),
+DuMidiKeyMapper::DuMidiKeyMapper() :
     m_scale(QStringLiteral(SCALE_NONE)),
     m_tonality(0)
 {
@@ -136,7 +135,7 @@ int DuMidiKeyMapper::dutouchScale(const QString &scale) const
 }
 
 
-int DuMidiKeyMapper::keyboardFromMidi(quint8 key)
+int DuMidiKeyMapper::keyboardFromMidi(quint8 key) const
 {
     if (!m_maps.contains(m_scale))
     {
