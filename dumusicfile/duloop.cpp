@@ -222,7 +222,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int midiTrackInde
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuLoop::fromMidi():\n"
                 << "failed to generate DuLoop\n"
-                << "DuMidiTrack is NULL";
+                << "DuMidiTrack at index" << midiTrackIndex << "is NULL";
 
         return DuLoopPtr();
     }
