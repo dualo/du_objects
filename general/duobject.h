@@ -40,7 +40,11 @@ Q_DECLARE_LOGGING_CATEGORY(LOG_CAT_MIDI)
     template <class T> \
     using name ## Ptr = QSharedPointer< name<T> >; \
     template <class T> \
-    using name ## ConstPtr = QSharedPointer< const name<T> >
+    using name ## ConstPtr = QSharedPointer< const name<T> >; \
+    template <class T> \
+    QDebug operator<<(QDebug dbg, const name ## ConstPtr<T>& obj); \
+    template <class T> \
+    QDebug operator<<(QDebug dbg, const name ## Ptr<T>& obj)
 
 #define DU_OBJEC_TEMPLATE_IMPL(name) \
     template <class T> \
