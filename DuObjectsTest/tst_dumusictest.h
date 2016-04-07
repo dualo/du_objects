@@ -10,7 +10,11 @@ public:
     DuMusicTest();
 
 private slots:
-    void testInOut();
+    void testEventInOut();
+    void testEventJsonInOut();
+
+    void testMusicInOut();
+    void testMusicJsonInOut();
 };
 
 #endif // DUMUSICTEST_H

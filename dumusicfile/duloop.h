@@ -5,7 +5,11 @@
 
 
 class MidiConversionHelper;
-DU_OBJECT(DuArray);
+#ifdef Q_OS_WIN
+#include "../general/duarray.h"
+#else
+DU_OBJECT_TEMPLATE(DuArray);
+#endif
 DU_OBJECT(DuEvent);
 DU_OBJECT(DuMusicInstrument);
 DU_OBJECT(DuMidiTrack);
@@ -22,7 +26,6 @@ public:
 
     static DuLoopPtr fromDuMusicBinary(const music_loop &du_loop,
                                        const music_sample *du_sample);
-    static DuLoopPtr fromJson(const QJsonObject &jsonLoop);
     static DuLoopPtr fromMidi(const MidiConversionHelper &helper, int midiTrackIndex);
 
     QByteArray toDuMusicBinary() const;
@@ -36,7 +39,8 @@ DU_KEY_ACCESSORS(ScoreDisplay,     int)
 DU_KEY_ACCESSORS(MidiOutChannel,   int)
 
 DU_KEY_ACCESSORS_OBJECT(Instrument, DuMusicInstrument)
-DU_KEY_ACCESSORS_OBJECT(Events,     DuArray)
+
+DU_KEY_ACCESSORS_OBJECT_TEMPLATE(Events, DuArray, DuEvent)
 
 public:
     int eventsSize() const;

@@ -39,9 +39,6 @@ DuDistortion::DuDistortion() :
     addChild(KeyDrive,
              new DuNumeric(FX_DISTO_DRIVE_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_DISTO_DRIVE_MAXVALUE, FX_DISTO_DRIVE_MINVALUE));
-
-    addChild(KeyEffectName,
-             new DuString(QStringLiteral(DEFAULT_EFFECTNAME), NAME_CARACT));
 }
 
 DuDistortion::~DuDistortion()
@@ -70,61 +67,9 @@ DuDistortionPtr DuDistortion::fromDuMusicBinary(const FX_distortion &du_distorti
     verif = distortion->setPostGain(du_distortion.d_postgain) ? verif : false;
     verif = distortion->setDrive(du_distortion.d_drive) ? verif : false;
 
-    verif = distortion->setEffectName(QString(QByteArray((char *)du_distortion.d_name, NAME_CARACT))) ? verif : false;
-
     if (!verif)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "DuDistortion::fromDuMusicBinary():\n"
-                   << "an attribute was not properly set";
-    }
-
-    return distortion;
-}
-
-
-DuDistortionPtr DuDistortion::fromJson(const QJsonObject &jsonDistortion)
-{
-    QJsonValue jsonOnOff        = jsonDistortion[KeyOnOff];
-    QJsonValue jsonPreGain      = jsonDistortion[KeyPreGain];
-    QJsonValue jsonEffectType   = jsonDistortion[KeyEffectType];
-    QJsonValue jsonLoPassFreq   = jsonDistortion[KeyLowPassFilterFrequency];
-    QJsonValue jsonLoPassRes    = jsonDistortion[KeyLowPassFilterResonance];
-    QJsonValue jsonPostGain     = jsonDistortion[KeyPostGain];
-    QJsonValue jsonDrive        = jsonDistortion[KeyDrive];
-    QJsonValue jsonEffectName   = jsonDistortion[KeyEffectName];
-
-    if (        !jsonOnOff.isDouble()       ||  !jsonPreGain.isDouble()
-            ||  !jsonEffectType.isDouble()  ||  !jsonLoPassFreq.isDouble()
-            ||  !jsonLoPassRes.isDouble()   ||  !jsonPostGain.isDouble()
-            ||  !jsonDrive.isDouble()       ||  !jsonEffectName.isString())
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuDistortion::fromJson():\n"
-                    << "failed to generate DuDistortion\n"
-                    << "a json key did not contain the proper type";
-
-        return DuDistortionPtr();
-    }
-
-
-    DuDistortionPtr distortion(new DuDistortion);
-    bool verif = true;
-
-    verif = distortion->setOnOff(jsonOnOff.toInt()) ? verif : false;
-
-    verif = distortion->setPreGain(jsonPreGain.toInt()) ? verif : false;
-    verif = distortion->setEffectType(jsonEffectType.toInt()) ? verif : false;
-
-    verif = distortion->setLowPassFilterFrequency(jsonLoPassFreq.toInt()) ? verif : false;
-    verif = distortion->setLowPassFilterResonance(jsonLoPassRes.toInt()) ? verif : false;
-
-    verif = distortion->setPostGain(jsonPostGain.toInt()) ? verif : false;
-    verif = distortion->setDrive(jsonDrive.toInt()) ? verif : false;
-
-    verif = distortion->setEffectName(jsonEffectName.toString()) ? verif : false;
-
-    if (!verif)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuDistortion::fromJson():\n"
                    << "an attribute was not properly set";
     }
 
@@ -177,15 +122,6 @@ QByteArray DuDistortion::toDuMusicBinary() const
     du_distortion.d_drive = tmpNum;
 
 
-    QByteArray tmpName(NAME_CARACT, (char)0x00);
-    tmpStr = getEffectName();
-    if (tmpStr.isNull())
-        return QByteArray();
-    tmpName.prepend(tmpStr.toUtf8());
-
-    std::memcpy(du_distortion.d_name, tmpName.data(), NAME_CARACT);
-
-
     return QByteArray((char *)&(du_distortion), size());
 }
 
@@ -203,4 +139,3 @@ DU_KEY_ACCESSORS_IMPL(DuDistortion, LowPassFilterFrequency, Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuDistortion, LowPassFilterResonance, Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuDistortion, PostGain,               Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuDistortion, Drive,                  Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuDistortion, EffectName,             String, QString, QString())

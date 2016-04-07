@@ -15,7 +15,6 @@ public:
     virtual DuObjectPtr clone() const;
 
     static DuDelayPtr fromDuMusicBinary(const FX_delay &du_delay);
-    static DuDelayPtr fromJson(const QJsonObject &jsonDelay);
 
     QByteArray toDuMusicBinary() const;
 
@@ -29,7 +28,6 @@ public:
     DU_KEY_ACCESSORS(EffectTime,       int)
     DU_KEY_ACCESSORS(Feedback,         int)
     DU_KEY_ACCESSORS(HDAmp,            int)
-    DU_KEY_ACCESSORS(EffectName,       QString)
 };
 
 #endif // DUDELAY_H

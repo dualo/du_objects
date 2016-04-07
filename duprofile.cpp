@@ -27,8 +27,8 @@ DuProfile::DuProfile() :
     addChild(KeyCreationDate, new DuDate);
     addChild(KeyRole,         new DuNumeric(None));
     addChild(KeyGUID,         new DuNumeric(-1));
-    addChild(KeyDuTouchList,  new DuArray);
-    addChild(KeyFriends,      new DuArray);
+    addChild(KeyDuTouchList,  new DuArray<DuTouch>);
+    addChild(KeyFriends,      new DuArray<DuProfile>);
 }
 
 DuObjectPtr DuProfile::clone() const
@@ -70,7 +70,7 @@ DuProfilePtr DuProfile::fromJson(const QJsonObject &jsonProfile, int recursionLe
     }
 
     // DU-TOUCH LIST
-    DuArrayPtr list(new DuArray);
+    DuArrayPtr<DuTouch> list(new DuArray<DuTouch>);
     QJsonArray array = jsonProfile.value(QStringLiteral("device_list")).toArray();
     for (QJsonArray::iterator it = array.begin(); it != array.end(); ++it)
     {
@@ -115,7 +115,7 @@ DuProfilePtr DuProfile::fromJson(const QJsonObject &jsonProfile, int recursionLe
     {
         QJsonArray friendsList = jsonProfile.value(QStringLiteral("friends")).toArray();
 
-        DuArrayPtr friends(new DuArray);
+        DuArrayPtr<DuProfile> friends(new DuArray<DuProfile>);
         for (QJsonArray::iterator it = friendsList.begin(); it != friendsList.end(); ++it)
         {
             if (!(*it).isObject())
@@ -185,5 +185,5 @@ DU_KEY_ACCESSORS_IMPL(DuProfile, CreationDate, Date, QDateTime, QDateTime())
 DU_KEY_ACCESSORS_IMPL(DuProfile, Role,         Numeric, DuProfile::Role, None)
 DU_KEY_ACCESSORS_IMPL(DuProfile, GUID,         Numeric, int, -1)
 
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuProfile, DuTouchList, DuArray)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuProfile, Friends,     DuArray)
+DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuProfile, DuTouchList, DuArray, DuTouch)
+DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuProfile, Friends,     DuArray, DuProfile)

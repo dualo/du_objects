@@ -8,7 +8,11 @@
 
 
 class MidiConversionHelper;
-DU_OBJECT(DuArray);
+#ifdef Q_OS_WIN
+#include "../general/duarray.h"
+#else
+DU_OBJECT_TEMPLATE(DuArray);
+#endif
 DU_OBJECT(DuLoop);
 DU_OBJECT(DuMidiTrack);
 
@@ -25,7 +29,6 @@ public:
     static DuTrackPtr fromDuMusicBinary(const music_track &du_track,
                                         const music_sample *du_sample_start,
                                         uint totalNbSamples);
-    static DuTrackPtr fromJson(const QJsonObject &jsonTrack);
     static DuTrackPtr fromMidi(const MidiConversionHelper &helper, int trackIndex);
 
     QByteArray toDuMusicBinary() const;
@@ -36,7 +39,7 @@ public:
 
     DU_KEY_ACCESSORS(Channel, int)
     DU_KEY_ACCESSORS(CurrentLoop, int)
-    DU_KEY_ACCESSORS_OBJECT(Loops, DuArray)
+    DU_KEY_ACCESSORS_OBJECT_TEMPLATE(Loops, DuArray, DuLoop)
 
 public:
     bool appendLoop(const DuLoopPtr &loop);

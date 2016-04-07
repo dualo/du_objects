@@ -15,7 +15,6 @@ public:
     virtual DuObjectPtr clone() const;
 
     static DuChorusPtr fromDuMusicBinary(const FX_chorus &du_chorus);
-    static DuChorusPtr fromJson(const QJsonObject &jsonChorus);
 
     QByteArray toDuMusicBinary() const;
 
@@ -32,7 +31,6 @@ public:
     DU_KEY_ACCESSORS(ModulationRate,               int)
     DU_KEY_ACCESSORS(TremoloShape,                 int)
     DU_KEY_ACCESSORS(RotarySpeed,                  int)
-    DU_KEY_ACCESSORS(EffectName,                   QString)
 };
 
 #endif // DUCHORUS_H

@@ -15,7 +15,6 @@ public:
     virtual DuObjectPtr clone() const;
 
     static DuMixerPtr fromDuMusicBinary(const FX_mix &du_mixer);
-    static DuMixerPtr fromJson(const QJsonObject &jsonMixer);
 
     QByteArray toDuMusicBinary() const;
 

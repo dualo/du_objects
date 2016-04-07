@@ -4,9 +4,13 @@
 #include "../general/ducontainer.h"
 
 
-DU_OBJECT(DuMixer);
-DU_OBJECT(DuArray);
+#ifdef Q_OS_WIN
+#include "../general/duarray.h"
+#else
+DU_OBJECT_TEMPLATE(DuArray);
+#endif
 DU_OBJECT(DuInstrumentInfo);
+DU_OBJECT(DuPreset);
 
 DU_OBJECT(DuSoundInfo);
 
@@ -18,7 +22,7 @@ public:
     virtual DuObjectPtr clone() const override;
     virtual int size() const override;
 
-    static DuSoundInfoPtr fromBinary(const struct_instr& data);
+    static DuSoundInfoPtr fromBinary(const sound_instr& data);
 
     QByteArray toBinary(uint8_t nbLayer, int nbSamples, uint32_t sampleSize) const;
 
@@ -44,20 +48,10 @@ public:
     DU_KEY_ACCESSORS_OBJECT(InstrumentInfo,  DuInstrumentInfo)
 
     DU_KEY_ACCESSORS(PresetNum,  int) // editable
-    DU_KEY_ACCESSORS(DisplayLed, int)
 
     DU_KEY_ACCESSORS(Name,       QString)
 
-    DU_KEY_ACCESSORS_OBJECT(PresetArray,     DuArray)
-
-    DU_KEY_ACCESSORS_OBJECT(Mixer,           DuMixer)
-    DU_KEY_ACCESSORS_OBJECT(DistortionArray, DuArray)
-    DU_KEY_ACCESSORS_OBJECT(CompressorArray, DuArray)
-    DU_KEY_ACCESSORS_OBJECT(EqualizerArray,  DuArray)
-    DU_KEY_ACCESSORS_OBJECT(DelayArray,      DuArray)
-    DU_KEY_ACCESSORS_OBJECT(ChorusArray,     DuArray)
-
-    DU_KEY_ACCESSORS_OBJECT(LedArray,        DuArray)
+    DU_KEY_ACCESSORS_OBJECT_TEMPLATE(PresetArray, DuArray, DuPreset)
 };
 
 #endif // DUSOUNDINFO_H

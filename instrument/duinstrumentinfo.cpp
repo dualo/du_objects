@@ -61,13 +61,17 @@ DuInstrumentInfo::DuInstrumentInfo() :
              new DuNumeric(0x0000, 2, 0xFFFF, 0x0000));
 }
 
+DuInstrumentInfo::~DuInstrumentInfo()
+{
+}
+
 DuObjectPtr DuInstrumentInfo::clone() const
 {
     return DuInstrumentInfoPtr(new DuInstrumentInfo(*this));
 }
 
 
-DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrInfo)
+DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const info_instr &du_instrInfo)
 {
     DuInstrumentInfoPtr instrInfo(new DuInstrumentInfo);
     bool verif = true;
@@ -104,67 +108,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const s_instr &du_instrI
     return instrInfo;
 }
 
-
-DuInstrumentInfoPtr DuInstrumentInfo::fromJson(const QJsonObject &jsonInstrInfo)
-{
-    QJsonValue jsonNameForDevice = jsonInstrInfo[KeyNameForDevice];
-    QJsonValue jsonProgChange    = jsonInstrInfo[KeyDreamProgramChange];
-    QJsonValue jsonCtrlChange    = jsonInstrInfo[KeyMidiControlChange0];
-    QJsonValue jsonKeyMap        = jsonInstrInfo[KeyKeyMapping];
-    QJsonValue jsonOctave        = jsonInstrInfo[KeyOctave];
-    QJsonValue jsonId            = jsonInstrInfo[KeyID];
-    QJsonValue jsonNoteOff       = jsonInstrInfo[KeyActiveNoteOff];
-    QJsonValue jsonCategory      = jsonInstrInfo[KeyCategory];
-    QJsonValue jsonRelVolume     = jsonInstrInfo[KeyRelativeVolume];
-    QJsonValue jsonType          = jsonInstrInfo[KeyInstrType];
-    QJsonValue jsonUserId        = jsonInstrInfo[KeyUserID];
-
-    if (        !jsonNameForDevice.isString() ||  !jsonProgChange.isDouble()
-            ||  !jsonCtrlChange.isDouble()    ||  !jsonKeyMap.isDouble()
-            ||  !jsonOctave.isDouble()        ||  !jsonId.isDouble()
-            ||  !jsonNoteOff.isDouble()       ||  !jsonCategory.isString()
-            ||  !jsonRelVolume.isDouble()     ||  !jsonType.isDouble()
-            ||  !jsonUserId.isDouble())
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuInstrumentInfo::fromJson():\n"
-                    << "failed to generate DuInstrumentInfo\n"
-                    << "a json key did not contain the proper type";
-
-        return DuInstrumentInfoPtr();
-    }
-
-
-    DuInstrumentInfoPtr instrInfo(new DuInstrumentInfo);
-    bool verif = true;
-
-    verif = instrInfo->setNameForDevice(jsonNameForDevice.toString()) ? verif : false;
-
-    verif = instrInfo->setDreamProgramChange(jsonProgChange.toInt()) ? verif : false;
-    verif = instrInfo->setMidiControlChange0(jsonCtrlChange.toInt()) ? verif : false;
-
-    verif = instrInfo->setKeyMapping(jsonKeyMap.toInt()) ? verif : false;
-    verif = instrInfo->setOctave(jsonOctave.toInt()) ? verif : false;
-    verif = instrInfo->setID(jsonId.toInt()) ? verif : false;
-
-    verif = instrInfo->setActiveNoteOff(jsonNoteOff.toInt()) ? verif : false;
-    verif = instrInfo->setCategory(jsonCategory.toString()) ? verif : false;
-
-    verif = instrInfo->setRelativeVolume(jsonRelVolume.toInt()) ? verif : false;
-
-    verif = instrInfo->setInstrType((INSTRUMENT_TYPE)jsonType.toInt()) ? verif : false;
-
-    verif = instrInfo->setUserID(jsonUserId.toInt()) ? verif : false;
-
-    if (!verif)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuInstrumentInfo::fromJson():\n"
-                   << "an attribute was not properly set";
-    }
-
-    return instrInfo;
-}
-
-bool DuInstrumentInfo::toStruct(s_instr& outStruct) const
+bool DuInstrumentInfo::toStruct(info_instr& outStruct) const
 {
     QString tmpStr;
     int tmpNum = 0;
@@ -257,7 +201,7 @@ bool DuInstrumentInfo::toStruct(s_instr& outStruct) const
 
 QByteArray DuInstrumentInfo::toDuMusicBinary() const
 {
-    s_instr du_instrumentinfo;
+    info_instr du_instrumentinfo;
     if (!toStruct(du_instrumentinfo))
     {
         return QByteArray();
@@ -269,7 +213,7 @@ QByteArray DuInstrumentInfo::toDuMusicBinary() const
 
 QByteArray DuInstrumentInfo::toBinary(uint8_t nbLayer, int nbSamples, uint32_t sampleSize) const
 {
-    s_instr du_instrumentinfo;
+    info_instr du_instrumentinfo;
     if (!toStruct(du_instrumentinfo))
     {
         return QByteArray();

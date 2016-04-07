@@ -73,49 +73,6 @@ DuEventPtr DuEvent::fromDuMusicBinary(const music_sample &du_sample)
     return event;
 }
 
-
-DuEventPtr DuEvent::fromJson(const QJsonObject &jsonEvent)
-{
-    QJsonValue jsonTime     = jsonEvent[KeyTime];
-    QJsonValue jsonCtrl     = jsonEvent[KeyControl];
-    QJsonValue jsonCanal    = jsonEvent[KeyCanal];
-    QJsonValue jsonKbrd     = jsonEvent[KeyKeyboard];
-    QJsonValue jsonNote     = jsonEvent[KeyNote];
-    QJsonValue jsonVal      = jsonEvent[KeyValue];
-
-    if (        !jsonTime.isDouble()    ||  !jsonCtrl.isDouble()
-            ||  !jsonCanal.isDouble()   ||  !jsonKbrd.isDouble()
-            ||  !jsonNote.isDouble()    ||  !jsonVal.isDouble())
-    {
-        qCCritical(LOG_CAT_DU_OBJECT)
-                << "DuEvent::fromJson():\n"
-                << "failed to generate DuEvent\n"
-                << "a json key did not contain the proper type";
-
-        return DuEventPtr();
-    }
-
-
-    DuEventPtr event(new DuEvent);
-    bool verif = true;
-
-    verif = event->setTime(jsonTime.toInt()) ? verif : false;
-    verif = event->setControl(jsonCtrl.toInt()) ? verif : false;
-    verif = event->setCanal(jsonCanal.toInt()) ? verif : false;
-    verif = event->setKeyboard(jsonKbrd.toInt()) ? verif : false;
-    verif = event->setNote(jsonNote.toInt()) ? verif : false;
-    verif = event->setValue(jsonVal.toInt()) ? verif : false;
-
-    if (!verif)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT)
-                << "DuEvent::fromJson():\n"
-                << "an attribute was not properly set";
-    }
-
-    return event;
-}
-
 DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
                              int presetOctave, int instrKeyMap, bool isPercu,
                              const MidiConversionHelper &helper)

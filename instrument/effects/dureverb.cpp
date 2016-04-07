@@ -100,65 +100,6 @@ DuReverbPtr DuReverb::fromDuMusicBinary(const FX_reverb &du_reverb)
 }
 
 
-DuReverbPtr DuReverb::fromJson(const QJsonObject &jsonReverb)
-{
-    QJsonValue jsonLevel                    = jsonReverb[KeyLevel];
-    QJsonValue jsonDirectLevel              = jsonReverb[KeyDirectLevel];
-    QJsonValue jsonRevSend                  = jsonReverb[KeyReverbSend];
-    QJsonValue jsonToneGain                 = jsonReverb[KeyToneGain];
-    QJsonValue jsonToneFreq                 = jsonReverb[KeyToneFrequency];
-    QJsonValue jsonPreHPFilter              = jsonReverb[KeyPreHighPassFilter];
-    QJsonValue jsonTime                     = jsonReverb[KeyTime];
-    QJsonValue jsonEchoFeedback             = jsonReverb[KeyEchoFeedback];
-    QJsonValue jsonHDAmp                    = jsonReverb[KeyHDAmp];
-    QJsonValue jsonThreshGate               = jsonReverb[KeyThresholdGate];
-    QJsonValue jsonPreDelayTime             = jsonReverb[KeyPreDelayTime];
-    QJsonValue jsonEffectName               = jsonReverb[KeyEffectName];
-
-    if (        !jsonLevel.isDouble()           ||  !jsonDirectLevel.isDouble()
-            ||  !jsonRevSend.isDouble()         ||  !jsonToneGain.isDouble()
-            ||  !jsonToneFreq.isDouble()        ||  !jsonPreHPFilter.isDouble()
-            ||  !jsonTime.isDouble()            ||  !jsonEchoFeedback.isDouble()
-            ||  !jsonHDAmp.isDouble()           ||  !jsonThreshGate.isDouble()
-            ||  !jsonPreDelayTime.isDouble()    ||  !jsonEffectName.isString())
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuReverb::fromJson():\n"
-                    << "failed to generate DuReverb\n"
-                    << "a json key did not contain the proper type";
-
-        return DuReverbPtr();
-    }
-
-
-    DuReverbPtr reverb(new DuReverb);
-    bool verif = true;
-
-    verif = reverb->setLevel(jsonLevel.toInt()) ? verif : false;
-    verif = reverb->setDirectLevel(jsonDirectLevel.toInt()) ? verif : false;
-    verif = reverb->setReverbSend(jsonRevSend.toInt()) ? verif : false;
-
-    verif = reverb->setToneGain(jsonToneGain.toInt()) ? verif : false;
-    verif = reverb->setToneFrequency(jsonToneFreq.toInt()) ? verif : false;
-    verif = reverb->setPreHighPassFilter(jsonPreHPFilter.toInt()) ? verif : false;
-
-    verif = reverb->setTime(jsonTime.toInt()) ? verif : false;
-    verif = reverb->setEchoFeedback(jsonEchoFeedback.toInt()) ? verif : false;
-    verif = reverb->setHDAmp(jsonHDAmp.toInt()) ? verif : false;
-    verif = reverb->setThresholdGate(jsonThreshGate.toInt()) ? verif : false;
-    verif = reverb->setPreDelayTime(jsonPreDelayTime.toInt()) ? verif : false;
-
-    verif = reverb->setEffectName(jsonEffectName.toString()) ? verif : false;
-
-    if (!verif)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuReverb::fromJson():\n"
-                   << "an attribute was not properly set";
-    }
-
-    return reverb;
-}
-
-
 QByteArray DuReverb::toDuMusicBinary() const
 {
     FX_reverb du_reverb;

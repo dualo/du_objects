@@ -37,7 +37,6 @@ HEADERS += \
     $$PWD/general/dudate.h \
     $$PWD/general/duurl.h \
     $$PWD/dumusicfile/dumusic.h \
-    $$PWD/dumusicfile/duheader.h \
     $$PWD/dumusicfile/dusonginfo.h \
     $$PWD/dumusicfile/dutrack.h \
     $$PWD/dumusicfile/duloop.h \
@@ -45,9 +44,6 @@ HEADERS += \
     $$PWD/dumusicfile/dumusicinstrument.h \
     $$PWD/instrument/duinstrumentinfo.h \
     $$PWD/instrument/dupreset.h \
-    $$PWD/instrument/duexpressionparam.h \
-    $$PWD/instrument/ducontrollers.h \
-    $$PWD/instrument/dueffectset.h \
     $$PWD/instrument/effects/duchorus.h \
     $$PWD/instrument/effects/ducompressor.h \
     $$PWD/instrument/effects/dudelay.h \
@@ -80,13 +76,14 @@ HEADERS += \
     $$PWD/dusoundfile/dusoundinfo.h \
     $$PWD/dusoundfile/dulayer.h \
     $$PWD/dusoundfile/dusample.h \
-    $$PWD/general/duboolean.h
+    $$PWD/general/duboolean.h \
+    $$PWD/du-touch/parameters/old_sound_parameters_mng.h \
+    $$PWD/du-touch/parameters/music_migration.h
 
 SOURCES += \
     $$PWD/du-touch/parameters/instr_mapping.c \
     $$PWD/general/duobject.cpp \
     $$PWD/general/ducontainer.cpp \
-    $$PWD/general/duarray.cpp \
     $$PWD/general/duvalue.cpp \
     $$PWD/general/dubinarydata.cpp \
     $$PWD/general/dunumeric.cpp \
@@ -95,7 +92,6 @@ SOURCES += \
     $$PWD/general/dudate.cpp \
     $$PWD/general/duurl.cpp \
     $$PWD/dumusicfile/dumusic.cpp \
-    $$PWD/dumusicfile/duheader.cpp \
     $$PWD/dumusicfile/dusonginfo.cpp \
     $$PWD/dumusicfile/dutrack.cpp \
     $$PWD/dumusicfile/duloop.cpp \
@@ -103,9 +99,6 @@ SOURCES += \
     $$PWD/dumusicfile/dumusicinstrument.cpp \
     $$PWD/instrument/duinstrumentinfo.cpp \
     $$PWD/instrument/dupreset.cpp \
-    $$PWD/instrument/duexpressionparam.cpp \
-    $$PWD/instrument/ducontrollers.cpp \
-    $$PWD/instrument/dueffectset.cpp \
     $$PWD/instrument/effects/duchorus.cpp \
     $$PWD/instrument/effects/ducompressor.cpp \
     $$PWD/instrument/effects/dudelay.cpp \
@@ -137,7 +130,8 @@ SOURCES += \
     $$PWD/miditodumusic/duscalemodel.cpp \
     $$PWD/dusoundfile/dulayer.cpp \
     $$PWD/dusoundfile/dusample.cpp \
-    $$PWD/general/duboolean.cpp
+    $$PWD/general/duboolean.cpp \
+    $$PWD/du-touch/parameters/music_migration.c
     
 RESOURCES += \
     $$PWD/miditodumusic/midiresources.qrc

@@ -18,7 +18,6 @@ public:
     virtual DuObjectPtr clone() const;
 
     static DuEventPtr fromDuMusicBinary(const music_sample &du_sample);
-    static DuEventPtr fromJson(const QJsonObject &jsonEvent);
     static DuEventPtr fromMidi(const DuMidiChannelEventPtr &channelEvent,
                                int presetOctave, int instrKeyMap, bool isPercu,
                                const MidiConversionHelper &helper);

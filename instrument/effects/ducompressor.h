@@ -15,7 +15,6 @@ public:
     virtual DuObjectPtr clone() const;
 
     static DuCompressorPtr fromDuMusicBinary(const FX_compressor &du_compressor);
-    static DuCompressorPtr fromJson(const QJsonObject &jsonCompressor);
 
     QByteArray toDuMusicBinary() const;
 
@@ -29,7 +28,6 @@ public:
     DU_KEY_ACCESSORS(Ratio,       int)
     DU_KEY_ACCESSORS(Boost,       int)
     DU_KEY_ACCESSORS(KneeType,    int)
-    DU_KEY_ACCESSORS(EffectName,  QString)
 };
 
 #endif // DUCOMPRESSOR_H

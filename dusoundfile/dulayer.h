@@ -7,7 +7,12 @@
 typedef QList<QByteArray> QByteArrayList;
 #endif
 
-DU_OBJECT(DuArray);
+#ifdef Q_OS_WIN
+#include "../general/duarray.h"
+#else
+DU_OBJECT_TEMPLATE(DuArray);
+#endif
+DU_OBJECT(DuSample);
 
 DU_OBJECT(DuLayer);
 
@@ -22,7 +27,7 @@ public:
                                  const QVector<dream_sp> &dreamSPArray,
                                  const QByteArrayList &sampleDataArray);
 
-    DU_KEY_ACCESSORS_OBJECT(SampleArray, DuArray)
+    DU_KEY_ACCESSORS_OBJECT_TEMPLATE(SampleArray, DuArray, DuSample)
 
     DU_KEY_ACCESSORS(MinVelocity,   int)
     DU_KEY_ACCESSORS(MaxVelocity,   int)

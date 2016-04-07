@@ -118,6 +118,51 @@ QHttpMultiPart *DuContainer::toHttpMultiPart(const QByteArray &boundary) const
     return multiPart;
 }
 
+bool DuContainer::parseJson(const QJsonValue &jsonValue)
+{
+    if (jsonValue.isNull())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "jsonValue is null:" << jsonValue;
+        return false;
+    }
+
+    if (jsonValue.isUndefined())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "jsonValue is undefined:" << jsonValue;
+        return false;
+    }
+
+    if (!jsonValue.isObject())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "jsonValue is not an object:" << jsonValue;
+        return false;
+    }
+
+    const QJsonObject& jsonObject = jsonValue.toObject();
+
+    QMapIterator<QString, DuObjectPtr> i(children);
+    while (i.hasNext())
+    {
+        i.next();
+
+        const DuObjectPtr& obj = i.value();
+        if (obj == NULL)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "DuObject associated to key" << i.key() << "is null:" << obj;
+            return false;
+        }
+
+        const QJsonValue& value = jsonObject[i.key()];
+        if (!obj->parseJson(value))
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "DuObject associated to key" << i.key()
+                                          << "failed to parse json value" << value;
+            return false;
+        }
+    }
+
+    return true;
+}
 
 QDebug DuContainer::debugPrint(QDebug dbg) const
 {

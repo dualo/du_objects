@@ -3,6 +3,11 @@
 
 #include "../general/ducontainer.h"
 
+// TODO: Get this from external
+#ifndef SOUNDBANK_STARTADRESS
+#define SOUNDBANK_STARTADRESS 0x10000
+#endif
+
 
 DU_OBJECT(DuInstrumentInfo);
 
@@ -16,14 +21,14 @@ public:
         SDK_5000 = 2,
     };
 
-    DuInstrumentInfo();
+    explicit DuInstrumentInfo();
+    ~DuInstrumentInfo();
 
     virtual DuObjectPtr clone() const;
 
-    static DuInstrumentInfoPtr fromDuMusicBinary(const s_instr &du_instrInfo);
-    static DuInstrumentInfoPtr fromJson(const QJsonObject &jsonInstrInfo);
+    static DuInstrumentInfoPtr fromDuMusicBinary(const info_instr &du_instrInfo);
 
-    bool toStruct(s_instr& outStruct) const;
+    bool toStruct(info_instr& outStruct) const;
     QByteArray toDuMusicBinary() const;
     QByteArray toBinary(uint8_t nbLayer, int nbSamples, uint32_t sampleSize) const;
 

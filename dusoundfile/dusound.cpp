@@ -24,11 +24,11 @@ DuSound::DuSound() :
 {
     addChild(KeyInfo,       new DuSoundInfo);
 
-    addChild(KeyLayerArray, new DuArray);
+    addChild(KeyLayerArray, new DuArray<DuLayer>);
 
-    addChild(KeyMapping,    new DuArray);
+    addChild(KeyMapping,    new DuArray<DuNote>);
 
-    addChild(KeyMetadata,   new DuArray);
+    addChild(KeyMetadata,   new DuArray<DuBinaryData>);
 }
 
 DuObjectPtr DuSound::clone() const
@@ -42,7 +42,7 @@ int DuSound::size() const
     int totalNbSamples = 0;
     int sampleSize = 0;
 
-    const DuArrayConstPtr& layers = getLayerArray();
+    const DuArrayConstPtr<DuLayer>& layers = getLayerArray();
     if (layers == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Layer array null";
@@ -52,14 +52,14 @@ int DuSound::size() const
     nbLayer = getLayerArray()->count();
     for (int i = 0; i < nbLayer; ++i)
     {
-        const DuLayerConstPtr& layer = layers->atAs<DuLayer>(i);
+        const DuLayerConstPtr& layer = layers->at(i);
         if (layer == NULL)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "Layer" << i << "null";
             return -1;
         }
 
-        const DuArrayConstPtr& samples = layer->getSampleArray();
+        const DuArrayConstPtr<DuSample>& samples = layer->getSampleArray();
         if (samples == NULL)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "Sample array null";
@@ -69,7 +69,7 @@ int DuSound::size() const
         int nbSamples = samples->count();
         for (int j = 0; j < nbSamples; ++j)
         {
-            const DuSampleConstPtr& sample = samples->atAs<DuSample>(j);
+            const DuSampleConstPtr& sample = samples->at(j);
             if (sample == NULL)
             {
                 qCCritical(LOG_CAT_DU_OBJECT) << "Sample" << j << "null";
@@ -83,7 +83,7 @@ int DuSound::size() const
     }
 
     int mappingSize = 0;
-    const DuArrayConstPtr& mapping = getMapping();
+    const DuArrayConstPtr<DuNote>& mapping = getMapping();
     if (mapping == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Mapping array null";
@@ -96,7 +96,7 @@ int DuSound::size() const
     }
 
     int metadataSize = 0;
-    const DuArrayConstPtr& metadata = getMetadata();
+    const DuArrayConstPtr<DuBinaryData>& metadata = getMetadata();
     if (metadata == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Metadata array null";
@@ -130,7 +130,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
         return DuSoundPtr();
     }
 
-    struct_instr soundStruct;
+    sound_instr soundStruct;
     std::memcpy((char*)&soundStruct, &data.data()[INSTR_HEADER_SIZE], INSTRU_STRUCT_SIZE);
 
     DuSoundPtr sound(new DuSound);
@@ -257,7 +257,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
     Q_ASSERT(sampleArray.size()  == totalNbSamples);
 
 
-    DuArrayPtr layerArray(new DuArray);
+    DuArrayPtr<DuLayer> layerArray(new DuArray<DuLayer>);
     int sampleCpt = 0;
     for (int i = 0; i < nbLayers; ++i)
     {
@@ -285,7 +285,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
 
     if (soundHeader.mapping_addr != 0)
     {
-        DuArrayPtr mapping(new DuArray);
+        DuArrayPtr<DuNote> mapping(new DuArray<DuNote>);
         for (uint i = 0; i < MAPPING_SIZE; i += S_NOTE_SIZE)
         {
             s_note note;
@@ -350,7 +350,7 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
 {
     QByteArray data;
 
-    const DuArrayConstPtr& layerArray = getLayerArray();
+    const DuArrayConstPtr<DuLayer>& layerArray = getLayerArray();
     if (layerArray == NULL)
         return QByteArray();
 
@@ -358,14 +358,14 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
     int totalNbSamples = 0;
     for (int i = 0; i < nbLayer; ++i)
     {
-        const DuLayerConstPtr& layer = layerArray->atAs<DuLayer>(i);
+        const DuLayerConstPtr& layer = layerArray->at(i);
         if (layer == NULL)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "Layer" << i << "null";
             return QByteArray();
         }
 
-        const DuArrayConstPtr& samples = layer->getSampleArray();
+        const DuArrayConstPtr<DuSample>& samples = layer->getSampleArray();
         if (samples == NULL)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "Sample array null";
@@ -383,11 +383,11 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
     int totalSampleSize = 0;
     for (int i = 0; i < nbLayer; ++i)
     {
-        DuLayerConstPtr layer = layerArray->atAs<DuLayer>(i);
+        DuLayerConstPtr layer = layerArray->at(i);
         if (layer == NULL)
             return QByteArray();
 
-        DuArrayConstPtr samples = layer->getSampleArray();
+        DuArrayConstPtr<DuSample> samples = layer->getSampleArray();
         if (samples == NULL)
             return QByteArray();
 
@@ -401,7 +401,7 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
 
         for (int j = 0; j < nbSamples; ++j)
         {
-            DuSampleConstPtr sample = samples->atAs<DuSample>(j);
+            DuSampleConstPtr sample = samples->at(j);
             if (sample == NULL)
                 return QByteArray();
 
@@ -427,7 +427,7 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
     soundHeader.SW_version = (uint16_t) getSoftInstrVersion();
 
     int mappingAddr = 0;
-    const DuArrayConstPtr& mapping = getMapping();
+    const DuArrayConstPtr<DuNote>& mapping = getMapping();
     if (mapping == NULL)
         return QByteArray();
 
@@ -439,7 +439,7 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
     soundHeader.mapping_addr = (uint32_t) mappingAddr;
 
     int metadataAddr = 0;
-    const DuArrayConstPtr& metadata = getMetadata();
+    const DuArrayConstPtr<DuBinaryData>& metadata = getMetadata();
     if (metadata == NULL)
         return QByteArray();
 
@@ -608,8 +608,8 @@ DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, Name, DuSoundInfo, Info, QString, QStrin
 
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, Info,         DuSoundInfo)
 
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, LayerArray,   DuArray)
+DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuSound, LayerArray, DuArray, DuLayer)
 
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, Mapping,      DuArray)
+DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuSound, Mapping,    DuArray, DuNote)
 
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, Metadata,     DuArray)
+DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuSound, Metadata,   DuArray, DuBinaryData)

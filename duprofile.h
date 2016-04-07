@@ -4,7 +4,13 @@
 #include "general/ducontainer.h"
 
 
-DU_OBJECT(DuArray);
+#ifdef Q_OS_WIN
+#include "../general/duarray.h"
+#else
+DU_OBJECT_TEMPLATE(DuArray);
+#endif
+
+DU_OBJECT(DuTouch);
 
 DU_OBJECT(DuProfile);
 
@@ -46,8 +52,8 @@ public:
     DU_KEY_ACCESSORS(Role,         Role)
     DU_KEY_ACCESSORS(GUID,         int)
 
-    DU_KEY_ACCESSORS_OBJECT(DuTouchList, DuArray)
-    DU_KEY_ACCESSORS_OBJECT(Friends,     DuArray)
+    DU_KEY_ACCESSORS_OBJECT_TEMPLATE(DuTouchList, DuArray, DuTouch)
+    DU_KEY_ACCESSORS_OBJECT_TEMPLATE(Friends,     DuArray, DuProfile)
 };
 
 Q_DECLARE_METATYPE(DuProfilePtr)

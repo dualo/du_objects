@@ -10,7 +10,7 @@ DU_OBJECT_IMPL(DuLayer)
 DuLayer::DuLayer() :
     DuContainer()
 {
-    addChild(KeySampleArray, new DuArray);
+    addChild(KeySampleArray, new DuArray<DuSample>);
 
     addChild(KeyMinVelocity, new DuNumeric(0x01, NUMERIC_DEFAULT_SIZE, 0x7F, 0x01));
     addChild(KeyMaxVelocity, new DuNumeric(0x7F, NUMERIC_DEFAULT_SIZE, 0x7F, 0x01));
@@ -49,7 +49,7 @@ DuLayerPtr DuLayer::fromBinary(const QList<dream_ip>& dreamIPArray,
         qCWarning(LOG_CAT_DU_OBJECT) << "an attribute was not properly set";
     }
 
-    DuArrayPtr sampleArray(new DuArray);
+    DuArrayPtr<DuSample> sampleArray(new DuArray<DuSample>);
     for (int i = 0; i < nbSamples; ++i)
     {
         if (dreamIPArray[i].min_vel != min_vel || dreamIPArray[i].max_vel != max_vel)
@@ -79,7 +79,7 @@ DuLayerPtr DuLayer::fromBinary(const QList<dream_ip>& dreamIPArray,
     return layer;
 }
 
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuLayer, SampleArray, DuArray)
+DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuLayer, SampleArray, DuArray, DuSample)
 
 DU_KEY_ACCESSORS_IMPL(DuLayer, MinVelocity, Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuLayer, MaxVelocity, Numeric, int, -1)

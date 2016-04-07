@@ -5,6 +5,8 @@
 
 #include <cstring>
 
+DU_OBJECT_IMPL(DuNote);
+
 DuNote::DuNote() :
     DuContainer()
 {

@@ -6,12 +6,6 @@
 
 DU_OBJECT(DuInstrumentInfo);
 DU_OBJECT(DuPreset);
-DU_OBJECT(DuMixer);
-DU_OBJECT(DuDistortion);
-DU_OBJECT(DuCompressor);
-DU_OBJECT(DuEqualizer);
-DU_OBJECT(DuDelay);
-DU_OBJECT(DuChorus);
 
 DU_OBJECT(DuMusicInstrument);
 
@@ -24,7 +18,6 @@ public:
     virtual DuObjectPtr clone() const;
 
     static DuMusicInstrumentPtr fromDuMusicBinary(const music_instr &du_instr);
-    static DuMusicInstrumentPtr fromJson(const QJsonObject &jsonInstrument);
 
     QByteArray toDuMusicBinary() const;
 
@@ -32,12 +25,6 @@ public:
 
     DU_KEY_ACCESSORS_OBJECT(InstrumentInfo, DuInstrumentInfo)
     DU_KEY_ACCESSORS_OBJECT(Preset,         DuPreset)
-    DU_KEY_ACCESSORS_OBJECT(Mixer,          DuMixer)
-    DU_KEY_ACCESSORS_OBJECT(Distortion,     DuDistortion)
-    DU_KEY_ACCESSORS_OBJECT(Compressor,     DuCompressor)
-    DU_KEY_ACCESSORS_OBJECT(Equalizer,      DuEqualizer)
-    DU_KEY_ACCESSORS_OBJECT(Delay,          DuDelay)
-    DU_KEY_ACCESSORS_OBJECT(Chorus,         DuChorus)
 };
 
 #endif // DUINSTRUMENT_H

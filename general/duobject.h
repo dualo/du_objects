@@ -34,6 +34,29 @@ Q_DECLARE_LOGGING_CATEGORY(LOG_CAT_MIDI)
         return obj->debugPrint(dbg); \
     }
 
+#define DU_OBJECT_TEMPLATE(name) \
+    template <class T> \
+    class name; \
+    template <class T> \
+    using name ## Ptr = QSharedPointer< name<T> >; \
+    template <class T> \
+    using name ## ConstPtr = QSharedPointer< const name<T> >
+
+#define DU_OBJEC_TEMPLATE_IMPL(name) \
+    template <class T> \
+    QDebug operator<<(QDebug dbg, const name ## ConstPtr<T>& obj) \
+    { \
+        if (obj.isNull()) \
+            return dbg << #name "(0x0) "; \
+        return obj->debugPrint(dbg); \
+    } \
+    template <class T> \
+    QDebug operator<<(QDebug dbg, const name ## Ptr<T>& obj) \
+    { \
+        if (obj.isNull()) \
+            return dbg << #name "(0x0) "; \
+        return obj->debugPrint(dbg); \
+    }
 
 DU_OBJECT(DuObject);
 
@@ -55,6 +78,8 @@ public:
     virtual QByteArray toMidiBinary() const;
     virtual QJsonValue toJson() const = 0;
     virtual QHttpPart toHttpPart(const QString &name) const;
+
+    virtual bool parseJson(const QJsonValue &jsonValue) = 0;
 
     virtual QDebug debugPrint(QDebug dbg) const;
 

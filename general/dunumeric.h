@@ -12,7 +12,7 @@ DU_OBJECT(DuNumeric);
 class DuNumeric : public DuValue
 {
 public:
-    explicit DuNumeric(int value);
+    explicit DuNumeric(int value = 0);
     explicit DuNumeric(int defaultValue, int byteSize, int maxValue, int minValue);
     explicit DuNumeric(int value, int byteSize, int maxValue,
                        int minValue, int defaultValue);
@@ -29,6 +29,9 @@ public:
 
     int getMin() const;
     bool setMin(int value);
+
+    QVector<int> forbiddenValues() const;
+    bool setForbiddenValues(const QVector<int>& forbiddenValues);
 
     // DuObject interface
 public:
@@ -49,6 +52,7 @@ private:
     int defaultValue;
     int maxValue;
     int minValue;
+    QVector<int> m_forbiddenValues;
 };
 
 #endif // DUNUMERIC_H

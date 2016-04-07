@@ -31,6 +31,19 @@
 #include <QFile>
 #include <QJsonDocument>
 
+#include "../general/duarray.h"
+
+#include "../midifile/dumidichannelevent.h"
+#include "../midifile/dumidifile.h"
+#include "../midifile/dumidimetaevent.h"
+#include "../midifile/dumiditrack.h"
+
+#include "../miditodumusic/dumidikeymapper.h"
+
+#include "../dumusicfile/dumusicinstrument.h"
+
+#include "../instrument/duinstrumentinfo.h"
+
 
 MidiConversionHelper::MidiConversionHelper() :
     midiValid(false),
@@ -182,7 +195,7 @@ QVector<DuMidiTrackPtr> MidiConversionHelper::getTracks()
     QVector<DuMidiTrackPtr> trackList;
     trackList.clear();
 
-    const DuArrayPtr tracks = selectedFile->getTracks();
+    const DuArrayPtr<DuMidiTrack> tracks = selectedFile->getTracks();
     if (tracks == NULL)
         return QVector<DuMidiTrackPtr>();
 
@@ -217,7 +230,7 @@ int MidiConversionHelper::getMidiChannel(int index) const
 
     const DuMidiTrackPtr &midiTrack = selectedTracks[index];
 
-    const DuArrayPtr &midiEvents = midiTrack->getEvents();
+    const DuArrayPtr<DuMidiBasicEvent> &midiEvents = midiTrack->getEvents();
     if (midiEvents == NULL)
         return -1;
 
@@ -284,13 +297,7 @@ void MidiConversionHelper::addSelection(int trackNum, int loopNum, int midiTrack
 
     DuMusicInstrumentPtr musicInstr(new DuMusicInstrument);
     musicInstr->setInstrumentInfo(soundInfo->getInstrumentInfo()->cloneAs<DuInstrumentInfo>());
-    musicInstr->setPreset(soundInfo->getPresetArray()->atAs<DuPreset>(0)->cloneAs<DuPreset>());
-    musicInstr->setMixer(soundInfo->getMixer()->cloneAs<DuMixer>());
-    musicInstr->setDistortion(soundInfo->getDistortionArray()->atAs<DuDistortion>(0)->cloneAs<DuDistortion>());
-    musicInstr->setCompressor(soundInfo->getCompressorArray()->atAs<DuCompressor>(0)->cloneAs<DuCompressor>());
-    musicInstr->setEqualizer(soundInfo->getEqualizerArray()->atAs<DuEqualizer>(0)->cloneAs<DuEqualizer>());
-    musicInstr->setDelay(soundInfo->getDelayArray()->atAs<DuDelay>(0)->cloneAs<DuDelay>());
-    musicInstr->setChorus(soundInfo->getChorusArray()->atAs<DuChorus>(0)->cloneAs<DuChorus>());
+    musicInstr->setPreset(soundInfo->getPresetArray()->at(0)->cloneAs<DuPreset>());
 
     selectedIndexes.append(QPair<int, int>(trackNum, loopNum));
     selectedTracks.append(midiTrack);
@@ -544,7 +551,7 @@ bool MidiConversionHelper::filterMetaEvents()
     bool keySigFound = false;
     bool titleFound = false;
 
-    const DuArrayPtr &midiTracks = selectedFile->getTracks();
+    const DuArrayPtr<DuMidiTrack> &midiTracks = selectedFile->getTracks();
     if (midiTracks == NULL)
         return false;
 
@@ -565,7 +572,7 @@ bool MidiConversionHelper::filterMetaEvents()
         if (midiTrack == NULL)
             return false;
 
-        const DuArrayPtr &midiEvents = midiTrack->getEvents();
+        const DuArrayPtr<DuMidiBasicEvent> &midiEvents = midiTrack->getEvents();
         if (midiEvents == NULL)
             return false;
 

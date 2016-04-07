@@ -5,6 +5,7 @@
 
 #include "dutimesignaturemodel.h"
 #include "duscalemodel.h"
+#include "dutimesignaturemodel.h"
 #include "dutonalitymodel.h"
 #include "dumidikeymapper.h"
 

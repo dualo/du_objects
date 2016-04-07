@@ -1,6 +1,7 @@
 #ifndef DUMIDIFILE_H
 #define DUMIDIFILE_H
 
+
 #include "../general/ducontainer.h"
 
 
@@ -15,7 +16,11 @@
 #define KEY_MIDIFILE_TRACKS     QStringLiteral("Tracks")
 
 
-DU_OBJECT(DuArray);
+#ifdef Q_OS_WIN
+#include "../general/duarray.h"
+#else
+DU_OBJECT_TEMPLATE(DuArray);
+#endif
 DU_OBJECT(DuMidiTrack);
 
 DU_OBJECT(DuMidiFile);
@@ -43,11 +48,11 @@ public:
     int getDivision() const;
     bool setDivision(quint16 value);
 
-    DuArrayPtr getTracks();
-    DuArrayConstPtr getTracks() const;
+    DuArrayPtr<DuMidiTrack> getTracks();
+    DuArrayConstPtr<DuMidiTrack> getTracks() const;
     DuMidiTrackPtr getTrackAt(int index);
 
-    void setTracks(const DuArrayPtr &array);
+    void setTracks(const DuArrayPtr<DuMidiTrack> &array);
     bool appendTrack(const DuMidiTrackPtr &track);
     bool appendTracks(const QVector<DuMidiTrackPtr> &tracks);
 };

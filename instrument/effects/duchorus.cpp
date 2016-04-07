@@ -51,9 +51,6 @@ DuChorus::DuChorus() :
     addChild(KeyRotarySpeed,
              new DuNumeric(FX_CHORUS_ROTARY_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_CHORUS_ROTARY_MAXVALUE, FX_CHORUS_ROTARY_MINVALUE));
-
-    addChild(KeyEffectName,
-             new DuString(QStringLiteral(DEFAULT_EFFECTNAME), NAME_CARACT));
 }
 
 DuChorus::~DuChorus()
@@ -84,68 +81,9 @@ DuChorusPtr DuChorus::fromDuMusicBinary(const FX_chorus &du_chorus)
     verif = chorus->setTremoloShape(du_chorus.c_tremoloshape) ? verif : false;
     verif = chorus->setRotarySpeed(du_chorus.c_rotaryspeed) ? verif : false;
 
-    verif = chorus->setEffectName(QString(QByteArray((char *)du_chorus.c_name, NAME_CARACT))) ? verif : false;
-
     if (!verif)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "DuChorus::fromDuMusicBinary():\n"
-                   << "an attribute was not properly set";
-    }
-
-    return chorus;
-}
-
-
-DuChorusPtr DuChorus::fromJson(const QJsonObject &jsonChorus)
-{
-    QJsonValue jsonMode         = jsonChorus[KeyMode];
-    QJsonValue jsonEffectLvl    = jsonChorus[KeyEffectLevel];
-    QJsonValue jsonDelayTime    = jsonChorus[KeyDelayTime];
-    QJsonValue jsonFeedback     = jsonChorus[KeyFeedback];
-    QJsonValue jsonHiPassFreq   = jsonChorus[KeyInputHighPassFilterFrequency];
-    QJsonValue jsonHDAmp        = jsonChorus[KeyHDAmp];
-    QJsonValue jsonModDepth     = jsonChorus[KeyModulationDepth];
-    QJsonValue jsonModRate      = jsonChorus[KeyModulationRate];
-    QJsonValue jsonTremShape    = jsonChorus[KeyTremoloShape];
-    QJsonValue jsonRotSpeed     = jsonChorus[KeyRotarySpeed];
-    QJsonValue jsonEffectName   = jsonChorus[KeyEffectName];
-
-    if (        !jsonMode.isDouble()        ||  !jsonEffectLvl.isDouble()
-            ||  !jsonDelayTime.isDouble()   ||  !jsonFeedback.isDouble()
-            ||  !jsonHiPassFreq.isDouble()  ||  !jsonHDAmp.isDouble()
-            ||  !jsonModDepth.isDouble()    ||  !jsonModRate.isDouble()
-            ||  !jsonTremShape.isDouble()   ||  !jsonRotSpeed.isDouble()
-            ||  !jsonEffectName.isString())
-    {
-
-        qCCritical(LOG_CAT_DU_OBJECT) << "DuChorus::fromJson():\n"
-                    << "failed to generate DuChorus\n"
-                    << "a json key did not contain the proper type";
-
-        return DuChorusPtr();
-    }
-
-
-    DuChorusPtr chorus(new DuChorus);
-    bool verif = true;
-
-    verif = chorus->setMode(jsonMode.toInt()) ? verif : false;
-    verif = chorus->setEffectLevel(jsonEffectLvl.toInt()) ? verif : false;
-    verif = chorus->setDelayTime(jsonDelayTime.toInt()) ? verif : false;
-    verif = chorus->setFeedback(jsonFeedback.toInt()) ? verif : false;
-    verif = chorus->setInputHighPassFilterFrequency(jsonHiPassFreq.toInt()) ? verif : false;
-    verif = chorus->setHDAmp(jsonHDAmp.toInt()) ? verif : false;
-
-    verif = chorus->setModulationDepth(jsonModDepth.toInt()) ? verif : false;
-    verif = chorus->setModulationRate(jsonModRate.toInt()) ? verif : false;
-    verif = chorus->setTremoloShape(jsonTremShape.toInt()) ? verif : false;
-    verif = chorus->setRotarySpeed(jsonRotSpeed.toInt()) ? verif : false;
-
-    verif = chorus->setEffectName(jsonEffectName.toString()) ? verif : false;
-
-    if (!verif)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "DuChorus::fromJson():\n"
                    << "an attribute was not properly set";
     }
 
@@ -213,15 +151,6 @@ QByteArray DuChorus::toDuMusicBinary() const
     du_chorus.c_rotaryspeed = tmpNum;
 
 
-    QByteArray tmpName(NAME_CARACT, (char)0x00);
-    tmpStr = getEffectName();
-    if (tmpStr.isNull())
-        return QByteArray();
-    tmpName.prepend(tmpStr.toUtf8());
-
-    std::memcpy(du_chorus.c_name, tmpName.data(), NAME_CARACT);
-
-
     return QByteArray((char *)&(du_chorus), size());
 }
 
@@ -242,4 +171,3 @@ DU_KEY_ACCESSORS_IMPL(DuChorus, ModulationDepth,              Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuChorus, ModulationRate,               Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuChorus, TremoloShape,                 Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuChorus, RotarySpeed,                  Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuChorus, EffectName,                   String, QString, QString())

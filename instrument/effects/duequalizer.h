@@ -15,7 +15,6 @@ public:
     virtual DuObjectPtr clone() const;
 
     static DuEqualizerPtr fromDuMusicBinary(const FX_equalizer &du_equalizer);
-    static DuEqualizerPtr fromJson(const QJsonObject &jsonEqualizer);
 
     QByteArray toDuMusicBinary() const;
 
@@ -33,7 +32,6 @@ public:
     DU_KEY_ACCESSORS(HighBandFrequency,        int)
     DU_KEY_ACCESSORS(LowMidBandQualityFactor,  int)
     DU_KEY_ACCESSORS(HighMidBandQualityFactor, int)
-    DU_KEY_ACCESSORS(EffectName,               QString)
 };
 
 #endif // DUEQUALIZER_H

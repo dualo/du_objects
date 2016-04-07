@@ -4,9 +4,16 @@
 #include "../general/ducontainer.h"
 
 
+DU_OBJECT(DuBinaryData);
+DU_OBJECT(DuLayer);
+DU_OBJECT(DuNote);
 DU_OBJECT(DuSoundHeader);
 DU_OBJECT(DuSoundInfo);
-DU_OBJECT(DuArray);
+#ifdef Q_OS_WIN
+#include "../general/duarray.h"
+#else
+DU_OBJECT_TEMPLATE(DuArray);
+#endif
 
 DU_OBJECT(DuSound);
 
@@ -61,11 +68,11 @@ public:
 
     DU_KEY_ACCESSORS_OBJECT(Info,                   DuSoundInfo)
 
-    DU_KEY_ACCESSORS_OBJECT(LayerArray,             DuArray)
+    DU_KEY_ACCESSORS_OBJECT_TEMPLATE(LayerArray,    DuArray, DuLayer)
 
-    DU_KEY_ACCESSORS_OBJECT(Mapping,                DuArray)
+    DU_KEY_ACCESSORS_OBJECT_TEMPLATE(Mapping,       DuArray, DuNote)
 
-    DU_KEY_ACCESSORS_OBJECT(Metadata,               DuArray)
+    DU_KEY_ACCESSORS_OBJECT_TEMPLATE(Metadata,      DuArray, DuBinaryData)
 
 private:
     int m_databaseId;

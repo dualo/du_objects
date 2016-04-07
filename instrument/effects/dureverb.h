@@ -15,7 +15,6 @@ public:
     virtual DuObjectPtr clone() const;
 
     static DuReverbPtr fromDuMusicBinary(const FX_reverb &du_reverb);
-    static DuReverbPtr fromJson(const QJsonObject &jsonReverb);
 
     QByteArray toDuMusicBinary() const;
 
