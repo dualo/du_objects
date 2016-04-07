@@ -532,7 +532,7 @@ bool MidiConversionHelper::filterMetaEvents()
     int midiDivision = selectedFile->getDivision();
     if (midiDivision == -1)
     {
-        qCritical() << "MidiConversionHelper::filterMetaEvents()\n"
+        qCCritical(LOG_CAT_MIDI) << "MidiConversionHelper::filterMetaEvents()\n"
                     << "failed to filter midi file\n"
                     << "invalid time division";
 

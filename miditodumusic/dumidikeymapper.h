@@ -3,8 +3,11 @@
 
 #include <QCoreApplication>
 #include <QJsonObject>
+#include <QLoggingCategory>
 #include <QStringList>
 #include <QPair>
+
+Q_DECLARE_LOGGING_CATEGORY(LOG_CAT_MIDI)
 
 
 //TODO: update following list each time the scales in defaultmaps.json change
