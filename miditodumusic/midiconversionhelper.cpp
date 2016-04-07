@@ -27,6 +27,7 @@
 #include "../instrument/effects/duequalizer.h"
 #include "../instrument/effects/dumixer.h"
 
+#include <QDataStream>
 #include <QFile>
 #include <QJsonDocument>
 
