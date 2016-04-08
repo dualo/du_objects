@@ -1006,6 +1006,26 @@ bool DuMusic::appendTrack(const DuTrackPtr &track)
     return tmp->append(track);
 }
 
+int DuMusic::indexInDevice() const
+{
+    return m_indexInDevice;
+}
+
+void DuMusic::setIndexInDevice(int indexInDevice)
+{
+    m_indexInDevice = indexInDevice;
+}
+
+QString DuMusic::deviceSerialNumber() const
+{
+    return m_deviceSerialNumber;
+}
+
+void DuMusic::setDeviceSerialNumber(const QString &deviceSerialNumber)
+{
+    m_deviceSerialNumber = deviceSerialNumber;
+}
+
 #define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS_IMPL(DuMusic, key, dutype, type, defaultReturn)
 #define X_OBJECT(key, dutype) DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusic, key, dutype)
 #define X_OBJECT_TEMPLATE(key, dutype, tpltype) DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuMusic, key, dutype, tpltype)
