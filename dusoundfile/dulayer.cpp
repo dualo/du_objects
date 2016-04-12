@@ -54,7 +54,7 @@ DuLayerPtr DuLayer::fromBinary(const QList<dream_ip>& dreamIPArray,
     {
         if (dreamIPArray[i].min_vel != min_vel || dreamIPArray[i].max_vel != max_vel)
         {
-            qCritical(LOG_CAT_DU_OBJECT) << "Some samples in this layer doesn't have the same bounds :\n"
+            qCritical(LOG_CAT_DU_OBJECT) << "Some samples in this layer don't have the same bounds :\n"
                                          << "min_vel 1:" << min_vel << "\n"
                                          << "max_vel 1:" << max_vel << "\n"
                                          << "min_vel 2:" << dreamIPArray[i].min_vel << "\n"
