@@ -86,6 +86,43 @@ int DuMusicInstrument::size() const
     return MUSIC_INSTRU_SIZE;
 }
 
+DuObjectPtr DuMusicInstrument::getChild(const QString &key)
+{
+    if (key == KeyNameForDevice)
+    {
+        DuInstrumentInfoPtr info = getInstrumentInfo();
+        if (info == NULL)
+        {
+            return DuObjectPtr();
+        }
+
+        return info->getChild(key);
+    }
+    else
+    {
+        return DuContainer::getChild(key);
+    }
+}
+
+DuObjectConstPtr DuMusicInstrument::getChild(const QString &key) const
+{
+    if (key == KeyNameForDevice)
+    {
+        DuInstrumentInfoConstPtr info = getInstrumentInfo();
+        if (info == NULL)
+        {
+            return DuObjectPtr();
+        }
+
+        return info->getChild(key);
+    }
+    else
+    {
+        return DuContainer::getChild(key);
+    }
+}
+
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuMusicInstrument, NameForDevice, DuInstrumentInfo, InstrumentInfo, QString, QString())
 
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusicInstrument, InstrumentInfo, DuInstrumentInfo)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusicInstrument, Preset,         DuPreset)

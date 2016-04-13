@@ -23,6 +23,11 @@ public:
 
     int size() const;
 
+    virtual DuObjectPtr getChild(const QString &key) override;
+    virtual DuObjectConstPtr getChild(const QString &key) const override;
+
+    DU_KEY_ACCESSORS_IN_CHILD(NameForDevice, QString)
+
     DU_KEY_ACCESSORS_OBJECT(InstrumentInfo, DuInstrumentInfo)
     DU_KEY_ACCESSORS_OBJECT(Preset,         DuPreset)
 };

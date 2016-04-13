@@ -597,6 +597,44 @@ int DuLoop::size() const
     return MUSIC_LOOP_SIZE;
 }
 
+DuObjectPtr DuLoop::getChild(const QString &key)
+{
+    if (key == KeyNameForDevice)
+    {
+        DuMusicInstrumentPtr instrument = getInstrument();
+        if (instrument == NULL)
+        {
+            return DuObjectPtr();
+        }
+
+        return instrument->getChild(key);
+    }
+    else
+    {
+        return DuContainer::getChild(key);
+    }
+}
+
+DuObjectConstPtr DuLoop::getChild(const QString &key) const
+{
+    if (key == KeyNameForDevice)
+    {
+        DuMusicInstrumentConstPtr instrument = getInstrument();
+        if (instrument == NULL)
+        {
+            return DuObjectPtr();
+        }
+
+        return instrument->getChild(key);
+    }
+    else
+    {
+        return DuContainer::getChild(key);
+    }
+}
+
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuLoop, NameForDevice, DuMusicInstrument, Instrument, QString, QString())
+
 DU_KEY_ACCESSORS_IMPL(DuLoop, State,            Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuLoop, DurationModifier, Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuLoop, ScoreDisplay,     Numeric, int, -1)
