@@ -38,14 +38,14 @@ public:
 
     DU_KEY_ACCESSORS_IN_CHILD(NameForDevice, QString)
 
-DU_KEY_ACCESSORS(State,            int)
-DU_KEY_ACCESSORS(DurationModifier, int)
-DU_KEY_ACCESSORS(ScoreDisplay,     int)
-DU_KEY_ACCESSORS(MidiOutChannel,   int)
+    DU_KEY_ACCESSORS(State,            int)
+    DU_KEY_ACCESSORS(DurationModifier, int)
+    DU_KEY_ACCESSORS(ScoreDisplay,     int)
+    DU_KEY_ACCESSORS(MidiOutChannel,   int)
 
-DU_KEY_ACCESSORS_OBJECT(Instrument, DuMusicInstrument)
+    DU_KEY_ACCESSORS_OBJECT(Instrument, DuMusicInstrument)
 
-DU_KEY_ACCESSORS_OBJECT_TEMPLATE(Events, DuArray, DuEvent)
+    DU_KEY_ACCESSORS_OBJECT_TEMPLATE(Events, DuArray, DuEvent)
 
 public:
     int eventsSize() const;
