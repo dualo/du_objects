@@ -22,16 +22,16 @@ public:
     explicit DuLoop();
     ~DuLoop();
 
-    virtual DuObjectPtr clone() const;
+    virtual DuObjectPtr clone() const override;
 
     static DuLoopPtr fromDuMusicBinary(const music_loop &du_loop,
                                        const music_sample *du_sample);
     static DuLoopPtr fromMidi(const MidiConversionHelper &helper, int midiTrackIndex);
 
-    QByteArray toDuMusicBinary() const;
+    QByteArray toDuMusicBinary() const override;
     DuMidiTrackPtr toDuMidiTrack(int durationRef, int channel, int transpose) const;
 
-    int size() const;
+    int size() const override;
 
     virtual DuObjectPtr getChild(const QString &key) override;
     virtual DuObjectConstPtr getChild(const QString &key) const override;

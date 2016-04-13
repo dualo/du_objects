@@ -15,13 +15,13 @@ public:
     explicit DuMusicInstrument();
     ~DuMusicInstrument();
 
-    virtual DuObjectPtr clone() const;
+    virtual DuObjectPtr clone() const override;
 
     static DuMusicInstrumentPtr fromDuMusicBinary(const music_instr &du_instr);
 
-    QByteArray toDuMusicBinary() const;
+    QByteArray toDuMusicBinary() const override;
 
-    int size() const;
+    int size() const override;
 
     virtual DuObjectPtr getChild(const QString &key) override;
     virtual DuObjectConstPtr getChild(const QString &key) const override;
