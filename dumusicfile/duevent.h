@@ -6,6 +6,7 @@
 
 class MidiConversionHelper;
 DU_OBJECT(DuMidiChannelEvent);
+DU_OBJECT(DuSound);
 
 DU_OBJECT(DuEvent);
 
@@ -19,7 +20,7 @@ public:
 
     static DuEventPtr fromDuMusicBinary(const music_sample &du_sample);
     static DuEventPtr fromMidi(const DuMidiChannelEventPtr &channelEvent,
-                               int presetOctave, int instrKeyMap, bool isPercu,
+                               const DuSoundConstPtr &sound,
                                const MidiConversionHelper &helper);
 
     QByteArray toDuMusicBinary() const;

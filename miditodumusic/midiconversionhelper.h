@@ -11,7 +11,6 @@
 
 Q_DECLARE_LOGGING_CATEGORY(LOG_CAT_MIDI)
 
-DU_OBJECT(DuMusicInstrument);
 DU_OBJECT(DuMidiFile);
 DU_OBJECT(DuMidiTrack);
 DU_OBJECT(DuSound);
@@ -56,10 +55,9 @@ public:
     QPair<int, int> getIndexes(int index) const;
 
     DuMidiTrackPtr getMidiTrack(int index) const;
-    DuMusicInstrumentPtr getInstrument(int index) const;
+    DuSoundPtr getSound(int index) const;
 
     int getKeyboardFromMidi(int key) const;
-    static int percuFromMidi(int gmKey, int mapIndex);
     static int percuToMidi(quint8 duKey, quint8 keyboardIndex, quint8 mapIndex);
 
     DuTimeSignatureModel *getTimeSigBoxModel();
@@ -132,7 +130,7 @@ private:
 
     QList<QPair<int, int> > selectedIndexes;
     QList<DuMidiTrackPtr> selectedTracks;
-    QList<DuMusicInstrumentPtr> selectedInstruments;
+    QList<DuSoundPtr> selectedSounds;
 
     QStringList midiScaleBoxModel;
 

@@ -1,14 +1,5 @@
 #include "midiconversionhelper.h"
 
-//#pragma pack(push, 4)
-#include "../du-touch/parameters/instr_mapping.c"
-//#pragma pack(pop)
-
-#include "../dumusicfile/dumusicinstrument.h"
-
-#include "../dusoundfile/dusound.h"
-#include "../dusoundfile/dusoundinfo.h"
-
 #include "../general/duarray.h"
 
 #include "../midifile/dumidibasicevent.h"
@@ -17,32 +8,10 @@
 #include "../midifile/dumidimetaevent.h"
 #include "../midifile/dumiditrack.h"
 
-#include "../instrument/duinstrumentinfo.h"
-#include "../instrument/dupreset.h"
+#include "../dusoundfile/dusound.h"
 
-#include "../instrument/effects/duchorus.h"
-#include "../instrument/effects/ducompressor.h"
-#include "../instrument/effects/dudelay.h"
-#include "../instrument/effects/dudistortion.h"
-#include "../instrument/effects/duequalizer.h"
-#include "../instrument/effects/dumixer.h"
-
-#include <QDataStream>
 #include <QFile>
 #include <QJsonDocument>
-
-#include "../general/duarray.h"
-
-#include "../midifile/dumidichannelevent.h"
-#include "../midifile/dumidifile.h"
-#include "../midifile/dumidimetaevent.h"
-#include "../midifile/dumiditrack.h"
-
-#include "../miditodumusic/dumidikeymapper.h"
-
-#include "../dumusicfile/dumusicinstrument.h"
-
-#include "../instrument/duinstrumentinfo.h"
 
 
 MidiConversionHelper::MidiConversionHelper() :
@@ -288,20 +257,9 @@ void MidiConversionHelper::addSelection(int trackNum, int loopNum, int midiTrack
         return;
     }
 
-    const DuSoundInfoConstPtr& soundInfo = sound->getInfo();
-    if (soundInfo == NULL)
-    {
-        qCCritical(LOG_CAT_MIDI) << "Sound info null";
-        return;
-    }
-
-    DuMusicInstrumentPtr musicInstr(new DuMusicInstrument);
-    musicInstr->setInstrumentInfo(soundInfo->getInstrumentInfo()->cloneAs<DuInstrumentInfo>());
-    musicInstr->setPreset(soundInfo->getPresetArray()->at(0)->cloneAs<DuPreset>());
-
     selectedIndexes.append(QPair<int, int>(trackNum, loopNum));
     selectedTracks.append(midiTrack);
-    selectedInstruments.append(musicInstr);
+    selectedSounds.append(sound->cloneAs<DuSound>());
 }
 
 void MidiConversionHelper::removeSelectionAt(int index)
@@ -311,12 +269,12 @@ void MidiConversionHelper::removeSelectionAt(int index)
     if (index >= count)
         return;
 
-    if (count != selectedTracks.count() || count != selectedInstruments.count())
+    if (count != selectedTracks.count() || count != selectedSounds.count())
         return;
 
     selectedIndexes.removeAt(index);
     selectedTracks.removeAt(index);
-    selectedInstruments.removeAt(index);
+    selectedSounds.removeAt(index);
 }
 
 
@@ -356,41 +314,18 @@ DuMidiTrackPtr MidiConversionHelper::getMidiTrack(int index) const
 }
 
 
-DuMusicInstrumentPtr MidiConversionHelper::getInstrument(int index) const
+DuSoundPtr MidiConversionHelper::getSound(int index) const
 {
-    if (index >= selectedInstruments.count())
-        return DuMusicInstrumentPtr();
+    if (index >= selectedSounds.count())
+        return DuSoundPtr();
 
-    return selectedInstruments[index];
+    return selectedSounds[index];
 }
 
 
 int MidiConversionHelper::getKeyboardFromMidi(int key) const
 {
     return mapper.keyboardFromMidi(key);
-}
-
-
-int MidiConversionHelper::percuFromMidi(int gmKey, int mapIndex)
-{
-    Q_UNUSED(gmKey);
-    Q_UNUSED(mapIndex);
-    Q_UNIMPLEMENTED();
-    //TODO: get mapping directly from du-sound
-    /*
-    s_note tmpNote;
-    int tmpKey = 0xFF;
-    for (int i = 0; i < NUM_BUTTON_KEYBOARD; i++)
-    {
-        tmpNote = keyboard_note_map[mapIndex][0][i];
-        tmpKey = tmpNote.note_gmref;
-
-        if (tmpKey == gmKey)
-            return tmpNote.note_key;
-    }
-    */
-
-    return -1;
 }
 
 int MidiConversionHelper::percuToMidi(quint8 duKey, quint8 keyboardIndex,
@@ -499,7 +434,7 @@ bool MidiConversionHelper::init(const QByteArray &midiRawData)
 {
     selectedIndexes.clear();
     selectedTracks.clear();
-    selectedInstruments.clear();
+    selectedSounds.clear();
 
     QDataStream stream(midiRawData);
     const DuMidiFilePtr &midiFile = DuMidiFile::fromMidiBinary(stream);
