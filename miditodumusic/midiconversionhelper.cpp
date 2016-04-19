@@ -10,6 +10,7 @@
 
 #include "../dusoundfile/dusound.h"
 
+#include <QDataStream>
 #include <QFile>
 #include <QJsonDocument>
 
