@@ -20,7 +20,9 @@ DU_OBJECT_IMPL(DuSound)
 DuSound::DuSound() :
     DuContainer(),
     m_databaseId(-1),
-    m_indexInDevice(-1)
+    m_indexInDevice(-1),
+    m_hasSamplesDownloaded(false),
+    m_sizeWithSamples(0)
 {
     addChild(KeyInfo,       new DuSoundInfo);
 
@@ -38,6 +40,11 @@ DuObjectPtr DuSound::clone() const
 
 int DuSound::size() const
 {
+    if (!m_hasSamplesDownloaded)
+    {
+        return m_sizeWithSamples;
+    }
+
     int nbLayer = 0;
     int totalNbSamples = 0;
     int sampleSize = 0;
@@ -116,6 +123,52 @@ int DuSound::size() const
             + metadataSize;
 }
 
+DuSoundPtr DuSound::fromHeaderBinary(const QByteArray &data)
+{
+    if (data.size() != INSTR_HEADER_SIZE + FULL_PRESET_ALIGN)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "Data size != header + instr struct size :\n"
+                                      << "data.size():" << data.size()
+                                      << "header + instr struct size:" << INSTR_HEADER_SIZE + FULL_PRESET_ALIGN;
+
+        return DuSoundPtr();
+    }
+
+    s_instr_header soundHeader;
+    std::memcpy((char*)&soundHeader, data.data(), INSTR_HEADER_SIZE);
+
+    sound_instr soundStruct;
+    std::memcpy((char*)&soundStruct, &data.data()[INSTR_HEADER_SIZE], INSTRU_STRUCT_SIZE);
+
+    DuSoundPtr sound(new DuSound);
+
+    if (soundStruct.s_instrument.instr_midi_pc == 0xFF)
+    {
+        // du-sound empty
+        return sound;
+    }
+
+    sound->setSizeWithSamples((int)soundHeader.full_size);
+    sound->setHasSamplesDownloaded(false);
+
+    DuSoundInfoPtr info = DuSoundInfo::fromBinary(soundStruct);
+    if (info != NULL)
+    {
+        sound->setInfo(info);
+    }
+    else
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
+                                      << "Info was not properly generated";
+
+        return DuSoundPtr();
+    }
+
+    qCDebug(LOG_CAT_DU_OBJECT) << "du-sound" << info->getName() << "has been successfully parsed";
+
+    return sound;
+}
+
 DuSoundPtr DuSound::fromBinary(const QByteArray &data)
 {
     s_instr_header soundHeader;
@@ -140,6 +193,8 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
         // du-sound empty
         return sound;
     }
+
+    sound->setHasSamplesDownloaded(true);
 
     DuSoundInfoPtr info = DuSoundInfo::fromBinary(soundStruct);
     if (info != NULL)
@@ -587,6 +642,26 @@ QString DuSound::deviceSerialNumber() const
 void DuSound::setDeviceSerialNumber(const QString &deviceSerialNumber)
 {
     m_deviceSerialNumber = deviceSerialNumber;
+}
+
+bool DuSound::getHasSamplesDownloaded() const
+{
+    return m_hasSamplesDownloaded;
+}
+
+void DuSound::setHasSamplesDownloaded(bool hasSamplesDownloaded)
+{
+    m_hasSamplesDownloaded = hasSamplesDownloaded;
+}
+
+int DuSound::getSizeWithSamples() const
+{
+    return m_sizeWithSamples;
+}
+
+void DuSound::setSizeWithSamples(int sizeWithSamples)
+{
+    m_sizeWithSamples = sizeWithSamples;
 }
 
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, NameForDevice,      DuSoundInfo, Info, QString, QString())

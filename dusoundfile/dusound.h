@@ -26,6 +26,7 @@ public:
 
     virtual int size() const override;
 
+    static DuSoundPtr fromHeaderBinary(const QByteArray &data);
     static DuSoundPtr fromBinary(const QByteArray &data);
     static DuSoundPtr fromBinary(QIODevice *input);
 
@@ -48,6 +49,12 @@ public:
 
     QString deviceSerialNumber() const;
     void setDeviceSerialNumber(const QString &deviceSerialNumber);
+
+    bool getHasSamplesDownloaded() const;
+    void setHasSamplesDownloaded(bool hasSamplesDownloaded);
+
+    int getSizeWithSamples() const;
+    void setSizeWithSamples(int sizeWithSamples);
 
     DU_KEY_ACCESSORS_IN_CHILD(NameForDevice,        QString)
     DU_KEY_ACCESSORS_IN_CHILD(DreamProgramChange,   int)
@@ -80,6 +87,8 @@ private:
 
     int m_indexInDevice;
     QString m_deviceSerialNumber;
+    bool m_hasSamplesDownloaded;
+    int m_sizeWithSamples;
 };
 
 Q_DECLARE_METATYPE(DuSoundPtr)
