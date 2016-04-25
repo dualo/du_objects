@@ -167,7 +167,7 @@ public:
     QSharedPointer<const T> getChildAs(const QString &key) const;
 
 private:
-    QMap<QString, DuObjectPtr> children;
+    QMap<QString, DuObjectPtr> m_children;
 };
 
 template <class T>

@@ -16,7 +16,7 @@ class DuArray : public DuObject
 #endif
 
 public:
-    explicit DuArray(int maxSize = -1);
+    explicit DuArray(int m_maxSize = -1);
     virtual ~DuArray();
 
 protected:
@@ -57,8 +57,8 @@ protected:
     const QList< QSharedPointer<T> > &getArray() const;
 
 private:
-    QList< QSharedPointer<T> > array;
-    int maxSize;
+    QList< QSharedPointer<T> > m_array;
+    int m_maxSize;
 };
 
 DU_OBJEC_TEMPLATE_IMPL(DuArray)
@@ -66,7 +66,7 @@ DU_OBJEC_TEMPLATE_IMPL(DuArray)
 template <class T>
 DuArray<T>::DuArray(int maxSize) :
     DuObject(),
-    maxSize(maxSize)
+    m_maxSize(maxSize)
 {
 }
 
@@ -78,12 +78,12 @@ DuArray<T>::~DuArray()
 template <class T>
 DuArray<T>::DuArray(const DuArray<T> &other) :
     DuObject(other),
-    maxSize(other.maxSize)
+    m_maxSize(other.m_maxSize)
 {
-    array.reserve(other.array.size());
-    foreach (const QSharedPointer<T>& obj, other.array)
+    m_array.reserve(other.m_array.size());
+    foreach (const QSharedPointer<T>& obj, other.m_array)
     {
-        array.append(obj->clone().template dynamicCast<T>());
+        m_array.append(obj->clone().template dynamicCast<T>());
     }
 }
 
@@ -99,12 +99,12 @@ QByteArray DuArray<T>::toDuMusicBinary() const
     QByteArray retArray;
     retArray.clear();
 
-    if (array.isEmpty())
+    if (m_array.isEmpty())
     {
         return QByteArray();
     }
 
-    foreach (const QSharedPointer<T>& obj, array)
+    foreach (const QSharedPointer<T>& obj, m_array)
     {
         QByteArray tmpArray = obj->toDuMusicBinary();
 
@@ -126,12 +126,12 @@ QByteArray DuArray<T>::toMidiBinary() const
     QByteArray retArray;
     retArray.clear();
 
-    if (array.isEmpty())
+    if (m_array.isEmpty())
     {
         return QByteArray("");
     }
 
-    foreach (const QSharedPointer<T>& obj, array)
+    foreach (const QSharedPointer<T>& obj, m_array)
     {
         QByteArray tmpArray = obj->toMidiBinary();
 
@@ -152,12 +152,12 @@ QJsonValue DuArray<T>::toJson() const
 {
     QJsonArray jsonArray;
 
-    if (array.isEmpty())
+    if (m_array.isEmpty())
     {
         return QJsonValue(QJsonArray());
     }
 
-    foreach (const QSharedPointer<T>& obj, array)
+    foreach (const QSharedPointer<T>& obj, m_array)
     {
         QJsonValue tmpValue = obj->toJson();
 
@@ -196,7 +196,7 @@ bool DuArray<T>::parseJson(const QJsonValue &jsonValue)
 
     const QJsonArray& jsonArray = jsonValue.toArray();
 
-    int originalSize = array.size();
+    int originalSize = m_array.size();
     int size = jsonArray.size();
 
     for (int i = 0; i < size; ++i)
@@ -204,7 +204,7 @@ bool DuArray<T>::parseJson(const QJsonValue &jsonValue)
         QSharedPointer<T> obj;
         if (i < originalSize)
         {
-            obj = array.at(i);
+            obj = m_array.at(i);
         }
         else
         {
@@ -233,7 +233,7 @@ int DuArray<T>::size() const
 {
     int size = 0;
 
-    foreach (const QSharedPointer<T>& obj, array)
+    foreach (const QSharedPointer<T>& obj, m_array)
     {
         int tmpSize = obj->size();
 
@@ -254,7 +254,7 @@ QDebug DuArray<T>::debugPrint(QDebug dbg) const
 {
     dbg.nospace() << "DuArray(";
 
-    QListIterator< QSharedPointer<T> > i(array);
+    QListIterator< QSharedPointer<T> > i(m_array);
     while (i.hasNext())
     {
         dbg.nospace() << i.next();
@@ -271,35 +271,35 @@ QDebug DuArray<T>::debugPrint(QDebug dbg) const
 template <class T>
 int DuArray<T>::getMaxSize() const
 {
-    return maxSize;
+    return m_maxSize;
 }
 
 template <class T>
 void DuArray<T>::setMaxSize(int value)
 {
-    if (value != -1 && value < array.count())
+    if (value != -1 && value < m_array.count())
     {
         qCWarning(LOG_CAT_DU_OBJECT) << value << "is above current element count and was not set";
         return;
     }
 
-    maxSize = value;
+    m_maxSize = value;
 }
 
 template <class T>
 bool DuArray<T>::append(const QSharedPointer<T> &element)
 {
-    if (maxSize != -1 && array.count() == maxSize)
+    if (m_maxSize != -1 && m_array.count() == m_maxSize)
     {
         qCWarning(LOG_CAT_DU_OBJECT)
                    << "the element was not appended\n"
                    << "the array already reached its"
-                   << "maximum size" << maxSize;
+                   << "maximum size" << m_maxSize;
 
         return false;
     }
 
-    array.append(element);
+    m_array.append(element);
     return true;
 }
 
@@ -312,93 +312,93 @@ bool DuArray<T>::append(T *element)
 template <class T>
 void DuArray<T>::insert(int index, const QSharedPointer<T> &element)
 {
-    if (index > array.count())
+    if (index > m_array.count())
     {
         qCWarning(LOG_CAT_DU_OBJECT)
                    << index << "is above element count\n"
                    << "the element was appended to the array";
 
-        array.append(element);
+        m_array.append(element);
         return;
     }
 
-    array.insert(index, element);
+    m_array.insert(index, element);
 }
 
 template <class T>
 void DuArray<T>::removeAt(int index)
 {
-    if (index >= array.count())
+    if (index >= m_array.count())
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "index" << index << "is invalid";
         return;
     }
 
-    array.removeAt(index);
+    m_array.removeAt(index);
 }
 
 template <class T>
 void DuArray<T>::replace(int index, const QSharedPointer<T> &element)
 {
-    if (index >= array.count())
+    if (index >= m_array.count())
     {
         qCWarning(LOG_CAT_DU_OBJECT)
                    << index << "is above element count\n"
                    << "the element was appended to the array";
 
-        array.append(element);
+        m_array.append(element);
         return;
     }
 
-    array.replace(index, element);
+    m_array.replace(index, element);
 }
 
 template <class T>
 int DuArray<T>::count() const
 {
-    return array.count();
+    return m_array.count();
 }
 
 template <class T>
 bool DuArray<T>::isEmpty() const
 {
-    return array.isEmpty();
+    return m_array.isEmpty();
 }
 
 template <class T>
 QSharedPointer<T> DuArray<T>::at(int index)
 {
-    if (index >= array.count())
+    if (index >= m_array.count())
     {
         qCWarning(LOG_CAT_DU_OBJECT)
                    << index << "is above element count\n"
                    << "last element returned";
 
-        return array.last();
+        return m_array.last();
     }
 
-    return array.at(index);
+    return m_array.at(index);
 }
 
 template <class T>
 QSharedPointer<const T> DuArray<T>::at(int index) const
 {
-    if (index >= array.count())
+    if (index >= m_array.count())
     {
         qCWarning(LOG_CAT_DU_OBJECT)
                    << index << "is above element count\n"
                    << "last element returned";
 
-        return array.last();
+        return m_array.last();
     }
 
-    return array.at(index);
+    return m_array.at(index);
 }
 
 template <class T>
 QSharedPointer<T> DuArray<T>::operator[](int index)
 {
-    if (index >= array.count())
+    if (index >= m_array.count())
     {
         qCWarning(LOG_CAT_DU_OBJECT)
                    << index << "is above element count\n"
@@ -407,13 +407,13 @@ QSharedPointer<T> DuArray<T>::operator[](int index)
         return DuObjectPtr();
     }
 
-    return array[index];
+    return m_array[index];
 }
 
 template <class T>
 const QList< QSharedPointer<T> > &DuArray<T>::getArray() const
 {
-    return array;
+    return m_array;
 }
 
 #endif // DUARRAY_H

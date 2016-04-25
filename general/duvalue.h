@@ -31,12 +31,12 @@ protected:
     QVariant &getValue();
 
 private:
-    QVariant value;
+    QVariant m_value;
 
     /**
      * @brief if -1, there is no max size (default)
      */
-    int maxSize;
+    int m_maxSize;
 };
 
 #endif // DUVALUE_H
