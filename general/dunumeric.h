@@ -45,7 +45,7 @@ public:
     virtual QDebug debugPrint(QDebug dbg) const override;
 
     // DuValue interface
-public:
+protected:
     virtual QVariant checkValue(const QVariant &value, bool &success) override;
 
 private:
