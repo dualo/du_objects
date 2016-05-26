@@ -318,19 +318,48 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
     {
         int nbSamples = nbSamplesPerLayerArray[i];
 
-        DuLayerPtr layer = DuLayer::fromBinary(dreamIPArray.mid(sampleCpt, nbSamples),
-                                               dreamSPArray.mid(sampleCpt, nbSamples),
-                                               sampleArray.mid(sampleCpt, nbSamples));
-        if (layer != NULL)
+        // If some samples in this layer have different bounds, we separate them in different layers.
+        // We start by grouping the indexes of the samples that have the same bounds.
+        QMap<QPair<int, int>, QList<int> > effectiveLayers;
+        for (int sampleIndex = sampleCpt; sampleIndex < sampleCpt + nbSamples; ++sampleIndex)
         {
-            layerArray->append(layer);
-        }
-        else
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
-                                          << "Layer" << i << "was not properly generated";
+            const dream_ip& ip = dreamIPArray.at(sampleIndex);
+            int minVel = ip.min_vel;
+            int maxVel = ip.max_vel;
 
-            return DuSoundPtr();
+            effectiveLayers[qMakePair<int, int>(minVel, maxVel)].append(sampleIndex);
+        }
+
+        // Then, for each group, we create a new layer.
+        // The resulting number of layers can be greater than the one given in the binary file.
+        foreach (const QList<int>& indexList, effectiveLayers)
+        {
+            QList<dream_ip> effectiveDreamIPArray;
+            QVector<dream_sp> effectiveDreamSPArray;
+            QByteArrayList effectiveSampleArray;
+
+            foreach (int index, indexList)
+            {
+                effectiveDreamIPArray << dreamIPArray.at(index);
+                effectiveDreamSPArray << dreamSPArray.at(index);
+                effectiveSampleArray << sampleArray.at(index);
+            }
+
+            DuLayerPtr layer = DuLayer::fromBinary(effectiveDreamIPArray,
+                                                   effectiveDreamSPArray,
+                                                   effectiveSampleArray);
+
+            if (layer != NULL)
+            {
+                layerArray->append(layer);
+            }
+            else
+            {
+                qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
+                                              << "Layer" << i << "was not properly generated";
+
+                return DuSoundPtr();
+            }
         }
 
         sampleCpt += nbSamples;
