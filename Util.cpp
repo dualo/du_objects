@@ -4,7 +4,11 @@
 
 QString Util::sizeToString(int size)
 {
-    if (size < 1000)
+    if (size < 0)
+    {
+        return QString();
+    }
+    else if (size < 1000)
     {
         return QObject::tr("%1 bytes").arg(size);
     }
