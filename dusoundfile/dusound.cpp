@@ -318,6 +318,13 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
     {
         int nbSamples = nbSamplesPerLayerArray[i];
 
+        // If there is no samples in this layer, we just add an empty layer
+        if (nbSamples == 0)
+        {
+            layerArray->append(new DuLayer);
+            continue;
+        }
+
         // If some samples in this layer have different bounds, we separate them in different layers.
         // We start by grouping the indexes of the samples that have the same bounds.
         QMap<QPair<int, int>, QList<int> > effectiveLayers;
