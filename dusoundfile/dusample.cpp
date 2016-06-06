@@ -30,7 +30,7 @@ DuSample::DuSample() :
     addChild(KeyPitchShifted,    new DuBoolean(true));
 
     addChild(KeyFineTune,        new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 100, 0x00));
-    addChild(KeyUnityNote,       new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
+    addChild(KeyUnityNote,       new DuNumeric(0x01, NUMERIC_DEFAULT_SIZE, 0x7F, 0x01));
 
     addChild(KeyLoopStart,       new DuNumeric(0));
 
