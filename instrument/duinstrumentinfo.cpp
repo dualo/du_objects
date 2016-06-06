@@ -7,20 +7,87 @@
 
 #include <QJsonObject>
 
+QList<DuInstrumentInfo::Category> DuInstrumentInfo::categoryMap = QList<DuInstrumentInfo::Category>()
+    << DuInstrumentInfo::Category({  0, "system",       -1             })
+    << DuInstrumentInfo::Category({  1, "percussions",  INSTR_PERCU    })
+    << DuInstrumentInfo::Category({  2, "mallet",       INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({  3, "hammer",       INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({  4, "el. piano",    INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({  5, "bass",         INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({  6, "ac. guitar",   INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({  7, "el. guitar",   INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({  8, "dist. guitar", INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({  9, "plucked",      INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({ 10, "strings",      INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({ 11, "reeds",        INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({ 12, "pipe organ",   INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({ 13, "el. organ",    INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({ 14, "wind",         INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({ 15, "flute",        INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({ 16, "brass",        INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({ 17, "el. percu",    INSTR_PERCU    })
+    << DuInstrumentInfo::Category({ 18, "perc synth",   INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({ 19, "mod bass",     INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({ 20, "club bass",    INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({ 21, "synth bass",   INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({ 22, "soft pad",     INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({ 23, "bright pad",   INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({ 24, "soft lead",    INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({ 25, "hard lead",    INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({ 26, "pure sound",   INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({ 27, "choir",        INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({ 28, "samples",      INSTR_SAMPLE   })
+    << DuInstrumentInfo::Category({ 29, "synth brass",  INSTR_HARMONIC })
+    << DuInstrumentInfo::Category({ 30, "other",        INSTR_HARMONIC });
+    // WARNING : names must have a size inferior to NAME_CARACT
+
+QString DuInstrumentInfo::getCategoryNameFromProgramChange(int programChange)
+{
+    foreach (const Category& category, categoryMap)
+    {
+        if (category.programChange == programChange)
+        {
+            return category.name;
+        }
+    }
+
+    return QString();
+}
+
+int DuInstrumentInfo::getProgramChangeFromCategoryName(const QString name)
+{
+    foreach (const Category& category, categoryMap)
+    {
+        if (category.name == name)
+        {
+            return category.programChange;
+        }
+    }
+
+    return -1;
+}
+
+QStringList DuInstrumentInfo::getCategoriesFromType(int type)
+{
+    QStringList list;
+
+    foreach (const Category& category, categoryMap)
+    {
+        if (category.type == type)
+        {
+            list << category.name;
+        }
+    }
+
+    return list;
+}
+
 DU_OBJECT_IMPL(DuInstrumentInfo)
 
 DuInstrumentInfo::DuInstrumentInfo() :
     DuContainer()
 {
     addChild(KeyNameForDevice, new DuString(NAME_CARACT));
-
-    addChild(KeyDreamProgramChange,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
-
-    addChild(KeyMidiControlChange0,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0x7F, 0x00));
 
     addChild(KeyKeyMapping,
              new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
@@ -78,9 +145,6 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const info_instr &du_ins
 
     verif = instrInfo->setNameForDevice(QString(QByteArray((char *)du_instrInfo.instr_name, NAME_CARACT))) ? verif : false;
 
-    verif = instrInfo->setDreamProgramChange(du_instrInfo.instr_midi_pc) ? verif : false;
-    verif = instrInfo->setMidiControlChange0(du_instrInfo.instr_midi_C0) ? verif : false;
-
     verif = instrInfo->setKeyMapping(du_instrInfo.instr_key_map) ? verif : false;
     verif = instrInfo->setOctave(du_instrInfo.instr_octave) ? verif : false;
 
@@ -89,7 +153,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const info_instr &du_ins
 
     verif = instrInfo->setActiveNoteOff(du_instrInfo.instr_noteoff) ? verif : false;
 
-    verif = instrInfo->setCategory(QString(QByteArray((char *)du_instrInfo.instr_cat, NAME_CARACT))) ? verif : false;
+    verif = instrInfo->setCategory(getCategoryNameFromProgramChange(du_instrInfo.instr_midi_pc)) ? verif : false;
 
     verif = instrInfo->setRelativeVolume(du_instrInfo.instr_relvolume) ? verif : false;
 
@@ -123,15 +187,10 @@ bool DuInstrumentInfo::toStruct(info_instr& outStruct) const
 
     std::memcpy(outStruct.instr_name, tmpName.data(), NAME_CARACT);
 
-    tmpNum = getDreamProgramChange();
+    tmpNum = getProgramChangeFromCategoryName(getCategory());
     if (tmpNum == -1)
         return false;
     outStruct.instr_midi_pc = (uint8_t) tmpNum;
-
-    tmpNum = getMidiControlChange0();
-    if (tmpNum == -1)
-        return false;
-    outStruct.instr_midi_C0 = (uint8_t) tmpNum;
 
     tmpNum = getKeyMapping();
     if (tmpNum == -1)
@@ -238,8 +297,6 @@ int DuInstrumentInfo::size() const
 
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, NameForDevice,      String, QString, QString())
 
-DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, DreamProgramChange, Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, MidiControlChange0, Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, KeyMapping,         Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, Octave,             Numeric, int, -1)
 

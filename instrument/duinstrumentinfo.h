@@ -21,6 +21,19 @@ public:
         SDK_5000 = 2,
     };
 
+    struct Category
+    {
+        int programChange;
+        QString name;
+        int type;
+    };
+
+    static QList<Category> categoryMap;
+    static QString getCategoryNameFromProgramChange(int programChange);
+    static int getProgramChangeFromCategoryName(const QString name);
+    static QStringList getCategoriesFromType(int type);
+
+
     explicit DuInstrumentInfo();
     ~DuInstrumentInfo();
 
@@ -36,8 +49,6 @@ public:
 
     DU_KEY_ACCESSORS(NameForDevice,      QString)
 
-    DU_KEY_ACCESSORS(DreamProgramChange, int)
-    DU_KEY_ACCESSORS(MidiControlChange0, int)
     DU_KEY_ACCESSORS(KeyMapping,         int)
     DU_KEY_ACCESSORS(Octave,             int)
 

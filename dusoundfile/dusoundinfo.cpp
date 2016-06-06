@@ -116,8 +116,6 @@ QByteArray DuSoundInfo::toBinary(uint8_t nbLayer, int nbSamples, uint32_t sample
 DuObjectPtr DuSoundInfo::getChild(const QString &key)
 {
     if (    key == KeyNameForDevice      ||
-            key == KeyDreamProgramChange ||
-            key == KeyMidiControlChange0 ||
             key == KeyKeyMapping         ||
             key == KeyOctave             ||
             key == KeyUserID             ||
@@ -147,8 +145,6 @@ DuObjectPtr DuSoundInfo::getChild(const QString &key)
 DuObjectConstPtr DuSoundInfo::getChild(const QString &key) const
 {
     if (    key == KeyNameForDevice      ||
-            key == KeyDreamProgramChange ||
-            key == KeyMidiControlChange0 ||
             key == KeyKeyMapping         ||
             key == KeyOctave             ||
             key == KeyUserID             ||
@@ -176,8 +172,6 @@ DuObjectConstPtr DuSoundInfo::getChild(const QString &key) const
 }
 
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, NameForDevice,      DuInstrumentInfo, InstrumentInfo, QString, QString())
-DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, DreamProgramChange, DuInstrumentInfo, InstrumentInfo, int, -1)
-DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, MidiControlChange0, DuInstrumentInfo, InstrumentInfo, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, KeyMapping,         DuInstrumentInfo, InstrumentInfo, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, Octave,             DuInstrumentInfo, InstrumentInfo, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSoundInfo, UserID,             DuInstrumentInfo, InstrumentInfo, int, -1)

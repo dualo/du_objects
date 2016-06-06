@@ -426,10 +426,11 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
 
     QString instrName = instrInfo->getNameForDevice();
 
-    //TODO: change Dream program change for GM program change when possible
-    //current code produces incorrect PCs
-    int instrPC = instrInfo->getDreamProgramChange();
-    int instrC0 = instrInfo->getMidiControlChange0();
+    //TODO: These infos must be given by the user
+//    int instrPC = instrInfo->getDreamProgramChange();
+//    int instrC0 = instrInfo->getMidiControlChange0();
+    int instrPC = 0;
+    int instrC0 = 0;
 
     bool isPercu = false;
 

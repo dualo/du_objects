@@ -57,8 +57,6 @@ public:
     void setSizeWithSamples(int sizeWithSamples);
 
     DU_KEY_ACCESSORS_IN_CHILD(NameForDevice,        QString)
-    DU_KEY_ACCESSORS_IN_CHILD(DreamProgramChange,   int)
-    DU_KEY_ACCESSORS_IN_CHILD(MidiControlChange0,   int)
     DU_KEY_ACCESSORS_IN_CHILD(KeyMapping,           int)
     DU_KEY_ACCESSORS_IN_CHILD(Octave,               int)
     DU_KEY_ACCESSORS_IN_CHILD(UserID,               int)
