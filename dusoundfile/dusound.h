@@ -61,7 +61,7 @@ public:
     DU_KEY_ACCESSORS_IN_CHILD(Octave,               int)
     DU_KEY_ACCESSORS_IN_CHILD(UserID,               int)
     DU_KEY_ACCESSORS_IN_CHILD(ID,                   int)
-    DU_KEY_ACCESSORS_IN_CHILD(ActiveNoteOff,        int)
+    DU_KEY_ACCESSORS_IN_CHILD(ActiveNoteOff,        bool)
     DU_KEY_ACCESSORS_IN_CHILD(Category,             QString)
     DU_KEY_ACCESSORS_IN_CHILD(RelativeVolume,       int)
     DU_KEY_ACCESSORS_IN_CHILD(InstrType,            INSTRUMENT_TYPE)

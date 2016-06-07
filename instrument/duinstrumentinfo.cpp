@@ -1,5 +1,6 @@
 #include "duinstrumentinfo.h"
 
+#include "../general/duboolean.h"
 #include "../general/dustring.h"
 #include "../general/dunumeric.h"
 
@@ -97,13 +98,11 @@ DuInstrumentInfo::DuInstrumentInfo() :
              new DuNumeric(MAIN_OCTAVE_DEFAULT, NUMERIC_DEFAULT_SIZE,
                            MAIN_OCTAVE_MAX, MAIN_OCTAVE_MIN));
 
-    addChild(KeyUserID, new DuNumeric(0)); //TODO: get user id
+    addChild(KeyUserID, new DuNumeric(0));
 
-    addChild(KeyID, new DuNumeric(0)); //TODO: generate new id
+    addChild(KeyID, new DuNumeric(0));
 
-    addChild(KeyActiveNoteOff,
-             new DuNumeric(0x01, NUMERIC_DEFAULT_SIZE,
-                           0xFF, 0x00));
+    addChild(KeyActiveNoteOff, new DuBoolean(true));
 
     addChild(KeyCategory, new DuString(NAME_CARACT));
 
@@ -151,7 +150,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const info_instr &du_ins
     verif = instrInfo->setUserID((int) du_instrInfo.instr_user_id) ? verif : false;
     verif = instrInfo->setID((int) du_instrInfo.instr_id) ? verif : false;
 
-    verif = instrInfo->setActiveNoteOff(du_instrInfo.instr_noteoff) ? verif : false;
+    verif = instrInfo->setActiveNoteOff(du_instrInfo.instr_noteoff == 0) ? verif : false;
 
     verif = instrInfo->setCategory(getCategoryNameFromProgramChange(du_instrInfo.instr_midi_pc)) ? verif : false;
 
@@ -212,7 +211,7 @@ bool DuInstrumentInfo::toStruct(info_instr& outStruct) const
         return false;
     outStruct.instr_id = (uint32_t) tmpNum;
 
-    tmpNum = getActiveNoteOff();
+    tmpNum = getActiveNoteOff() ? 0 : 1;
     if (tmpNum == -1)
         return false;
     outStruct.instr_noteoff = (uint8_t) tmpNum;
@@ -303,7 +302,7 @@ DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, Octave,             Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, UserID,             Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, ID,                 Numeric, int, -1)
 
-DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, ActiveNoteOff,      Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, ActiveNoteOff,      Boolean, bool, false)
 
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, Category,           String, QString, QString())
 

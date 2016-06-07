@@ -55,7 +55,7 @@ public:
     DU_KEY_ACCESSORS(UserID,             int)
     DU_KEY_ACCESSORS(ID,                 int)
 
-    DU_KEY_ACCESSORS(ActiveNoteOff,      int)
+    DU_KEY_ACCESSORS(ActiveNoteOff,      bool)
 
     DU_KEY_ACCESSORS(Category,           QString)
 
