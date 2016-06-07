@@ -36,10 +36,14 @@ public:
                                   const QByteArray& data);
     static DuSamplePtr fromWav(QFile *input);
 
+private:
     static QString convertToMono(SndfileHandle& oldSoundFile);
+    static QString convertTo44100samplerate(SndfileHandle &oldSoundFile, int *outWaveSize);
+    static double interpolate(double x0, double x1, double x2, double x3, double t);
     static QString convertTo16bits(SndfileHandle& oldSoundFile);
     static int normalizeWaveType(int format);
 
+public:
     QByteArray ipBinary(uint8_t min_vel, uint8_t max_vel) const;
     QByteArray spBinary(uint32_t sampleAddress) const;
 

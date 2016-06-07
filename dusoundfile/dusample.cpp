@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QStandardPaths>
 #include <QtEndian>
+#include <QtMath>
 
 #include <cstring>
 
@@ -213,6 +214,32 @@ DuSamplePtr DuSample::fromWav(QFile *input)
         wavSize /= 2;
     }
 
+
+    // Convert to 44100 samplerate
+    if (soundFile.samplerate() != 44100 && soundFile.channels() == 1)
+    {
+        qCDebug(LOG_CAT_DU_OBJECT) << "Wrong sample rate => " << soundFile.samplerate();
+
+        int newWaveSize;
+        wavFileName = convertTo44100samplerate(soundFile, &newWaveSize);
+        if (wavFileName.isEmpty())
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to convert to 44100 samplerate";
+            return DuSamplePtr();
+        }
+
+        soundFile = SndfileHandle(wavFileName.toStdString(), SFM_READ, 0);
+        if (soundFile.rawHandle() == NULL)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "Failed to open the file" << wavFileName << ":\n"
+                                          << soundFile.strError();
+            return DuSamplePtr();
+        }
+
+        wavSize = newWaveSize;
+    }
+
+
     // Convert to 16 bits
     if ((soundFile.format() & SF_FORMAT_SUBMASK) > 2)
     {
@@ -386,6 +413,152 @@ QString DuSample::convertToMono(SndfileHandle &oldSoundFile)
     return monoWavFileName;
 }
 
+QString DuSample::convertTo44100samplerate(SndfileHandle &oldSoundFile, int* outWaveSize)
+{
+    if (oldSoundFile.channels() != 1)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "Failed to convert to 44100 samplerate\n"
+                << "Wav is not mono:" << oldSoundFile.channels() << "channels";
+        return QString();
+    }
+
+    QString wav44100samplerateFileName = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/tmp_44100samplerate.wav";
+    if (wav44100samplerateFileName.isEmpty())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "Failed to convert to 44100 samplerate\n"
+                << "can't find temp folder";
+        return QString();
+    }
+
+    if (QFile::exists(wav44100samplerateFileName))
+    {
+        if (!QFile::remove(wav44100samplerateFileName))
+        {
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "Failed to convert to 44100 samplerate\n"
+                    << "couldn't remove previous temp file :" << wav44100samplerateFileName;
+            return QString();
+        }
+    }
+
+    SndfileHandle newSoundFile(wav44100samplerateFileName.toStdString(), SFM_WRITE, oldSoundFile.format(), 1, 44100);
+    if (newSoundFile.rawHandle() == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "Failed to open the file" << wav44100samplerateFileName << ":\n"
+                                      << newSoundFile.strError();
+        return QString();
+    }
+
+    //TODO: if we want to use the loop start/end written in sample data,
+    //      we have to convert the sample rate for these infos too.
+    //      But because of interpolation, it could have a bad quality...
+    SF_INSTRUMENT inst;
+    if (oldSoundFile.command(SFC_GET_INSTRUMENT, &inst, sizeof(inst)) != SF_TRUE)
+    {
+        qCDebug(LOG_CAT_DU_OBJECT) << "No instrument info found";
+    }
+
+    if (newSoundFile.command(SFC_SET_INSTRUMENT, &inst, sizeof(inst)) != SF_TRUE)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "Failed to convert to 44100 samplerate\n"
+                << "can't set instrument :" << newSoundFile.strError();
+        return QString();
+    }
+
+    const qint64 oldNbFrames = oldSoundFile.frames();
+    QScopedArrayPointer<double> oldFrames(new double[oldNbFrames]);
+    sf_count_t nbFramesRead = oldSoundFile.readf(oldFrames.data(), oldNbFrames);
+    if (nbFramesRead != oldNbFrames)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "Failed to convert to 44100 samplerate\n"
+                << "error reading frames from old sound"
+                << "info.frames =" << oldNbFrames << "\n"
+                << "frames read =" << nbFramesRead << "\n"
+                << oldSoundFile.strError();
+        return QString();
+    }
+
+    double oldSampleRate = static_cast<double>(oldSoundFile.samplerate());
+
+    // result wav length in s
+    double duration = static_cast<double>(oldNbFrames) / oldSampleRate;
+
+    // delta time in s
+    double dt = 1.0 / 44100.0;
+
+    int newNbFrames = static_cast<int>(duration * 44100.0);
+    QScopedArrayPointer<double> newFrames(new double[newNbFrames]);
+
+    int i = 0;
+    for (double t = 0.0; t < duration && i < newNbFrames; t += dt)
+    {
+        int x1 = qFloor(t * oldSampleRate);
+        int x2 = x1 + 1; //qCeil(t * oldSampleRate);
+        int x0 = x1 - 1;
+        int x3 = x2 + 1;
+
+        double oldT = x1 * (1.0 / oldSampleRate);
+
+        if (x0 < 0)
+            x0 = 0;
+        if (x0 >= oldNbFrames)
+            x0 = static_cast<int>(oldNbFrames) - 1;
+
+        if (x1 < 0)
+            x1 = 0;
+        if (x1 >= oldNbFrames)
+            x1 = static_cast<int>(oldNbFrames) - 1;
+
+        if (x2 < 0)
+            x2 = 0;
+        if (x2 >= oldNbFrames)
+            x2 = static_cast<int>(oldNbFrames) - 1;
+
+        if (x3 < 0)
+            x3 = 0;
+        if (x3 >= oldNbFrames)
+            x3 = static_cast<int>(oldNbFrames) - 1;
+
+        newFrames[i] = interpolate(oldFrames[x0], oldFrames[x1], oldFrames[x2], oldFrames[x3], t - oldT);
+
+        ++i;
+    }
+
+    sf_count_t writtenFrames = newSoundFile.writef(newFrames.data(), newNbFrames);
+    if (writtenFrames != newNbFrames)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "Failed to convert to 44100 samplerate\n"
+                << "error writing frames to 44100 samplerate sound"
+                << "info.frames =" << newNbFrames << "\n"
+                << "frames written =" << writtenFrames << "\n"
+                << newSoundFile.strError();
+        return QString();
+    }
+
+    newSoundFile.writeSync();
+
+    if (outWaveSize != NULL)
+        *outWaveSize = newNbFrames;
+
+    return wav44100samplerateFileName;
+}
+
+double DuSample::interpolate(double x0, double x1, double x2, double x3, double t)
+{
+    // Hermite4pt3oX
+
+    double c0 = x1;
+    double c1 = 0.5 * (x2 - x0);
+    double c2 = x0 - (2.5 * x1) + (2.0 * x2) - (0.5 * x3);
+    double c3 = (0.5 * (x3 - x0)) + (1.5 * (x1 - x2));
+    return (((((c3 * t) + c2) * t) + c1) * t) + c0;
+}
+
 QString DuSample::convertTo16bits(SndfileHandle &oldSoundFile)
 {
     QString wav16bitsFileName = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/tmp_16bits.wav";
@@ -448,8 +621,8 @@ QString DuSample::convertTo16bits(SndfileHandle &oldSoundFile)
     if (writtenFrames != oldSoundFile.frames())
     {
         qCCritical(LOG_CAT_DU_OBJECT)
-                << "Failed to convert to mono\n"
-                << "error writing frames to mono sound"
+                << "Failed to convert to 16 bits\n"
+                << "error writing frames to 16 bits sound"
                 << "info.frames =" << oldSoundFile.frames() << "\n"
                 << "frames written =" << writtenFrames << "\n"
                 << newSoundFile.strError();
