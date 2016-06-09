@@ -38,7 +38,7 @@ public:
 
 private:
     static QString convertToMono(SndfileHandle& oldSoundFile);
-    static QString convertTo44100samplerate(SndfileHandle &oldSoundFile, int *outWaveSize);
+    static QString convertTo44100samplerate(SndfileHandle &oldSoundFile, sf_count_t *outNbFrames);
     static double interpolate(double x0, double x1, double x2, double x3, double t);
     static QString convertTo16bits(SndfileHandle& oldSoundFile);
     static int normalizeWaveType(int format);

@@ -189,7 +189,7 @@ DuSamplePtr DuSample::fromWav(QFile *input)
         return DuSamplePtr();
     }
 
-    qint64 wavSize = soundFile.frames() * soundFile.channels();
+    sf_count_t nbFrames = soundFile.frames() * soundFile.channels();
 
     // Convert stereo to mono
     if (soundFile.channels() == 2)
@@ -211,17 +211,16 @@ DuSamplePtr DuSample::fromWav(QFile *input)
             return DuSamplePtr();
         }
 
-        wavSize /= 2;
+        nbFrames /= 2;
     }
-
 
     // Convert to 44100 samplerate
     if (soundFile.samplerate() != 44100 && soundFile.channels() == 1)
     {
         qCDebug(LOG_CAT_DU_OBJECT) << "Wrong sample rate => " << soundFile.samplerate();
 
-        int newWaveSize;
-        wavFileName = convertTo44100samplerate(soundFile, &newWaveSize);
+        sf_count_t newNbFrames = 0;
+        wavFileName = convertTo44100samplerate(soundFile, &newNbFrames);
         if (wavFileName.isEmpty())
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "Failed to convert to 44100 samplerate";
@@ -236,9 +235,10 @@ DuSamplePtr DuSample::fromWav(QFile *input)
             return DuSamplePtr();
         }
 
-        wavSize = newWaveSize;
+        nbFrames = newNbFrames;
     }
 
+    qint64 wavSize = 0;
 
     // Convert to 16 bits
     if ((soundFile.format() & SF_FORMAT_SUBMASK) > 2)
@@ -260,11 +260,11 @@ DuSamplePtr DuSample::fromWav(QFile *input)
             return DuSamplePtr();
         }
 
-        wavSize *= 2; // 16 bits (2*8)
+        wavSize = 2 * nbFrames; // 16 bits
     }
     else
     {
-        wavSize *= (soundFile.format() & SF_FORMAT_SUBMASK);
+        wavSize = (soundFile.format() & SF_FORMAT_SUBMASK) * nbFrames;
     }
 
     // Arrondi PAIR
@@ -360,8 +360,7 @@ QString DuSample::convertToMono(SndfileHandle &oldSoundFile)
     {
         qCDebug(LOG_CAT_DU_OBJECT) << "No instrument info found";
     }
-
-    if (newSoundFile.command(SFC_SET_INSTRUMENT, &inst, sizeof(inst)) != SF_TRUE)
+    else if (newSoundFile.command(SFC_SET_INSTRUMENT, &inst, sizeof(inst)) != SF_TRUE)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "Failed to convert to mono\n"
@@ -369,7 +368,7 @@ QString DuSample::convertToMono(SndfileHandle &oldSoundFile)
         return QString();
     }
 
-    const qint64 oldNbFrames = oldSoundFile.channels() * oldSoundFile.frames();
+    const sf_count_t oldNbFrames = oldSoundFile.channels() * oldSoundFile.frames();
     QScopedArrayPointer<double> oldFrames(new double[oldNbFrames]);
     sf_count_t nbFramesRead = oldSoundFile.readf(oldFrames.data(), oldSoundFile.frames());
     if (nbFramesRead != oldSoundFile.frames())
@@ -383,7 +382,7 @@ QString DuSample::convertToMono(SndfileHandle &oldSoundFile)
         return QString();
     }
 
-    const qint64 newNbFrames = newSoundFile.channels() * oldSoundFile.frames();
+    const sf_count_t newNbFrames = newSoundFile.channels() * oldSoundFile.frames();
     QScopedArrayPointer<double> newFrames(new double[newNbFrames]);
     for (int i = 0; i < oldSoundFile.frames(); ++i)
     {
@@ -413,7 +412,7 @@ QString DuSample::convertToMono(SndfileHandle &oldSoundFile)
     return monoWavFileName;
 }
 
-QString DuSample::convertTo44100samplerate(SndfileHandle &oldSoundFile, int* outWaveSize)
+QString DuSample::convertTo44100samplerate(SndfileHandle &oldSoundFile, sf_count_t* outNbFrames)
 {
     if (oldSoundFile.channels() != 1)
     {
@@ -459,8 +458,7 @@ QString DuSample::convertTo44100samplerate(SndfileHandle &oldSoundFile, int* out
     {
         qCDebug(LOG_CAT_DU_OBJECT) << "No instrument info found";
     }
-
-    if (newSoundFile.command(SFC_SET_INSTRUMENT, &inst, sizeof(inst)) != SF_TRUE)
+    else if (newSoundFile.command(SFC_SET_INSTRUMENT, &inst, sizeof(inst)) != SF_TRUE)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "Failed to convert to 44100 samplerate\n"
@@ -468,7 +466,7 @@ QString DuSample::convertTo44100samplerate(SndfileHandle &oldSoundFile, int* out
         return QString();
     }
 
-    const qint64 oldNbFrames = oldSoundFile.frames();
+    const sf_count_t oldNbFrames = oldSoundFile.frames();
     QScopedArrayPointer<double> oldFrames(new double[oldNbFrames]);
     sf_count_t nbFramesRead = oldSoundFile.readf(oldFrames.data(), oldNbFrames);
     if (nbFramesRead != oldNbFrames)
@@ -490,7 +488,7 @@ QString DuSample::convertTo44100samplerate(SndfileHandle &oldSoundFile, int* out
     // delta time in s
     double dt = 1.0 / 44100.0;
 
-    int newNbFrames = static_cast<int>(duration * 44100.0);
+    sf_count_t newNbFrames = static_cast<sf_count_t>(duration * 44100.0);
     QScopedArrayPointer<double> newFrames(new double[newNbFrames]);
 
     int i = 0;
@@ -542,8 +540,8 @@ QString DuSample::convertTo44100samplerate(SndfileHandle &oldSoundFile, int* out
 
     newSoundFile.writeSync();
 
-    if (outWaveSize != NULL)
-        *outWaveSize = newNbFrames;
+    if (outNbFrames != NULL)
+        *outNbFrames = newNbFrames;
 
     return wav44100samplerateFileName;
 }
@@ -594,8 +592,7 @@ QString DuSample::convertTo16bits(SndfileHandle &oldSoundFile)
     {
         qCDebug(LOG_CAT_DU_OBJECT) << "No instrument info found";
     }
-
-    if (newSoundFile.command(SFC_SET_INSTRUMENT, &inst, sizeof(inst)) != SF_TRUE)
+    else if (newSoundFile.command(SFC_SET_INSTRUMENT, &inst, sizeof(inst)) != SF_TRUE)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "Failed to convert to 16 bits\n"
@@ -603,7 +600,7 @@ QString DuSample::convertTo16bits(SndfileHandle &oldSoundFile)
         return QString();
     }
 
-    const qint64 oldNbFrames = oldSoundFile.channels() * oldSoundFile.frames();
+    const sf_count_t oldNbFrames = oldSoundFile.channels() * oldSoundFile.frames();
     QScopedArrayPointer<double> frames(new double[oldNbFrames]);
     sf_count_t nbFramesRead = oldSoundFile.readf(frames.data(), oldSoundFile.frames());
     if (nbFramesRead != oldSoundFile.frames())
