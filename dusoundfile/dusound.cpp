@@ -379,8 +379,12 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
         DuArrayPtr<DuNote> mapping(new DuArray<DuNote>);
         for (uint i = 0; i < MAPPING_SIZE; i += S_NOTE_SIZE)
         {
+            // --- WE HAVE TO DO A CORRESPONDANCE ---
+            const uint halfMappingSize = MAPPING_SIZE / 2;
+            uint corI = i < halfMappingSize ? i + halfMappingSize : i - halfMappingSize;
+
             s_note note;
-            std::memcpy((char*)&note, &data.data()[soundHeader.mapping_addr + i], S_NOTE_SIZE);
+            std::memcpy((char*)&note, &data.data()[soundHeader.mapping_addr + corI], S_NOTE_SIZE);
 
             DuNotePtr noteObject = DuNote::fromBinary(note);
             if (noteObject != NULL)
@@ -568,7 +572,22 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
 
 QByteArray DuSound::mappingBinary() const
 {
-    return getMapping()->toDuMusicBinary();
+    const QByteArray& data = getMapping()->toDuMusicBinary();
+    if (data.isEmpty())
+    {
+        return QByteArray();
+    }
+    else if (data.size() != MAPPING_SIZE)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "Mapping size is incorrect:" << data.size() << "!=" << MAPPING_SIZE;
+        return QByteArray();
+    }
+    else
+    {
+        // --- WE HAVE TO DO A CORRESPONDANCE ---
+        const int halpMappingSize = MAPPING_SIZE / 2;
+        return data.mid(halpMappingSize, halpMappingSize) + data.mid(0, halpMappingSize);
+    }
 }
 
 QByteArray DuSound::metadataBinary() const
