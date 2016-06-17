@@ -1,5 +1,6 @@
 #include "dunote.h"
 
+#include "../general/duboolean.h"
 #include "../general/dunumeric.h"
 #include "../general/dustring.h"
 
@@ -10,12 +11,13 @@ DU_OBJECT_IMPL(DuNote);
 DuNote::DuNote() :
     DuContainer()
 {
-    addChild(KeyNoteGM,       new DuNumeric(0, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
-    addChild(KeyExclusive,    new DuNumeric(0, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
-    addChild(KeyNoteOff,      new DuNumeric(0, NUMERIC_DEFAULT_SIZE, 0x01, 0x00));
-    addChild(KeyNote,         new DuNumeric(1, NUMERIC_DEFAULT_SIZE, NUM_BUTTON_KEYBOARD * 2, 1));
-    addChild(KeyName,         new DuString(NOTE_NAME_CARACT));
-    addChild(KeyCategoryName, new DuString(NAME_CARACT));
+    addChild(KeyNoteGM,         new DuNumeric(0, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
+    addChild(KeyIsExclusive,    new DuBoolean(false));
+    addChild(KeyExclusiveNote,  new DuNumeric(0, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
+    addChild(KeyNoteOff,        new DuBoolean(false));
+    addChild(KeyNote,           new DuNumeric(1, NUMERIC_DEFAULT_SIZE, NUM_BUTTON_KEYBOARD * 2, 1));
+    addChild(KeyName,           new DuString(NOTE_NAME_CARACT));
+    addChild(KeyCategoryName,   new DuString(NAME_CARACT));
 }
 
 DuObjectPtr DuNote::clone() const
@@ -34,8 +36,16 @@ DuNotePtr DuNote::fromBinary(const s_note &data)
     bool verif = true;
 
     verif = note->setNoteGM(data.note_gmref) ? verif : false;
-    verif = note->setExclusive(data.note_excl) ? verif : false;
-    verif = note->setNoteOff(data.note_off) ? verif : false;
+    if (data.note_excl == 0xFF)
+    {
+        verif = note->setIsExclusive(false) ? verif : false;
+    }
+    else
+    {
+        verif = note->setIsExclusive(true) ? verif : false;
+        verif = note->setExclusiveNote(data.note_excl) ? verif : false;
+    }
+    verif = note->setNoteOff(data.note_off == 1) ? verif : false;
     verif = note->setNote(data.note_key) ? verif : false;
     verif = note->setName(QString(QByteArray((char *)data.note_name, NOTE_NAME_CARACT))) ? verif : false;
     verif = note->setCategoryName(QString(QByteArray((char *)data.cat_name, NAME_CARACT))) ? verif : false;
@@ -61,12 +71,19 @@ QByteArray DuNote::toDuMusicBinary() const
         return QByteArray();
     data.note_gmref = tmpNum;
 
-    tmpNum = getExclusive();
-    if (tmpNum == -1)
-        return QByteArray();
-    data.note_excl = tmpNum;
+    if (getIsExclusive())
+    {
+        tmpNum = getExclusiveNote();
+        if (tmpNum == -1)
+            return QByteArray();
+        data.note_excl = tmpNum;
+    }
+    else
+    {
+        data.note_excl = 0xFF;
+    }
 
-    tmpNum = getNoteOff();
+    tmpNum = getNoteOff() ? 1 : 0;
     if (tmpNum == -1)
         return QByteArray();
     data.note_off = tmpNum;
@@ -95,12 +112,13 @@ QByteArray DuNote::toDuMusicBinary() const
     return QByteArray((char *)&data, size());
 }
 
-DU_KEY_ACCESSORS_IMPL(DuNote, NoteGM,       Numeric, int,    -1)
-DU_KEY_ACCESSORS_IMPL(DuNote, Exclusive,    Numeric, int,    -1)
-DU_KEY_ACCESSORS_IMPL(DuNote, NoteOff,      Numeric, int,    -1)
-DU_KEY_ACCESSORS_IMPL(DuNote, Note,         Numeric, int,    -1)
-DU_KEY_ACCESSORS_IMPL(DuNote, Name,         String,  QString, QString())
-DU_KEY_ACCESSORS_IMPL(DuNote, CategoryName, String,  QString, QString())
+DU_KEY_ACCESSORS_IMPL(DuNote, NoteGM,           Numeric, int,   -1)
+DU_KEY_ACCESSORS_IMPL(DuNote, IsExclusive,      Boolean, bool,  false)
+DU_KEY_ACCESSORS_IMPL(DuNote, ExclusiveNote,    Numeric, int,   -1)
+DU_KEY_ACCESSORS_IMPL(DuNote, NoteOff,          Boolean, bool,  false)
+DU_KEY_ACCESSORS_IMPL(DuNote, Note,             Numeric, int,   -1)
+DU_KEY_ACCESSORS_IMPL(DuNote, Name,             String,  QString, QString())
+DU_KEY_ACCESSORS_IMPL(DuNote, CategoryName,     String,  QString, QString())
 
 const int DuNote::drumMapping[] = {
     // Right

@@ -18,12 +18,13 @@ public:
 
     virtual QByteArray toDuMusicBinary() const;
 
-    DU_KEY_ACCESSORS(NoteGM,       int)
-    DU_KEY_ACCESSORS(Exclusive,    int)
-    DU_KEY_ACCESSORS(NoteOff,      int)
-    DU_KEY_ACCESSORS(Note,         int)
-    DU_KEY_ACCESSORS(Name,         QString)
-    DU_KEY_ACCESSORS(CategoryName, QString)
+    DU_KEY_ACCESSORS(NoteGM,        int)
+    DU_KEY_ACCESSORS(IsExclusive,   bool)
+    DU_KEY_ACCESSORS(ExclusiveNote, int)
+    DU_KEY_ACCESSORS(NoteOff,       bool)
+    DU_KEY_ACCESSORS(Note,          int)
+    DU_KEY_ACCESSORS(Name,          QString)
+    DU_KEY_ACCESSORS(CategoryName,  QString)
 
     static const int drumMapping[];
 };
