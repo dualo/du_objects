@@ -4,16 +4,15 @@
 
 #include <QJsonObject>
 
+#include "../dusoundfile/dunote.h"
+#include "../dusoundfile/dusound.h"
+
+#include "../general/duarray.h"
 #include "../general/dunumeric.h"
 
 #include "../miditodumusic/midiconversionhelper.h"
 
 #include "../midifile/dumidichannelevent.h"
-
-#include <du_objects/dusoundfile/dunote.h>
-#include <du_objects/dusoundfile/dusound.h>
-
-#include <du_objects/general/duarray.h>
 
 
 DU_OBJECT_IMPL(DuEvent)

@@ -8,6 +8,9 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+#include "../dusoundfile/dusound.h"
+#include "../dusoundfile/dusoundinfo.h"
+
 #include "../general/duarray.h"
 #include "../general/dunumeric.h"
 
@@ -19,9 +22,6 @@
 #include "../midifile/dumidichannelevent.h"
 #include "../midifile/dumidimetaevent.h"
 #include "../midifile/dumiditrack.h"
-
-#include <du_objects/dusoundfile/dusound.h>
-#include <du_objects/dusoundfile/dusoundinfo.h>
 
 
 DU_OBJECT_IMPL(DuLoop)
