@@ -128,3 +128,10 @@ bool operator==(const JsonApiErrorObject &first, const JsonApiErrorObject &secon
             && first.detail() == second.detail()
             && first.meta() == second.meta();
 }
+
+QDebug operator<<(QDebug dbg, const JsonApiErrorObject &obj)
+{
+    dbg.nospace() << "JsonApiErrorObject(" << obj.toJsonObject() << ")";
+
+    return dbg.space();
+}

@@ -214,3 +214,10 @@ bool operator==(const JsonApiDocument &first, const JsonApiDocument &second)
             && first.isError() == second.isError()
             && first.isNull() == second.isNull();
 }
+
+QDebug operator<<(QDebug dbg, const JsonApiDocument &obj)
+{
+    dbg.nospace() << "JsonApiDocument(" << obj.toJsonDocument() << ")";
+
+    return dbg.space();
+}

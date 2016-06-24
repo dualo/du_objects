@@ -39,5 +39,6 @@ private:
 };
 
 bool operator==(const JsonApiDocument& first, const JsonApiDocument& second);
+QDebug operator<<(QDebug dbg, const JsonApiDocument& obj);
 
 #endif // JSONAPIDOCUMENT_H

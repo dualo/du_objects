@@ -2,6 +2,7 @@
 #define JSONAPIERROROBJECT_H
 
 #include <QCoreApplication>
+#include <QDebug>
 #include <QJsonObject>
 
 class JsonApiErrorObject
@@ -40,5 +41,6 @@ private:
 };
 
 bool operator==(const JsonApiErrorObject& first, const JsonApiErrorObject& second);
+QDebug operator<<(QDebug dbg, const JsonApiErrorObject& obj);
 
 #endif // JSONAPIERROROBJECT_H
