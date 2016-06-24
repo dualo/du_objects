@@ -33,37 +33,40 @@ JsonApiDocument::JsonApiDocument(const QJsonDocument &jsonDoc) :
         }
 
         // INCLUDED
-        const QJsonValue& includedArrayValue = jsonObject.value("included");
-        if (!includedArrayValue.isArray())
-            return;
-
-        const QJsonArray& includedArray = includedArrayValue.toArray();
-        for (QJsonArray::const_iterator it = includedArray.constBegin(); it != includedArray.constEnd(); ++it)
+        if (jsonObject.contains("included"))
         {
-            const QJsonValue& includedValue = *(it);
-            if (!includedValue.isObject())
+            const QJsonValue& includedArrayValue = jsonObject.value("included");
+            if (!includedArrayValue.isArray())
                 return;
 
-            JsonApiResourceObject resource(includedValue.toObject());
-            if (resource.isNull())
-                return;
-
-            // Replace in primary data's relationships
-            QList<JsonApiResourceObject>::iterator primaryDataIt;
-            for (primaryDataIt = m_primaryData.begin(); primaryDataIt != m_primaryData.end(); ++primaryDataIt)
+            const QJsonArray& includedArray = includedArrayValue.toArray();
+            for (QJsonArray::const_iterator it = includedArray.constBegin(); it != includedArray.constEnd(); ++it)
             {
-                JsonApiResourceObject& primaryDataObj = *(primaryDataIt);
+                const QJsonValue& includedValue = *(it);
+                if (!includedValue.isObject())
+                    return;
 
-                QMultiMap<QString, JsonApiResourceObject>::iterator relationshipIt;
-                for (relationshipIt = primaryDataObj.relationships().begin(); relationshipIt != primaryDataObj.relationships().end(); ++relationshipIt)
+                JsonApiResourceObject resource(includedValue.toObject());
+                if (resource.isNull())
+                    return;
+
+                // Replace in primary data's relationships
+                QList<JsonApiResourceObject>::iterator primaryDataIt;
+                for (primaryDataIt = m_primaryData.begin(); primaryDataIt != m_primaryData.end(); ++primaryDataIt)
                 {
-                    JsonApiResourceObject& relationshipObj = relationshipIt.value();
+                    JsonApiResourceObject& primaryDataObj = *(primaryDataIt);
 
-                    if (relationshipObj.id() == resource.id() && relationshipObj.type() == resource.type())
+                    QMultiMap<QString, JsonApiResourceObject>::iterator relationshipIt;
+                    for (relationshipIt = primaryDataObj.relationships().begin(); relationshipIt != primaryDataObj.relationships().end(); ++relationshipIt)
                     {
-                        relationshipObj.setAttributes(resource.attributes());
-                        relationshipObj.setRelationships(resource.relationships());
-                        relationshipObj.setMeta(resource.meta());
+                        JsonApiResourceObject& relationshipObj = relationshipIt.value();
+
+                        if (relationshipObj.id() == resource.id() && relationshipObj.type() == resource.type())
+                        {
+                            relationshipObj.setAttributes(resource.attributes());
+                            relationshipObj.setRelationships(resource.relationships());
+                            relationshipObj.setMeta(resource.meta());
+                        }
                     }
                 }
             }
