@@ -65,7 +65,8 @@ int DuInstrumentInfo::getProgramChangeFromCategoryName(const QString name)
         }
     }
 
-    return -1;
+    // 0xFF : unknown category or migrated du-music from v2
+    return 0xFF;
 }
 
 QStringList DuInstrumentInfo::getCategoriesFromType(int type)
