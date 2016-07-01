@@ -14,6 +14,7 @@ public:
         None = 0,
         Custom,
         All,
+        Official,
         Device,
         Shared,
         Trash,
