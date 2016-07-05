@@ -2,7 +2,6 @@
 #define DUOBJECT_H
 
 #include <QHttpPart>
-#include <QJsonValue>
 #include <QSharedPointer>
 #include <QLoggingCategory>
 
@@ -11,6 +10,7 @@
 #pragma pack(pop)
 
 Q_DECLARE_LOGGING_CATEGORY(LOG_CAT_DU_OBJECT)
+Q_DECLARE_LOGGING_CATEGORY(LOG_CAT_MIDI)
 
 
 #define DU_OBJECT(name) \
@@ -18,7 +18,7 @@ Q_DECLARE_LOGGING_CATEGORY(LOG_CAT_DU_OBJECT)
     typedef QSharedPointer<name> name ## Ptr; \
     typedef QSharedPointer<const name> name ## ConstPtr; \
     QDebug operator<<(QDebug dbg, const name ## ConstPtr& obj); \
-    QDebug operator<<(QDebug dbg, const name ## Ptr& obj);
+    QDebug operator<<(QDebug dbg, const name ## Ptr& obj)
 
 #define DU_OBJECT_IMPL(name) \
     QDebug operator<<(QDebug dbg, const name ## ConstPtr& obj) \
@@ -40,7 +40,11 @@ Q_DECLARE_LOGGING_CATEGORY(LOG_CAT_DU_OBJECT)
     template <class T> \
     using name ## Ptr = QSharedPointer< name<T> >; \
     template <class T> \
-    using name ## ConstPtr = QSharedPointer< const name<T> >;
+    using name ## ConstPtr = QSharedPointer< const name<T> >; \
+    template <class T> \
+    QDebug operator<<(QDebug dbg, const name ## ConstPtr<T>& obj); \
+    template <class T> \
+    QDebug operator<<(QDebug dbg, const name ## Ptr<T>& obj)
 
 #define DU_OBJEC_TEMPLATE_IMPL(name) \
     template <class T> \
@@ -58,7 +62,7 @@ Q_DECLARE_LOGGING_CATEGORY(LOG_CAT_DU_OBJECT)
         return obj->debugPrint(dbg); \
     }
 
-DU_OBJECT(DuObject)
+DU_OBJECT(DuObject);
 
 class DuObject
 {
@@ -71,6 +75,8 @@ protected:
 
 public:
     virtual DuObjectPtr clone() const = 0;
+    template <class T>
+    QSharedPointer<T> cloneAs() const;
 
     virtual QByteArray toDuMusicBinary() const = 0;
     virtual QByteArray toMidiBinary() const;
@@ -83,5 +89,11 @@ public:
 
     virtual int size() const = 0;
 };
+
+template <class T>
+inline QSharedPointer<T> DuObject::cloneAs() const
+{
+    return clone().dynamicCast<T>();
+}
 
 #endif // DUOBJECT_H

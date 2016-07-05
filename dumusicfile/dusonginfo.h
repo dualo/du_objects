@@ -10,9 +10,12 @@
 //NOTE: the 2 #define above could be replaced if dummy sizes were defined
 
 class MidiConversionHelper;
-DU_OBJECT(DuMixer)
+DU_OBJECT(DuMixer);
 
-DU_OBJECT(DuSongInfo)
+class MidiConversionHelper;
+DU_OBJECT(DuMixer);
+
+DU_OBJECT(DuSongInfo);
 
 class DuSongInfo : public DuContainer
 {
@@ -52,7 +55,6 @@ public:
 
     DU_KEY_ACCESSORS(Leds,                  QByteArray)
 
-    DU_KEY_ACCESSORS(Swing,                 int)
     DU_KEY_ACCESSORS(Quantification,        int)
 };
 

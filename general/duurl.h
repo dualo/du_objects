@@ -4,7 +4,7 @@
 #include "duvalue.h"
 
 
-DU_OBJECT(DuUrl)
+DU_OBJECT(DuUrl);
 
 class DuUrl : public DuValue
 {
@@ -24,7 +24,7 @@ public:
     virtual QDebug debugPrint(QDebug dbg) const override;
 
     // DuValue interface
-public:
+protected:
     virtual QVariant checkValue(const QVariant &value, bool &success) override;
 };
 

@@ -1,11 +1,12 @@
 #ifndef DUDEVICELIST_H
 #define DUDEVICELIST_H
 
-#include "dudevice.h"
 #include "dulist.h"
 
 
-DU_OBJECT(DuDeviceList)
+DU_OBJECT(DuDevice);
+
+DU_OBJECT(DuDeviceList);
 
 class DuDeviceList : public DuList
 {

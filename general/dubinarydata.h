@@ -5,7 +5,7 @@
 #include <QDataStream>
 
 
-DU_OBJECT(DuBinaryData)
+DU_OBJECT(DuBinaryData);
 
 class DuBinaryData : public DuValue
 {
@@ -44,7 +44,7 @@ public:
     virtual int size() const override;
 
     // DuValue interface
-public:
+protected:
     virtual QVariant checkValue(const QVariant &value, bool &success) override;
 };
 

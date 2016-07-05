@@ -66,13 +66,14 @@ class QIODevice;
 #ifdef Q_OS_WIN
 #include "../general/duarray.h"
 #else
-DU_OBJECT_TEMPLATE(DuArray)
+DU_OBJECT_TEMPLATE(DuArray);
 #endif
-DU_OBJECT(DuMixer)
-DU_OBJECT(DuReverb)
-DU_OBJECT(DuTrack)
+DU_OBJECT(DuMixer);
+DU_OBJECT(DuReverb);
+DU_OBJECT(DuTrack);
 
-DU_OBJECT(DuMusic)
+
+DU_OBJECT(DuMusic);
 
 class DuMusic : public DuContainer
 {
@@ -99,6 +100,12 @@ public:
     QStringList lists() const;
     void setLists(const QStringList &lists);
 
+    int indexInDevice() const;
+    void setIndexInDevice(int indexInDevice);
+
+    QString deviceSerialNumber() const;
+    void setDeviceSerialNumber(const QString &deviceSerialNumber);
+
     bool appendTrack(const DuTrackPtr &track);
 
 #define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS(key, type)
@@ -112,6 +119,9 @@ public:
 private:
     int m_databaseId;
     QStringList m_lists;
+
+    int m_indexInDevice;
+    QString m_deviceSerialNumber;
 };
 
 Q_DECLARE_METATYPE(DuMusicPtr)

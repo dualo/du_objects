@@ -4,7 +4,7 @@
 #include "dueffectsettings.h"
 
 
-DU_OBJECT(DuReverb)
+DU_OBJECT(DuReverb);
 
 class DuReverb : public DuEffectSettings
 {

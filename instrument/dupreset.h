@@ -95,7 +95,7 @@ DU_OBJECT(DuDelay);
 DU_OBJECT(DuChorus);
 DU_OBJECT(DuNumeric);
 
-DU_OBJECT(DuPreset)
+DU_OBJECT(DuPreset);
 
 class DuPreset : public DuContainer
 {

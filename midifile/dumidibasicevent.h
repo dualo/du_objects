@@ -2,15 +2,13 @@
 #define DUMIDIBASICEVENT_H
 
 #include "../general/ducontainer.h"
-#include "dumidivariablelength.h"
-#include "dumidistatus.h"
 
 
 #define KEY_MIDIEVENT_TIME      QStringLiteral("Time")
 #define KEY_MIDIEVENT_STATUS    QStringLiteral("Status")
 
 
-DU_OBJECT(DuMidiBasicEvent)
+DU_OBJECT(DuMidiBasicEvent);
 
 class DuMidiBasicEvent : public DuContainer
 {

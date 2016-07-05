@@ -1,5 +1,10 @@
 #include "dumidisysexevent.h"
 
+#include "dumidistatus.h"
+#include "dumidivariablelength.h"
+
+#include "../general/dubinarydata.h"
+
 
 
 DU_OBJECT_IMPL(DuMidiSysExEvent)

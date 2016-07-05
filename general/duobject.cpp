@@ -1,6 +1,7 @@
 #include "duobject.h"
 
 Q_LOGGING_CATEGORY(LOG_CAT_DU_OBJECT, "du-object")
+Q_LOGGING_CATEGORY(LOG_CAT_MIDI, "midi")
 
 DU_OBJECT_IMPL(DuObject)
 

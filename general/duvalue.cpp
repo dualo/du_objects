@@ -8,14 +8,14 @@ DU_OBJECT_IMPL(DuValue)
 
 DuValue::DuValue(int maxSize) :
     DuObject(),
-    maxSize(maxSize)
+    m_maxSize(maxSize)
 {
 }
 
 DuValue::DuValue(const QVariant &value, int maxSize) :
     DuObject(),
-    value(value),
-    maxSize(maxSize)
+    m_value(value),
+    m_maxSize(maxSize)
 {
 }
 
@@ -42,19 +42,19 @@ bool DuValue::parseJson(const QJsonValue &jsonValue)
 
 int DuValue::size() const
 {
-    return maxSize;
+    return m_maxSize;
 }
 
 
 const QVariant &DuValue::getValue() const
 {
-    return value;
+    return m_value;
 }
 
 bool DuValue::setValue(const QVariant &value)
 {
     bool success = false;
-    this->value = checkValue(value, success);
+    this->m_value = checkValue(value, success);
     return success;
 }
 
@@ -66,18 +66,18 @@ QVariant DuValue::checkValue(const QVariant &value, bool& success)
 
 int DuValue::getMaxSize() const
 {
-    return maxSize;
+    return m_maxSize;
 }
 
 void DuValue::setMaxSize(int value)
 {
-    maxSize = value;
+    m_maxSize = value;
 }
 
 QDebug DuValue::debugPrint(QDebug dbg) const
 {
     dbg.nospace() << "DuValue(";
-    dbg.nospace() << value;
+    dbg.nospace() << m_value;
     dbg.nospace() << ")";
 
     return dbg.space();
@@ -86,5 +86,5 @@ QDebug DuValue::debugPrint(QDebug dbg) const
 
 QVariant &DuValue::getValue()
 {
-    return value;
+    return m_value;
 }

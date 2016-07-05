@@ -1,5 +1,7 @@
 #include "dustring.h"
 
+#include <QJsonValue>
+
 
 DU_OBJECT_IMPL(DuString)
 

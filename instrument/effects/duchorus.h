@@ -4,7 +4,7 @@
 #include "dueffectsettings.h"
 
 
-DU_OBJECT(DuChorus)
+DU_OBJECT(DuChorus);
 
 class DuChorus : public DuEffectSettings
 {

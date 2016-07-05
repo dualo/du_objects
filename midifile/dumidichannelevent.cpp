@@ -1,5 +1,12 @@
 #include "dumidichannelevent.h"
 
+#include "dumidistatus.h"
+#include "dumidivariablelength.h"
+
+#include "../general/dunumeric.h"
+
+#include <QDataStream>
+
 
 
 DU_OBJECT_IMPL(DuMidiChannelEvent)

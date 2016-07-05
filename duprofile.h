@@ -1,12 +1,18 @@
 #ifndef DUPROFILE_H
 #define DUPROFILE_H
 
-#include "general/duarray.h"
 #include "general/ducontainer.h"
 
-DU_OBJECT(DuTouch)
 
-DU_OBJECT(DuProfile)
+#ifdef Q_OS_WIN
+#include "general/duarray.h"
+#else
+DU_OBJECT_TEMPLATE(DuArray);
+#endif
+
+DU_OBJECT(DuTouch);
+
+DU_OBJECT(DuProfile);
 
 class DuProfile : public DuContainer
 {

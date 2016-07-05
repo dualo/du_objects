@@ -1,54 +1,46 @@
 #ifndef DUSOUND_H
 #define DUSOUND_H
 
-#include "../general/dubinarydata.h"
+#include "../general/ducontainer.h"
 
 
-//TODO: this will be in an external
-#pragma pack(push, 4)
+DU_OBJECT(DuBinaryData);
+DU_OBJECT(DuLayer);
+DU_OBJECT(DuNote);
+DU_OBJECT(DuSoundHeader);
+DU_OBJECT(DuSoundInfo);
+#ifdef Q_OS_WIN
+#include "../general/duarray.h"
+#else
+DU_OBJECT_TEMPLATE(DuArray);
+#endif
 
-#define NAME_CARACT	12
-#define INSTR_INFO_DUMMY 7
+DU_OBJECT(DuSound);
 
-typedef struct
+class DuSound : public DuContainer
 {
-    uint32_t KW_MMRY;
-    uint8_t instr_name[NAME_CARACT];
-    uint8_t instr_midi_pc;
-    uint8_t instr_midi_C0;
-    uint8_t instr_key_map;
-    uint8_t instr_octave;
-    uint32_t instr_user_id;
-    uint32_t instr_id;
-    uint32_t sample_address;
-    uint8_t instr_noteoff;
-    uint8_t instr_cat[NAME_CARACT];
-    uint8_t instr_relvolume;
-    uint8_t format_id;
-    uint8_t touche;
-    uint8_t nb_layer;
-    uint16_t ip_size;
-    uint16_t sp_size;
-    uint32_t sample_size;
-    uint8_t instr_dummy[INSTR_INFO_DUMMY];
-} s_instr_m3;
+    static QAtomicInt m_currentGlobalID;
+public:
+    static int currentGlobalID();
 
-#define INSTR_INFO_INSTR_SIZE 64 //(NAME_CARACT*2 + 5*4 + 2*2 + 9*1 + INSTR_INFO_DUMMY)
-
-#pragma pack(pop)
-
-
-DU_OBJECT(DuSound)
-
-class DuSound : public DuBinaryData //TODO: inherit from DuContainer
-{
 public:
     DuSound();
 
     virtual DuObjectPtr clone() const override;
 
+    virtual int size() const override;
+
+    static DuSoundPtr fromHeaderBinary(const QByteArray &data);
     static DuSoundPtr fromBinary(const QByteArray &data);
     static DuSoundPtr fromBinary(QIODevice *input);
+
+    QByteArray toBinary() const;
+    QByteArray headerIpSpSamplesBinary() const;
+    QByteArray mappingBinary() const;
+    QByteArray metadataBinary() const;
+
+    virtual DuObjectPtr getChild(const QString &key) override;
+    virtual DuObjectConstPtr getChild(const QString &key) const override;
 
     int databaseId() const;
     void setDatabaseId(int databaseId);
@@ -56,12 +48,49 @@ public:
     QStringList lists() const;
     void setLists(const QStringList &lists);
 
-    QString name() const;
-    void setName(const QString &name);
+    int indexInDevice() const;
+    void setIndexInDevice(int indexInDevice);
+
+    QString deviceSerialNumber() const;
+    void setDeviceSerialNumber(const QString &deviceSerialNumber);
+
+    bool getHasSamplesDownloaded() const;
+    void setHasSamplesDownloaded(bool hasSamplesDownloaded);
+
+    int getSizeWithSamples() const;
+    void setSizeWithSamples(int sizeWithSamples);
+
+    DU_KEY_ACCESSORS_IN_CHILD(NameForDevice,        QString)
+    DU_KEY_ACCESSORS_IN_CHILD(KeyMapping,           int)
+    DU_KEY_ACCESSORS_IN_CHILD(Octave,               int)
+    DU_KEY_ACCESSORS_IN_CHILD(UserID,               int)
+    DU_KEY_ACCESSORS_IN_CHILD(ID,                   int)
+    DU_KEY_ACCESSORS_IN_CHILD(ActiveNoteOff,        bool)
+    DU_KEY_ACCESSORS_IN_CHILD(Category,             QString)
+    DU_KEY_ACCESSORS_IN_CHILD(RelativeVolume,       int)
+    DU_KEY_ACCESSORS_IN_CHILD(InstrType,            INSTRUMENT_TYPE)
+    DU_KEY_ACCESSORS_IN_CHILD(InstrVersion,         int)
+    DU_KEY_ACCESSORS_IN_CHILD(HardInstrVersion,     int)
+    DU_KEY_ACCESSORS_IN_CHILD(SoftInstrVersion,     int)
+
+    DU_KEY_ACCESSORS_IN_CHILD(Name,                 QString)
+
+    DU_KEY_ACCESSORS_OBJECT(Info,                   DuSoundInfo)
+
+    DU_KEY_ACCESSORS_OBJECT_TEMPLATE(LayerArray,    DuArray, DuLayer)
+
+    DU_KEY_ACCESSORS_OBJECT_TEMPLATE(Mapping,       DuArray, DuNote)
+
+    DU_KEY_ACCESSORS_OBJECT_TEMPLATE(Metadata,      DuArray, DuBinaryData)
 
 private:
     int m_databaseId;
     QStringList m_lists;
+
+    int m_indexInDevice;
+    QString m_deviceSerialNumber;
+    bool m_hasSamplesDownloaded;
+    int m_sizeWithSamples;
 };
 
 Q_DECLARE_METATYPE(DuSoundPtr)

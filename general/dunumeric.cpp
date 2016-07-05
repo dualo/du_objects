@@ -1,5 +1,6 @@
 #include "dunumeric.h"
 
+#include <QJsonValue>
 #include <climits>
 
 
@@ -7,9 +8,9 @@ DU_OBJECT_IMPL(DuNumeric)
 
 DuNumeric::DuNumeric(int value) :
     DuValue(4),
-    defaultValue(0),
-    maxValue(INT_MAX),
-    minValue(INT_MIN)
+    m_defaultValue(0),
+    m_maxValue(INT_MAX),
+    m_minValue(INT_MIN)
 {
     bool res = setNumeric(value);
     Q_ASSERT(res);
@@ -17,9 +18,9 @@ DuNumeric::DuNumeric(int value) :
 
 DuNumeric::DuNumeric(int defaultValue, int byteSize, int maxValue, int minValue) :
     DuValue(byteSize),
-    defaultValue(defaultValue),
-    maxValue(maxValue),
-    minValue(minValue)
+    m_defaultValue(defaultValue),
+    m_maxValue(maxValue),
+    m_minValue(minValue)
 {
     bool res = setNumeric(defaultValue)
             && minValue <= defaultValue
@@ -31,9 +32,9 @@ DuNumeric::DuNumeric(int defaultValue, int byteSize, int maxValue, int minValue)
 DuNumeric::DuNumeric(int value, int byteSize,
                      int maxValue, int minValue, int defaultValue) :
     DuValue(byteSize),
-    defaultValue(defaultValue),
-    maxValue(maxValue),
-    minValue(minValue)
+    m_defaultValue(defaultValue),
+    m_maxValue(maxValue),
+    m_minValue(minValue)
 {
     bool res = setNumeric(value)
             && minValue <= defaultValue
@@ -144,35 +145,35 @@ QVariant DuNumeric::checkValue(const QVariant &value, bool &success)
 
     int convertedValue = value.toInt();
 
-    if (convertedValue < minValue)
+    if (convertedValue < m_minValue)
     {
         qCWarning(LOG_CAT_DU_OBJECT)
-                << convertedValue << "below" << minValue
+                << convertedValue << "below" << m_minValue
                 << "and could not be set\n"
-                << minValue << "was set instead";
+                << m_minValue << "was set instead";
 
         success = false;
-        return minValue;
+        return m_minValue;
     }
-    else if (convertedValue > maxValue)
+    else if (convertedValue > m_maxValue)
     {
         qCWarning(LOG_CAT_DU_OBJECT)
-                << convertedValue << "above" << maxValue
+                << convertedValue << "above" << m_maxValue
                 << "and could not be set\n"
-                << maxValue << "was set instead";
+                << m_maxValue << "was set instead";
 
         success = false;
-        return maxValue;
+        return m_maxValue;
     }
     else if (m_forbiddenValues.contains(convertedValue))
     {
         qCWarning(LOG_CAT_DU_OBJECT)
                 << convertedValue << "is a forbidden value"
                 << "and could not be set\n"
-                << defaultValue << "was set instead";
+                << m_defaultValue << "was set instead";
 
         success = false;
-        return defaultValue;
+        return m_defaultValue;
     }
 
     success = true;
@@ -192,64 +193,64 @@ bool DuNumeric::setNumeric(int value)
 
 int DuNumeric::getDefault() const
 {
-    return defaultValue;
+    return m_defaultValue;
 }
 
 bool DuNumeric::setDefault(int value)
 {
-    if (value > maxValue || value < minValue)
+    if (value > m_maxValue || value < m_minValue)
     {
         qCWarning(LOG_CAT_DU_OBJECT)
                 << value << "not comprised between"
-                << minValue << "and" << maxValue;
+                << m_minValue << "and" << m_maxValue;
 
         return false;
     }
 
-    defaultValue = value;
+    m_defaultValue = value;
     return true;
 }
 
 
 int DuNumeric::getMax() const
 {
-    return maxValue;
+    return m_maxValue;
 }
 
 bool DuNumeric::setMax(int value)
 {
-    if (value < getNumeric() || value < defaultValue)
+    if (value < getNumeric() || value < m_defaultValue)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "DuNumeric::setMax():\n"
                    << value << "is below" << getNumeric()
-                   << "or" << defaultValue
+                   << "or" << m_defaultValue
                    << "and was not set";
 
         return false;
     }
 
-    maxValue = value;
+    m_maxValue = value;
     return true;
 }
 
 int DuNumeric::getMin() const
 {
-    return minValue;
+    return m_minValue;
 }
 
 bool DuNumeric::setMin(int value)
 {
-    if (value > getNumeric() || value > defaultValue)
+    if (value > getNumeric() || value > m_defaultValue)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "DuNumeric::setMin():\n"
                    << value << "is above" << getNumeric()
-                   << "or" << defaultValue
+                   << "or" << m_defaultValue
                    << "and was not set";
 
         return false;
     }
 
-    minValue = value;
+    m_minValue = value;
     return true;
 }
 
@@ -260,11 +261,11 @@ QVector<int> DuNumeric::forbiddenValues() const
 
 bool DuNumeric::setForbiddenValues(const QVector<int> &forbiddenValues)
 {
-    if (forbiddenValues.contains(getNumeric()) || forbiddenValues.contains(defaultValue))
+    if (forbiddenValues.contains(getNumeric()) || forbiddenValues.contains(m_defaultValue))
     {
         qCWarning(LOG_CAT_DU_OBJECT)
                 << forbiddenValues << "contains" << getNumeric()
-                << "or" << defaultValue
+                << "or" << m_defaultValue
                 << "and was not set";
 
         return false;

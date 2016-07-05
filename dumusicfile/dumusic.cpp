@@ -36,7 +36,8 @@ DU_OBJECT_IMPL(DuMusic)
 
 DuMusic::DuMusic() :
     DuContainer(),
-    m_databaseId(-1)
+    m_databaseId(-1),
+    m_indexInDevice(-1)
 {
     addChild(KeyFileVersion, new DuNumeric(VERSION_MUSIC));
 
@@ -75,12 +76,12 @@ DuMusic::DuMusic() :
     directionGyroY->setForbiddenValues(QVector<int>() << 0);
     addChild(KeyDirectionGyroY, directionGyroY);
 
-    addChild(KeyActiveAftertouch, new DuNumeric(0x00, 2, 0xFFFF, 0x0000));
-    addChild(KeyActiveSliderL,    new DuNumeric(0x00, 2, 0xFFFF, 0x0000));
-    addChild(KeyActiveSliderR,    new DuNumeric(0x00, 2, 0xFFFF, 0x0000));
-    addChild(KeyActiveGyroP,      new DuNumeric(0x00, 2, 0xFFFF, 0x0000));
-    addChild(KeyActiveGyroR,      new DuNumeric(0x00, 2, 0xFFFF, 0x0000));
-    addChild(KeyActiveGyroY,      new DuNumeric(0x00, 2, 0xFFFF, 0x0000));
+    addChild(KeyActiveAftertouch, new DuNumeric(0x0000, 2, 0xFFFF, 0x0000));
+    addChild(KeyActiveSliderL,    new DuNumeric(0x0000, 2, 0xFFFF, 0x0000));
+    addChild(KeyActiveSliderR,    new DuNumeric(0x0000, 2, 0xFFFF, 0x0000));
+    addChild(KeyActiveGyroP,      new DuNumeric(0x0000, 2, 0xFFFF, 0x0000));
+    addChild(KeyActiveGyroR,      new DuNumeric(0x0000, 2, 0xFFFF, 0x0000));
+    addChild(KeyActiveGyroY,      new DuNumeric(0x0000, 2, 0xFFFF, 0x0000));
 
     addChild(KeySongId,      new DuNumeric(0));
     addChild(KeySongName,    new DuString(MUSIC_SONG_NAME_SIZE));
@@ -1003,6 +1004,26 @@ bool DuMusic::appendTrack(const DuTrackPtr &track)
         return false;
 
     return tmp->append(track);
+}
+
+int DuMusic::indexInDevice() const
+{
+    return m_indexInDevice;
+}
+
+void DuMusic::setIndexInDevice(int indexInDevice)
+{
+    m_indexInDevice = indexInDevice;
+}
+
+QString DuMusic::deviceSerialNumber() const
+{
+    return m_deviceSerialNumber;
+}
+
+void DuMusic::setDeviceSerialNumber(const QString &deviceSerialNumber)
+{
+    m_deviceSerialNumber = deviceSerialNumber;
 }
 
 #define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS_IMPL(DuMusic, key, dutype, type, defaultReturn)

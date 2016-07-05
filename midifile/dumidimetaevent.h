@@ -2,7 +2,6 @@
 #define DUMIDIMETAEVENT_H
 
 #include "dumidibasicevent.h"
-#include "../general/dubinarydata.h"
 
 
 #define KEY_MIDIMETAEVENT_TYPE      QStringLiteral("Type")
@@ -12,7 +11,7 @@
 #define MICROSECS_PER_MIN           60000000
 
 
-DU_OBJECT(DuMidiMetaEvent)
+DU_OBJECT(DuMidiMetaEvent);
 
 class DuMidiMetaEvent : public DuMidiBasicEvent
 {

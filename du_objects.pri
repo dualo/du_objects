@@ -1,3 +1,26 @@
+win32 {
+    INCLUDEPATH += $$PWD/libs/win/libsndfile/include
+    DEPENDPATH += $$PWD/libs/win/libsndfile/include
+
+    contains(QMAKE_TARGET.arch, x86_64) {
+        LIBS += -L$$PWD/libs/win/libsndfile/lib/x64 -L$$PWD/libs/win/libsndfile/bin/x64 -llibsndfile-1
+    } else {
+        LIBS += -L$$PWD/libs/win/libsndfile/lib/x86 -L$$PWD/libs/win/libsndfile/bin/x86 -llibsndfile-1
+    }
+} else:macx {
+    INCLUDEPATH += $$PWD/libs/mac/libsndfile/include
+    DEPENDPATH += $$PWD/libs/mac/libsndfile/include
+
+    LIBS += -L$$PWD/libs/mac/libsndfile/lib -lsndfile
+
+    libsndfile.path = Contents/Frameworks
+    libsndfile.files = $$PWD/libs/mac/libsndfile/lib/libsndfile.1.dylib
+
+    QMAKE_BUNDLE_DATA += libsndfile
+} else:unix {
+    LIBS += -lsndfile
+}
+
 HEADERS += \
     $$PWD/du-touch/parameters/music_parameters_mng.h \
     $$PWD/du-touch/parameters/sound_parameters_mng.h \
@@ -49,6 +72,10 @@ HEADERS += \
     $$PWD/dusoundfile/dusound.h \
     $$PWD/miditodumusic/duscalemodel.h \
     $$PWD/du-touch/parameters/controler_parameters_mng.h \
+    $$PWD/dusoundfile/dunote.h \
+    $$PWD/dusoundfile/dusoundinfo.h \
+    $$PWD/dusoundfile/dulayer.h \
+    $$PWD/dusoundfile/dusample.h \
     $$PWD/general/duboolean.h \
     $$PWD/du-touch/parameters/old_sound_parameters_mng.h \
     $$PWD/du-touch/parameters/music_migration.h
@@ -98,7 +125,11 @@ SOURCES += \
     $$PWD/dudevicelist.cpp \
     $$PWD/duprofile.cpp \
     $$PWD/dusoundfile/dusound.cpp \
+    $$PWD/dusoundfile/dunote.cpp \
+    $$PWD/dusoundfile/dusoundinfo.cpp \
     $$PWD/miditodumusic/duscalemodel.cpp \
+    $$PWD/dusoundfile/dulayer.cpp \
+    $$PWD/dusoundfile/dusample.cpp \
     $$PWD/general/duboolean.cpp \
     $$PWD/du-touch/parameters/music_migration.c
     

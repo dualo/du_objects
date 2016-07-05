@@ -1,5 +1,7 @@
 #include "dudevicelist.h"
 
+#include "dudevice.h"
+
 #include "general/dustring.h"
 
 

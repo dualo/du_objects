@@ -74,13 +74,8 @@ DuSongInfo::DuSongInfo() :
              new DuBinaryData(NUM_LED_VALUE));
 
 
-    addChild(KeySwing,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0xFF, 0x00));
-
     addChild(KeyQuantification,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           0xFF, 0x00));
+             new DuNumeric(0x00));
 }
 
 DuSongInfo::~DuSongInfo()
@@ -130,7 +125,6 @@ DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
 
     verif = songInfo->setReverbPreset(du_song.s_reverb_preset) ? verif : false;
 
-    verif = songInfo->setSwing(du_song.s_swing) ? verif : false;
     verif = songInfo->setQuantification(du_song.s_quantification) ? verif : false;
 
     if (!verif)
@@ -175,7 +169,6 @@ DuSongInfoPtr DuSongInfo::fromMidi(const MidiConversionHelper &helper)
 
 //    verif = songInfo->setLeds() ? verif : false;
 
-    verif = songInfo->setSwing(0) ? verif : false;
     verif = songInfo->setQuantification(0) ? verif : false;
 
     if (!verif)
@@ -289,11 +282,6 @@ QByteArray DuSongInfo::toDuMusicBinary() const
     du_songinfo.s_reverb_preset = tmpNum;
 
 
-    tmpNum = getSwing();
-    if (tmpNum == -1)
-        return QByteArray();
-    du_songinfo.s_swing = tmpNum;
-
     tmpNum = getQuantification();
     if (tmpNum == -1)
         return QByteArray();
@@ -344,5 +332,4 @@ DU_KEY_ACCESSORS_IMPL(DuSongInfo, ReverbPreset,          Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuSongInfo, Leds,                  BinaryData, QByteArray, QByteArray())
 
-DU_KEY_ACCESSORS_IMPL(DuSongInfo, Swing,                 Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuSongInfo, Quantification,        Numeric, int, -1)

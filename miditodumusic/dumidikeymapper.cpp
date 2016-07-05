@@ -8,8 +8,7 @@
 #include <QDebug>
 
 
-DuMidiKeyMapper::DuMidiKeyMapper(QObject *parent) :
-    QObject(parent),
+DuMidiKeyMapper::DuMidiKeyMapper() :
     m_scale(QStringLiteral(SCALE_NONE)),
     m_tonality(0)
 {
@@ -136,11 +135,11 @@ int DuMidiKeyMapper::dutouchScale(const QString &scale) const
 }
 
 
-int DuMidiKeyMapper::keyboardFromMidi(quint8 key)
+int DuMidiKeyMapper::keyboardFromMidi(quint8 key) const
 {
     if (!m_maps.contains(m_scale))
     {
-        qCritical()
+        qCCritical(LOG_CAT_MIDI)
                 << "DuMidiKeyMapper::fetchKeyboard():\n"
                 << "operation aborted\n"
                 << "invalid scale";
@@ -151,7 +150,7 @@ int DuMidiKeyMapper::keyboardFromMidi(quint8 key)
     QJsonValue chosenScaleValue = m_maps.value(m_scale);
     if (!chosenScaleValue.isArray())
     {
-        qCritical()
+        qCCritical(LOG_CAT_MIDI)
                 << "DuMidiKeyMapper::fetchKeyboard():\n"
                 << "operation aborted\n"
                 << "invalid scale key map";
@@ -163,7 +162,7 @@ int DuMidiKeyMapper::keyboardFromMidi(quint8 key)
     int count = chosenScale.count();
     if (m_tonality >= count)
     {
-        qCritical()
+        qCCritical(LOG_CAT_MIDI)
                 << "DuMidiKeyMapper::fetchKeyboard():\n"
                 << "operation aborted\n"
                 << "invalid tonality";
@@ -174,7 +173,7 @@ int DuMidiKeyMapper::keyboardFromMidi(quint8 key)
     QJsonValue chosenMapValue = chosenScale.at(m_tonality);
     if (!chosenMapValue.isArray())
     {
-        qCritical()
+        qCCritical(LOG_CAT_MIDI)
                 << "DuMidiKeyMapper::fetchKeyboard():\n"
                 << "operation aborted\n"
                 << "invalid tonality key map";
@@ -185,7 +184,7 @@ int DuMidiKeyMapper::keyboardFromMidi(quint8 key)
     QJsonArray chosenMap = chosenMapValue.toArray();
     if (chosenMap.count() != 12)
     {
-        qCritical()
+        qCCritical(LOG_CAT_MIDI)
                 << "DuMidiKeyMapper::fetchKeyboard():\n"
                 << "operation aborted\n"
                 << "invalid tonality key map";
@@ -196,7 +195,7 @@ int DuMidiKeyMapper::keyboardFromMidi(quint8 key)
     QJsonValue chosenKeyboardValue = chosenMap.at(key % 12);
     if (!chosenKeyboardValue.isDouble())
     {
-        qCritical()
+        qCCritical(LOG_CAT_MIDI)
                 << "DuMidiKeyMapper::fetchKeyboard():\n"
                 << "operation aborted\n"
                 << "invalid map value";

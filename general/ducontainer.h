@@ -3,8 +3,6 @@
 
 #include "duobject.h"
 #include <QMap>
-#include <QStringList>
-#include <QHttpMultiPart>
 
 
 #define DU_KEY_ACCESSORS(key, type) \
@@ -114,7 +112,7 @@
     const QString className::Key ## key = QStringLiteral(#key);
 
 
-DU_OBJECT(DuContainer)
+DU_OBJECT(DuContainer);
 
 class DuContainer : public DuObject
 {
@@ -169,7 +167,7 @@ public:
     QSharedPointer<const T> getChildAs(const QString &key) const;
 
 private:
-    QMap<QString, DuObjectPtr> children;
+    QMap<QString, DuObjectPtr> m_children;
 };
 
 template <class T>

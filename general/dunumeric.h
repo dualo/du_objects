@@ -7,7 +7,7 @@
 #define NUMERIC_DEFAULT_SIZE    1
 
 
-DU_OBJECT(DuNumeric)
+DU_OBJECT(DuNumeric);
 
 class DuNumeric : public DuValue
 {
@@ -45,13 +45,13 @@ public:
     virtual QDebug debugPrint(QDebug dbg) const override;
 
     // DuValue interface
-public:
+protected:
     virtual QVariant checkValue(const QVariant &value, bool &success) override;
 
 private:
-    int defaultValue;
-    int maxValue;
-    int minValue;
+    int m_defaultValue;
+    int m_maxValue;
+    int m_minValue;
     QVector<int> m_forbiddenValues;
 };
 

@@ -1,10 +1,13 @@
 #ifndef DUMIDIKEYMAPPER_H
 #define DUMIDIKEYMAPPER_H
 
-#include <QObject>
+#include <QCoreApplication>
 #include <QJsonObject>
+#include <QLoggingCategory>
 #include <QStringList>
 #include <QPair>
+
+Q_DECLARE_LOGGING_CATEGORY(LOG_CAT_MIDI)
 
 
 //TODO: update following list each time the scales in defaultmaps.json change
@@ -25,12 +28,12 @@
 #define SCALE_UKRAINIAN_DORIAN      "Ukrainian dorian"
 
 
-class DuMidiKeyMapper : public QObject
+class DuMidiKeyMapper
 {
-    Q_OBJECT
+    Q_DECLARE_TR_FUNCTIONS(DuMidiKeyMapper)
 
 public:
-    explicit DuMidiKeyMapper(QObject *parent = 0);
+    explicit DuMidiKeyMapper();
     ~DuMidiKeyMapper();
 
     QJsonValue toJson() const;
@@ -47,7 +50,7 @@ public:
     QPair<QString, QString> scaleIds(const QString &scale) const;
     int dutouchScale(const QString &scale) const;
 
-    int keyboardFromMidi(quint8 key);
+    int keyboardFromMidi(quint8 key) const;
 
 private:
     QJsonObject m_maps;

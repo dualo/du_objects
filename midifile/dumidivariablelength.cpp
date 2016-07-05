@@ -1,5 +1,8 @@
 #include "dumidivariablelength.h"
 
+#include <QDataStream>
+#include <QJsonValue>
+
 
 
 DU_OBJECT_IMPL(DuMidiVariableLength)

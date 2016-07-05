@@ -18,11 +18,15 @@ include(../du_objects.pri)
 
 SOURCES += \
     main.cpp \
+    tst_dusampletest.cpp \
+    tst_dusoundtest.cpp \
     tst_dumusictest.cpp \
     tst_dueffectstest.cpp \
     tst_dupresettest.cpp
 
 HEADERS += \
+    tst_dusampletest.h \
+    tst_dusoundtest.h \
     tst_dumusictest.h \
     tst_dueffectstest.h \
     tst_dupresettest.h

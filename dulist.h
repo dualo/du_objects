@@ -4,7 +4,7 @@
 #include "general/ducontainer.h"
 
 
-DU_OBJECT(DuList)
+DU_OBJECT(DuList);
 
 class DuList : public DuContainer
 {
@@ -14,6 +14,7 @@ public:
         None = 0,
         Custom,
         All,
+        Official,
         Device,
         Shared,
         Trash,

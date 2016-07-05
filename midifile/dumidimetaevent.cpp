@@ -1,5 +1,11 @@
 #include "dumidimetaevent.h"
 
+#include "dumidistatus.h"
+#include "dumidivariablelength.h"
+
+#include "../general/dubinarydata.h"
+#include "../general/dunumeric.h"
+
 
 
 DU_OBJECT_IMPL(DuMidiMetaEvent)

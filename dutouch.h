@@ -4,7 +4,7 @@
 #include "dudevice.h"
 
 
-DU_OBJECT(DuTouch)
+DU_OBJECT(DuTouch);
 
 class DuTouch : public DuDevice
 {

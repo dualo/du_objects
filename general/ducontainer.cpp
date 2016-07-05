@@ -18,11 +18,11 @@ DuContainer::~DuContainer()
 DuContainer::DuContainer(const DuContainer &other) :
     DuObject(other)
 {
-    QMapIterator<QString, DuObjectPtr> i(other.children);
+    QMapIterator<QString, DuObjectPtr> i(other.m_children);
     while (i.hasNext())
     {
         i.next();
-        children.insert(i.key(), i.value()->clone());
+        m_children.insert(i.key(), i.value()->clone());
     }
 }
 
@@ -36,7 +36,7 @@ QByteArray DuContainer::toDuMusicBinary() const
 {
     QByteArray retArray;
 
-    QMapIterator<QString, DuObjectPtr> i(children);
+    QMapIterator<QString, DuObjectPtr> i(m_children);
     while (i.hasNext())
     {
         i.next();
@@ -68,7 +68,7 @@ QJsonValue DuContainer::toJson() const
 {
     QJsonObject object;
 
-    QMapIterator<QString, DuObjectPtr> i(children);
+    QMapIterator<QString, DuObjectPtr> i(m_children);
     while (i.hasNext())
     {
         i.next();
@@ -101,7 +101,7 @@ QHttpMultiPart *DuContainer::toHttpMultiPart(const QByteArray &boundary) const
     QHttpMultiPart* multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
     multiPart->setBoundary(boundary);
 
-    QMapIterator<QString, DuObjectPtr> i(children);
+    QMapIterator<QString, DuObjectPtr> i(m_children);
     while (i.hasNext())
     {
         i.next();
@@ -140,7 +140,7 @@ bool DuContainer::parseJson(const QJsonValue &jsonValue)
 
     const QJsonObject& jsonObject = jsonValue.toObject();
 
-    QMapIterator<QString, DuObjectPtr> i(children);
+    QMapIterator<QString, DuObjectPtr> i(m_children);
     while (i.hasNext())
     {
         i.next();
@@ -168,7 +168,7 @@ QDebug DuContainer::debugPrint(QDebug dbg) const
 {
     dbg.nospace() << "DuContainer(";
 
-    QMapIterator<QString, DuObjectPtr> i(children);
+    QMapIterator<QString, DuObjectPtr> i(m_children);
     while (i.hasNext())
     {
         i.next();
@@ -189,7 +189,7 @@ int DuContainer::size() const
 {
     int size = 0;
 
-    QMapIterator<QString, DuObjectPtr> i(children);
+    QMapIterator<QString, DuObjectPtr> i(m_children);
     while (i.hasNext())
     {
         i.next();
@@ -209,13 +209,13 @@ int DuContainer::size() const
 
 QStringList DuContainer::keys() const
 {
-    return children.keys();
+    return m_children.keys();
 }
 
 
 DuObjectPtr DuContainer::operator[](const QString &key)
 {
-    if (!children.contains(key))
+    if (!m_children.contains(key))
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "DuContainer::operator[]:\n"
                    << key << "was not contained\n"
@@ -224,12 +224,12 @@ DuObjectPtr DuContainer::operator[](const QString &key)
         return DuObjectPtr();
     }
 
-    return children[key];
+    return m_children[key];
 }
 
 void DuContainer::addChild(const QString &key, const DuObjectPtr &child)
 {
-    children.insert(key, child);
+    m_children.insert(key, child);
 }
 
 void DuContainer::addChild(const QString &key, DuObject *child)
@@ -239,10 +239,10 @@ void DuContainer::addChild(const QString &key, DuObject *child)
 
 DuObjectPtr DuContainer::getChild(const QString &key)
 {
-    return children.value(key);
+    return m_children.value(key);
 }
 
 DuObjectConstPtr DuContainer::getChild(const QString &key) const
 {
-    return children.value(key);
+    return m_children.value(key);
 }

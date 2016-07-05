@@ -11,12 +11,12 @@ class MidiConversionHelper;
 #ifdef Q_OS_WIN
 #include "../general/duarray.h"
 #else
-DU_OBJECT_TEMPLATE(DuArray)
+DU_OBJECT_TEMPLATE(DuArray);
 #endif
-DU_OBJECT(DuLoop)
-DU_OBJECT(DuMidiTrack)
+DU_OBJECT(DuLoop);
+DU_OBJECT(DuMidiTrack);
 
-DU_OBJECT(DuTrack)
+DU_OBJECT(DuTrack);
 
 class DuTrack : public DuContainer
 {

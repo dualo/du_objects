@@ -2,12 +2,11 @@
 #define DUDEVICE_H
 
 #include "general/ducontainer.h"
-#include "general/dudate.h"
-#include "general/dunumeric.h"
-#include "general/duversion.h"
 
 
-DU_OBJECT(DuDevice)
+DU_OBJECT(DuVersion);
+
+DU_OBJECT(DuDevice);
 
 class DuDevice : public DuContainer
 {
@@ -32,10 +31,11 @@ public:
     bool getBusy() const;
     void setBusy(bool value);
 
-    DU_KEY_ACCESSORS(SerialNumber, QString)
-    DU_KEY_ACCESSORS(Name,         QString)
-    DU_KEY_ACCESSORS(Owner,        QString)
-    DU_KEY_ACCESSORS(OwnerId,      int)
+    DU_KEY_ACCESSORS(SerialNumber,    QString)
+    DU_KEY_ACCESSORS(Name,            QString)
+    DU_KEY_ACCESSORS(Owner,           QString)
+    DU_KEY_ACCESSORS(OwnerId,         int)
+    DU_KEY_ACCESSORS(DissocScheduled, bool)
 
     DU_KEY_ACCESSORS_OBJECT(Version, DuVersion)
 

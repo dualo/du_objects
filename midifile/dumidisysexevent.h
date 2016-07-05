@@ -2,14 +2,13 @@
 #define DUMIDISYSEXEVENT_H
 
 #include "dumidibasicevent.h"
-#include "../general/dubinarydata.h"
 
 
 #define KEY_MIDISYSEXEVENT_LENGTH   QStringLiteral("Length")
 #define KEY_MIDISYSEXEVENT_DATA     QStringLiteral("Data")
 
 
-DU_OBJECT(DuMidiSysExEvent)
+DU_OBJECT(DuMidiSysExEvent);
 
 class DuMidiSysExEvent : public DuMidiBasicEvent
 {

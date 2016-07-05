@@ -158,7 +158,7 @@ DuPreset::DuPreset() :
     DuArrayPtr<DuNumeric> multinoteArray(new DuArray<DuNumeric>(4));
     for (int i = 0; i < 4; ++i)
         multinoteArray->append(new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                                             0x7F, 0x00));
+                                             127, -128));
     addChild(KeyMultinote, multinoteArray);
 
 
@@ -291,7 +291,7 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
     DuArrayPtr<DuNumeric> multinoteArray(new DuArray<DuNumeric>(4));
     for (int i = 0; i < 4; ++i)
     {
-        multinoteArray->append(new DuNumeric(du_preset.s_multinote[i], NUMERIC_DEFAULT_SIZE, 0x7F, 0x00, 0x00));
+        multinoteArray->append(new DuNumeric(du_preset.s_multinote[i], NUMERIC_DEFAULT_SIZE, 127, -128, 0x00));
     }
     preset->setMultinote(multinoteArray);
 

@@ -5,7 +5,7 @@
 #include <QVariant>
 
 
-DU_OBJECT(DuValue)
+DU_OBJECT(DuValue);
 
 class DuValue : public DuObject
 {
@@ -20,7 +20,6 @@ public:
 
     const QVariant &getValue() const;
     bool setValue(const QVariant &value);
-    virtual QVariant checkValue(const QVariant &value, bool &success);
 
     int getMaxSize() const;
     void setMaxSize(int value);
@@ -30,13 +29,15 @@ public:
 protected:
     QVariant &getValue();
 
+    virtual QVariant checkValue(const QVariant &value, bool &success);
+
 private:
-    QVariant value;
+    QVariant m_value;
 
     /**
      * @brief if -1, there is no max size (default)
      */
-    int maxSize;
+    int m_maxSize;
 };
 
 #endif // DUVALUE_H

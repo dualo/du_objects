@@ -22,25 +22,30 @@ public:
     explicit DuLoop();
     ~DuLoop();
 
-    virtual DuObjectPtr clone() const;
+    virtual DuObjectPtr clone() const override;
 
     static DuLoopPtr fromDuMusicBinary(const music_loop &du_loop,
                                        const music_sample *du_sample);
     static DuLoopPtr fromMidi(const MidiConversionHelper &helper, int midiTrackIndex);
 
-    QByteArray toDuMusicBinary() const;
+    QByteArray toDuMusicBinary() const override;
     DuMidiTrackPtr toDuMidiTrack(int durationRef, int channel, int transpose) const;
 
-    int size() const;
+    int size() const override;
 
-DU_KEY_ACCESSORS(State,            int)
-DU_KEY_ACCESSORS(DurationModifier, int)
-DU_KEY_ACCESSORS(ScoreDisplay,     int)
-DU_KEY_ACCESSORS(MidiOutChannel,   int)
+    virtual DuObjectPtr getChild(const QString &key) override;
+    virtual DuObjectConstPtr getChild(const QString &key) const override;
 
-DU_KEY_ACCESSORS_OBJECT(Instrument, DuMusicInstrument)
+    DU_KEY_ACCESSORS_IN_CHILD(NameForDevice, QString)
 
-DU_KEY_ACCESSORS_OBJECT_TEMPLATE(Events, DuArray, DuEvent)
+    DU_KEY_ACCESSORS(State,            int)
+    DU_KEY_ACCESSORS(DurationModifier, int)
+    DU_KEY_ACCESSORS(ScoreDisplay,     int)
+    DU_KEY_ACCESSORS(MidiOutChannel,   int)
+
+    DU_KEY_ACCESSORS_OBJECT(Instrument, DuMusicInstrument)
+
+    DU_KEY_ACCESSORS_OBJECT_TEMPLATE(Events, DuArray, DuEvent)
 
 public:
     int eventsSize() const;

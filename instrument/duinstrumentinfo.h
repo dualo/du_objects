@@ -9,11 +9,31 @@
 #endif
 
 
-DU_OBJECT(DuInstrumentInfo)
+DU_OBJECT(DuInstrumentInfo);
 
 class DuInstrumentInfo : public DuContainer
 {
 public:
+    enum DreamFormat {
+        FORMAT_ERROR = -1,
+        NO_FORMAT = 0,
+        SDK_3000 = 1,
+        SDK_5000 = 2,
+    };
+
+    struct Category
+    {
+        int programChange;
+        QString name;
+        int type;
+    };
+
+    static QList<Category> categoryMap;
+    static QString getCategoryNameFromProgramChange(int programChange);
+    static int getProgramChangeFromCategoryName(const QString name);
+    static QStringList getCategoriesFromType(int type);
+
+
     explicit DuInstrumentInfo();
     ~DuInstrumentInfo();
 
@@ -21,30 +41,32 @@ public:
 
     static DuInstrumentInfoPtr fromDuMusicBinary(const info_instr &du_instrInfo);
 
+    bool toStruct(info_instr& outStruct) const;
     QByteArray toDuMusicBinary() const;
+    QByteArray toBinary(uint8_t nbLayer, int nbSamples, uint32_t sampleSize) const;
 
     int size() const;
 
-    //TODO: add key for GM program change when possible
-    //TODO: add parameters for du-sounds when possible
+    DU_KEY_ACCESSORS(NameForDevice,      QString)
 
-    DU_KEY_ACCESSORS(Name,               QString)
-
-    DU_KEY_ACCESSORS(DreamProgramChange, int)
-    DU_KEY_ACCESSORS(MidiControlChange0, int)
     DU_KEY_ACCESSORS(KeyMapping,         int)
     DU_KEY_ACCESSORS(Octave,             int)
 
-    DU_KEY_ACCESSORS(UserID,             QString)
+    DU_KEY_ACCESSORS(UserID,             int)
     DU_KEY_ACCESSORS(ID,                 int)
 
-    DU_KEY_ACCESSORS(ActiveNoteOff,      int)
+    DU_KEY_ACCESSORS(ActiveNoteOff,      bool)
 
     DU_KEY_ACCESSORS(Category,           QString)
 
     DU_KEY_ACCESSORS(RelativeVolume,     int)
 
-    DU_KEY_ACCESSORS(Type,               int)
+    DU_KEY_ACCESSORS(DreamFormatId,      DreamFormat)
+
+    DU_KEY_ACCESSORS(InstrType,          INSTRUMENT_TYPE)
+    DU_KEY_ACCESSORS(InstrVersion,       int)
+    DU_KEY_ACCESSORS(HardInstrVersion,   int)
+    DU_KEY_ACCESSORS(SoftInstrVersion,   int)
 };
 
 #endif // DUINSTRUMENTINFO_H

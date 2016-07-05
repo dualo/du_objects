@@ -4,6 +4,10 @@
 
 #include <QJsonObject>
 
+#include "../dusoundfile/dunote.h"
+#include "../dusoundfile/dusound.h"
+
+#include "../general/duarray.h"
 #include "../general/dunumeric.h"
 
 #include "../miditodumusic/midiconversionhelper.h"
@@ -74,7 +78,7 @@ DuEventPtr DuEvent::fromDuMusicBinary(const music_sample &du_sample)
 }
 
 DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
-                             int presetOctave, int instrKeyMap, bool isPercu,
+                             const DuSoundConstPtr& sound,
                              const MidiConversionHelper &helper)
 {
     //This case should not occur
@@ -112,12 +116,12 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
 
     DuEventPtr event(new DuEvent);
 
-    int tmpKey = channelEvent->getKey();
-    if (tmpKey == -1)
+    int midiKey = channelEvent->getKey();
+    if (midiKey == -1)
     {
         qCWarning(LOG_CAT_DU_OBJECT)
                 << "DuEvent::fromMidi():\n"
-                << "invalid midi key:" << tmpKey;
+                << "invalid midi key:" << midiKey;
 
         return DuEventPtr();
     }
@@ -141,19 +145,25 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
     }
 
     int keyboard = 0;
-    int key = tmpKey;
+    int key = -1;
 
     bool verif = true;
 
-    if (isPercu)
+    if (sound->getInstrType() == INSTR_PERCU)
     {
-        //Percussion map index starts from 0 in instr_mapping.c arrays
-        //In du-musics, it starts from 1 (0 being for harmonic instruments)
-        quint8 percuIndex = instrKeyMap - 1;
-
         if (midiType <= DuMidiChannelEvent::KeyAftertouch)
         {
-            key = MidiConversionHelper::percuFromMidi(tmpKey, percuIndex);
+            const DuArrayConstPtr<DuNote>& mapping = sound->getMapping();
+            int mappingSize = mapping->count();
+            for (int i = 0; i < mappingSize; ++i)
+            {
+                const DuNoteConstPtr& note = mapping->at(i);
+                if (note != NULL && note->getNoteGM() == midiKey)
+                {
+                    key = note->getNote();
+                }
+            }
+
             if (key == -1)
             {
                 qCWarning(LOG_CAT_DU_OBJECT)
@@ -163,18 +173,16 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
                 return DuEventPtr();
             }
         }
-
-        verif = event->setCanal((percuIndex << 4) & 0xF0) ? verif : false;
     }
     else if (midiType <= DuMidiChannelEvent::KeyAftertouch)
     {
         //KEY_MUSIC_TRANSPOSE set to default when importing from Midi
-        key = tmpKey - 12 * presetOctave;
+        key = midiKey - 12 * sound->getOctave();
         if (key < 0)
         {
             qCWarning(LOG_CAT_DU_OBJECT)
                     << "DuEvent::fromMidi():\n"
-                    << "invalid midi key:" << tmpKey;
+                    << "invalid midi key:" << midiKey;
 
             return DuEventPtr();
         }

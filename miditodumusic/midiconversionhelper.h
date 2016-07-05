@@ -1,43 +1,31 @@
 #ifndef MIDICONVERSIONHELPER_H
 #define MIDICONVERSIONHELPER_H
 
+#include "../general/duobject.h"
+
+#include "dutimesignaturemodel.h"
 #include "duscalemodel.h"
 #include "dutimesignaturemodel.h"
 #include "dutonalitymodel.h"
+#include "dumidikeymapper.h"
 
-#include "../general/duobject.h"
+Q_DECLARE_LOGGING_CATEGORY(LOG_CAT_MIDI)
 
-#include <QObject>
-
-class DuMidiKeyMapper;
-DU_OBJECT(DuMusicInstrument);
 DU_OBJECT(DuMidiFile);
 DU_OBJECT(DuMidiTrack);
+DU_OBJECT(DuSound);
 
-class MidiConversionHelper : public QObject
+struct MidiTrackData
 {
-    Q_OBJECT
+    QString name;
+    int programChange;
+};
 
-    Q_PROPERTY(bool valid READ isValid NOTIFY validChanged)
-
-    Q_PROPERTY(int duration READ getDuration NOTIFY durationChanged)
-
-    Q_PROPERTY(int tempo READ getTempo NOTIFY tempoChanged)
-    Q_PROPERTY(int timeSig READ getTimeSig NOTIFY timeSigChanged)
-    Q_PROPERTY(int scale READ getScale NOTIFY scaleChanged)
-    Q_PROPERTY(int tonality READ getTonality NOTIFY tonalityChanged)
-    Q_PROPERTY(QString title READ getTitle NOTIFY titleChanged)
-
-    Q_PROPERTY(int midiTempo READ getMidiTempo NOTIFY validChanged)
-    Q_PROPERTY(QString midiTimeSig READ getMidiTimeSigStr NOTIFY validChanged)
-    Q_PROPERTY(QString midiScale READ getMidiScale NOTIFY validChanged)
-    Q_PROPERTY(QString midiTonality READ getMidiTonality NOTIFY validChanged)
-    Q_PROPERTY(QString midiTitle READ getMidiTitle NOTIFY validChanged)
-
-    Q_PROPERTY(QStringList midiTracks READ getTrackNames NOTIFY validChanged)
-
+class MidiConversionHelper
+{
+    Q_DECLARE_TR_FUNCTIONS(MidiConversionHelper)
 public:
-    explicit MidiConversionHelper(QObject *parent = 0);
+    explicit MidiConversionHelper();
     ~MidiConversionHelper();
 
     bool isValid() const;
@@ -59,8 +47,7 @@ public:
     QVector<DuMidiTrackPtr> getTracks();
     int getMidiChannel(int index) const;
 
-    QString getTrackName(int index) const;
-    const QStringList getTrackNames() const;
+    QList<MidiTrackData> midiTracks() const;
 
     QStringList mapList() const;
     void chooseMap();
@@ -68,10 +55,9 @@ public:
     QPair<int, int> getIndexes(int index) const;
 
     DuMidiTrackPtr getMidiTrack(int index) const;
-    DuMusicInstrumentPtr getInstrument(int index) const;
+    DuSoundPtr getSound(int index) const;
 
     int getKeyboardFromMidi(int key) const;
-    static int percuFromMidi(int gmKey, int mapIndex);
     static int percuToMidi(quint8 duKey, quint8 keyboardIndex, quint8 mapIndex);
 
     DuTimeSignatureModel *getTimeSigBoxModel();
@@ -82,7 +68,6 @@ public:
 
     QStringList midiScales() const;
 
-public slots:
     void setTempo(int value);
     void setTimeSig(int value);
     void setScale(const QString &value);
@@ -94,35 +79,15 @@ public slots:
     QString findScale(const QString &key) const;
     int findTonality(const QString &key);
 
-    void addSelection(int trackNum, int loopNum);
+    void addSelection(int trackNum, int loopNum, int midiTrackIndex, const DuSoundConstPtr& sound);
     void removeSelectionAt(int index);
 
     int findIndexes(int trackIndex, int loopIndex) const;
 
-    void setSelectedTrack(int index, const DuMidiTrackPtr &midiTrack);
-    void setSelectedTrack(int index, int midiTrackIndex);
-
-    void setSelectedInstr(int index, const DuMusicInstrumentPtr &instrument);
-    void setSelectedInstr(int index, int instrumentIndex);
-
     bool importMidiFile(const DuMidiFilePtr &midiFile);
     bool populateMapper(const QJsonObject &jsonMaps);
 
-    void importMidiFromFile();
-    void importMapsFromFile();
-
-    void newImport();
-
-signals:
-    void validChanged();
-
-    void durationChanged();
-
-    void tempoChanged();
-    void timeSigChanged();
-    void scaleChanged();
-    void tonalityChanged();
-    void titleChanged();
+    bool init(const QByteArray &midiRawData);
 
 private:
     bool filterMetaEvents();
@@ -159,14 +124,13 @@ private:
     QString midiTitle;
 
     DuMidiFilePtr selectedFile;
-    DuMidiKeyMapper *mapper;
+    DuMidiKeyMapper mapper;
 
-    QStringList trackNames;
+    QList<MidiTrackData> m_midiTracks;
 
     QList<QPair<int, int> > selectedIndexes;
-
     QList<DuMidiTrackPtr> selectedTracks;
-    QList<DuMusicInstrumentPtr> selectedInstruments;
+    QList<DuSoundPtr> selectedSounds;
 
     QStringList midiScaleBoxModel;
 
