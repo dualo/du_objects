@@ -19,6 +19,10 @@ DU_OBJECT(DuSound);
 
 class DuSound : public DuContainer
 {
+    static QAtomicInt m_currentGlobalID;
+public:
+    static int currentGlobalID();
+
 public:
     DuSound();
 

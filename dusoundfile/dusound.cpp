@@ -13,6 +13,14 @@
 
 #include <cstring>
 #include <QFile>
+#include <QDateTime>
+
+QAtomicInt DuSound::m_currentGlobalID = static_cast<int>(QDateTime::currentDateTimeUtc().toTime_t());
+
+int DuSound::currentGlobalID()
+{
+    return m_currentGlobalID++;
+}
 
 
 DU_OBJECT_IMPL(DuSound)
