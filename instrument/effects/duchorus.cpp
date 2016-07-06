@@ -96,7 +96,6 @@ QByteArray DuChorus::toDuMusicBinary() const
     FX_chorus du_chorus;
     std::memset((char*)&du_chorus, 0, size());
 
-    QString tmpStr;
     int tmpNum = 0;
 
 

@@ -82,7 +82,6 @@ QByteArray DuDistortion::toDuMusicBinary() const
     FX_distortion du_distortion;
     std::memset((char*)&du_distortion, 0, size());
 
-    QString tmpStr;
     int tmpNum = 0;
 
 

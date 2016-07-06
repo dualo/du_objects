@@ -80,7 +80,6 @@ QByteArray DuCompressor::toDuMusicBinary() const
     FX_compressor du_compressor;
     std::memset((char*)&du_compressor, 0, size());
 
-    QString tmpStr;
     int tmpNum = 0;
 
 
