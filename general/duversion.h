@@ -3,14 +3,18 @@
 
 #include "dustring.h"
 
+#include <QCoreApplication>
+
 
 DU_OBJECT(DuVersion);
 
 class DuVersion : public DuString
 {
+    Q_DECLARE_TR_FUNCTIONS(DuVersion)
+
 public:
     explicit DuVersion(const QString& version);
-    DuVersion(int major = 0, int minor = 0, int patch = 0);
+    DuVersion(int major = -1, int minor = -1, int patch = -1);
 
     virtual DuObjectPtr clone() const;
 
