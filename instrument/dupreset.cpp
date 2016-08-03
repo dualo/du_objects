@@ -205,9 +205,17 @@ DuPreset::DuPreset() :
     addChild(KeyEqualizer,  new DuEqualizer);
     addChild(KeyDelay,      new DuDelay);
 
+    DuChorusPtr chorus(new DuChorus);
+    chorus->setMode(0);
+    DuChorusPtr flanger(new DuChorus);
+    flanger->setMode(1);
+    DuChorusPtr phaser(new DuChorus);
+    phaser->setMode(3);
+
     DuArrayPtr<DuChorus> chorusArray(new DuArray<DuChorus>(3));
-    for (int i = 0; i < 3; ++i)
-        chorusArray->append(new DuChorus);
+    chorusArray->append(chorus);
+    chorusArray->append(flanger);
+    chorusArray->append(phaser);
     addChild(KeyChorusArray, chorusArray);
 }
 
