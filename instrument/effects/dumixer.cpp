@@ -12,19 +12,19 @@ DuMixer::DuMixer() :
     DuEffectSettings()
 {
     addChild(KeyInputGain,
-             new DuNumeric(FX_MIX_INGAIN_MAXVALUE, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(FX_MIX_INGAIN_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_MIX_INGAIN_MAXVALUE, FX_MIX_INGAIN_MINVALUE));
 
     addChild(KeyLowCutFilterFrequency,
-             new DuNumeric(FX_MIX_LCFREQ_MAXVALUE, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(FX_MIX_LCFREQ_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_MIX_LCFREQ_MAXVALUE, FX_MIX_LCFREQ_MINVALUE));
 
     addChild(KeyHighCutFilterFrequency,
-             new DuNumeric(FX_MIX_HCFREQ_MINVALUE, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(FX_MIX_HCFREQ_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_MIX_HCFREQ_MAXVALUE, FX_MIX_HCFREQ_MINVALUE));
 
     addChild(KeyOutputLevel,
-             new DuNumeric(FX_MIX_OUTLEVEL_MAXVALUE, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(FX_MIX_OUTLEVEL_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_MIX_OUTLEVEL_MAXVALUE, FX_MIX_OUTLEVEL_MINVALUE));
 
     addChild(KeyOutputPanning,
@@ -32,15 +32,15 @@ DuMixer::DuMixer() :
                            FX_MIX_OUTPAN_MAXVALUE, FX_MIX_OUTPAN_MINVALUE));
 
     addChild(KeyOutputFrontRear,
-             new DuNumeric(FX_MIX_OUTFR_MINVALUE, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(FX_MIX_OUTFR_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_MIX_OUTFR_MAXVALUE, FX_MIX_OUTFR_MINVALUE));
 
     addChild(KeySendToReverb,
-             new DuNumeric(FX_MIX_REVERB_MINVALUE, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(FX_MIX_REVERB_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_MIX_REVERB_MAXVALUE, FX_MIX_REVERB_MINVALUE));
 
     addChild(KeySendToChorus,
-             new DuNumeric(FX_MIX_CHORUS_MINVALUE, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(FX_MIX_CHORUS_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_MIX_CHORUS_MAXVALUE, FX_MIX_CHORUS_MINVALUE));
 }
 
