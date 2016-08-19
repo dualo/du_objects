@@ -232,7 +232,7 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
     bool verif = true;
 
     // preset name
-    verif = preset->setName(QString::fromUtf8((char*) du_preset.s_name, PRESET_NAME_MAXSIZE)) ? verif : false;
+    verif = preset->setName(QString::fromUtf8(reinterpret_cast<const char*>(du_preset.s_name), PRESET_NAME_MAXSIZE)) ? verif : false;
 
     // general
     verif = preset->setVolume(du_preset.s_volume) ? verif : false;
@@ -428,11 +428,11 @@ QByteArray DuPreset::toDuMusicBinary() const
     QString tmpStr;
     int tmpNum = 0;
 
-    std::memset((char*)&du_preset, 0, (size_t) size());
+    std::memset(reinterpret_cast<char*>(&du_preset), 0, static_cast<size_t>(size()));
 
 
     // preset name
-    QByteArray tmpName(PRESET_NAME_MAXSIZE, (char)0x00);
+    QByteArray tmpName(PRESET_NAME_MAXSIZE, 0x00);
     tmpStr = getName();
     if (tmpStr.isNull())
         return QByteArray();
@@ -445,309 +445,309 @@ QByteArray DuPreset::toDuMusicBinary() const
     tmpNum = getVolume();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_volume = (uint8_t) tmpNum;
+    du_preset.s_volume = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getPanning();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_panning = (uint8_t) tmpNum;
+    du_preset.s_panning = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getSendToReverb();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_sendtorev = (uint8_t) tmpNum;
+    du_preset.s_sendtorev = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getOctave();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_instr_octave = (uint8_t) tmpNum;
+    du_preset.s_instr_octave = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getKeyCurve();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_key_curve = (uint8_t) tmpNum;
+    du_preset.s_key_curve = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getExpression();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_expression = (uint8_t) tmpNum;
+    du_preset.s_expression = static_cast<uint8_t>(tmpNum);
 
 
     // controleurs
     tmpNum = getActiveAftertouch();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_activ_aftertouch = (uint8_t) tmpNum;
+    du_preset.s_activ_aftertouch = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getActiveSliderL();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_activ_slider_L = (uint8_t) tmpNum;
+    du_preset.s_activ_slider_L = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getActiveSliderR();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_activ_slider_R = (uint8_t) tmpNum;
+    du_preset.s_activ_slider_R = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getActiveGyroP();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_activ_gyro_P = (uint8_t) tmpNum;
+    du_preset.s_activ_gyro_P = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getActiveGyroR();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_activ_gyro_R = (uint8_t) tmpNum;
+    du_preset.s_activ_gyro_R = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getActiveGyroY();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_activ_gyro_Y = (uint8_t) tmpNum;
+    du_preset.s_activ_gyro_Y = static_cast<uint8_t>(tmpNum);
 
 
     tmpNum = getDirectionAftertouch();
     if (tmpNum == 0)
         return QByteArray();
-    du_preset.s_direction_aftertouch = (int8_t) tmpNum;
+    du_preset.s_direction_aftertouch = static_cast<int8_t>(tmpNum);
 
     tmpNum = getDirectionSliderL();
     if (tmpNum == 0)
         return QByteArray();
-    du_preset.s_direction_slider_L = (int8_t) tmpNum;
+    du_preset.s_direction_slider_L = static_cast<int8_t>(tmpNum);
 
     tmpNum = getDirectionSliderR();
     if (tmpNum == 0)
         return QByteArray();
-    du_preset.s_direction_slider_R = (int8_t) tmpNum;
+    du_preset.s_direction_slider_R = static_cast<int8_t>(tmpNum);
 
     tmpNum = getDirectionGyroP();
     if (tmpNum == 0)
         return QByteArray();
-    du_preset.s_direction_gyro_P = (int8_t) tmpNum;
+    du_preset.s_direction_gyro_P = static_cast<int8_t>(tmpNum);
 
     tmpNum = getDirectionGyroR();
     if (tmpNum == 0)
         return QByteArray();
-    du_preset.s_direction_gyro_R = (int8_t) tmpNum;
+    du_preset.s_direction_gyro_R = static_cast<int8_t>(tmpNum);
 
     tmpNum = getDirectionGyroY();
     if (tmpNum == 0)
         return QByteArray();
-    du_preset.s_direction_gyro_Y = (int8_t) tmpNum;
+    du_preset.s_direction_gyro_Y = static_cast<int8_t>(tmpNum);
 
 
     // portamento
     tmpNum = getPortamentoOnOff();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_portamento_on_off = (uint8_t) tmpNum;
+    du_preset.s_portamento_on_off = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getPortamentoControl();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_portamento_ctrl = (uint8_t) tmpNum;
+    du_preset.s_portamento_ctrl = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getPortamentoTime();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_portamento_time = (uint8_t) tmpNum;
+    du_preset.s_portamento_time = static_cast<uint8_t>(tmpNum);
 
 
     // led marks
     tmpNum = getDisplayLed();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_displayled = (uint8_t) tmpNum;
+    du_preset.s_displayled = static_cast<uint8_t>(tmpNum);
 
     const DuArrayConstPtr<DuNumeric> &ledsArray = getLedArray();
     if (ledsArray == NULL)
         return QByteArray();
-    std::memcpy((char*)&(du_preset.s_leds), ledsArray->toDuMusicBinary().constData(), (size_t) ledsArray->size());
+    std::memcpy(du_preset.s_leds, ledsArray->toDuMusicBinary().constData(), static_cast<size_t>(ledsArray->size()));
 
 
     // pitch
     tmpNum = getPitch();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_pitch = (uint8_t) tmpNum;
+    du_preset.s_pitch = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getPitchBendSensitivity();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_pitch_bend_sensitivity = (uint8_t) tmpNum;
+    du_preset.s_pitch_bend_sensitivity = static_cast<uint8_t>(tmpNum);
 
 
     // adsr
     tmpNum = getAdsrAttack();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_adsr_attack = (uint8_t) tmpNum;
+    du_preset.s_adsr_attack = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getAdsrRelease();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_adsr_release = (uint8_t) tmpNum;
+    du_preset.s_adsr_release = static_cast<uint8_t>(tmpNum);
 
 
     // wah
     tmpNum = getWahType();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_wah_type = (uint8_t) tmpNum;
+    du_preset.s_wah_type = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getWahFrequency();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_wah_freq = (uint8_t) tmpNum;
+    du_preset.s_wah_freq = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getWahResonance();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_wah_res = (uint8_t) tmpNum;
+    du_preset.s_wah_res = static_cast<uint8_t>(tmpNum);
 
 
     // multi-note
     tmpNum = getMultinoteAct();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_multinote_act = (uint8_t) tmpNum;
+    du_preset.s_multinote_act = static_cast<uint8_t>(tmpNum);
 
     const DuArrayConstPtr<DuNumeric> &multinoteArray = getMultinote();
     if (multinoteArray == NULL)
         return QByteArray();
-    std::memcpy(du_preset.s_multinote, multinoteArray->toDuMusicBinary().constData(), (size_t) multinoteArray->size());
+    std::memcpy(du_preset.s_multinote, multinoteArray->toDuMusicBinary().constData(), static_cast<size_t>(multinoteArray->size()));
 
 
     // arpeggiator
     tmpNum = getArpeggiatorType();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_arpegiator_type = (uint8_t) tmpNum;
+    du_preset.s_arpegiator_type = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getArpeggiatorBeat();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_arpegiator_beat = (uint8_t) tmpNum;
+    du_preset.s_arpegiator_beat = static_cast<uint8_t>(tmpNum);
 
 
     // auto pitch
     tmpNum = getAutopitchRate();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_autopitch_rate = (uint8_t) tmpNum;
+    du_preset.s_autopitch_rate = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getAutopitchRange();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_autopitch_range = (uint8_t) tmpNum;
+    du_preset.s_autopitch_range = static_cast<uint8_t>(tmpNum);
 
 
     // tremolo
     tmpNum = getTremoloRate();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_tremolo_rate = (uint8_t) tmpNum;
+    du_preset.s_tremolo_rate = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getTremoloRange();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_tremolo_range = (uint8_t) tmpNum;
+    du_preset.s_tremolo_range = static_cast<uint8_t>(tmpNum);
 
 
     // autopan
     tmpNum = getAutopanRate();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_autopan_rate = (uint8_t) tmpNum;
+    du_preset.s_autopan_rate = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getAutopanRange();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_autopan_range = (uint8_t) tmpNum;
+    du_preset.s_autopan_range = static_cast<uint8_t>(tmpNum);
 
 
     // auto wah
     tmpNum = getAutowahRate();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_autowah_rate = (uint8_t) tmpNum;
+    du_preset.s_autowah_rate = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getAutowahRange();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_autowah_range = (uint8_t) tmpNum;
+    du_preset.s_autowah_range = static_cast<uint8_t>(tmpNum);
 
 
     // FX structs
     tmpNum = getChorusPreset();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_chorus_preset = (uint8_t) tmpNum;
+    du_preset.s_chorus_preset = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getCompressorOnOff();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_compressor_onoff = (uint8_t) tmpNum;
+    du_preset.s_compressor_onoff = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getDelayOnOff();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_delay_onoff = (uint8_t) tmpNum;
+    du_preset.s_delay_onoff = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getDistortionOnOff();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_distortion_onoff = (uint8_t) tmpNum;
+    du_preset.s_distortion_onoff = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getEqualizerOnOff();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_eq_onoff = (uint8_t) tmpNum;
+    du_preset.s_eq_onoff = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getChorusOnOff();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_chorus_onoff = (uint8_t) tmpNum;
+    du_preset.s_chorus_onoff = static_cast<uint8_t>(tmpNum);
 
     tmpNum = getReverbOnOff();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_reverb_onoff = (uint8_t) tmpNum;
+    du_preset.s_reverb_onoff = static_cast<uint8_t>(tmpNum);
 
 
     // fx
     const DuMixerConstPtr& mixer = getMixer();
     if (mixer == NULL)
         return QByteArray();
-    std::memcpy((char *)&(du_preset.s_mix), mixer->toDuMusicBinary().constData(), (size_t) mixer->size());
+    std::memcpy(&(du_preset.s_mix), mixer->toDuMusicBinary().constData(), static_cast<size_t>(mixer->size()));
 
     const DuDistortionConstPtr& distortion = getDistortion();
     if (distortion == NULL)
         return QByteArray();
-    std::memcpy((char *)&(du_preset.s_distortion), distortion->toDuMusicBinary().constData(), (size_t) distortion->size());
+    std::memcpy(&(du_preset.s_distortion), distortion->toDuMusicBinary().constData(), static_cast<size_t>(distortion->size()));
 
     const DuCompressorConstPtr& compressor = getCompressor();
     if (compressor == NULL)
         return QByteArray();
-    std::memcpy((char *)&(du_preset.s_compressor), compressor->toDuMusicBinary().constData(), (size_t) compressor->size());
+    std::memcpy(&(du_preset.s_compressor), compressor->toDuMusicBinary().constData(), static_cast<size_t>(compressor->size()));
 
     const DuEqualizerConstPtr& equalizer = getEqualizer();
     if (equalizer == NULL)
         return QByteArray();
-    std::memcpy((char *)&(du_preset.s_equalizer), equalizer->toDuMusicBinary().constData(), (size_t) equalizer->size());
+    std::memcpy(&(du_preset.s_equalizer), equalizer->toDuMusicBinary().constData(), static_cast<size_t>(equalizer->size()));
 
     const DuDelayConstPtr& delay = getDelay();
     if (delay == NULL)
         return QByteArray();
-    std::memcpy((char *)&(du_preset.s_delay), delay->toDuMusicBinary().constData(), (size_t) delay->size());
+    std::memcpy(&(du_preset.s_delay), delay->toDuMusicBinary().constData(), static_cast<size_t>(delay->size()));
 
     const DuArrayConstPtr<DuChorus> &chorusArray = getChorusArray();
     if (chorusArray == NULL)
         return QByteArray();
-    std::memcpy((char*)&(du_preset.s_chorus), chorusArray->toDuMusicBinary().constData(), (size_t) chorusArray->size());
+    std::memcpy(&(du_preset.s_chorus), chorusArray->toDuMusicBinary().constData(), static_cast<size_t>(chorusArray->size()));
 
 
-    return QByteArray((char *)&(du_preset), size());
+    return QByteArray(reinterpret_cast<char*>(&du_preset), size());
 }
 
 
