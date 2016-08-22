@@ -477,32 +477,32 @@ QByteArray DuPreset::toDuMusicBinary() const
     tmpNum = getActiveAftertouch();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_activ_aftertouch = static_cast<uint8_t>(tmpNum);
+    du_preset.s_activ_aftertouch = static_cast<uint16_t>(tmpNum);
 
     tmpNum = getActiveSliderL();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_activ_slider_L = static_cast<uint8_t>(tmpNum);
+    du_preset.s_activ_slider_L = static_cast<uint16_t>(tmpNum);
 
     tmpNum = getActiveSliderR();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_activ_slider_R = static_cast<uint8_t>(tmpNum);
+    du_preset.s_activ_slider_R = static_cast<uint16_t>(tmpNum);
 
     tmpNum = getActiveGyroP();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_activ_gyro_P = static_cast<uint8_t>(tmpNum);
+    du_preset.s_activ_gyro_P = static_cast<uint16_t>(tmpNum);
 
     tmpNum = getActiveGyroR();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_activ_gyro_R = static_cast<uint8_t>(tmpNum);
+    du_preset.s_activ_gyro_R = static_cast<uint16_t>(tmpNum);
 
     tmpNum = getActiveGyroY();
     if (tmpNum == -1)
         return QByteArray();
-    du_preset.s_activ_gyro_Y = static_cast<uint8_t>(tmpNum);
+    du_preset.s_activ_gyro_Y = static_cast<uint16_t>(tmpNum);
 
 
     tmpNum = getDirectionAftertouch();
