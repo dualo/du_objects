@@ -232,7 +232,7 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
     bool verif = true;
 
     // preset name
-    verif = preset->setName(QString::fromUtf8(reinterpret_cast<const char*>(du_preset.s_name), PRESET_NAME_MAXSIZE)) ? verif : false;
+    verif = preset->setName(QString::fromLatin1(reinterpret_cast<const char*>(du_preset.s_name), PRESET_NAME_MAXSIZE)) ? verif : false;
 
     // general
     verif = preset->setVolume(du_preset.s_volume) ? verif : false;
@@ -436,7 +436,7 @@ QByteArray DuPreset::toDuMusicBinary() const
     tmpStr = getName();
     if (tmpStr.isNull())
         return QByteArray();
-    tmpName.prepend(tmpStr.toUtf8());
+    tmpName.prepend(tmpStr.toLatin1());
 
     std::memcpy(du_preset.s_name, tmpName.constData(), PRESET_NAME_MAXSIZE);
 

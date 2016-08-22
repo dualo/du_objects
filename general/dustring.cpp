@@ -98,11 +98,11 @@ QVariant DuString::checkValue(const QVariant &value, bool &success)
                    << "and was truncated before being set";
 
         success = false;
-        return convertedValue.left(size).toUtf8();
+        return convertedValue.left(size);
     }
 
     success = true;
-    return convertedValue.toUtf8();
+    return convertedValue;
 }
 
 QString DuString::getString() const

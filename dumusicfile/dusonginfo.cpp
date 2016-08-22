@@ -105,7 +105,7 @@ DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
     songInfo->setMixer(mixer);
 
     verif = songInfo->setSongId(du_song.s_id & 0x7FFFFFFF) ? verif : false;
-    verif = songInfo->setSongName(QString(QByteArray((char *)du_song.s_name, MUSIC_SONG_NAME_SIZE))) ? verif : false;
+    verif = songInfo->setSongName(QString::fromLatin1(reinterpret_cast<const char*>(du_song.s_name), MUSIC_SONG_NAME_SIZE)) ? verif : false;
     verif = songInfo->setSongVersion(du_song.s_version_song & 0x7FFFFFFF) ? verif : false;
 
     verif = songInfo->setReferenceTrack(du_song.s_reftrack) ? verif : false;
@@ -209,7 +209,7 @@ QByteArray DuSongInfo::toDuMusicBinary() const
     tmpStr = getSongName();
     if (tmpStr.isNull())
         return QByteArray();
-    tmpArray.prepend(tmpStr.toUtf8());
+    tmpArray.prepend(tmpStr.toLatin1());
 
     std::memcpy(du_songinfo.s_name, tmpArray.data(), MUSIC_SONG_NAME_SIZE);
 

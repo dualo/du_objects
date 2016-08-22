@@ -220,7 +220,7 @@ void DuMidiMetaEvent::setTitle(const QString &title)
 
     setType(DuMidiMetaEvent::Title);
 
-    setData(title.toUtf8());
+    setData(title.toLatin1());
 }
 
 void DuMidiMetaEvent::setInstrumentName(const QString &instrument)
@@ -233,7 +233,7 @@ void DuMidiMetaEvent::setInstrumentName(const QString &instrument)
 
     setType(DuMidiMetaEvent::Instrument);
 
-    setData(instrument.toUtf8());
+    setData(instrument.toLatin1());
 }
 
 

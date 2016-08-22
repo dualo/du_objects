@@ -53,7 +53,7 @@ DuSoundInfoPtr DuSoundInfo::fromBinary(const sound_instr &data)
     bool verif = true;
 
     verif = soundInfo->setPresetNum(data.s_presetnum)   ? verif : false;
-    verif = soundInfo->setName(QString::fromUtf8((char*) data.s_complete_name, SOUND_NAME_SIZE)) ? verif : false;
+    verif = soundInfo->setName(QString::fromLatin1(reinterpret_cast<const char*>(data.s_complete_name), SOUND_NAME_SIZE)) ? verif : false;
 
     if (!verif)
     {
@@ -102,7 +102,7 @@ QByteArray DuSoundInfo::toBinary(uint8_t nbLayer, int nbSamples, uint32_t sample
     QString tmpStr = getName();
     if (tmpStr.isNull())
         return QByteArray();
-    tmpName.prepend(tmpStr.toUtf8());
+    tmpName.prepend(tmpStr.toLatin1());
     std::memcpy(soundStruct.s_complete_name, tmpName.constData(), SOUND_NAME_SIZE);
 
     const DuArrayConstPtr<DuPreset> &presetArray = getPresetArray();

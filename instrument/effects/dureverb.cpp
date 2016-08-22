@@ -88,7 +88,7 @@ DuReverbPtr DuReverb::fromDuMusicBinary(const FX_reverb &du_reverb)
     verif = reverb->setThresholdGate(du_reverb.r_thresgate) ? verif : false;
     verif = reverb->setPreDelayTime(du_reverb.r_predelaytime) ? verif : false;
 
-    verif = reverb->setEffectName(QString::fromUtf8((char *)du_reverb.r_name, NAME_CARACT)) ? verif : false;
+    verif = reverb->setEffectName(QString::fromLatin1(reinterpret_cast<const char*>(du_reverb.r_name), NAME_CARACT)) ? verif : false;
 
     if (!verif)
     {
@@ -171,7 +171,7 @@ QByteArray DuReverb::toDuMusicBinary() const
     tmpStr = getEffectName();
     if (tmpStr.isNull())
         return QByteArray();
-    tmpName.prepend(tmpStr.toUtf8());
+    tmpName.prepend(tmpStr.toLatin1());
 
     std::memcpy(du_reverb.r_name, tmpName.data(), NAME_CARACT);
 

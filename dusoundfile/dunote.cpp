@@ -47,8 +47,8 @@ DuNotePtr DuNote::fromBinary(const s_note &data)
     }
     verif = note->setNoteOff(data.note_off == 1) ? verif : false;
     verif = note->setNote(data.note_key) ? verif : false;
-    verif = note->setName(QString(QByteArray((char *)data.note_name, NOTE_NAME_CARACT))) ? verif : false;
-    verif = note->setCategoryName(QString(QByteArray((char *)data.cat_name, NAME_CARACT))) ? verif : false;
+    verif = note->setName(QString::fromLatin1((char *)data.note_name, NOTE_NAME_CARACT)) ? verif : false;
+    verif = note->setCategoryName(QString::fromLatin1((char *)data.cat_name, NAME_CARACT)) ? verif : false;
 
     if (!verif)
     {
@@ -97,7 +97,7 @@ QByteArray DuNote::toDuMusicBinary() const
     tmpStr = getName();
     if (tmpStr.isNull())
         return QByteArray();
-    tmpName.prepend(tmpStr.toUtf8());
+    tmpName.prepend(tmpStr.toLatin1());
 
     std::memcpy(data.note_name, tmpName.data(), NOTE_NAME_CARACT);
 
@@ -105,7 +105,7 @@ QByteArray DuNote::toDuMusicBinary() const
     tmpStr = getCategoryName();
     if (tmpStr.isNull())
         return QByteArray();
-    tmpCatName.prepend(tmpStr.toUtf8());
+    tmpCatName.prepend(tmpStr.toLatin1());
 
     std::memcpy(data.cat_name, tmpCatName.data(), NAME_CARACT);
 

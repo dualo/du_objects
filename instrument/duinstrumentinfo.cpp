@@ -143,7 +143,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const info_instr &du_ins
     DuInstrumentInfoPtr instrInfo(new DuInstrumentInfo);
     bool verif = true;
 
-    verif = instrInfo->setNameForDevice(QString(QByteArray((char *)du_instrInfo.instr_name, NAME_CARACT))) ? verif : false;
+    verif = instrInfo->setNameForDevice(QString::fromLatin1(reinterpret_cast<const char*>(du_instrInfo.instr_name), NAME_CARACT)) ? verif : false;
 
     verif = instrInfo->setKeyMapping(du_instrInfo.instr_key_map) ? verif : false;
     verif = instrInfo->setOctave(du_instrInfo.instr_octave) ? verif : false;
@@ -183,7 +183,7 @@ bool DuInstrumentInfo::toStruct(info_instr& outStruct) const
     tmpStr = getNameForDevice();
     if (tmpStr.isNull())
         return false;
-    tmpName.prepend(tmpStr.toUtf8());
+    tmpName.prepend(tmpStr.toLatin1());
 
     std::memcpy(outStruct.instr_name, tmpName.data(), NAME_CARACT);
 
@@ -221,7 +221,7 @@ bool DuInstrumentInfo::toStruct(info_instr& outStruct) const
     tmpStr = getCategory();
     if (tmpStr.isNull())
         return false;
-    tmpCategory.prepend(tmpStr.toUtf8());
+    tmpCategory.prepend(tmpStr.toLatin1());
 
     std::memcpy(outStruct.instr_cat, tmpCategory.data(), NAME_CARACT);
 

@@ -292,15 +292,15 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
 
     verif = music->setFileVersion((int)local_song.s_version_music) ? verif : false;
 
-    verif = music->setOriginalSerialNumber(QString::fromUtf8((char *)local_song.s_original_sn, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
-    verif = music->setOriginalName(QString::fromUtf8((char *)local_song.s_original_name, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
-    verif = music->setOriginalUser(QString::fromUtf8((char *)local_song.s_original_user, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
-    verif = music->setOriginalUserId(QString::fromUtf8((char *)local_song.s_original_userid, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
+    verif = music->setOriginalSerialNumber(QString::fromLatin1((char *)local_song.s_original_sn, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
+    verif = music->setOriginalName(QString::fromLatin1((char *)local_song.s_original_name, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
+    verif = music->setOriginalUser(QString::fromLatin1((char *)local_song.s_original_user, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
+    verif = music->setOriginalUserId(QString::fromLatin1((char *)local_song.s_original_userid, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
 
-    verif = music->setLastModifSerialNumber(QString::fromUtf8((char *)local_song.s_modif_sn, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
-    verif = music->setLastModifName(QString::fromUtf8((char *)local_song.s_modif_name, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
-    verif = music->setLastModifUser(QString::fromUtf8((char *)local_song.s_modif_user, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
-    verif = music->setLastModifUserId(QString::fromUtf8((char *)local_song.s_modif_userid, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
+    verif = music->setLastModifSerialNumber(QString::fromLatin1((char *)local_song.s_modif_sn, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
+    verif = music->setLastModifName(QString::fromLatin1((char *)local_song.s_modif_name, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
+    verif = music->setLastModifUser(QString::fromLatin1((char *)local_song.s_modif_user, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
+    verif = music->setLastModifUserId(QString::fromLatin1((char *)local_song.s_modif_userid, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
 
     verif = music->setSize((int)local_song.s_size) ? verif : false;
     verif = music->setMetaData((int)local_song.s_metadata) ? verif : false;
@@ -320,7 +320,7 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
     verif = music->setActiveGyroY(local_song.s_activ_gyro_Y) ? verif : false;
 
     verif = music->setSongId(local_song.s_id & 0x7FFFFFFF) ? verif : false;
-    verif = music->setSongName(QString::fromUtf8((char *)local_song.s_name, MUSIC_SONG_NAME_SIZE)) ? verif : false;
+    verif = music->setSongName(QString::fromLatin1((char *)local_song.s_name, MUSIC_SONG_NAME_SIZE)) ? verif : false;
     verif = music->setSongVersion(local_song.s_version_song & 0x7FFFFFFF) ? verif : false;
 
     verif = music->setVolume(local_song.s_volume) ? verif : false;
@@ -521,56 +521,56 @@ QByteArray DuMusic::toDuMusicBinary() const
     tmpStr = getOriginalSerialNumber();
     if (tmpStr.isNull())
         return QByteArray();
-    tmpArray.prepend(tmpStr.toUtf8());
+    tmpArray.prepend(tmpStr.toLatin1());
     std::memcpy(local_song.s_original_sn, tmpArray.constData(), MUSIC_SONG_OWNER_STR_SIZE);
 
     tmpArray.fill(0x00, MUSIC_SONG_OWNER_STR_SIZE);
     tmpStr = getOriginalName();
     if (tmpStr.isNull())
         return QByteArray();
-    tmpArray.prepend(tmpStr.toUtf8());
+    tmpArray.prepend(tmpStr.toLatin1());
     std::memcpy(local_song.s_original_name, tmpArray.constData(), MUSIC_SONG_OWNER_STR_SIZE);
 
     tmpArray.fill(0x00, MUSIC_SONG_OWNER_STR_SIZE);
     tmpStr = getOriginalUser();
     if (tmpStr.isNull())
         return QByteArray();
-    tmpArray.prepend(tmpStr.toUtf8());
+    tmpArray.prepend(tmpStr.toLatin1());
     std::memcpy(local_song.s_original_user, tmpArray.constData(), MUSIC_SONG_OWNER_STR_SIZE);
 
     tmpArray.fill(0x00, MUSIC_SONG_OWNER_STR_SIZE);
     tmpStr = getOriginalUserId();
     if (tmpStr.isNull())
         return QByteArray();
-    tmpArray.prepend(tmpStr.toUtf8());
+    tmpArray.prepend(tmpStr.toLatin1());
     std::memcpy(local_song.s_original_userid, tmpArray.constData(), MUSIC_SONG_OWNER_STR_SIZE);
 
     tmpArray.fill(0x00, MUSIC_SONG_OWNER_STR_SIZE);
     tmpStr = getLastModifSerialNumber();
     if (tmpStr.isNull())
         return QByteArray();
-    tmpArray.prepend(tmpStr.toUtf8());
+    tmpArray.prepend(tmpStr.toLatin1());
     std::memcpy(local_song.s_modif_sn, tmpArray.constData(), MUSIC_SONG_OWNER_STR_SIZE);
 
     tmpArray.fill(0x00, MUSIC_SONG_OWNER_STR_SIZE);
     tmpStr = getLastModifName();
     if (tmpStr.isNull())
         return QByteArray();
-    tmpArray.prepend(tmpStr.toUtf8());
+    tmpArray.prepend(tmpStr.toLatin1());
     std::memcpy(local_song.s_modif_name, tmpArray.constData(), MUSIC_SONG_OWNER_STR_SIZE);
 
     tmpArray.fill(0x00, MUSIC_SONG_OWNER_STR_SIZE);
     tmpStr = getLastModifUser();
     if (tmpStr.isNull())
         return QByteArray();
-    tmpArray.prepend(tmpStr.toUtf8());
+    tmpArray.prepend(tmpStr.toLatin1());
     std::memcpy(local_song.s_modif_user, tmpArray.constData(), MUSIC_SONG_OWNER_STR_SIZE);
 
     tmpArray.fill(0x00, MUSIC_SONG_OWNER_STR_SIZE);
     tmpStr = getLastModifUserId();
     if (tmpStr.isNull())
         return QByteArray();
-    tmpArray.prepend(tmpStr.toUtf8());
+    tmpArray.prepend(tmpStr.toLatin1());
     std::memcpy(local_song.s_modif_userid, tmpArray.constData(), MUSIC_SONG_OWNER_STR_SIZE);
 
 
@@ -656,7 +656,7 @@ QByteArray DuMusic::toDuMusicBinary() const
     tmpStr = getSongName();
     if (tmpStr.isNull())
         return QByteArray();
-    tmpArray.prepend(tmpStr.toUtf8());
+    tmpArray.prepend(tmpStr.toLatin1());
     std::memcpy(local_song.s_name, tmpArray.constData(), MUSIC_SONG_NAME_SIZE);
 
     tmpNum = getSongVersion();
