@@ -10,6 +10,7 @@ class DuUrl : public DuValue
 {
 public:
     explicit DuUrl(const QUrl &url = QUrl());
+    virtual ~DuUrl() = default;
 
     QUrl getUrl() const;
     bool setUrl(const QUrl &url);

@@ -21,8 +21,8 @@ DU_OBJECT(DuTrack);
 class DuTrack : public DuContainer
 {
 public:
-    explicit DuTrack();
-    ~DuTrack();
+    DuTrack();
+    ~DuTrack() = default;
 
     virtual DuObjectPtr clone() const;
 

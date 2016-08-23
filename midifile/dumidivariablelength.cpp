@@ -7,13 +7,9 @@
 
 DU_OBJECT_IMPL(DuMidiVariableLength)
 
-DuMidiVariableLength::DuMidiVariableLength(int offset) :
+DuMidiVariableLength::DuMidiVariableLength(quint32 offset) :
     DuValue(),
-    offset(offset)
-{
-}
-
-DuMidiVariableLength::~DuMidiVariableLength()
+    m_offset(offset)
 {
 }
 
@@ -40,16 +36,16 @@ QByteArray DuMidiVariableLength::toMidiBinary() const
     if (value > FOUR_BYTES_MAX_UINT_VALUE)
         return QByteArray();
 
-    array.prepend((quint8)(value & 0x7F));
+    array.prepend(static_cast<char>(value & 0x7F));
 
     if (value > ONE_BYTE_MAX_UINT_VALUE)
-        array.prepend((quint8)(((value >> 7) & 0x7F) + 0x80));
+        array.prepend(static_cast<char>(((value >> 7) & 0x7F) + 0x80));
 
     if (value > TWO_BYTES_MAX_UINT_VALUE)
-        array.prepend((quint8)(((value >> 14) & 0x7F) + 0x80));
+        array.prepend(static_cast<char>(((value >> 14) & 0x7F) + 0x80));
 
     if (value > THREE_BYTES_MAX_UINT_VALUE)
-        array.prepend((quint8)(((value >> 21) & 0x7F) + 0x80));
+        array.prepend(static_cast<char>(((value >> 21) & 0x7F) + 0x80));
 
     return array;
 }
@@ -83,7 +79,7 @@ int DuMidiVariableLength::size() const
 
 quint32 DuMidiVariableLength::getAbsolute() const
 {
-    return getOffset() + getValue().toInt();
+    return getOffset() + getValue().value<quint32>();
 }
 
 void DuMidiVariableLength::setAbsolute(quint32 delta, quint32 offset)
@@ -140,7 +136,7 @@ void DuMidiVariableLength::setAbsolute(QDataStream &stream, quint32 offset)
 
 quint32 DuMidiVariableLength::getRelative() const
 {
-    return getValue().toInt();
+    return getValue().value<quint32>();
 }
 
 void DuMidiVariableLength::setRelative(quint32 value)
@@ -151,10 +147,10 @@ void DuMidiVariableLength::setRelative(quint32 value)
 
 quint32 DuMidiVariableLength::getOffset() const
 {
-    return offset;
+    return m_offset;
 }
 
 void DuMidiVariableLength::setOffset(quint32 value)
 {
-    offset = value;
+    m_offset = value;
 }

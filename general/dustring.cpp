@@ -17,10 +17,6 @@ DuString::DuString(int maxSize) :
     setString(QString());
 }
 
-DuString::~DuString()
-{
-}
-
 DuObjectPtr DuString::clone() const
 {
     return DuStringPtr(new DuString(*this));

@@ -15,10 +15,6 @@ DuObject::DuObject(const DuObject &other)
     Q_UNUSED(other)
 }
 
-DuObject::~DuObject()
-{
-}
-
 
 QByteArray DuObject::toMidiBinary() const
 {
@@ -35,7 +31,7 @@ QHttpPart DuObject::toHttpPart(const QString &name) const
 
 QDebug DuObject::debugPrint(QDebug dbg) const
 {
-    dbg.nospace() << "DuObject(" << (void*)this << ")";
+    dbg.nospace() << "DuObject(" << reinterpret_cast<const void*>(this) << ")";
 
     return dbg.space();
 }

@@ -25,6 +25,7 @@ public:
 
 public:
     DuSound();
+    virtual ~DuSound() = default;
 
     virtual DuObjectPtr clone() const override;
 

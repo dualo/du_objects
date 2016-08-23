@@ -44,10 +44,6 @@ DuMixer::DuMixer() :
                            FX_MIX_CHORUS_MAXVALUE, FX_MIX_CHORUS_MINVALUE));
 }
 
-DuMixer::~DuMixer()
-{
-}
-
 DuObjectPtr DuMixer::clone() const
 {
     return DuMixerPtr(new DuMixer(*this));
@@ -83,52 +79,52 @@ DuMixerPtr DuMixer::fromDuMusicBinary(const FX_mix &du_mixer)
 QByteArray DuMixer::toDuMusicBinary() const
 {
     FX_mix du_mixer;
-    std::memset((char*)&du_mixer, 0, size());
+    std::memset(&du_mixer, 0, static_cast<size_t>(size()));
     int tmp = 0;
 
 
     tmp = getInputGain();
     if (tmp == -1)
         return QByteArray();
-    du_mixer.m_inputgain = tmp;
+    du_mixer.m_inputgain = static_cast<quint8>(tmp);
 
     tmp = getLowCutFilterFrequency();
     if (tmp == -1)
         return QByteArray();
-    du_mixer.m_locutfilterfrequency = tmp;
+    du_mixer.m_locutfilterfrequency = static_cast<quint8>(tmp);
 
     tmp = getHighCutFilterFrequency();
     if (tmp == -1)
         return QByteArray();
-    du_mixer.m_hicutfilterfrequency = tmp;
+    du_mixer.m_hicutfilterfrequency = static_cast<quint8>(tmp);
 
     tmp = getOutputLevel();
     if (tmp == -1)
         return QByteArray();
-    du_mixer.m_ouputlevel = tmp;
+    du_mixer.m_ouputlevel = static_cast<quint8>(tmp);
 
     tmp = getOutputPanning();
     if (tmp == -1)
         return QByteArray();
-    du_mixer.m_outputpanning = tmp;
+    du_mixer.m_outputpanning = static_cast<quint8>(tmp);
 
     tmp = getOutputFrontRear();
     if (tmp == -1)
         return QByteArray();
-    du_mixer.m_ouputfrontrear = tmp;
+    du_mixer.m_ouputfrontrear = static_cast<quint8>(tmp);
 
     tmp = getSendToReverb();
     if (tmp == -1)
         return QByteArray();
-    du_mixer.m_sendtoreverb = tmp;
+    du_mixer.m_sendtoreverb = static_cast<quint8>(tmp);
 
     tmp = getSendToChorus();
     if (tmp == -1)
         return QByteArray();
-    du_mixer.m_sendtochorus = tmp;
+    du_mixer.m_sendtochorus = static_cast<quint8>(tmp);
 
 
-    return QByteArray((char *)&(du_mixer), size());
+    return QByteArray(reinterpret_cast<char*>(&du_mixer), size());
 }
 
 

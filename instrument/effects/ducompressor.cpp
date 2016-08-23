@@ -41,10 +41,6 @@ DuCompressor::DuCompressor() :
                            FX_COMP_KNEE_MAXVALUE, FX_COMP_KNEE_MINVALUE));
 }
 
-DuCompressor::~DuCompressor()
-{
-}
-
 DuObjectPtr DuCompressor::clone() const
 {
     return DuCompressorPtr(new DuCompressor(*this));
@@ -78,7 +74,7 @@ DuCompressorPtr DuCompressor::fromDuMusicBinary(const FX_compressor &du_compress
 QByteArray DuCompressor::toDuMusicBinary() const
 {
     FX_compressor du_compressor;
-    std::memset((char*)&du_compressor, 0, size());
+    std::memset(&du_compressor, 0, static_cast<size_t>(size()));
 
     int tmpNum = 0;
 
@@ -86,40 +82,40 @@ QByteArray DuCompressor::toDuMusicBinary() const
     tmpNum = getOnOff();
     if (tmpNum == -1)
         return QByteArray();
-    du_compressor.c_on_off = tmpNum;
+    du_compressor.c_on_off = static_cast<quint8>(tmpNum);
 
     tmpNum = getAttackTime();
     if (tmpNum == -1)
         return QByteArray();
-    du_compressor.c_attacktime = tmpNum;
+    du_compressor.c_attacktime = static_cast<quint8>(tmpNum);
 
     tmpNum = getReleaseTime();
     if (tmpNum == -1)
         return QByteArray();
-    du_compressor.c_releasetime = tmpNum;
+    du_compressor.c_releasetime = static_cast<quint8>(tmpNum);
 
     tmpNum = getThreshold();
     if (tmpNum == -1)
         return QByteArray();
-    du_compressor.c_threshold = tmpNum;
+    du_compressor.c_threshold = static_cast<quint8>(tmpNum);
 
     tmpNum = getRatio();
     if (tmpNum == -1)
         return QByteArray();
-    du_compressor.c_ratio = tmpNum;
+    du_compressor.c_ratio = static_cast<quint8>(tmpNum);
 
     tmpNum = getBoost();
     if (tmpNum == -1)
         return QByteArray();
-    du_compressor.c_boost = tmpNum;
+    du_compressor.c_boost = static_cast<quint8>(tmpNum);
 
     tmpNum = getKneeType();
     if (tmpNum == -1)
         return QByteArray();
-    du_compressor.c_kneetype = tmpNum;
+    du_compressor.c_kneetype = static_cast<quint8>(tmpNum);
 
 
-    return QByteArray((char *)&(du_compressor), size());
+    return QByteArray(reinterpret_cast<char*>(&du_compressor), size());
 }
 
 

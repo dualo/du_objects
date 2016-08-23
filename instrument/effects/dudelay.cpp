@@ -41,10 +41,6 @@ DuDelay::DuDelay() :
                            FX_DELAY_HDAMP_MAXVALUE, FX_DELAY_HDAMP_MINVALUE));
 }
 
-DuDelay::~DuDelay()
-{
-}
-
 DuObjectPtr DuDelay::clone() const
 {
     return DuDelayPtr(new DuDelay(*this));
@@ -79,7 +75,7 @@ DuDelayPtr DuDelay::fromDuMusicBinary(const FX_delay &du_delay)
 QByteArray DuDelay::toDuMusicBinary() const
 {
     FX_delay du_delay;
-    std::memset((char*)&du_delay, 0, size());
+    std::memset(&du_delay, 0, static_cast<size_t>(size()));
 
     int tmpNum = 0;
 
@@ -87,40 +83,40 @@ QByteArray DuDelay::toDuMusicBinary() const
     tmpNum = getOnOff();
     if (tmpNum == -1)
         return QByteArray();
-    du_delay.d_on_off = tmpNum;
+    du_delay.d_on_off = static_cast<quint8>(tmpNum);
 
     tmpNum = getMode();
     if (tmpNum == -1)
         return QByteArray();
-    du_delay.d_mode = tmpNum;
+    du_delay.d_mode = static_cast<quint8>(tmpNum);
 
     tmpNum = getPreLowPassFilter();
     if (tmpNum == -1)
         return QByteArray();
-    du_delay.d_prelp = tmpNum;
+    du_delay.d_prelp = static_cast<quint8>(tmpNum);
 
     tmpNum = getEffectLevel();
     if (tmpNum == -1)
         return QByteArray();
-    du_delay.d_level = tmpNum;
+    du_delay.d_level = static_cast<quint8>(tmpNum);
 
     tmpNum = getEffectTime();
     if (tmpNum == -1)
         return QByteArray();
-    du_delay.d_time = tmpNum;
+    du_delay.d_time = static_cast<quint8>(tmpNum);
 
     tmpNum = getFeedback();
     if (tmpNum == -1)
         return QByteArray();
-    du_delay.d_feedback = tmpNum;
+    du_delay.d_feedback = static_cast<quint8>(tmpNum);
 
     tmpNum = getHDAmp();
     if (tmpNum == -1)
         return QByteArray();
-    du_delay.d_hdamp = tmpNum;
+    du_delay.d_hdamp = static_cast<quint8>(tmpNum);
 
 
-    return QByteArray((char *)&(du_delay), size());
+    return QByteArray(reinterpret_cast<char*>(&du_delay), size());
 }
 
 

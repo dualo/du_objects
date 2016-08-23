@@ -41,10 +41,6 @@ DuDistortion::DuDistortion() :
                            FX_DISTO_DRIVE_MAXVALUE, FX_DISTO_DRIVE_MINVALUE));
 }
 
-DuDistortion::~DuDistortion()
-{
-}
-
 DuObjectPtr DuDistortion::clone() const
 {
     return DuDistortionPtr(new DuDistortion(*this));
@@ -80,7 +76,7 @@ DuDistortionPtr DuDistortion::fromDuMusicBinary(const FX_distortion &du_distorti
 QByteArray DuDistortion::toDuMusicBinary() const
 {
     FX_distortion du_distortion;
-    std::memset((char*)&du_distortion, 0, size());
+    std::memset(&du_distortion, 0, static_cast<size_t>(size()));
 
     int tmpNum = 0;
 
@@ -88,40 +84,40 @@ QByteArray DuDistortion::toDuMusicBinary() const
     tmpNum = getOnOff();
     if (tmpNum == -1)
         return QByteArray();
-    du_distortion.d_on_off = tmpNum;
+    du_distortion.d_on_off = static_cast<quint8>(tmpNum);
 
     tmpNum = getPreGain();
     if (tmpNum == -1)
         return QByteArray();
-    du_distortion.d_pre_gain = tmpNum;
+    du_distortion.d_pre_gain = static_cast<quint8>(tmpNum);
 
     tmpNum = getEffectType();
     if (tmpNum == -1)
         return QByteArray();
-    du_distortion.d_type = tmpNum;
+    du_distortion.d_type = static_cast<quint8>(tmpNum);
 
     tmpNum = getLowPassFilterFrequency();
     if (tmpNum == -1)
         return QByteArray();
-    du_distortion.d_lowpassfilterfreq = tmpNum;
+    du_distortion.d_lowpassfilterfreq = static_cast<quint8>(tmpNum);
 
     tmpNum = getLowPassFilterResonance();
     if (tmpNum == -1)
         return QByteArray();
-    du_distortion.d_lowpassfilterres = tmpNum;
+    du_distortion.d_lowpassfilterres = static_cast<quint8>(tmpNum);
 
     tmpNum = getPostGain();
     if (tmpNum == -1)
         return QByteArray();
-    du_distortion.d_postgain = tmpNum;
+    du_distortion.d_postgain = static_cast<quint8>(tmpNum);
 
     tmpNum = getDrive();
     if (tmpNum == -1)
         return QByteArray();
-    du_distortion.d_drive = tmpNum;
+    du_distortion.d_drive = static_cast<quint8>(tmpNum);
 
 
-    return QByteArray((char *)&(du_distortion), size());
+    return QByteArray(reinterpret_cast<char*>(&du_distortion), size());
 }
 
 

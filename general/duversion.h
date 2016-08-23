@@ -10,7 +10,8 @@ class DuVersion : public DuString
 {
 public:
     explicit DuVersion(const QString& version);
-    DuVersion(int major = 0, int minor = 0, int patch = 0);
+    explicit DuVersion(int major = 0, int minor = 0, int patch = 0);
+    virtual ~DuVersion() = default;
 
     virtual DuObjectPtr clone() const;
 

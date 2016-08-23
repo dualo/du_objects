@@ -51,10 +51,6 @@ DuLoop::DuLoop() :
     addChild(KeyEvents, new DuArray<DuEvent>(RECORD_SAMPLEBUFFERSIZE));
 }
 
-DuLoop::~DuLoop()
-{
-}
-
 DuObjectPtr DuLoop::clone() const
 {
     return DuLoopPtr(new DuLoop(*this));
@@ -296,7 +292,7 @@ QByteArray DuLoop::toDuMusicBinary() const
 
     int tmpNum = 0;
 
-    std::memset((char*)&du_loop, 0, size());
+    std::memset(&du_loop, 0, static_cast<size_t>(size()));
 
 
     const DuMusicInstrumentConstPtr &instrument = getInstrument();
@@ -307,36 +303,36 @@ QByteArray DuLoop::toDuMusicBinary() const
     if (instrumentArray.isNull())
         return QByteArray();
 
-    std::memcpy(&(du_loop.l_instr), instrumentArray.data(), instrument->size());
+    std::memcpy(&(du_loop.l_instr), instrumentArray.data(), static_cast<size_t>(instrument->size()));
 
 
     tmpNum = getState();
     if (tmpNum == -1)
         return QByteArray();
-    du_loop.l_state = tmpNum;
+    du_loop.l_state = static_cast<quint8>(tmpNum);
 
     tmpNum = getDurationModifier();
     if (tmpNum == -1)
         return QByteArray();
-    du_loop.l_loopmod = tmpNum;
+    du_loop.l_loopmod = static_cast<quint8>(tmpNum);
 
     tmpNum = getScoreDisplay();
     if (tmpNum == -1)
         return QByteArray();
-    du_loop.l_learn = tmpNum;
+    du_loop.l_learn = static_cast<quint8>(tmpNum);
 
     tmpNum = getMidiOutChannel();
     if (tmpNum == -1)
         return QByteArray();
-    du_loop.l_midioutchannel = tmpNum;
+    du_loop.l_midioutchannel = static_cast<quint8>(tmpNum);
 
     tmpNum = countEvents();
     if(tmpNum == -1)
         return QByteArray();
-    du_loop.l_numsample = tmpNum;
+    du_loop.l_numsample = static_cast<quint16>(tmpNum);
 
 
-    return QByteArray((char *)&(du_loop), size());
+    return QByteArray(reinterpret_cast<char*>(&du_loop), size());
 }
 
 DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
@@ -478,8 +474,8 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
 
         pcEvent->setRunningStatus(false);
         pcEvent->setType(DuMidiChannelEvent::ProgramChange);
-        pcEvent->setChannel((quint8)midiChannel);
-        pcEvent->setValue((quint8)instrPC);
+        pcEvent->setChannel(static_cast<quint8>(midiChannel));
+        pcEvent->setValue(static_cast<quint8>(instrPC));
 
         midiEvents->append(pcEvent);
         prevType = DuMidiChannelEvent::ProgramChange;
@@ -491,9 +487,9 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
 
         c0Event->setRunningStatus(false);
         c0Event->setType(DuMidiChannelEvent::ControlChange);
-        c0Event->setChannel((quint8)midiChannel);
+        c0Event->setChannel(static_cast<quint8>(midiChannel));
         c0Event->setKey(0x00);
-        c0Event->setValue((quint8)instrC0);
+        c0Event->setValue(static_cast<quint8>(instrC0));
 
         midiEvents->append(c0Event);
         prevType = DuMidiChannelEvent::ControlChange;
@@ -524,7 +520,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
             return DuMidiTrackPtr();
         }
 
-        quint32 tmpTime = (quint32)event->getTime();
+        quint32 tmpTime = static_cast<quint32>(event->getTime());
         DuMidiChannelEventPtr channelEvent;
 
         if (tmpTime < prevTime)
@@ -534,7 +530,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
                                                        isPercu, instrKeyMap);
             if (channelEvent != NULL)
             {
-                channelEvent->setTime((quint32)durationRef * (quint8)durationMod
+                channelEvent->setTime(static_cast<quint32>(durationRef) * static_cast<quint8>(durationMod)
                                       + tmpTime - prevTime, prevTime);
             }
         }
@@ -555,11 +551,11 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
         }
         else
         {
-            channelEvent->setChannel((quint8)midiChannel);
+            channelEvent->setChannel(static_cast<quint8>(midiChannel));
 
             midiEvents->append(channelEvent);
 
-            prevTime = channelEvent->getTime();
+            prevTime = static_cast<quint32>(channelEvent->getTime());
             prevType = channelEvent->getType();
         }
     }

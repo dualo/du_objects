@@ -49,7 +49,7 @@ DuProfilePtr DuProfile::fromJson(const QJsonObject &jsonProfile, int recursionLe
     outProfile->setLastname(jsonProfile.value(QStringLiteral("Lastname")).toString());
     outProfile->setPseudo(jsonProfile.value(QStringLiteral("username")).toString());
     outProfile->setMail(jsonProfile.value(QStringLiteral("email")).toString());
-    outProfile->setCreationDate(QDateTime::fromTime_t(jsonProfile.value(QStringLiteral("time_created")).toInt()));
+    outProfile->setCreationDate(QDateTime::fromTime_t(static_cast<uint>(jsonProfile.value(QStringLiteral("time_created")).toInt())));
     outProfile->setGUID(jsonProfile.value(QStringLiteral("global_id")).toInt());
 
     QString role = jsonProfile.value(QStringLiteral("role")).toString();

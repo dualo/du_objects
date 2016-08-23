@@ -12,10 +12,6 @@ DuBinaryData::DuBinaryData(int maxSize) :
     resize(0);
 }
 
-DuBinaryData::~DuBinaryData()
-{
-}
-
 
 DuObjectPtr DuBinaryData::clone() const
 {

@@ -132,7 +132,7 @@ DuObjectPtr DuMusic::clone() const
 DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
 {
     // Migration
-    MUSIC_MIGRATION_ERROR result = (MUSIC_MIGRATION_ERROR) migrate_music(&du_music);
+    MUSIC_MIGRATION_ERROR result = static_cast<MUSIC_MIGRATION_ERROR>(migrate_music(&du_music));
     switch (result)
     {
         case MUSIC_MIGRATION_SUCCESS:
@@ -183,7 +183,7 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
 
     const music_song& local_song = du_music.local_song;
 
-    uint fileSampleSize = fileSize - MUSIC_SONG_SIZE;
+    uint fileSampleSize = static_cast<uint>(fileSize - MUSIC_SONG_SIZE);
 
     if (fileSampleSize != local_song.s_totalsample * MUSIC_SAMPLE_SIZE)
     {
@@ -290,7 +290,7 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
 
     bool verif = true;
 
-    verif = music->setFileVersion((int)local_song.s_version_music) ? verif : false;
+    verif = music->setFileVersion(static_cast<int>(local_song.s_version_music)) ? verif : false;
 
     verif = music->setOriginalSerialNumber(DuString::fromStruct(local_song.s_original_sn, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
     verif = music->setOriginalName(DuString::fromStruct(local_song.s_original_name, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
@@ -302,8 +302,8 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
     verif = music->setLastModifUser(DuString::fromStruct(local_song.s_modif_user, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
     verif = music->setLastModifUserId(DuString::fromStruct(local_song.s_modif_userid, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
 
-    verif = music->setSize((int)local_song.s_size) ? verif : false;
-    verif = music->setMetaData((int)local_song.s_metadata) ? verif : false;
+    verif = music->setSize(static_cast<int>(local_song.s_size)) ? verif : false;
+    verif = music->setMetaData(static_cast<int>(local_song.s_metadata)) ? verif : false;
 
     verif = music->setPlayhead(local_song.s_playhead) ? verif : false;
     verif = music->setTranspose(local_song.s_transpose) ? verif : false;
@@ -329,8 +329,8 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
     verif = music->setReferenceTrack(local_song.s_reftrack) ? verif : false;
     verif = music->setCurrentTrack(local_song.s_currenttrack) ? verif : false;
     verif = music->setOffset(local_song.s_decaltempo) ? verif : false;
-    verif = music->setReferenceLoopDuration((int)local_song.s_looptimer) ? verif : false;
-    verif = music->setLeds(QByteArray((char *)local_song.s_leds, NUM_LED_VALUE)) ? verif : false;
+    verif = music->setReferenceLoopDuration(static_cast<int>(local_song.s_looptimer)) ? verif : false;
+    verif = music->setLeds(QByteArray(reinterpret_cast<const char*>(local_song.s_leds), NUM_LED_VALUE)) ? verif : false;
 
     verif = music->setSwing(local_song.s_swing) ? verif : false;
     verif = music->setQuantification(local_song.s_quantification) ? verif : false;
@@ -368,7 +368,7 @@ DuMusicPtr DuMusic::fromBinary(const QByteArray &data)
 
     QScopedPointer<s_total_buffer> temp_total_buffer(new s_total_buffer);
 
-    std::memcpy((char *)(temp_total_buffer.data()), data.constData(), (size_t) dataSize);
+    std::memcpy(reinterpret_cast<char*>(temp_total_buffer.data()), data.constData(), static_cast<size_t>(dataSize));
 
     return DuMusic::fromDuMusicBinary(*temp_total_buffer, dataSize);
 }
@@ -514,7 +514,7 @@ QByteArray DuMusic::toDuMusicBinary() const
     tmpNum = getFileVersion();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_version_music = (uint32_t) tmpNum;
+    local_song.s_version_music = static_cast<quint32>(tmpNum);
 
 
     tmpArray.fill(0x00, MUSIC_SONG_OWNER_STR_SIZE);
@@ -577,80 +577,80 @@ QByteArray DuMusic::toDuMusicBinary() const
     tmpNum = getSize();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_size = (uint32_t) tmpNum;
+    local_song.s_size = static_cast<quint32>(tmpNum);
 
     tmpNum = getMetaData();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_metadata = (uint32_t) tmpNum;
+    local_song.s_metadata = static_cast<quint32>(tmpNum);
 
 
     tmpNum = getPlayhead();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_playhead = (uint8_t) tmpNum;
+    local_song.s_playhead = static_cast<quint8>(tmpNum);
 
     tmpNum = getTranspose();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_transpose = (uint8_t) tmpNum;
+    local_song.s_transpose = static_cast<quint8>(tmpNum);
 
     tmpNum = getState();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_state = (uint8_t) tmpNum;
+    local_song.s_state = static_cast<quint8>(tmpNum);
 
 
     tmpNum = getDirectionGyroP();
     if (tmpNum == 0)
         return QByteArray();
-    local_song.s_direction_gyro_P = (int8_t) tmpNum;
+    local_song.s_direction_gyro_P = static_cast<qint8>(tmpNum);
 
     tmpNum = getDirectionGyroR();
     if (tmpNum == 0)
         return QByteArray();
-    local_song.s_direction_gyro_R = (int8_t) tmpNum;
+    local_song.s_direction_gyro_R = static_cast<qint8>(tmpNum);
 
     tmpNum = getDirectionGyroY();
     if (tmpNum == 0)
         return QByteArray();
-    local_song.s_direction_gyro_Y = (int8_t) tmpNum;
+    local_song.s_direction_gyro_Y = static_cast<qint8>(tmpNum);
 
     tmpNum = getActiveAftertouch();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_activ_aftertouch = (uint16_t) tmpNum;
+    local_song.s_activ_aftertouch = static_cast<quint16>(tmpNum);
 
     tmpNum = getActiveSliderL();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_activ_slider_L = (uint16_t) tmpNum;
+    local_song.s_activ_slider_L = static_cast<quint16>(tmpNum);
 
     tmpNum = getActiveSliderR();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_activ_slider_R = (uint16_t) tmpNum;
+    local_song.s_activ_slider_R = static_cast<quint16>(tmpNum);
 
     tmpNum = getActiveGyroP();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_activ_gyro_P = (uint16_t) tmpNum;
+    local_song.s_activ_gyro_P = static_cast<quint16>(tmpNum);
 
     tmpNum = getActiveGyroR();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_activ_gyro_R = (uint16_t) tmpNum;
+    local_song.s_activ_gyro_R = static_cast<quint16>(tmpNum);
 
     tmpNum = getActiveGyroY();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_activ_gyro_Y = (uint16_t) tmpNum;
+    local_song.s_activ_gyro_Y = static_cast<quint16>(tmpNum);
 
 
     tmpNum = getSongId();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_id = (uint32_t) tmpNum;
+    local_song.s_id = static_cast<quint32>(tmpNum);
 
     tmpArray.fill(0x00, MUSIC_SONG_NAME_SIZE);
     tmpStr = getSongName();
@@ -662,43 +662,43 @@ QByteArray DuMusic::toDuMusicBinary() const
     tmpNum = getSongVersion();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_version_song = (uint32_t) tmpNum;
+    local_song.s_version_song = static_cast<quint32>(tmpNum);
 
 
     tmpNum = getVolume();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_volume = (uint8_t) tmpNum;
+    local_song.s_volume = static_cast<quint8>(tmpNum);
 
     tmpNum = getTempo();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_tempo = (uint8_t) tmpNum;
+    local_song.s_tempo = static_cast<quint8>(tmpNum);
 
     tmpNum = getClickVolume();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_voltempo = (uint8_t) tmpNum;
+    local_song.s_voltempo = static_cast<quint8>(tmpNum);
 
     tmpNum = getReferenceTrack();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_reftrack = (uint8_t) tmpNum;
+    local_song.s_reftrack = static_cast<quint8>(tmpNum);
 
     tmpNum = getCurrentTrack();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_currenttrack = (uint8_t) tmpNum;
+    local_song.s_currenttrack = static_cast<quint8>(tmpNum);
 
     tmpNum = getOffset();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_decaltempo = (uint8_t) tmpNum;
+    local_song.s_decaltempo = static_cast<quint8>(tmpNum);
 
     tmpNum = getReferenceLoopDuration();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_looptimer = (uint32_t) tmpNum;
+    local_song.s_looptimer = static_cast<quint32>(tmpNum);
 
     tmpArray = getLeds();
     if (tmpArray.isNull())
@@ -712,39 +712,39 @@ QByteArray DuMusic::toDuMusicBinary() const
     const QByteArray &mixerArray = mixer->toDuMusicBinary();
     if (mixerArray.isNull())
         return QByteArray();
-    std::memcpy(&(local_song.s_mix), mixerArray.constData(), (size_t) mixerArray.size());
+    std::memcpy(&(local_song.s_mix), mixerArray.constData(), static_cast<size_t>(mixerArray.size()));
 
 
     tmpNum = getSwing();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_swing = (uint8_t) tmpNum;
+    local_song.s_swing = static_cast<quint8>(tmpNum);
 
     tmpNum = getQuantification();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_quantification = (uint8_t) tmpNum;
+    local_song.s_quantification = static_cast<quint8>(tmpNum);
 
     tmpNum = getScale();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_displaynote = (uint8_t) tmpNum;
+    local_song.s_displaynote = static_cast<quint8>(tmpNum);
 
     tmpNum = getTonality();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_scaletonality = (uint8_t) tmpNum;
+    local_song.s_scaletonality = static_cast<quint8>(tmpNum);
 
     tmpNum = getTimeSignature();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_timesignature = (uint8_t) tmpNum;
+    local_song.s_timesignature = static_cast<quint8>(tmpNum);
 
 
     tmpNum = getReverbPreset();
     if (tmpNum == -1)
         return QByteArray();
-    local_song.s_reverb_preset = (uint8_t) tmpNum;
+    local_song.s_reverb_preset = static_cast<quint8>(tmpNum);
 
     const DuReverbConstPtr &reverb = getReverb();
     if (reverb == NULL)
@@ -752,7 +752,7 @@ QByteArray DuMusic::toDuMusicBinary() const
     const QByteArray &reverbArray = reverb->toDuMusicBinary();
     if (reverbArray.isNull())
         return QByteArray();
-    std::memcpy(&(local_song.s_reverb), reverbArray.constData(), (size_t) reverbArray.size());
+    std::memcpy(&(local_song.s_reverb), reverbArray.constData(), static_cast<size_t>(reverbArray.size()));
 
 
     const DuArrayConstPtr<DuTrack> &tracks = getTracks();
@@ -761,7 +761,7 @@ QByteArray DuMusic::toDuMusicBinary() const
     const QByteArray &tracksArray = tracks->toDuMusicBinary();
     if (tracksArray.isNull())
         return QByteArray();
-    std::memcpy(&(local_song.s_track), tracksArray.constData(), (size_t) tracksArray.size());
+    std::memcpy(&(local_song.s_track), tracksArray.constData(), static_cast<size_t>(tracksArray.size()));
 
 
     QByteArray tmpLocalBuffer;
@@ -793,10 +793,10 @@ QByteArray DuMusic::toDuMusicBinary() const
                 return QByteArray();
 
             music_loop *tmp_loop = &(local_song.s_track[i].t_loop[j]);
-            tmp_loop->l_numsample = (uint16_t) tmp;
+            tmp_loop->l_numsample = static_cast<quint16>(tmp);
 
             if (tmp > 0)
-                tmp_loop->l_adress = (uint32_t) eventTotal * MUSIC_SAMPLE_SIZE;
+                tmp_loop->l_adress = static_cast<quint32>(eventTotal) * MUSIC_SAMPLE_SIZE;
             else
                 tmp_loop->l_adress = 0;
 
@@ -809,12 +809,12 @@ QByteArray DuMusic::toDuMusicBinary() const
         }
     }
 
-    local_song.s_totalsample = (uint16_t) eventTotal;
+    local_song.s_totalsample = static_cast<quint16>(eventTotal);
 
-    std::memcpy(du_music->local_buffer, tmpLocalBuffer.constData(), (size_t) eventTotal * MUSIC_SAMPLE_SIZE);
+    std::memcpy(du_music->local_buffer, tmpLocalBuffer.constData(), static_cast<size_t>(eventTotal) * MUSIC_SAMPLE_SIZE);
 
 
-    return QByteArray((char*)du_music.data(), musicSize);
+    return QByteArray(reinterpret_cast<char*>(du_music.data()), musicSize);
 }
 
 
@@ -878,14 +878,14 @@ QByteArray DuMusic::toMidiBinary() const
 
     DuMidiMetaEventPtr tempoEvent(new DuMidiMetaEvent());
 
-    tempoEvent->setTempo((quint8)tempo);
+    tempoEvent->setTempo(static_cast<quint8>(tempo));
     tempoTrack->appendEvent(tempoEvent);
 
     if (timeSig > 0 && timeSig < 5)
     {
         DuMidiMetaEventPtr timeSigEvent(new DuMidiMetaEvent());
 
-        timeSigEvent->setTimeSignature((quint8)timeSig + 1);
+        timeSigEvent->setTimeSignature(static_cast<quint8>(timeSig) + 1);
         tempoTrack->appendEvent(timeSigEvent);
     }
 
@@ -893,7 +893,7 @@ QByteArray DuMusic::toMidiBinary() const
     {
         DuMidiMetaEventPtr keySigEvent(new DuMidiMetaEvent());
 
-        keySigEvent->setKeySignature(((quint8)tonality + 11) % 12, (scale == 2));
+        keySigEvent->setKeySignature((static_cast<quint8>(tonality) + 11) % 12, (scale == 2));
         tempoTrack->appendEvent(keySigEvent);
     }
 

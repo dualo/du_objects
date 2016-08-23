@@ -12,8 +12,8 @@ DU_OBJECT(DuEffectSettings);
 class DuEffectSettings : public DuContainer
 {
 public:
-    explicit DuEffectSettings();
-    virtual ~DuEffectSettings();
+    DuEffectSettings();
+    virtual ~DuEffectSettings() = default;
 
     virtual DuObjectPtr clone() const;
 };

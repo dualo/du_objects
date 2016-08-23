@@ -23,8 +23,8 @@ DU_OBJECT(DuMidiTrack);
 class DuMidiTrack : public DuContainer
 {
 public:
-    explicit DuMidiTrack();
-    ~DuMidiTrack();
+    DuMidiTrack();
+    virtual ~DuMidiTrack() = default;
 
     DuObjectPtr clone() const;
 

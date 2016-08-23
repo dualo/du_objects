@@ -34,8 +34,8 @@ public:
     static QStringList getCategoriesFromType(int type);
 
 
-    explicit DuInstrumentInfo();
-    ~DuInstrumentInfo();
+    DuInstrumentInfo();
+    virtual ~DuInstrumentInfo() = default;
 
     virtual DuObjectPtr clone() const;
 

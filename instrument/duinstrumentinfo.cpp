@@ -128,10 +128,6 @@ DuInstrumentInfo::DuInstrumentInfo() :
              new DuNumeric(0x0000, 2, 0xFFFF, 0x0000));
 }
 
-DuInstrumentInfo::~DuInstrumentInfo()
-{
-}
-
 DuObjectPtr DuInstrumentInfo::clone() const
 {
     return DuInstrumentInfoPtr(new DuInstrumentInfo(*this));
@@ -148,8 +144,8 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const info_instr &du_ins
     verif = instrInfo->setKeyMapping(du_instrInfo.instr_key_map) ? verif : false;
     verif = instrInfo->setOctave(du_instrInfo.instr_octave) ? verif : false;
 
-    verif = instrInfo->setUserID((int) du_instrInfo.instr_user_id) ? verif : false;
-    verif = instrInfo->setID((int) du_instrInfo.instr_id) ? verif : false;
+    verif = instrInfo->setUserID(static_cast<int>(du_instrInfo.instr_user_id)) ? verif : false;
+    verif = instrInfo->setID(static_cast<int>(du_instrInfo.instr_id)) ? verif : false;
 
     verif = instrInfo->setActiveNoteOff(du_instrInfo.instr_noteoff == 0) ? verif : false;
 
@@ -157,10 +153,10 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const info_instr &du_ins
 
     verif = instrInfo->setRelativeVolume(du_instrInfo.instr_relvolume) ? verif : false;
 
-    verif = instrInfo->setDreamFormatId((DreamFormat)du_instrInfo.format_id) ? verif : false;
+    verif = instrInfo->setDreamFormatId(static_cast<DreamFormat>(du_instrInfo.format_id)) ? verif : false;
 
-    verif = instrInfo->setInstrType((INSTRUMENT_TYPE)du_instrInfo.instr_type) ? verif : false;
-    verif = instrInfo->setInstrVersion((int) du_instrInfo.instr_version) ? verif : false;
+    verif = instrInfo->setInstrType(static_cast<INSTRUMENT_TYPE>(du_instrInfo.instr_type)) ? verif : false;
+    verif = instrInfo->setInstrVersion(static_cast<int>(du_instrInfo.instr_version)) ? verif : false;
     verif = instrInfo->setHardInstrVersion(du_instrInfo.HW_instr_version) ? verif : false;
     verif = instrInfo->setSoftInstrVersion(du_instrInfo.SW_instr_version) ? verif : false;
 
@@ -177,9 +173,9 @@ bool DuInstrumentInfo::toStruct(info_instr& outStruct) const
     QString tmpStr;
     int tmpNum = 0;
 
-    std::memset((char*)&outStruct, 0, (size_t) size());
+    std::memset(&outStruct, 0, static_cast<size_t>(size()));
 
-    QByteArray tmpName(NAME_CARACT, (char)0x00);
+    QByteArray tmpName(NAME_CARACT, 0x00);
     tmpStr = getNameForDevice();
     if (tmpStr.isNull())
         return false;
@@ -190,34 +186,34 @@ bool DuInstrumentInfo::toStruct(info_instr& outStruct) const
     tmpNum = getProgramChangeFromCategoryName(getCategory());
     if (tmpNum == -1)
         return false;
-    outStruct.instr_midi_pc = (uint8_t) tmpNum;
+    outStruct.instr_midi_pc = static_cast<quint8>(tmpNum);
 
     tmpNum = getKeyMapping();
     if (tmpNum == -1)
         return false;
-    outStruct.instr_key_map = (uint8_t) tmpNum;
+    outStruct.instr_key_map = static_cast<quint8>(tmpNum);
 
     tmpNum = getOctave();
     if (tmpNum == -1)
         return false;
-    outStruct.instr_octave = (uint8_t) tmpNum;
+    outStruct.instr_octave = static_cast<quint8>(tmpNum);
 
     tmpNum = getUserID();
     if (tmpNum == -1)
         return false;
-    outStruct.instr_user_id = (uint32_t) tmpNum;
+    outStruct.instr_user_id = static_cast<quint32>(tmpNum);
 
     tmpNum = getID();
     if (tmpNum == -1)
         return false;
-    outStruct.instr_id = (uint32_t) tmpNum;
+    outStruct.instr_id = static_cast<quint32>(tmpNum);
 
     tmpNum = getActiveNoteOff() ? 0 : 1;
     if (tmpNum == -1)
         return false;
-    outStruct.instr_noteoff = (uint8_t) tmpNum;
+    outStruct.instr_noteoff = static_cast<quint8>(tmpNum);
 
-    QByteArray tmpCategory(NAME_CARACT, (char)0x00);
+    QByteArray tmpCategory(NAME_CARACT, 0x00);
     tmpStr = getCategory();
     if (tmpStr.isNull())
         return false;
@@ -228,32 +224,32 @@ bool DuInstrumentInfo::toStruct(info_instr& outStruct) const
     tmpNum = getRelativeVolume();
     if (tmpNum == -1)
         return false;
-    outStruct.instr_relvolume = (uint8_t) tmpNum;
+    outStruct.instr_relvolume = static_cast<quint8>(tmpNum);
 
     DreamFormat tmpFormat = getDreamFormatId();
     if (tmpFormat == FORMAT_ERROR)
         return false;
-    outStruct.format_id = (uint8_t)tmpFormat;
+    outStruct.format_id = static_cast<quint8>(tmpFormat);
 
     INSTRUMENT_TYPE tmpType = getInstrType();
     if (tmpType == NUM_INSTR_TYPE)
         return false;
-    outStruct.instr_type = (uint8_t)tmpType;
+    outStruct.instr_type = static_cast<quint8>(tmpType);
 
     tmpNum = getInstrVersion();
     if (tmpNum == -1)
         return false;
-    outStruct.instr_version = (uint32_t) tmpNum;
+    outStruct.instr_version = static_cast<quint32>(tmpNum);
 
     tmpNum = getHardInstrVersion();
     if (tmpNum == -1)
         return false;
-    outStruct.HW_instr_version = (uint16_t) tmpNum;
+    outStruct.HW_instr_version = static_cast<quint16>(tmpNum);
 
     tmpNum = getSoftInstrVersion();
     if (tmpNum == -1)
         return false;
-    outStruct.SW_instr_version = (uint16_t) tmpNum;
+    outStruct.SW_instr_version = static_cast<quint16>(tmpNum);
 
     return true;
 }
@@ -266,7 +262,7 @@ QByteArray DuInstrumentInfo::toDuMusicBinary() const
         return QByteArray();
     }
 
-    return QByteArray((char *)&(du_instrumentinfo), size());
+    return QByteArray(reinterpret_cast<char*>(&du_instrumentinfo), size());
 }
 
 
@@ -280,13 +276,13 @@ QByteArray DuInstrumentInfo::toBinary(uint8_t nbLayer, int nbSamples, uint32_t s
 
     du_instrumentinfo.nb_layer = nbLayer;
 
-    du_instrumentinfo.ip_size = (uint16_t) nbLayer * 2 + (uint16_t) nbSamples * INSTR_DREAM_IP_SIZE;
+    du_instrumentinfo.ip_size = static_cast<quint16>(nbLayer) * 2 + static_cast<quint16>(nbSamples) * INSTR_DREAM_IP_SIZE;
 
-    du_instrumentinfo.sp_size = (uint16_t) nbSamples * INSTR_DREAM_SP_SIZE;
+    du_instrumentinfo.sp_size = static_cast<quint16>(nbSamples) * INSTR_DREAM_SP_SIZE;
 
     du_instrumentinfo.sample_size = sampleSize;
 
-    return QByteArray((char *)&(du_instrumentinfo), size());
+    return QByteArray(reinterpret_cast<char*>(&du_instrumentinfo), size());
 }
 
 int DuInstrumentInfo::size() const

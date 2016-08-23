@@ -61,7 +61,7 @@ DuNotePtr DuNote::fromBinary(const s_note &data)
 QByteArray DuNote::toDuMusicBinary() const
 {
     s_note data;
-    std::memset((char*)&data, 0, size());
+    std::memset(&data, 0, static_cast<size_t>(size()));
 
     QString tmpStr;
     int tmpNum = 0;
@@ -69,14 +69,14 @@ QByteArray DuNote::toDuMusicBinary() const
     tmpNum = getNoteGM();
     if (tmpNum == -1)
         return QByteArray();
-    data.note_gmref = tmpNum;
+    data.note_gmref = static_cast<quint8>(tmpNum);
 
     if (getIsExclusive())
     {
         tmpNum = getExclusiveNote();
         if (tmpNum == -1)
             return QByteArray();
-        data.note_excl = tmpNum;
+        data.note_excl = static_cast<quint8>(tmpNum);
     }
     else
     {
@@ -86,14 +86,14 @@ QByteArray DuNote::toDuMusicBinary() const
     tmpNum = getNoteOff() ? 1 : 0;
     if (tmpNum == -1)
         return QByteArray();
-    data.note_off = tmpNum;
+    data.note_off = static_cast<quint8>(tmpNum);
 
     tmpNum = getNote();
     if (tmpNum == -1)
         return QByteArray();
-    data.note_key = tmpNum;
+    data.note_key = static_cast<quint8>(tmpNum);
 
-    QByteArray tmpName(NOTE_NAME_CARACT, (char)0x00);
+    QByteArray tmpName(NOTE_NAME_CARACT, 0x00);
     tmpStr = getName();
     if (tmpStr.isNull())
         return QByteArray();
@@ -101,7 +101,7 @@ QByteArray DuNote::toDuMusicBinary() const
 
     std::memcpy(data.note_name, tmpName.data(), NOTE_NAME_CARACT);
 
-    QByteArray tmpCatName(NAME_CARACT, (char)0x00);
+    QByteArray tmpCatName(NAME_CARACT, 0x00);
     tmpStr = getCategoryName();
     if (tmpStr.isNull())
         return QByteArray();
@@ -109,7 +109,7 @@ QByteArray DuNote::toDuMusicBinary() const
 
     std::memcpy(data.cat_name, tmpCatName.data(), NAME_CARACT);
 
-    return QByteArray((char *)&data, size());
+    return QByteArray(reinterpret_cast<char*>(&data), size());
 }
 
 DU_KEY_ACCESSORS_IMPL(DuNote, NoteGM,           Numeric, int,   -1)

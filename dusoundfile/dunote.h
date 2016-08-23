@@ -10,6 +10,7 @@ class DuNote : public DuContainer
 {
 public:
     DuNote();
+    virtual ~DuNote() = default;
 
     virtual DuObjectPtr clone() const;
     virtual int size() const;

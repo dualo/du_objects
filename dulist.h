@@ -24,7 +24,8 @@ public:
         // Keep in sync with DuListObject::Type
     };
 
-    DuList(const QString& name = QString(), Type type = None);
+    explicit DuList(const QString& name = QString(), Type type = None);
+    virtual ~DuList() = default;
 
     virtual DuObjectPtr clone() const;
 

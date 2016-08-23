@@ -12,6 +12,7 @@ class DuDeviceList : public DuList
 {
 public:
     explicit DuDeviceList(const DuDeviceConstPtr &device);
+    virtual ~DuDeviceList() = default;
 
     virtual DuObjectPtr clone() const;
 

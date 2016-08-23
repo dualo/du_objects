@@ -31,10 +31,6 @@ DuTrack::DuTrack() :
     addChild(KeyLoops, loopsArray);
 }
 
-DuTrack::~DuTrack()
-{
-}
-
 DuObjectPtr DuTrack::clone() const
 {
     return DuTrackPtr(new DuTrack(*this));
@@ -203,7 +199,7 @@ QByteArray DuTrack::toDuMusicBinary() const
 
     int tmpNum = 0;
 
-    std::memset((char*)&du_track, 0, size());
+    std::memset(&du_track, 0, static_cast<size_t>(size()));
 
 
     const DuArrayConstPtr<DuLoop> &loops = getLoops();
@@ -218,21 +214,21 @@ QByteArray DuTrack::toDuMusicBinary() const
     if (loopsArray.isNull())
         return QByteArray();
 
-    std::memcpy(&(du_track.t_loop), loopsArray.data(), loopSize);
+    std::memcpy(&(du_track.t_loop), loopsArray.data(), static_cast<size_t>(loopSize));
 
 
     tmpNum = getChannel();
     if (tmpNum == -1)
         return QByteArray();
-    du_track.t_midichannel = tmpNum;
+    du_track.t_midichannel = static_cast<quint8>(tmpNum);
 
     tmpNum = getCurrentLoop();
     if (tmpNum == -1)
         return QByteArray();
-    du_track.t_currentloop = tmpNum;
+    du_track.t_currentloop = static_cast<quint8>(tmpNum);
 
 
-    return QByteArray((char *)&(du_track), size());
+    return QByteArray(reinterpret_cast<char*>(&du_track), size());
 }
 
 

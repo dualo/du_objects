@@ -15,8 +15,8 @@ DU_OBJECT(DuMidiVariableLength);
 class DuMidiVariableLength : public DuValue
 {
 public:
-    explicit DuMidiVariableLength(int offset = 0);
-    ~DuMidiVariableLength();
+    explicit DuMidiVariableLength(quint32 offset = 0);
+    virtual ~DuMidiVariableLength() = default;
 
     virtual DuObjectPtr clone() const;
 
@@ -40,7 +40,7 @@ public:
     void setOffset(quint32 value);
 
 private:
-    quint32 offset;
+    quint32 m_offset;
 };
 
 #endif // DUMIDIVARIABLELENGTH_H

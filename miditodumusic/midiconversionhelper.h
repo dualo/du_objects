@@ -57,7 +57,7 @@ public:
     DuMidiTrackPtr getMidiTrack(int index) const;
     DuSoundPtr getSound(int index) const;
 
-    int getKeyboardFromMidi(int key) const;
+    int getKeyboardFromMidi(quint8 key) const;
     static int percuToMidi(quint8 duKey, quint8 keyboardIndex, quint8 mapIndex);
 
     DuTimeSignatureModel *getTimeSigBoxModel();

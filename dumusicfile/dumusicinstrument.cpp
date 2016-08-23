@@ -16,10 +16,6 @@ DuMusicInstrument::DuMusicInstrument() :
     addChild(KeyPreset,         new DuPreset);
 }
 
-DuMusicInstrument::~DuMusicInstrument()
-{
-}
-
 DuObjectPtr DuMusicInstrument::clone() const
 {
     return DuMusicInstrumentPtr(new DuMusicInstrument(*this));
@@ -60,24 +56,26 @@ DuMusicInstrumentPtr DuMusicInstrument::fromDuMusicBinary(const music_instr &du_
 QByteArray DuMusicInstrument::toDuMusicBinary() const
 {
     music_instr du_instrument;
-    std::memset((char*)&du_instrument, 0, size());
+    std::memset(&du_instrument, 0, static_cast<size_t>(size()));
 
 
     const DuInstrumentInfoConstPtr& instrInfo = getInstrumentInfo();
     if (instrInfo == NULL)
         return QByteArray();
 
-    std::memcpy((char *)&(du_instrument.i_instrument),
-                instrInfo->toDuMusicBinary().constData(), instrInfo->size());
+    std::memcpy(&(du_instrument.i_instrument),
+                instrInfo->toDuMusicBinary().constData(),
+                static_cast<size_t>(instrInfo->size()));
 
     const DuPresetConstPtr& preset = getPreset();
     if (preset == NULL)
         return QByteArray();
 
-    std::memcpy((char *)&(du_instrument.i_preset),
-                preset->toDuMusicBinary().constData(), preset->size());
+    std::memcpy(&(du_instrument.i_preset),
+                preset->toDuMusicBinary().constData(),
+                static_cast<size_t>(preset->size()));
 
-    return QByteArray((char *)&(du_instrument), size());
+    return QByteArray(reinterpret_cast<char*>(&du_instrument), size());
 }
 
 

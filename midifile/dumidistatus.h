@@ -10,7 +10,7 @@ class DuMidiStatus : public DuNumeric
 {
 public:
     explicit DuMidiStatus(int value, bool runningStatus = false);
-    ~DuMidiStatus();
+    virtual ~DuMidiStatus() = default;
 
     virtual DuObjectPtr clone() const;
 

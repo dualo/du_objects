@@ -21,7 +21,7 @@ class DuSongInfo : public DuContainer
 {
 public:
     DuSongInfo();
-    ~DuSongInfo();
+    virtual ~DuSongInfo() = default;
 
     virtual DuObjectPtr clone() const;
 

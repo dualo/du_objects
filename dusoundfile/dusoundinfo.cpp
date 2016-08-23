@@ -86,19 +86,19 @@ QByteArray DuSoundInfo::toBinary(uint8_t nbLayer, int nbSamples, uint32_t sample
     int tmpInt;
 
     sound_instr soundStruct;
-    std::memset((char*)&soundStruct, 0, size());
+    std::memset(&soundStruct, 0, static_cast<size_t>(size()));
 
     const DuInstrumentInfoConstPtr &m3infos = getInstrumentInfo();
     if (m3infos == NULL)
         return QByteArray();
-    std::memcpy((char*)&(soundStruct.s_instrument), m3infos->toBinary(nbLayer, nbSamples, sampleSize).constData(), m3infos->size());
+    std::memcpy(&(soundStruct.s_instrument), m3infos->toBinary(nbLayer, nbSamples, sampleSize).constData(), static_cast<size_t>(m3infos->size()));
 
     tmpInt = getPresetNum();
     if (tmpInt == -1)
         return QByteArray();
-    soundStruct.s_presetnum = tmpInt;
+    soundStruct.s_presetnum = static_cast<quint8>(tmpInt);
 
-    QByteArray tmpName(SOUND_NAME_SIZE, (char)0x00);
+    QByteArray tmpName(SOUND_NAME_SIZE, 0x00);
     QString tmpStr = getName();
     if (tmpStr.isNull())
         return QByteArray();
@@ -108,9 +108,9 @@ QByteArray DuSoundInfo::toBinary(uint8_t nbLayer, int nbSamples, uint32_t sample
     const DuArrayConstPtr<DuPreset> &presetArray = getPresetArray();
     if (presetArray == NULL)
         return QByteArray();
-    std::memcpy((char*)&(soundStruct.s_preset), presetArray->toDuMusicBinary().constData(), presetArray->size());
+    std::memcpy(&(soundStruct.s_preset), presetArray->toDuMusicBinary().constData(), static_cast<size_t>(presetArray->size()));
 
-    return QByteArray((char*)&soundStruct, size());
+    return QByteArray(reinterpret_cast<char*>(&soundStruct), size());
 }
 
 DuObjectPtr DuSoundInfo::getChild(const QString &key)

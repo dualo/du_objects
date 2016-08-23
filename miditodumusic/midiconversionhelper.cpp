@@ -237,7 +237,7 @@ void MidiConversionHelper::chooseMap()
     if (scale.isEmpty() || tonality == -1)
         return;
 
-    mapper.chooseMap(scale, tonality);
+    mapper.chooseMap(scale, static_cast<quint8>(tonality));
 }
 
 
@@ -324,7 +324,7 @@ DuSoundPtr MidiConversionHelper::getSound(int index) const
 }
 
 
-int MidiConversionHelper::getKeyboardFromMidi(int key) const
+int MidiConversionHelper::getKeyboardFromMidi(quint8 key) const
 {
     return mapper.keyboardFromMidi(key);
 }
@@ -535,15 +535,15 @@ bool MidiConversionHelper::filterMetaEvents()
 
         if (trackDuration != -1)
         {
-            quint64 tmp = trackDuration;
+            quint64 tmp = static_cast<quint64>(trackDuration);
             tmp *= DUMUSIC_DIVISION;
-            tmp /= midiDivision;
+            tmp /= static_cast<quint64>(midiDivision);
 
             //This prevents having events with a timestamp equal to the loop reference duration
             tmp += 1;
 
-            if ((quint32)tmp > (quint32)duration)
-                setDuration(tmp);
+            if (static_cast<quint32>(tmp) > static_cast<quint32>(duration))
+                setDuration(static_cast<int>(tmp));
         }
 
         //Removing EndOfTrack event
@@ -564,11 +564,11 @@ bool MidiConversionHelper::filterMetaEvents()
 
             if (time != -1)
             {
-                quint64 tmp = time;
+                quint64 tmp = static_cast<quint64>(time);
                 tmp *= DUMUSIC_DIVISION;
-                tmp /= midiDivision;
+                tmp /= static_cast<quint64>(midiDivision);
 
-                midiEvent->setTime((quint32)tmp, 0);
+                midiEvent->setTime(static_cast<quint32>(tmp), 0);
             }
 
             const DuMidiMetaEventPtr &metaEvent =
@@ -636,10 +636,10 @@ bool MidiConversionHelper::filterMetaEvents()
                         if (tmpData.size() != 4)
                             return false;
 
-                        quint32 tmpNum = tmpData[1];
-                        quint8 tmpDecal = 8 + tmpData[1] - 1;
+                        quint32 tmpNum = static_cast<quint32>(tmpData[1]);
+                        quint8 tmpDecal = 8 + static_cast<quint8>(tmpData[1]) - 1;
 
-                        setMidiTimeSig(((tmpNum << tmpDecal) & 0xFF00) + tmpData[0]);
+                        setMidiTimeSig(static_cast<int>(((tmpNum << tmpDecal) & 0xFF00) + static_cast<uint>(tmpData[0])));
                     }
                 }
 

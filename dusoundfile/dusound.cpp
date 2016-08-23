@@ -143,10 +143,10 @@ DuSoundPtr DuSound::fromHeaderBinary(const QByteArray &data)
     }
 
     s_instr_header soundHeader;
-    std::memcpy((char*)&soundHeader, data.data(), INSTR_HEADER_SIZE);
+    std::memcpy(&soundHeader, data.data(), INSTR_HEADER_SIZE);
 
     sound_instr soundStruct;
-    std::memcpy((char*)&soundStruct, &data.data()[INSTR_HEADER_SIZE], INSTRU_STRUCT_SIZE);
+    std::memcpy(&soundStruct, &data.data()[INSTR_HEADER_SIZE], INSTRU_STRUCT_SIZE);
 
     DuSoundPtr sound(new DuSound);
 
@@ -156,7 +156,7 @@ DuSoundPtr DuSound::fromHeaderBinary(const QByteArray &data)
         return sound;
     }
 
-    sound->setSizeWithSamples((int)soundHeader.full_size);
+    sound->setSizeWithSamples(static_cast<int>(soundHeader.full_size));
     sound->setHasSamplesDownloaded(false);
 
     DuSoundInfoPtr info = DuSoundInfo::fromBinary(soundStruct);
@@ -180,9 +180,9 @@ DuSoundPtr DuSound::fromHeaderBinary(const QByteArray &data)
 DuSoundPtr DuSound::fromBinary(const QByteArray &data)
 {
     s_instr_header soundHeader;
-    std::memcpy((char*)&soundHeader, data.data(), INSTR_HEADER_SIZE);
+    std::memcpy(&soundHeader, data.data(), INSTR_HEADER_SIZE);
 
-    if (data.size() < (int)soundHeader.full_size)
+    if (data.size() < static_cast<int>(soundHeader.full_size))
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Data size < size in header :\n"
                                       << "data.size():" << data.size()
@@ -192,7 +192,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
     }
 
     sound_instr soundStruct;
-    std::memcpy((char*)&soundStruct, &data.data()[INSTR_HEADER_SIZE], INSTRU_STRUCT_SIZE);
+    std::memcpy(&soundStruct, &data.data()[INSTR_HEADER_SIZE], INSTRU_STRUCT_SIZE);
 
     DuSoundPtr sound(new DuSound);
 
@@ -228,11 +228,11 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
 
     int nbLayers = soundStruct.s_instrument.nb_layer;
 
-    QList<uint8_t> nbSamplesPerLayerArray;
+    QList<quint8> nbSamplesPerLayerArray;
     nbSamplesPerLayerArray.reserve(nbLayers);
     for (int i = 0; i < nbLayers; ++i)
     {
-        uint8_t nbSamples = (uint8_t)data.data()[INSTR_NB_SAMPLES_PER_LAYER_ADDRESS + (2*i)];
+        quint8 nbSamples = static_cast<quint8>(data.data()[INSTR_NB_SAMPLES_PER_LAYER_ADDRESS + (2*i)]);
         nbSamplesPerLayerArray << nbSamples;
     }
 
@@ -243,7 +243,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
     for (int i = 0; i < ipSize; i += INSTR_DREAM_IP_SIZE)
     {
         dream_ip dreamIP;
-        std::memcpy((char*)&dreamIP, &data.data()[firstIPAddress + i], INSTR_DREAM_IP_SIZE);
+        std::memcpy(&dreamIP, &data.data()[firstIPAddress + i], INSTR_DREAM_IP_SIZE);
 
         dreamIPArray << dreamIP;
     }
@@ -255,7 +255,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
     for (int i = 0; i < spSize; i += INSTR_DREAM_SP_SIZE)
     {
         dream_sp dreamSP;
-        std::memcpy((char*)&dreamSP, &data.data()[firstSPAddress + i], INSTR_DREAM_SP_SIZE);
+        std::memcpy(&dreamSP, &data.data()[firstSPAddress + i], INSTR_DREAM_SP_SIZE);
 
         if (m3Infos->getDreamFormatId() == DuInstrumentInfo::SDK_3000)
         {
@@ -291,7 +291,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
     {
         const dream_sp& currentSampleParam = dreamSPArray[i];
 
-        int currentWavAddress = (int) DuSample::wavAddressDreamToReadable(currentSampleParam.wav_address);
+        int currentWavAddress = static_cast<int>(DuSample::wavAddressDreamToReadable(currentSampleParam.wav_address));
 
         int sampleSize = DuSample::sizeWavDreamToReadable(currentSampleParam.size_wav);
         if (sampleSize <= 0)
@@ -392,7 +392,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
             uint corI = i < halfMappingSize ? i + halfMappingSize : i - halfMappingSize;
 
             s_note note;
-            std::memcpy((char*)&note, &data.data()[soundHeader.mapping_addr + corI], S_NOTE_SIZE);
+            std::memcpy(&note, &data.data()[soundHeader.mapping_addr + corI], S_NOTE_SIZE);
 
             DuNotePtr noteObject = DuNote::fromBinary(note);
             if (noteObject != NULL)
@@ -496,9 +496,9 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
 
         int nbSamples = samples->count();
 
-        ipHeader[i * 2] = (char) nbSamples;
+        ipHeader[i * 2] = static_cast<char>(nbSamples);
         if (i == 0)
-            ipHeader[(i * 2) + 1] = (char) nbLayer;
+            ipHeader[(i * 2) + 1] = static_cast<char>(nbLayer);
         else
             ipHeader[(i * 2) + 1] = 0;
 
@@ -508,8 +508,8 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
             if (sample == NULL)
                 return QByteArray();
 
-            dreamIPData += sample->ipBinary((uint8_t) layer->getMinVelocity() - 1, (uint8_t) layer->getMaxVelocity());
-            dreamSPData += sample->spBinary((uint32_t) sampleAddress);
+            dreamIPData += sample->ipBinary(static_cast<quint8>(layer->getMinVelocity()) - 1, static_cast<quint8>(layer->getMaxVelocity()));
+            dreamSPData += sample->spBinary(static_cast<quint32>(sampleAddress));
             dreamSamplesData += sample->getData();
 
             sampleAddress += sample->getData().size();
@@ -519,15 +519,15 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
 
     // HEADER
     s_instr_header soundHeader;
-    std::memset((char*)&soundHeader, 0, INSTR_HEADER_SIZE);
+    std::memset(&soundHeader, 0, INSTR_HEADER_SIZE);
 
     soundHeader.KW_INST = 0x54534E49;
     soundHeader.KW_META = 0x4154454D;
 
-    soundHeader.full_size = (uint32_t) size();
+    soundHeader.full_size = static_cast<quint32>(size());
 
-    soundHeader.HW_version = (uint16_t) getHardInstrVersion();
-    soundHeader.SW_version = (uint16_t) getSoftInstrVersion();
+    soundHeader.HW_version = static_cast<quint16>(getHardInstrVersion());
+    soundHeader.SW_version = static_cast<quint16>(getSoftInstrVersion());
 
     int mappingAddr = 0;
     const DuArrayConstPtr<DuNote>& mapping = getMapping();
@@ -539,7 +539,7 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
         mappingAddr = INSTR_NB_SAMPLES_PER_LAYER_ADDRESS + 2 * nbLayer + (INSTR_DREAM_IP_SIZE + INSTR_DREAM_SP_SIZE) * totalNbSamples + totalSampleSize;
     }
 
-    soundHeader.mapping_addr = (uint32_t) mappingAddr;
+    soundHeader.mapping_addr = static_cast<quint32>(mappingAddr);
 
     int metadataAddr = 0;
     const DuArrayConstPtr<DuBinaryData>& metadata = getMetadata();
@@ -558,16 +558,16 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
         }
     }
 
-    soundHeader.meta_addr = (uint32_t) metadataAddr;
+    soundHeader.meta_addr = static_cast<quint32>(metadataAddr);
 
-    data.append((char*)&soundHeader, INSTR_HEADER_SIZE);
+    data.append(reinterpret_cast<char*>(&soundHeader), INSTR_HEADER_SIZE);
 
     // SOUND STRUCT
     const DuSoundInfoConstPtr &info = getInfo();
     if (info == NULL)
         return QByteArray();
 
-    data += info->toBinary((uint8_t) nbLayer, totalNbSamples, (uint32_t) totalSampleSize);
+    data += info->toBinary(static_cast<quint8>(nbLayer), totalNbSamples, static_cast<quint32>(totalSampleSize));
     data += QByteArray(INTR_STRUCT_ALIGN, 0);
 
     data += ipHeader;

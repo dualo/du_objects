@@ -68,7 +68,7 @@ class DuObject
 {
 public:
     DuObject();
-    virtual ~DuObject();
+    virtual ~DuObject() = default;
 
 protected:
     explicit DuObject(const DuObject &other);

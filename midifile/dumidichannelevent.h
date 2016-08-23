@@ -14,7 +14,7 @@ class DuMidiChannelEvent : public DuMidiBasicEvent
 {
 public:
     explicit DuMidiChannelEvent(quint32 time = 0, quint8 status = 0x80);
-    virtual ~DuMidiChannelEvent();
+    virtual ~DuMidiChannelEvent() = default;
 
     enum Type
     {

@@ -19,8 +19,8 @@ DU_OBJECT(DuLoop);
 class DuLoop : public DuContainer
 {
 public:
-    explicit DuLoop();
-    ~DuLoop();
+    DuLoop();
+    virtual ~DuLoop() = default;
 
     virtual DuObjectPtr clone() const override;
 

@@ -21,10 +21,6 @@ DuMidiChannelEvent::DuMidiChannelEvent(quint32 time, quint8 status) :
              new DuNumeric(0, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
 }
 
-DuMidiChannelEvent::~DuMidiChannelEvent()
-{
-}
-
 
 DuObjectPtr DuMidiChannelEvent::clone() const
 {

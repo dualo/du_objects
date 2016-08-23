@@ -10,6 +10,7 @@ class DuTouch : public DuDevice
 {
 public:
     DuTouch();
+    virtual ~DuTouch() = default;
 
     virtual DuObjectPtr clone() const;
 

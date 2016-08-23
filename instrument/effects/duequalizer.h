@@ -9,8 +9,8 @@ DU_OBJECT(DuEqualizer);
 class DuEqualizer : public DuEffectSettings
 {
 public:
-    explicit DuEqualizer();
-    ~DuEqualizer();
+    DuEqualizer();
+    virtual ~DuEqualizer() = default;
 
     virtual DuObjectPtr clone() const;
 

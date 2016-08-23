@@ -28,6 +28,7 @@ public:
     };
 
     DuSample();
+    virtual ~DuSample() = default;
 
     virtual DuObjectPtr clone() const override;
 
@@ -44,39 +45,39 @@ private:
     static int normalizeWaveType(int format);
 
 public:
-    QByteArray ipBinary(uint8_t min_vel, uint8_t max_vel) const;
-    QByteArray spBinary(uint32_t sampleAddress) const;
+    QByteArray ipBinary(quint8 min_vel, quint8 max_vel) const;
+    QByteArray spBinary(quint32 sampleAddress) const;
 
-    static uint32_t wavAddressDreamToReadable(uint32_t dreamValue);
-    static uint32_t wavAddressReadableToDream(uint32_t readableValue);
+    static quint32 wavAddressDreamToReadable(quint32 dreamValue);
+    static quint32 wavAddressReadableToDream(quint32 readableValue);
 
-    static uint32_t loopStartDreamToReadable(uint16_t loopStartMSB, uint16_t loopStartLSB, uint32_t sampleStartAddress);
-    static void loopStartReadableToDream(uint32_t readableValue, uint32_t sampleStartAddress, uint16_t& outLoopStartMSB, uint16_t& outLoopStartLSB);
+    static quint32 loopStartDreamToReadable(quint16 loopStartMSB, quint16 loopStartLSB, quint32 sampleStartAddress);
+    static void loopStartReadableToDream(quint32 readableValue, quint32 sampleStartAddress, quint16 &outLoopStartMSB, quint16 &outLoopStartLSB);
 
-    static uint32_t loopEndDreamToReadable(uint16_t loopEndMSB, uint16_t loopEndLSB, uint32_t sampleStartAddress);
-    static void loopEndReadableToDream(uint32_t readableValue, uint32_t sampleStartAddress, uint16_t& outLoopEndMSB, uint16_t& outLoopEndLSB);
+    static quint32 loopEndDreamToReadable(quint16 loopEndMSB, quint16 loopEndLSB, quint32 sampleStartAddress);
+    static void loopEndReadableToDream(quint32 readableValue, quint32 sampleStartAddress, quint16 &outLoopEndMSB, quint16 &outLoopEndLSB);
 
-    static int initLevelDreamToReadable(uint16_t dreamValue);
-    static uint16_t initReadableToDream(int level);
+    static int initLevelDreamToReadable(quint16 dreamValue);
+    static quint16 initReadableToDream(int level);
 
-    static int attackRateDreamToReadable(uint16_t dreamValue);
-    static int attackLevelDreamToReadable(uint16_t dreamValue);
-    static uint16_t attackReadableToDream(int rate, int level);
+    static int attackRateDreamToReadable(quint16 dreamValue);
+    static int attackLevelDreamToReadable(quint16 dreamValue);
+    static quint16 attackReadableToDream(int rate, int level);
 
-    static int decayRateDreamToReadable(uint16_t dreamValue);
-    static int decayLevelDreamToReadable(uint16_t dreamValue);
-    static uint16_t decayReadableToDream(int rate, int level);
+    static int decayRateDreamToReadable(quint16 dreamValue);
+    static int decayLevelDreamToReadable(quint16 dreamValue);
+    static quint16 decayReadableToDream(int rate, int level);
 
-    static int releaseRateDreamToReadable(uint16_t dreamValue);
-    static int releaseLevelDreamToReadable(uint16_t dreamValue);
-    static uint16_t releaseReadableToDream(int rate, int level);
+    static int releaseRateDreamToReadable(quint16 dreamValue);
+    static int releaseLevelDreamToReadable(quint16 dreamValue);
+    static quint16 releaseReadableToDream(int rate, int level);
 
-    static int volumeDreamToReadable(uint16_t dreamValue);
-    static bool isOneShotDreamToReadable(uint16_t dreamValue);
-    static uint16_t volumeReadableToDream(int volume, bool isOneShot);
+    static int volumeDreamToReadable(quint16 dreamValue);
+    static bool isOneShotDreamToReadable(quint16 dreamValue);
+    static quint16 volumeReadableToDream(int volume, bool isOneShot);
 
-    static int sizeWavDreamToReadable(uint32_t dreamValue);
-    static uint32_t sizeWavReadableToDream(int readableValue);
+    static int sizeWavDreamToReadable(quint32 dreamValue);
+    static quint32 sizeWavReadableToDream(int readableValue);
 
     // Intrument Parameters
     DU_KEY_ACCESSORS(StartNote,       int)

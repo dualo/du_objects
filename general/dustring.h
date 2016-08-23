@@ -11,7 +11,7 @@ class DuString : public DuValue
 public:
     explicit DuString(const QString &value, int maxSize = -1);
     explicit DuString(int maxSize = -1);
-    virtual ~DuString();
+    virtual ~DuString() = default;
 
     QString getString() const;
     bool setString(const QString &value);

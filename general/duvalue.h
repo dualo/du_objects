@@ -12,7 +12,7 @@ class DuValue : public DuObject
 public:
     explicit DuValue(int maxSize = -1);
     explicit DuValue(const QVariant &value, int maxSize = -1);
-    virtual ~DuValue();
+    virtual ~DuValue() = default;
 
     virtual bool parseJson(const QJsonValue &jsonValue) override;
 
