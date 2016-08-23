@@ -232,7 +232,7 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
     bool verif = true;
 
     // preset name
-    verif = preset->setName(QString::fromLatin1(reinterpret_cast<const char*>(du_preset.s_name), PRESET_NAME_MAXSIZE)) ? verif : false;
+    verif = preset->setName(DuString::fromStruct(du_preset.s_name, PRESET_NAME_MAXSIZE)) ? verif : false;
 
     // general
     verif = preset->setVolume(du_preset.s_volume) ? verif : false;

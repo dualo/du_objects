@@ -16,6 +16,8 @@ public:
     QString getString() const;
     bool setString(const QString &value);
 
+    static QString fromStruct(const quint8 *str, uint maxSize);
+
     // DuObject interface
 public:
     virtual DuObjectPtr clone() const override;

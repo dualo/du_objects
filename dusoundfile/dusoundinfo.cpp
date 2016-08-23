@@ -53,7 +53,7 @@ DuSoundInfoPtr DuSoundInfo::fromBinary(const sound_instr &data)
     bool verif = true;
 
     verif = soundInfo->setPresetNum(data.s_presetnum)   ? verif : false;
-    verif = soundInfo->setName(QString::fromLatin1(reinterpret_cast<const char*>(data.s_complete_name), SOUND_NAME_SIZE)) ? verif : false;
+    verif = soundInfo->setName(DuString::fromStruct(data.s_complete_name, SOUND_NAME_SIZE)) ? verif : false;
 
     if (!verif)
     {

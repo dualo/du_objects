@@ -47,8 +47,8 @@ DuNotePtr DuNote::fromBinary(const s_note &data)
     }
     verif = note->setNoteOff(data.note_off == 1) ? verif : false;
     verif = note->setNote(data.note_key) ? verif : false;
-    verif = note->setName(QString::fromLatin1((char *)data.note_name, NOTE_NAME_CARACT)) ? verif : false;
-    verif = note->setCategoryName(QString::fromLatin1((char *)data.cat_name, NAME_CARACT)) ? verif : false;
+    verif = note->setName(DuString::fromStruct(data.note_name, NOTE_NAME_CARACT)) ? verif : false;
+    verif = note->setCategoryName(DuString::fromStruct(data.cat_name, NAME_CARACT)) ? verif : false;
 
     if (!verif)
     {

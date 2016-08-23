@@ -32,12 +32,12 @@ QByteArray DuString::toDuMusicBinary() const
     QByteArray array;
     array.clear();
 
-    array.append(getString());
+    array.append(getString().toLatin1());
 
     int bytesLeft = getMaxSize() - getString().size();
     for (int i= 0; i < bytesLeft; i++)
     {
-        array.append((char)0x00);
+        array.append('0');
     }
 
     return array;
@@ -49,7 +49,7 @@ QByteArray DuString::toMidiBinary() const
     QByteArray array;
     array.clear();
 
-    array.append(getString());
+    array.append(getString().toLocal8Bit());
 
     return array;
 }
@@ -123,4 +123,10 @@ QString DuString::getString() const
 bool DuString::setString(const QString &value)
 {
     return setValue(value);
+}
+
+QString DuString::fromStruct(const quint8 *str, uint maxSize)
+{
+    const char* charStr = reinterpret_cast<const char*>(str);
+    return QString::fromLatin1(charStr, static_cast<int>(qstrnlen(charStr, maxSize)));
 }

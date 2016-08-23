@@ -292,15 +292,15 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
 
     verif = music->setFileVersion((int)local_song.s_version_music) ? verif : false;
 
-    verif = music->setOriginalSerialNumber(QString::fromLatin1((char *)local_song.s_original_sn, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
-    verif = music->setOriginalName(QString::fromLatin1((char *)local_song.s_original_name, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
-    verif = music->setOriginalUser(QString::fromLatin1((char *)local_song.s_original_user, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
-    verif = music->setOriginalUserId(QString::fromLatin1((char *)local_song.s_original_userid, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
+    verif = music->setOriginalSerialNumber(DuString::fromStruct(local_song.s_original_sn, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
+    verif = music->setOriginalName(DuString::fromStruct(local_song.s_original_name, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
+    verif = music->setOriginalUser(DuString::fromStruct(local_song.s_original_user, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
+    verif = music->setOriginalUserId(DuString::fromStruct(local_song.s_original_userid, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
 
-    verif = music->setLastModifSerialNumber(QString::fromLatin1((char *)local_song.s_modif_sn, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
-    verif = music->setLastModifName(QString::fromLatin1((char *)local_song.s_modif_name, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
-    verif = music->setLastModifUser(QString::fromLatin1((char *)local_song.s_modif_user, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
-    verif = music->setLastModifUserId(QString::fromLatin1((char *)local_song.s_modif_userid, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
+    verif = music->setLastModifSerialNumber(DuString::fromStruct(local_song.s_modif_sn, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
+    verif = music->setLastModifName(DuString::fromStruct(local_song.s_modif_name, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
+    verif = music->setLastModifUser(DuString::fromStruct(local_song.s_modif_user, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
+    verif = music->setLastModifUserId(DuString::fromStruct(local_song.s_modif_userid, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
 
     verif = music->setSize((int)local_song.s_size) ? verif : false;
     verif = music->setMetaData((int)local_song.s_metadata) ? verif : false;
@@ -320,7 +320,7 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
     verif = music->setActiveGyroY(local_song.s_activ_gyro_Y) ? verif : false;
 
     verif = music->setSongId(local_song.s_id & 0x7FFFFFFF) ? verif : false;
-    verif = music->setSongName(QString::fromLatin1((char *)local_song.s_name, MUSIC_SONG_NAME_SIZE)) ? verif : false;
+    verif = music->setSongName(DuString::fromStruct(local_song.s_name, MUSIC_SONG_NAME_SIZE)) ? verif : false;
     verif = music->setSongVersion(local_song.s_version_song & 0x7FFFFFFF) ? verif : false;
 
     verif = music->setVolume(local_song.s_volume) ? verif : false;

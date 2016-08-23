@@ -143,7 +143,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const info_instr &du_ins
     DuInstrumentInfoPtr instrInfo(new DuInstrumentInfo);
     bool verif = true;
 
-    verif = instrInfo->setNameForDevice(QString::fromLatin1(reinterpret_cast<const char*>(du_instrInfo.instr_name), NAME_CARACT)) ? verif : false;
+    verif = instrInfo->setNameForDevice(DuString::fromStruct(du_instrInfo.instr_name, NAME_CARACT)) ? verif : false;
 
     verif = instrInfo->setKeyMapping(du_instrInfo.instr_key_map) ? verif : false;
     verif = instrInfo->setOctave(du_instrInfo.instr_octave) ? verif : false;

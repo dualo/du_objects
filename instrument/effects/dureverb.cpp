@@ -88,7 +88,7 @@ DuReverbPtr DuReverb::fromDuMusicBinary(const FX_reverb &du_reverb)
     verif = reverb->setThresholdGate(du_reverb.r_thresgate) ? verif : false;
     verif = reverb->setPreDelayTime(du_reverb.r_predelaytime) ? verif : false;
 
-    verif = reverb->setEffectName(QString::fromLatin1(reinterpret_cast<const char*>(du_reverb.r_name), NAME_CARACT)) ? verif : false;
+    verif = reverb->setEffectName(DuString::fromStruct(du_reverb.r_name, NAME_CARACT)) ? verif : false;
 
     if (!verif)
     {
