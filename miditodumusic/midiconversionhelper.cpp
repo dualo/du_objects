@@ -664,7 +664,7 @@ bool MidiConversionHelper::filterMetaEvents()
                     if (!titleFound)
                     {
                         titleFound = true;
-                        setMidiTitle(QString(metaEvent->getData().data()));
+                        setMidiTitle(QString::fromLatin1(metaEvent->getData()));
                         if (title.isNull())
                             return false;
                     }
@@ -676,7 +676,7 @@ bool MidiConversionHelper::filterMetaEvents()
                     {
                         instrumentFound = true;
 
-                        QString tmpStr = QString(metaEvent->getData());
+                        QString tmpStr = QString::fromLatin1(metaEvent->getData());
                         if (tmpStr.isNull())
                             return false;
 
