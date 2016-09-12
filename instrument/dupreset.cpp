@@ -428,7 +428,7 @@ QByteArray DuPreset::toDuMusicBinary() const
     QString tmpStr;
     int tmpNum = 0;
 
-    std::memset(reinterpret_cast<char*>(&du_preset), 0, static_cast<size_t>(size()));
+    std::memset(&du_preset, 0, static_cast<size_t>(size()));
 
 
     // preset name
