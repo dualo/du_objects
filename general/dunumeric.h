@@ -16,7 +16,7 @@ public:
     explicit DuNumeric(int defaultValue, int byteSize, int maxValue, int minValue);
     explicit DuNumeric(int value, int byteSize, int maxValue,
                        int minValue, int defaultValue);
-    virtual ~DuNumeric();
+    virtual ~DuNumeric() = default;
 
     int getNumeric() const;
     bool setNumeric(int value);

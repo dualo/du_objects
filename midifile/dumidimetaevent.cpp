@@ -21,10 +21,6 @@ DuMidiMetaEvent::DuMidiMetaEvent(quint32 time) :
     addChild(KEY_MIDIMETAEVENT_DATA,    new DuBinaryData());
 }
 
-DuMidiMetaEvent::~DuMidiMetaEvent()
-{
-}
-
 
 DuObjectPtr DuMidiMetaEvent::clone() const
 {
@@ -135,7 +131,7 @@ int DuMidiMetaEvent::getLength() const
     if (tmp == NULL)
         return -1;
 
-    return tmp->getAbsolute();
+    return static_cast<int>(tmp->getAbsolute());
 }
 
 void DuMidiMetaEvent::setLength(quint32 value)
@@ -151,7 +147,7 @@ void DuMidiMetaEvent::setLength(quint32 value)
         return;
 
     length->setAbsolute(value);
-    data->resize(value);
+    data->resize(static_cast<int>(value));
 }
 
 void DuMidiMetaEvent::setLength(QDataStream &stream)
@@ -167,7 +163,7 @@ void DuMidiMetaEvent::setLength(QDataStream &stream)
         return;
 
     length->setAbsolute(stream);
-    data->resize(length->getAbsolute());
+    data->resize(static_cast<int>(length->getAbsolute()));
 }
 
 
@@ -194,7 +190,7 @@ void DuMidiMetaEvent::setData(const QByteArray &value)
     if (data == NULL)
         return;
 
-    length->setAbsolute(value.size());
+    length->setAbsolute(static_cast<quint32>(value.size()));
     data->setBinaryData(value);
 }
 
@@ -220,7 +216,7 @@ void DuMidiMetaEvent::setTitle(const QString &title)
 
     setType(DuMidiMetaEvent::Title);
 
-    setData(title.toUtf8());
+    setData(title.toLatin1());
 }
 
 void DuMidiMetaEvent::setInstrumentName(const QString &instrument)
@@ -233,7 +229,7 @@ void DuMidiMetaEvent::setInstrumentName(const QString &instrument)
 
     setType(DuMidiMetaEvent::Instrument);
 
-    setData(instrument.toUtf8());
+    setData(instrument.toLatin1());
 }
 
 
@@ -259,13 +255,13 @@ int DuMidiMetaEvent::getTempo() const
     quint32 tmpByte = 0;
     quint32 tmp = 0;
 
-    tmpByte = tempoArray[0];
+    tmpByte = static_cast<quint32>(tempoArray[0]);
     tmp += (tmpByte << 16) & 0xFF0000;
 
-    tmpByte = tempoArray[1];
+    tmpByte = static_cast<quint32>(tempoArray[1]);
     tmp += (tmpByte << 8) & 0xFF00;
 
-    tmpByte = tempoArray[2];
+    tmpByte = static_cast<quint32>(tempoArray[2]);
     tmp += tmpByte & 0xFF;
 
     return MICROSECS_PER_MIN / tmp;
@@ -286,9 +282,9 @@ void DuMidiMetaEvent::setTempo(quint8 bpm)
     tempoArray.clear();
 
     quint32 tempoValue = MICROSECS_PER_MIN / bpm;
-    tempoArray.append((quint8)((tempoValue >> 16) & 0xFF));
-    tempoArray.append((quint8)((tempoValue >> 8) & 0xFF));
-    tempoArray.append((quint8)(tempoValue & 0xFF));
+    tempoArray.append(static_cast<char>((tempoValue >> 16) & 0xFF));
+    tempoArray.append(static_cast<char>((tempoValue >> 8) & 0xFF));
+    tempoArray.append(static_cast<char>(tempoValue & 0xFF));
 
     setData(tempoArray);
 }
@@ -308,10 +304,10 @@ void DuMidiMetaEvent::setTimeSignature(quint8 nn, quint8 dd, quint8 cc, quint8 b
     QByteArray timeSigArray;
     timeSigArray.clear();
 
-    timeSigArray.append(nn);
-    timeSigArray.append(dd);
-    timeSigArray.append(cc);
-    timeSigArray.append(bb);
+    timeSigArray.append(static_cast<char>(nn));
+    timeSigArray.append(static_cast<char>(dd));
+    timeSigArray.append(static_cast<char>(cc));
+    timeSigArray.append(static_cast<char>(bb));
 
     setData(timeSigArray);
 }
@@ -337,7 +333,7 @@ int DuMidiMetaEvent::getTonality() const
     }
 
     qint8 sf = keySigArray[0];
-    quint8 mi = keySigArray[1];
+    quint8 mi = static_cast<quint8>(keySigArray[1]);
 
     return ((sf + 6 * (2 + sf % 2) - 3 * mi + 1) % 12);
 }
@@ -369,7 +365,7 @@ void DuMidiMetaEvent::setKeySignature(quint8 key, bool isMinor)
     quint8 scale = 0;
     if (isMinor) scale++;
 
-    qint8 tmpTonal = ((qint8)key + 3 * scale - 1) % 12;
+    qint8 tmpTonal = (static_cast<quint8>(key) + 3 * scale - 1) % 12;
 
     qint8 signature = (tmpTonal - 6 * (tmpTonal % 2)) % 12;
     if (signature > 7)
@@ -382,8 +378,8 @@ void DuMidiMetaEvent::setKeySignature(quint8 key, bool isMinor)
     QByteArray keySigArray;
     keySigArray.clear();
 
-    keySigArray.append(signature);
-    keySigArray.append(scale);
+    keySigArray.append(static_cast<char>(signature));
+    keySigArray.append(static_cast<char>(scale));
 
     setData(keySigArray);
 }

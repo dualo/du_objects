@@ -14,11 +14,7 @@ DuString::DuString(const QString &value, int maxSize) :
 DuString::DuString(int maxSize) :
     DuValue(maxSize)
 {
-    setString(QString());
-}
-
-DuString::~DuString()
-{
+    setString("");
 }
 
 DuObjectPtr DuString::clone() const
@@ -32,12 +28,12 @@ QByteArray DuString::toDuMusicBinary() const
     QByteArray array;
     array.clear();
 
-    array.append(getString());
+    array.append(getString().toLatin1());
 
     int bytesLeft = getMaxSize() - getString().size();
     for (int i= 0; i < bytesLeft; i++)
     {
-        array.append((char)0x00);
+        array.append('0');
     }
 
     return array;
@@ -49,7 +45,7 @@ QByteArray DuString::toMidiBinary() const
     QByteArray array;
     array.clear();
 
-    array.append(getString());
+    array.append(getString().toLocal8Bit());
 
     return array;
 }
@@ -98,11 +94,11 @@ QVariant DuString::checkValue(const QVariant &value, bool &success)
                    << "and was truncated before being set";
 
         success = false;
-        return convertedValue.left(size).toUtf8();
+        return convertedValue.left(size);
     }
 
     success = true;
-    return convertedValue.toUtf8();
+    return convertedValue;
 }
 
 QString DuString::getString() const
@@ -123,4 +119,10 @@ QString DuString::getString() const
 bool DuString::setString(const QString &value)
 {
     return setValue(value);
+}
+
+QString DuString::fromStruct(const quint8 *str, uint maxSize)
+{
+    const char* charStr = reinterpret_cast<const char*>(str);
+    return QString::fromLatin1(charStr, static_cast<int>(qstrnlen(charStr, maxSize)));
 }

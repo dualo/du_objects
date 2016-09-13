@@ -17,7 +17,7 @@ class DuMidiMetaEvent : public DuMidiBasicEvent
 {
 public:
     explicit DuMidiMetaEvent(quint32 time = 0);
-    virtual ~DuMidiMetaEvent();
+    virtual ~DuMidiMetaEvent() = default;
 
     enum MetaTypes
     {

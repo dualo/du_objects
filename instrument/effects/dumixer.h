@@ -9,8 +9,8 @@ DU_OBJECT(DuMixer);
 class DuMixer : public DuEffectSettings
 {
 public:
-    explicit DuMixer();
-    ~DuMixer();
+    DuMixer();
+    virtual ~DuMixer() = default;
 
     virtual DuObjectPtr clone() const;
 

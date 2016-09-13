@@ -14,7 +14,7 @@ class DuMidiSysExEvent : public DuMidiBasicEvent
 {
 public:
     explicit DuMidiSysExEvent(quint32 time = 0, quint8 status = 0xF0);
-    virtual ~DuMidiSysExEvent();
+    virtual ~DuMidiSysExEvent() = default;
 
     virtual DuObjectPtr clone() const;
 

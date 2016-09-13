@@ -20,6 +20,7 @@ class DuLayer : public DuContainer
 {
 public:
     DuLayer();
+    virtual ~DuLayer() = default;
 
     virtual DuObjectPtr clone() const override;
 

@@ -12,6 +12,7 @@ class DuDevice : public DuContainer
 {
 public:
     DuDevice();
+    virtual ~DuDevice() = default;
 
     virtual DuObjectPtr clone() const;
 

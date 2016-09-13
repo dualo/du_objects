@@ -17,10 +17,6 @@ DuMidiSysExEvent::DuMidiSysExEvent(quint32 time, quint8 status) :
     addChild(KEY_MIDISYSEXEVENT_DATA,   new DuBinaryData());
 }
 
-DuMidiSysExEvent::~DuMidiSysExEvent()
-{
-}
-
 
 DuObjectPtr DuMidiSysExEvent::clone() const
 {
@@ -93,7 +89,7 @@ int DuMidiSysExEvent::getLength() const
     if (tmp == NULL)
         return -1;
 
-    return tmp->getAbsolute();
+    return static_cast<int>(tmp->getAbsolute());
 }
 
 void DuMidiSysExEvent::setLength(quint32 value)
@@ -109,7 +105,7 @@ void DuMidiSysExEvent::setLength(quint32 value)
         return;
 
     length->setAbsolute(value);
-    data->resize(value);
+    data->resize(static_cast<int>(value));
 }
 
 void DuMidiSysExEvent::setLength(QDataStream &stream)
@@ -125,7 +121,7 @@ void DuMidiSysExEvent::setLength(QDataStream &stream)
         return;
 
     length->setAbsolute(stream);
-    data->resize(length->getAbsolute());
+    data->resize(static_cast<int>(length->getAbsolute()));
 }
 
 
@@ -152,7 +148,7 @@ void DuMidiSysExEvent::setData(const QByteArray &value)
     if (data == NULL)
         return;
 
-    length->setAbsolute(value.size());
+    length->setAbsolute(static_cast<quint32>(value.size()));
     data->setBinaryData(value);
 }
 

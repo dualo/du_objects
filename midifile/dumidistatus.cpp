@@ -10,10 +10,6 @@ DuMidiStatus::DuMidiStatus(int value, bool runningStatus) :
 {
 }
 
-DuMidiStatus::~DuMidiStatus()
-{
-}
-
 
 DuObjectPtr DuMidiStatus::clone() const
 {
@@ -30,7 +26,7 @@ QByteArray DuMidiStatus::toMidiBinary() const
     retArray.clear();
 
     int num = getNumeric();
-    retArray.append((quint8)(num & 0xFF));
+    retArray.append(static_cast<char>(num & 0xFF));
 
     return retArray;
 }

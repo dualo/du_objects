@@ -100,7 +100,8 @@ DU_OBJECT(DuPreset);
 class DuPreset : public DuContainer
 {
 public:
-    explicit DuPreset();
+    DuPreset();
+    virtual ~DuPreset() = default;
 
     virtual DuObjectPtr clone() const;
 

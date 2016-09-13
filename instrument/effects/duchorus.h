@@ -9,8 +9,8 @@ DU_OBJECT(DuChorus);
 class DuChorus : public DuEffectSettings
 {
 public:
-    explicit DuChorus();
-    ~DuChorus();
+    DuChorus();
+    virtual ~DuChorus() = default;
 
     virtual DuObjectPtr clone() const;
 

@@ -9,8 +9,8 @@ DU_OBJECT(DuDistortion);
 class DuDistortion : public DuEffectSettings
 {
 public:
-    explicit DuDistortion();
-    ~DuDistortion();
+    DuDistortion();
+    virtual ~DuDistortion() = default;
 
     virtual DuObjectPtr clone() const;
 

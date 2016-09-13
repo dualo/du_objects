@@ -19,10 +19,6 @@ DuMidiTrack::DuMidiTrack() :
     addChild(KEY_MIDITRACK_EVENTS, new DuArray<DuMidiBasicEvent>());
 }
 
-DuMidiTrack::~DuMidiTrack()
-{
-}
-
 
 DuObjectPtr DuMidiTrack::clone() const
 {
@@ -63,7 +59,7 @@ DuMidiTrackPtr DuMidiTrack::fromMidiBinary(QDataStream &stream)
         DuMidiBasicEventPtr event(new DuMidiBasicEvent());
 
         event->setTime(stream, offset);
-        delta = event->getTime() - offset;
+        delta = static_cast<quint32>(event->getTime()) - offset;
 
         quint8 tmp;
         stream >> tmp;
@@ -120,7 +116,7 @@ DuMidiTrackPtr DuMidiTrack::fromMidiBinary(QDataStream &stream)
         if (trackEnded)
             track->m_duration = offset;
 
-        totalSize += event->size();
+        totalSize += static_cast<quint32>(event->size());
     }
 
     if (totalSize > byteCount)
@@ -146,12 +142,12 @@ QByteArray DuMidiTrack::toMidiBinary() const
 {
     QByteArray retArray = getEvents()->toMidiBinary();
 
-    quint32 size = retArray.size();
+    quint32 size = static_cast<quint32>(retArray.size());
 
-    retArray.prepend((char)(size & 0xFF));
-    retArray.prepend((char)((size >> 8) & 0xFF));
-    retArray.prepend((char)((size >> 16) & 0xFF));
-    retArray.prepend((char)((size >> 24) & 0xFF));
+    retArray.prepend(static_cast<char>(size & 0xFF));
+    retArray.prepend(static_cast<char>((size >> 8) & 0xFF));
+    retArray.prepend(static_cast<char>((size >> 16) & 0xFF));
+    retArray.prepend(static_cast<char>((size >> 24) & 0xFF));
     retArray.prepend(MIDI_TRACK_ID_VALUE);
 
     return retArray;

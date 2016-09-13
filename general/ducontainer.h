@@ -117,8 +117,8 @@ DU_OBJECT(DuContainer);
 class DuContainer : public DuObject
 {
 public:
-    explicit DuContainer();
-    virtual ~DuContainer();
+    DuContainer();
+    virtual ~DuContainer() = default;
 
 protected:
     explicit DuContainer(const DuContainer &other);

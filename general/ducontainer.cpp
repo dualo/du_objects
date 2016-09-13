@@ -11,10 +11,6 @@ DuContainer::DuContainer() :
 {
 }
 
-DuContainer::~DuContainer()
-{
-}
-
 DuContainer::DuContainer(const DuContainer &other) :
     DuObject(other)
 {

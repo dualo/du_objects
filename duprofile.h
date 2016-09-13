@@ -32,6 +32,7 @@ public:
     };
 
     DuProfile();
+    virtual ~DuProfile() = default;
 
     virtual DuObjectPtr clone() const;
 

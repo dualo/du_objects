@@ -9,8 +9,8 @@ DU_OBJECT(DuCompressor);
 class DuCompressor : public DuEffectSettings
 {
 public:
-    explicit DuCompressor();
-    ~DuCompressor();
+    DuCompressor();
+    virtual ~DuCompressor() = default;
 
     virtual DuObjectPtr clone() const;
 

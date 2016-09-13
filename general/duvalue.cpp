@@ -19,10 +19,6 @@ DuValue::DuValue(const QVariant &value, int maxSize) :
 {
 }
 
-DuValue::~DuValue()
-{
-}
-
 bool DuValue::parseJson(const QJsonValue &jsonValue)
 {
     if (jsonValue.isNull())

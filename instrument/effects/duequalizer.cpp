@@ -57,10 +57,6 @@ DuEqualizer::DuEqualizer() :
                            FX_PEQ_HMBQ_MAXVALUE, FX_PEQ_HMBQ_MINVALUE));
 }
 
-DuEqualizer::~DuEqualizer()
-{
-}
-
 DuObjectPtr DuEqualizer::clone() const
 {
     return DuEqualizerPtr(new DuEqualizer(*this));
@@ -100,7 +96,7 @@ DuEqualizerPtr DuEqualizer::fromDuMusicBinary(const FX_equalizer& du_equalizer)
 QByteArray DuEqualizer::toDuMusicBinary() const
 {
     FX_equalizer du_equalizer;
-    std::memset((char*)&du_equalizer, 0, size());
+    std::memset(&du_equalizer, 0, static_cast<size_t>(size()));
 
     int tmpNum = 0;
 
@@ -108,60 +104,60 @@ QByteArray DuEqualizer::toDuMusicBinary() const
     tmpNum = getOnOff();
     if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_on_off = tmpNum;
+    du_equalizer.e_on_off = static_cast<quint8>(tmpNum);
 
     tmpNum = getLowBandGain();
     if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_lowbandgain = tmpNum;
+    du_equalizer.e_lowbandgain = static_cast<quint8>(tmpNum);
 
     tmpNum = getLowMidBandGain();
     if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_lowmidbandgain = tmpNum;
+    du_equalizer.e_lowmidbandgain = static_cast<quint8>(tmpNum);
 
     tmpNum = getHighMidBandGain();
     if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_highmidbandgain = tmpNum;
+    du_equalizer.e_highmidbandgain = static_cast<quint8>(tmpNum);
 
     tmpNum = getHighBandGain();
     if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_highbandgain = tmpNum;
+    du_equalizer.e_highbandgain = static_cast<quint8>(tmpNum);
 
     tmpNum = getLowBandFrequency();
     if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_lowbandfrequency = tmpNum;
+    du_equalizer.e_lowbandfrequency = static_cast<quint8>(tmpNum);
 
     tmpNum = getLowMidBandFrequency();
     if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_lowmidbandfrequency = tmpNum;
+    du_equalizer.e_lowmidbandfrequency = static_cast<quint8>(tmpNum);
 
     tmpNum = getHighMidBandFrequency();
     if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_highmidbandfrequency = tmpNum;
+    du_equalizer.e_highmidbandfrequency = static_cast<quint8>(tmpNum);
 
     tmpNum = getHighBandFrequency();
     if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_highbandfrequency = tmpNum;
+    du_equalizer.e_highbandfrequency = static_cast<quint8>(tmpNum);
 
     tmpNum = getLowMidBandQualityFactor();
     if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_lowmidbandQ = tmpNum;
+    du_equalizer.e_lowmidbandQ = static_cast<quint8>(tmpNum);
 
     tmpNum = getHighMidBandQualityFactor();
     if (tmpNum == -1)
         return QByteArray();
-    du_equalizer.e_highmidbandQ = tmpNum;
+    du_equalizer.e_highmidbandQ = static_cast<quint8>(tmpNum);
 
 
-    return QByteArray((char *)&(du_equalizer), size());
+    return QByteArray(reinterpret_cast<char*>(&du_equalizer), size());
 }
 
 

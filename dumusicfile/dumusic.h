@@ -79,6 +79,7 @@ class DuMusic : public DuContainer
 {
 public:
     DuMusic();
+    virtual ~DuMusic() = default;
 
     virtual DuObjectPtr clone() const override;
 

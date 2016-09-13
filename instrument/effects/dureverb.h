@@ -9,8 +9,8 @@ DU_OBJECT(DuReverb);
 class DuReverb : public DuEffectSettings
 {
 public:
-    explicit DuReverb();
-    ~DuReverb();
+    DuReverb();
+    virtual ~DuReverb() = default;
 
     virtual DuObjectPtr clone() const;
 

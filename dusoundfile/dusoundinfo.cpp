@@ -53,7 +53,7 @@ DuSoundInfoPtr DuSoundInfo::fromBinary(const sound_instr &data)
     bool verif = true;
 
     verif = soundInfo->setPresetNum(data.s_presetnum)   ? verif : false;
-    verif = soundInfo->setName(QString::fromUtf8((char*) data.s_complete_name, SOUND_NAME_SIZE)) ? verif : false;
+    verif = soundInfo->setName(DuString::fromStruct(data.s_complete_name, SOUND_NAME_SIZE)) ? verif : false;
 
     if (!verif)
     {
@@ -86,31 +86,31 @@ QByteArray DuSoundInfo::toBinary(uint8_t nbLayer, int nbSamples, uint32_t sample
     int tmpInt;
 
     sound_instr soundStruct;
-    std::memset((char*)&soundStruct, 0, size());
+    std::memset(&soundStruct, 0, static_cast<size_t>(size()));
 
     const DuInstrumentInfoConstPtr &m3infos = getInstrumentInfo();
     if (m3infos == NULL)
         return QByteArray();
-    std::memcpy((char*)&(soundStruct.s_instrument), m3infos->toBinary(nbLayer, nbSamples, sampleSize).constData(), m3infos->size());
+    std::memcpy(&(soundStruct.s_instrument), m3infos->toBinary(nbLayer, nbSamples, sampleSize).constData(), static_cast<size_t>(m3infos->size()));
 
     tmpInt = getPresetNum();
     if (tmpInt == -1)
         return QByteArray();
-    soundStruct.s_presetnum = tmpInt;
+    soundStruct.s_presetnum = static_cast<quint8>(tmpInt);
 
-    QByteArray tmpName(SOUND_NAME_SIZE, (char)0x00);
+    QByteArray tmpName(SOUND_NAME_SIZE, 0x00);
     QString tmpStr = getName();
     if (tmpStr.isNull())
         return QByteArray();
-    tmpName.prepend(tmpStr.toUtf8());
+    tmpName.prepend(tmpStr.toLatin1());
     std::memcpy(soundStruct.s_complete_name, tmpName.constData(), SOUND_NAME_SIZE);
 
     const DuArrayConstPtr<DuPreset> &presetArray = getPresetArray();
     if (presetArray == NULL)
         return QByteArray();
-    std::memcpy((char*)&(soundStruct.s_preset), presetArray->toDuMusicBinary().constData(), presetArray->size());
+    std::memcpy(&(soundStruct.s_preset), presetArray->toDuMusicBinary().constData(), static_cast<size_t>(presetArray->size()));
 
-    return QByteArray((char*)&soundStruct, size());
+    return QByteArray(reinterpret_cast<char*>(&soundStruct), size());
 }
 
 DuObjectPtr DuSoundInfo::getChild(const QString &key)

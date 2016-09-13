@@ -21,10 +21,6 @@ DuMidiFile::DuMidiFile() :
     addChild(KEY_MIDIFILE_TRACKS,   new DuArray<DuMidiTrack>());
 }
 
-DuMidiFile::~DuMidiFile()
-{
-}
-
 
 DuObjectPtr DuMidiFile::clone() const
 {
@@ -113,17 +109,17 @@ QByteArray DuMidiFile::toMidiBinary() const
     int division = getDivision();
 
     array.append(MIDI_HEADER_ID_VALUE);
-    array.append((char)((MIDI_HEADER_CHUNK_SIZE >> 24) & 0xFF));
-    array.append((char)((MIDI_HEADER_CHUNK_SIZE >> 16) & 0xFF));
-    array.append((char)((MIDI_HEADER_CHUNK_SIZE >> 8) & 0xFF));
-    array.append((char)(MIDI_HEADER_CHUNK_SIZE & 0xFF));
+    array.append(static_cast<char>((MIDI_HEADER_CHUNK_SIZE >> 24) & 0xFF));
+    array.append(static_cast<char>((MIDI_HEADER_CHUNK_SIZE >> 16) & 0xFF));
+    array.append(static_cast<char>((MIDI_HEADER_CHUNK_SIZE >> 8) & 0xFF));
+    array.append(static_cast<char>(MIDI_HEADER_CHUNK_SIZE & 0xFF));
 
-    array.append((char)((format >> 8) & 0xFF));
-    array.append((char)(format & 0xFF));
-    array.append((char)((count >> 8) & 0xFF));
-    array.append((char)(count & 0xFF));
-    array.append((char)((division >> 8) & 0xFF));
-    array.append((char)(division & 0xFF));
+    array.append(static_cast<char>((format >> 8) & 0xFF));
+    array.append(static_cast<char>(format & 0xFF));
+    array.append(static_cast<char>((count >> 8) & 0xFF));
+    array.append(static_cast<char>(count & 0xFF));
+    array.append(static_cast<char>((division >> 8) & 0xFF));
+    array.append(static_cast<char>(division & 0xFF));
 
     array += getTracks()->toMidiBinary();
 

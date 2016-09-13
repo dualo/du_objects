@@ -9,6 +9,7 @@ class DuBoolean : public DuValue
 {
 public:
     explicit DuBoolean(bool value);
+    virtual ~DuBoolean() = default;
 
     bool getBoolean() const;
     bool setBoolean(bool value);

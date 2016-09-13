@@ -45,10 +45,6 @@ DuEvent::DuEvent() :
                            0x7F, 0x00));
 }
 
-DuEvent::~DuEvent()
-{
-}
-
 DuObjectPtr DuEvent::clone() const
 {
     return DuEventPtr(new DuEvent(*this));
@@ -60,7 +56,7 @@ DuEventPtr DuEvent::fromDuMusicBinary(const music_sample &du_sample)
     DuEventPtr event(new DuEvent);
     bool verif = true;
 
-    verif = event->setTime(du_sample.time) ? verif : false;
+    verif = event->setTime(static_cast<const int>(du_sample.time)) ? verif : false;
     verif = event->setControl(du_sample.control) ? verif : false;
     verif = event->setCanal(du_sample.canal) ? verif : false;
     verif = event->setKeyboard(du_sample.note & 0x80) ? verif : false;
@@ -187,7 +183,7 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
             return DuEventPtr();
         }
 
-        keyboard = helper.getKeyboardFromMidi(key);
+        keyboard = helper.getKeyboardFromMidi(static_cast<quint8>(key));
     }
 
     verif = event->setKeyboard(keyboard) ? verif : false;
@@ -211,7 +207,7 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
 QByteArray DuEvent::toDuMusicBinary() const
 {
     music_sample du_sample;
-    std::memset((char*)&du_sample, 0, size());
+    std::memset(&du_sample, 0, static_cast<size_t>(size()));
 
     int tmpNum = 0;
     int tmpKbrd = 0;
@@ -220,17 +216,17 @@ QByteArray DuEvent::toDuMusicBinary() const
     tmpNum = getTime();
     if (tmpNum == -1)
         return QByteArray();
-    du_sample.time = (quint32)tmpNum;
+    du_sample.time = static_cast<quint32>(tmpNum);
 
     tmpNum = getControl();
     if (tmpNum == -1)
         return QByteArray();
-    du_sample.control = (quint8)tmpNum;
+    du_sample.control = static_cast<quint8>(tmpNum);
 
     tmpNum = getCanal();
     if (tmpNum == -1)
         return QByteArray();
-    du_sample.canal = (quint8)tmpNum;
+    du_sample.canal = static_cast<quint8>(tmpNum);
 
     tmpKbrd = getKeyboard();
     if (tmpKbrd == -1)
@@ -238,15 +234,15 @@ QByteArray DuEvent::toDuMusicBinary() const
     tmpNum = getNote();
     if (tmpNum == -1)
         return QByteArray();
-    du_sample.note = (quint8)tmpKbrd + (quint8)tmpNum;
+    du_sample.note = static_cast<quint8>(tmpKbrd) + static_cast<quint8>(tmpNum);
 
     tmpNum = getValue();
     if (tmpNum == -1)
         return QByteArray();
-    du_sample.value = (quint8)tmpNum;
+    du_sample.value = static_cast<quint8>(tmpNum);
 
 
-    return QByteArray((char *)&(du_sample), MUSIC_SAMPLE_SIZE);
+    return QByteArray(reinterpret_cast<char*>(&du_sample), MUSIC_SAMPLE_SIZE);
 }
 
 DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
@@ -282,7 +278,7 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
         return DuMidiChannelEventPtr();
     }
 
-    channelEvent->setTime((quint32)tmp - prevTime, prevTime);
+    channelEvent->setTime(static_cast<quint32>(tmp) - prevTime, prevTime);
 
 
     tmp = getControl();
@@ -296,7 +292,7 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
         return DuMidiChannelEventPtr();
     }
 
-    quint8 midiType = (quint8)tmp + 0x08;
+    quint8 midiType = static_cast<quint8>(tmp) + 0x08;
 
     channelEvent->setRunningStatus(midiType == prevType);
     channelEvent->setType(midiType);
@@ -336,10 +332,10 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
             //Percussion map index starts from 0 in instr_mapping.c arrays
 
             quint8 keyboardIndex = (keyboard >> 7) & 0x01;
-            midiKey = MidiConversionHelper::percuToMidi((quint8)tmp,keyboardIndex,
-                                                        (quint8)instrKeyMap - 1);
+            midiKey = MidiConversionHelper::percuToMidi(static_cast<quint8>(tmp), keyboardIndex,
+                                                        static_cast<quint8>(instrKeyMap) - 1);
 
-            if (midiKey == -1 || (quint8)midiKey > 0x7F)
+            if (midiKey == -1 || static_cast<quint8>(midiKey) > 0x7F)
             {
                 qCCritical(LOG_CAT_DU_OBJECT)
                         << "DuEvent::toDuMidiChannelEvent():\n"
@@ -368,7 +364,7 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
         midiKey = tmp;
     }
 
-    channelEvent->setKey((quint8)midiKey);
+    channelEvent->setKey(static_cast<quint8>(midiKey));
 
 
     tmp = getValue();
@@ -382,7 +378,7 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
         return DuMidiChannelEventPtr();
     }
 
-    channelEvent->setValue((quint8)tmp);
+    channelEvent->setValue(static_cast<quint8>(tmp));
 
 
     return channelEvent;

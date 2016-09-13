@@ -11,7 +11,7 @@ class DuBinaryData : public DuValue
 {
 public:
     explicit DuBinaryData(int maxSize = -1);
-    virtual ~DuBinaryData();
+    virtual ~DuBinaryData() = default;
 
     const QByteArray getBinaryData() const;
     bool setBinaryData(const QByteArray &value);

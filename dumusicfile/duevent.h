@@ -13,8 +13,8 @@ DU_OBJECT(DuEvent);
 class DuEvent : public DuContainer
 {
 public:
-    explicit DuEvent();
-    ~DuEvent();
+    DuEvent();
+    virtual ~DuEvent() = default;
 
     virtual DuObjectPtr clone() const;
 

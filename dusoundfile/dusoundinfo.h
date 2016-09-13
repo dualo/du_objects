@@ -18,6 +18,7 @@ class DuSoundInfo : public DuContainer
 {
 public:
     DuSoundInfo();
+    virtual ~DuSoundInfo() = default;
 
     virtual DuObjectPtr clone() const override;
     virtual int size() const override;

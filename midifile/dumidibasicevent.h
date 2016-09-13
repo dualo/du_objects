@@ -14,7 +14,7 @@ class DuMidiBasicEvent : public DuContainer
 {
 public:
     explicit DuMidiBasicEvent(quint32 time = 0, quint8 status = 0x80);
-    virtual ~DuMidiBasicEvent();
+    virtual ~DuMidiBasicEvent() = default;
 
     virtual DuObjectPtr clone() const;
 

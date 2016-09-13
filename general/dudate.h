@@ -12,6 +12,7 @@ class DuDate : public DuValue
 {
 public:
     explicit DuDate(const QDateTime& date = QDateTime());
+    virtual ~DuDate() = default;
 
     QDateTime getDate() const;
     bool setDate(const QDateTime& date);

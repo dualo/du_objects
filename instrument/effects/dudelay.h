@@ -9,8 +9,8 @@ DU_OBJECT(DuDelay);
 class DuDelay : public DuEffectSettings
 {
 public:
-    explicit DuDelay();
-    ~DuDelay();
+    DuDelay();
+    virtual ~DuDelay() = default;
 
     virtual DuObjectPtr clone() const;
 

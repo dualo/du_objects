@@ -58,10 +58,6 @@ DuReverb::DuReverb()
              new DuString(QStringLiteral(DEFAULT_EFFECTNAME), NAME_CARACT));
 }
 
-DuReverb::~DuReverb()
-{
-}
-
 
 DuObjectPtr DuReverb::clone() const
 {
@@ -88,7 +84,7 @@ DuReverbPtr DuReverb::fromDuMusicBinary(const FX_reverb &du_reverb)
     verif = reverb->setThresholdGate(du_reverb.r_thresgate) ? verif : false;
     verif = reverb->setPreDelayTime(du_reverb.r_predelaytime) ? verif : false;
 
-    verif = reverb->setEffectName(QString::fromUtf8((char *)du_reverb.r_name, NAME_CARACT)) ? verif : false;
+    verif = reverb->setEffectName(DuString::fromStruct(du_reverb.r_name, NAME_CARACT)) ? verif : false;
 
     if (!verif)
     {
@@ -103,7 +99,7 @@ DuReverbPtr DuReverb::fromDuMusicBinary(const FX_reverb &du_reverb)
 QByteArray DuReverb::toDuMusicBinary() const
 {
     FX_reverb du_reverb;
-    std::memset((char*)&du_reverb, 0, size());
+    std::memset(&du_reverb, 0, static_cast<size_t>(size()));
 
     QString tmpStr;
     int tmpNum = 0;
@@ -112,71 +108,71 @@ QByteArray DuReverb::toDuMusicBinary() const
     tmpNum = getLevel();
     if (tmpNum == -1)
         return QByteArray();
-    du_reverb.r_level = tmpNum;
+    du_reverb.r_level = static_cast<quint8>(tmpNum);
 
     tmpNum = getDirectLevel();
     if (tmpNum == -1)
         return QByteArray();
-    du_reverb.r_directlevel = tmpNum;
+    du_reverb.r_directlevel = static_cast<quint8>(tmpNum);
 
     tmpNum = getReverbSend();
     if (tmpNum == -1)
         return QByteArray();
-    du_reverb.r_revsend = tmpNum;
+    du_reverb.r_revsend = static_cast<quint8>(tmpNum);
 
 
     tmpNum = getToneGain();
     if (tmpNum == -1)
         return QByteArray();
-    du_reverb.r_tonegain = tmpNum;
+    du_reverb.r_tonegain = static_cast<quint8>(tmpNum);
 
     tmpNum = getToneFrequency();
     if (tmpNum == -1)
         return QByteArray();
-    du_reverb.r_tonefreq = tmpNum;
+    du_reverb.r_tonefreq = static_cast<quint8>(tmpNum);
 
     tmpNum = getPreHighPassFilter();
     if (tmpNum == -1)
         return QByteArray();
-    du_reverb.r_prehp = tmpNum;
+    du_reverb.r_prehp = static_cast<quint8>(tmpNum);
 
 
     tmpNum = getTime();
     if (tmpNum == -1)
         return QByteArray();
-    du_reverb.r_time = tmpNum;
+    du_reverb.r_time = static_cast<quint8>(tmpNum);
 
     tmpNum = getEchoFeedback();
     if (tmpNum == -1)
         return QByteArray();
-    du_reverb.r_echofeedback = tmpNum;
+    du_reverb.r_echofeedback = static_cast<quint8>(tmpNum);
 
     tmpNum = getHDAmp();
     if (tmpNum == -1)
         return QByteArray();
-    du_reverb.r_hdamp = tmpNum;
+    du_reverb.r_hdamp = static_cast<quint8>(tmpNum);
 
     tmpNum = getThresholdGate();
     if (tmpNum == -1)
         return QByteArray();
-    du_reverb.r_thresgate = tmpNum;
+    du_reverb.r_thresgate = static_cast<quint8>(tmpNum);
 
     tmpNum = getPreDelayTime();
     if (tmpNum == -1)
         return QByteArray();
-    du_reverb.r_predelaytime = tmpNum;
+    du_reverb.r_predelaytime = static_cast<quint8>(tmpNum);
 
 
-    QByteArray tmpName(NAME_CARACT, (char)0x00);
+    QByteArray tmpName(NAME_CARACT, 0x00);
     tmpStr = getEffectName();
     if (tmpStr.isNull())
         return QByteArray();
-    tmpName.prepend(tmpStr.toUtf8());
+    tmpName.prepend(tmpStr.toLatin1());
 
     std::memcpy(du_reverb.r_name, tmpName.data(), NAME_CARACT);
 
 
-    return QByteArray((char *)&(du_reverb), size());
+    return QByteArray(reinterpret_cast<char*>(&du_reverb), size());
 }
 
 

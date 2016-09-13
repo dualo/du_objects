@@ -17,7 +17,7 @@ class DuArray : public DuObject
 
 public:
     explicit DuArray(int m_maxSize = -1);
-    virtual ~DuArray();
+    virtual ~DuArray() = default;
 
 protected:
     explicit DuArray(const DuArray<T> &other);
@@ -67,11 +67,6 @@ template <class T>
 DuArray<T>::DuArray(int maxSize) :
     DuObject(),
     m_maxSize(maxSize)
-{
-}
-
-template <class T>
-DuArray<T>::~DuArray()
 {
 }
 

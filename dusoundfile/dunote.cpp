@@ -14,7 +14,7 @@ DuNote::DuNote() :
     addChild(KeyNoteGM,         new DuNumeric(0, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
     addChild(KeyIsExclusive,    new DuBoolean(false));
     addChild(KeyExclusiveNote,  new DuNumeric(0, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
-    addChild(KeyNoteOff,        new DuBoolean(false));
+    addChild(KeyNoteOff,        new DuBoolean(true));
     addChild(KeyNote,           new DuNumeric(1, NUMERIC_DEFAULT_SIZE, NUM_BUTTON_KEYBOARD * 2, 1));
     addChild(KeyName,           new DuString(NOTE_NAME_CARACT));
     addChild(KeyCategoryName,   new DuString(NAME_CARACT));
@@ -47,8 +47,8 @@ DuNotePtr DuNote::fromBinary(const s_note &data)
     }
     verif = note->setNoteOff(data.note_off == 1) ? verif : false;
     verif = note->setNote(data.note_key) ? verif : false;
-    verif = note->setName(QString(QByteArray((char *)data.note_name, NOTE_NAME_CARACT))) ? verif : false;
-    verif = note->setCategoryName(QString(QByteArray((char *)data.cat_name, NAME_CARACT))) ? verif : false;
+    verif = note->setName(DuString::fromStruct(data.note_name, NOTE_NAME_CARACT)) ? verif : false;
+    verif = note->setCategoryName(DuString::fromStruct(data.cat_name, NAME_CARACT)) ? verif : false;
 
     if (!verif)
     {
@@ -61,7 +61,7 @@ DuNotePtr DuNote::fromBinary(const s_note &data)
 QByteArray DuNote::toDuMusicBinary() const
 {
     s_note data;
-    std::memset((char*)&data, 0, size());
+    std::memset(&data, 0, static_cast<size_t>(size()));
 
     QString tmpStr;
     int tmpNum = 0;
@@ -69,14 +69,14 @@ QByteArray DuNote::toDuMusicBinary() const
     tmpNum = getNoteGM();
     if (tmpNum == -1)
         return QByteArray();
-    data.note_gmref = tmpNum;
+    data.note_gmref = static_cast<quint8>(tmpNum);
 
     if (getIsExclusive())
     {
         tmpNum = getExclusiveNote();
         if (tmpNum == -1)
             return QByteArray();
-        data.note_excl = tmpNum;
+        data.note_excl = static_cast<quint8>(tmpNum);
     }
     else
     {
@@ -86,30 +86,30 @@ QByteArray DuNote::toDuMusicBinary() const
     tmpNum = getNoteOff() ? 1 : 0;
     if (tmpNum == -1)
         return QByteArray();
-    data.note_off = tmpNum;
+    data.note_off = static_cast<quint8>(tmpNum);
 
     tmpNum = getNote();
     if (tmpNum == -1)
         return QByteArray();
-    data.note_key = tmpNum;
+    data.note_key = static_cast<quint8>(tmpNum);
 
-    QByteArray tmpName(NOTE_NAME_CARACT, (char)0x00);
+    QByteArray tmpName(NOTE_NAME_CARACT, 0x00);
     tmpStr = getName();
     if (tmpStr.isNull())
         return QByteArray();
-    tmpName.prepend(tmpStr.toUtf8());
+    tmpName.prepend(tmpStr.toLatin1());
 
     std::memcpy(data.note_name, tmpName.data(), NOTE_NAME_CARACT);
 
-    QByteArray tmpCatName(NAME_CARACT, (char)0x00);
+    QByteArray tmpCatName(NAME_CARACT, 0x00);
     tmpStr = getCategoryName();
     if (tmpStr.isNull())
         return QByteArray();
-    tmpCatName.prepend(tmpStr.toUtf8());
+    tmpCatName.prepend(tmpStr.toLatin1());
 
     std::memcpy(data.cat_name, tmpCatName.data(), NAME_CARACT);
 
-    return QByteArray((char *)&data, size());
+    return QByteArray(reinterpret_cast<char*>(&data), size());
 }
 
 DU_KEY_ACCESSORS_IMPL(DuNote, NoteGM,           Numeric, int,   -1)

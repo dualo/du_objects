@@ -28,8 +28,8 @@ DU_OBJECT(DuMidiFile);
 class DuMidiFile : public DuContainer
 {
 public:
-    explicit DuMidiFile();
-    ~DuMidiFile();
+    DuMidiFile();
+    virtual ~DuMidiFile() = default;
 
     DuObjectPtr clone() const;
 

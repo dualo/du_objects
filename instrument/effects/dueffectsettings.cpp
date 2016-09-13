@@ -8,10 +8,6 @@ DuEffectSettings::DuEffectSettings() :
 {
 }
 
-DuEffectSettings::~DuEffectSettings()
-{
-}
-
 DuObjectPtr DuEffectSettings::clone() const
 {
     return DuEffectSettingsPtr(new DuEffectSettings(*this));

@@ -12,8 +12,8 @@ DU_OBJECT(DuMusicInstrument);
 class DuMusicInstrument : public DuContainer
 {
 public:
-    explicit DuMusicInstrument();
-    ~DuMusicInstrument();
+    DuMusicInstrument();
+    virtual ~DuMusicInstrument() = default;
 
     virtual DuObjectPtr clone() const override;
 

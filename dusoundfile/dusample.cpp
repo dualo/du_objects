@@ -73,7 +73,7 @@ DuSamplePtr DuSample::fromBinary(const dream_ip& dreamIP,
 
     // Sample Parameters
     verif = sample->setAddress1(dreamSP.address1) ? verif : false;
-    verif = sample->setLoopType((SampleType)dreamSP.loopType) ? verif : false;
+    verif = sample->setLoopType(static_cast<SampleType>(dreamSP.loopType)) ? verif : false;
     verif = sample->setAddress2(dreamSP.address2) ? verif : false;
     verif = sample->setAddress3(dreamSP.address3) ? verif : false;
 
@@ -115,14 +115,14 @@ DuSamplePtr DuSample::fromBinary(const dream_ip& dreamIP,
     }
     verif = sample->setUnityNote(unityNote) ? verif : false;
 
-    uint32_t sampleStartAddress = wavAddressDreamToReadable(dreamSP.wav_address);
+    quint32 sampleStartAddress = wavAddressDreamToReadable(dreamSP.wav_address);
 
-    verif = sample->setLoopStart((int) loopStartDreamToReadable(dreamSP.loop_start_MSB, dreamSP.loop_start_LSB, sampleStartAddress)) ? verif : false;
+    verif = sample->setLoopStart(static_cast<int>(loopStartDreamToReadable(dreamSP.loop_start_MSB, dreamSP.loop_start_LSB, sampleStartAddress))) ? verif : false;
 
     verif = sample->setVolumeMixer1(volumeDreamToReadable(dreamSP.volume_mixer1)) ? verif : false;
     verif = sample->setIsOneShot(isOneShotDreamToReadable(dreamSP.volume_mixer1)) ? verif : false;
 
-    verif = sample->setLoopEnd((int) loopEndDreamToReadable(dreamSP.loop_end_MSB, dreamSP.loop_end_LSB, sampleStartAddress)) ? verif : false;
+    verif = sample->setLoopEnd(static_cast<int>(loopEndDreamToReadable(dreamSP.loop_end_MSB, dreamSP.loop_end_LSB, sampleStartAddress))) ? verif : false;
 
     verif = sample->setAmplitudeOscAmp(dreamSP.amplitude_osc_amp) ? verif : false;
     verif = sample->setVolumeMixer2(dreamSP.volume_mixer2) ? verif : false;
@@ -305,7 +305,7 @@ DuSamplePtr DuSample::fromWav(QFile *input)
         return DuSamplePtr();
     }
 
-    quint32 sizeInFile = qFromLittleEndian<quint32>((uchar*)wavFileData.mid(dataKeywordIndex + 4, 4).data());
+    quint32 sizeInFile = qFromLittleEndian<quint32>(reinterpret_cast<const uchar*>(wavFileData.mid(dataKeywordIndex + 4, 4).constData()));
     if (sizeInFile != wavSize)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "Size in file is different from calculated size:\n"
@@ -313,7 +313,7 @@ DuSamplePtr DuSample::fromWav(QFile *input)
                                      << "calculated:" << wavSize << "o";
     }
 
-    QByteArray rawData = wavFileData.mid(dataKeywordIndex + 4 + 4, (int) wavSize); // +4 for "data", +4 for size
+    QByteArray rawData = wavFileData.mid(dataKeywordIndex + 4 + 4, static_cast<int>(wavSize)); // +4 for "data", +4 for size
     rawData.append(QByteArray(16, 0x00)); // Append 8 half words to loop over at the end of the sample
 
     DuSamplePtr sample(new DuSample);
@@ -646,14 +646,14 @@ int DuSample::normalizeWaveType(int format)
 
     qCDebug(LOG_CAT_DU_OBJECT) << "New format =" << QString::number(newFormat, 16);
 
-    return (int) newFormat;
+    return static_cast<int>(newFormat);
 }
 
-QByteArray DuSample::ipBinary(uint8_t min_vel, uint8_t max_vel) const
+QByteArray DuSample::ipBinary(quint8 min_vel, quint8 max_vel) const
 {
     dream_ip dataStruct;
 
-    std::memset((char*)&dataStruct, 0, INSTR_DREAM_IP_SIZE);
+    std::memset(&dataStruct, 0, INSTR_DREAM_IP_SIZE);
 
     int tmpNum = 0;
 
@@ -662,45 +662,45 @@ QByteArray DuSample::ipBinary(uint8_t min_vel, uint8_t max_vel) const
     tmpNum = getStartNote() - 1;
     if (tmpNum == -1)
         return QByteArray();
-    dataStruct.start_note = (uint8_t) tmpNum;
+    dataStruct.start_note = static_cast<quint8>(tmpNum);
 
     dataStruct.max_vel = max_vel;
 
     tmpNum = getEndNote();
     if (tmpNum == -1)
         return QByteArray();
-    dataStruct.end_note = (uint8_t) tmpNum;
+    dataStruct.end_note = static_cast<quint8>(tmpNum);
 
-    return QByteArray((char*)&dataStruct, INSTR_DREAM_IP_SIZE);
+    return QByteArray(reinterpret_cast<char*>(&dataStruct), INSTR_DREAM_IP_SIZE);
 }
 
-QByteArray DuSample::spBinary(uint32_t sampleAddress) const
+QByteArray DuSample::spBinary(quint32 sampleAddress) const
 {
     dream_sp data;
 
-    std::memset((char*)&data, 0, INSTR_DREAM_SP_SIZE);
+    std::memset(&data, 0, INSTR_DREAM_SP_SIZE);
 
     int tmpNum = 0;
 
     tmpNum = getAddress1();
     if (tmpNum == -1)
         return QByteArray();
-    data.address1 = (uint16_t) tmpNum;
+    data.address1 = static_cast<quint16>(tmpNum);
 
     SampleType tmpSampleType = getLoopType();
     if (tmpSampleType == Unknown)
         return QByteArray();
-    data.loopType = (uint16_t) tmpSampleType;
+    data.loopType = static_cast<quint16>(tmpSampleType);
 
     tmpNum = getAddress2();
     if (tmpNum == -1)
         return QByteArray();
-    data.address2 = (uint16_t) tmpNum;
+    data.address2 = static_cast<quint16>(tmpNum);
 
     tmpNum = getAddress3();
     if (tmpNum == -1)
         return QByteArray();
-    data.address3 = (uint16_t) tmpNum;
+    data.address3 = static_cast<quint16>(tmpNum);
 
     data.unknown1 = 0xB5F0;
     data.unknown2 = 0x0814;
@@ -711,7 +711,7 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress) const
     tmpNum = getVolumeAmplifier();
     if (tmpNum == -1)
         return QByteArray();
-    data.volume_amplifier = (uint8_t) tmpNum;
+    data.volume_amplifier = static_cast<quint8>(tmpNum);
 
     data.unknown6 = getPitchShifted() ? 0x0081 : 0x00E1;
 
@@ -724,26 +724,26 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress) const
     if (tmpNum == -1)
         return QByteArray();
     if (tmpNum <= 64)
-        data.coarse_tune = (uint8_t) (64 - tmpNum);
+        data.coarse_tune = static_cast<quint8>(64 - tmpNum);
     else // tmpNum > 64
-        data.coarse_tune = (uint8_t) (320 - tmpNum);
+        data.coarse_tune = static_cast<quint8>(320 - tmpNum);
 
     tmpNum = getLoopStart();
     if (tmpNum == -1)
         return QByteArray();
-    loopStartReadableToDream((uint32_t) tmpNum, sampleAddress, data.loop_start_MSB, data.loop_start_LSB);
+    loopStartReadableToDream(static_cast<quint32>(tmpNum), sampleAddress, data.loop_start_MSB, data.loop_start_LSB);
 
     data.wav_address = wavAddressReadableToDream(sampleAddress);
 
     tmpNum = volumeReadableToDream(getVolumeMixer1(), getIsOneShot());
     if (tmpNum == -1)
         return QByteArray();
-    data.volume_mixer1 = (uint16_t) tmpNum;
+    data.volume_mixer1 = static_cast<quint16>(tmpNum);
 
     tmpNum = getLoopEnd();
     if (tmpNum == -1)
         return QByteArray();
-    loopEndReadableToDream((uint32_t) tmpNum, sampleAddress, data.loop_end_MSB, data.loop_end_LSB);
+    loopEndReadableToDream(static_cast<quint32>(tmpNum), sampleAddress, data.loop_end_MSB, data.loop_end_LSB);
 
     data.unknown7 = 0x7F0E;
     data.unknown8 = 0x06;
@@ -751,32 +751,32 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress) const
     tmpNum = getAmplitudeOscAmp();
     if (tmpNum == -1)
         return QByteArray();
-    data.amplitude_osc_amp = (uint8_t) tmpNum;
+    data.amplitude_osc_amp = static_cast<quint8>(tmpNum);
 
     tmpNum = getVolumeMixer2();
     if (tmpNum == -1)
         return QByteArray();
-    data.volume_mixer2 = (uint16_t) tmpNum;
+    data.volume_mixer2 = static_cast<quint16>(tmpNum);
 
     tmpNum = initReadableToDream(getInitLevel());
     if (tmpNum == -1)
         return QByteArray();
-    data.init = (uint16_t) tmpNum;
+    data.init = static_cast<quint16>(tmpNum);
 
     tmpNum = attackReadableToDream(getAttackRate(), getAttackLevel());
     if (tmpNum == -1)
         return QByteArray();
-    data.attack = (uint16_t) tmpNum;
+    data.attack = static_cast<quint16>(tmpNum);
 
     tmpNum = decayReadableToDream(getDecayRate(), getDecayLevel());
     if (tmpNum == -1)
         return QByteArray();
-    data.decay = (uint16_t) tmpNum;
+    data.decay = static_cast<quint16>(tmpNum);
 
     tmpNum = releaseReadableToDream(getReleaseRate(), getReleaseLevel());
     if (tmpNum == -1)
         return QByteArray();
-    data.release = (uint16_t) tmpNum;
+    data.release = static_cast<quint16>(tmpNum);
 
     data.unknown13 = 0x0401;
     data.unknown14 = 0x0F00;
@@ -793,12 +793,12 @@ QByteArray DuSample::spBinary(uint32_t sampleAddress) const
 
     data.size_wav = sizeWavReadableToDream(getData().size());
 
-    return QByteArray((char*)&data, INSTR_DREAM_SP_SIZE);
+    return QByteArray(reinterpret_cast<char*>(&data), INSTR_DREAM_SP_SIZE);
 }
 
-uint32_t DuSample::wavAddressDreamToReadable(uint32_t dreamValue)
+quint32 DuSample::wavAddressDreamToReadable(quint32 dreamValue)
 {
-    uint32_t reorderedWavAddress = 0;
+    quint32 reorderedWavAddress = 0;
     reorderedWavAddress |= (0x000000FF & dreamValue) << 0;
     reorderedWavAddress |= (0x0000FF00 & dreamValue) << 16;
     reorderedWavAddress |= (0x00FF0000 & dreamValue) >> 8;
@@ -806,10 +806,10 @@ uint32_t DuSample::wavAddressDreamToReadable(uint32_t dreamValue)
     return (reorderedWavAddress - SOUNDBANK_STARTADRESS) * 2;
 }
 
-uint32_t DuSample::wavAddressReadableToDream(uint32_t readableValue)
+quint32 DuSample::wavAddressReadableToDream(quint32 readableValue)
 {
-    uint32_t tmpNum = (readableValue / 2) + SOUNDBANK_STARTADRESS;
-    uint32_t reorderedWavAddress = 0;
+    quint32 tmpNum = (readableValue / 2) + SOUNDBANK_STARTADRESS;
+    quint32 reorderedWavAddress = 0;
     reorderedWavAddress |= (0x000000FF & tmpNum) << 0;
     reorderedWavAddress |= (0x0000FF00 & tmpNum) << 8;
     reorderedWavAddress |= (0x00FF0000 & tmpNum) << 8;
@@ -817,10 +817,10 @@ uint32_t DuSample::wavAddressReadableToDream(uint32_t readableValue)
     return reorderedWavAddress;
 }
 
-uint32_t DuSample::loopStartDreamToReadable(uint16_t loopStartMSB, uint16_t loopStartLSB, uint32_t sampleStartAddress)
+quint32 DuSample::loopStartDreamToReadable(quint16 loopStartMSB, quint16 loopStartLSB, quint32 sampleStartAddress)
 {
-    uint32_t loopStart = (uint32_t) (loopStartMSB << 16) | (uint32_t) loopStartLSB;
-    uint32_t reorderedLoopStart = 0;
+    quint32 loopStart = static_cast<quint32>(loopStartMSB << 16) | static_cast<quint32>(loopStartLSB);
+    quint32 reorderedLoopStart = 0;
     reorderedLoopStart |= ((0x000000FF & loopStart) - 0x00000001) << 24;
     reorderedLoopStart |=  (0x0000FF00 & loopStart) >> 8;
     reorderedLoopStart |=  (0x00FF0000 & loopStart) >> 8;
@@ -829,27 +829,27 @@ uint32_t DuSample::loopStartDreamToReadable(uint16_t loopStartMSB, uint16_t loop
     return (reorderedLoopStart - SOUNDBANK_STARTADRESS) * 2 - sampleStartAddress;
 }
 
-void DuSample::loopStartReadableToDream(uint32_t readableValue, uint32_t sampleStartAddress, uint16_t& outLoopStartMSB, uint16_t& outLoopStartLSB)
+void DuSample::loopStartReadableToDream(quint32 readableValue, quint32 sampleStartAddress, quint16& outLoopStartMSB, quint16& outLoopStartLSB)
 {
-    uint32_t readableValueOffseted = ((readableValue + sampleStartAddress) / 2) + SOUNDBANK_STARTADRESS;
+    quint32 readableValueOffseted = ((readableValue + sampleStartAddress) / 2) + SOUNDBANK_STARTADRESS;
 
-    uint32_t reorderedLoopStart = 0;
+    quint32 reorderedLoopStart = 0;
     reorderedLoopStart |=  (0x000000FF & readableValueOffseted) << 0;
     reorderedLoopStart |=  (0x0000FF00 & readableValueOffseted) << 16;
     reorderedLoopStart |=  (0x00FF0000 & readableValueOffseted) << 0;
     reorderedLoopStart |= ((0xFF000000 & readableValueOffseted) + 0x01000000) >> 16;
 
-    uint16_t reorderedLoopStart_MSB = (0xFFFF0000 & reorderedLoopStart) >> 16;
-    uint16_t reorderedLoopStart_LSB = (0x0000FFFF & reorderedLoopStart);
+    quint16 reorderedLoopStart_MSB = (0xFFFF0000 & reorderedLoopStart) >> 16;
+    quint16 reorderedLoopStart_LSB = (0x0000FFFF & reorderedLoopStart);
 
-    outLoopStartMSB = (uint16_t) ((0x00FF & reorderedLoopStart_MSB) << 8) | (uint16_t) ((0xFF00 & reorderedLoopStart_MSB) >> 8);
-    outLoopStartLSB = (uint16_t) ((0x00FF & reorderedLoopStart_LSB) << 8) | (uint16_t) ((0xFF00 & reorderedLoopStart_LSB) >> 8);
+    outLoopStartMSB = static_cast<quint16>((0x00FF & reorderedLoopStart_MSB) << 8) | static_cast<quint16>((0xFF00 & reorderedLoopStart_MSB) >> 8);
+    outLoopStartLSB = static_cast<quint16>((0x00FF & reorderedLoopStart_LSB) << 8) | static_cast<quint16>((0xFF00 & reorderedLoopStart_LSB) >> 8);
 }
 
-uint32_t DuSample::loopEndDreamToReadable(uint16_t loopEndMSB, uint16_t loopEndLSB, uint32_t sampleStartAddress)
+quint32 DuSample::loopEndDreamToReadable(quint16 loopEndMSB, quint16 loopEndLSB, quint32 sampleStartAddress)
 {
-    uint32_t loopEnd = (uint32_t) (loopEndMSB << 16) | (uint32_t) loopEndLSB;
-    uint32_t reorderedLoopEnd = 0;
+    quint32 loopEnd = static_cast<quint32>(loopEndMSB << 16) | static_cast<quint32>(loopEndLSB);
+    quint32 reorderedLoopEnd = 0;
     reorderedLoopEnd |= (0x000000FF & loopEnd) << 8;
     reorderedLoopEnd |= (0x0000FF00 & loopEnd) << 8;
     reorderedLoopEnd |= (0x00FF0000 & loopEnd) >> 16;
@@ -858,133 +858,133 @@ uint32_t DuSample::loopEndDreamToReadable(uint16_t loopEndMSB, uint16_t loopEndL
     return (reorderedLoopEnd - SOUNDBANK_STARTADRESS) * 2 - sampleStartAddress;
 }
 
-void DuSample::loopEndReadableToDream(uint32_t readableValue, uint32_t sampleStartAddress, uint16_t& outLoopEndMSB, uint16_t& outLoopEndLSB)
+void DuSample::loopEndReadableToDream(quint32 readableValue, quint32 sampleStartAddress, quint16& outLoopEndMSB, quint16& outLoopEndLSB)
 {
-    uint32_t readableValueOffseted = ((readableValue + sampleStartAddress) / 2) + SOUNDBANK_STARTADRESS;
+    quint32 readableValueOffseted = ((readableValue + sampleStartAddress) / 2) + SOUNDBANK_STARTADRESS;
 
-    uint32_t reorderedLoopEnd = 0;
+    quint32 reorderedLoopEnd = 0;
     reorderedLoopEnd |= (0x000000FF & readableValueOffseted) << 24;
     reorderedLoopEnd |= (0x0000FF00 & readableValueOffseted) << 0;
     reorderedLoopEnd |= (0x00FF0000 & readableValueOffseted) >> 16;
     reorderedLoopEnd |= (0xFF000000 & readableValueOffseted) >> 8;
 
-    uint16_t reorderedLoopEnd_MSB = (0xFFFF0000 & reorderedLoopEnd) >> 16;
-    uint16_t reorderedLoopEnd_LSB = (0x0000FFFF & reorderedLoopEnd);
+    quint16 reorderedLoopEnd_MSB = (0xFFFF0000 & reorderedLoopEnd) >> 16;
+    quint16 reorderedLoopEnd_LSB = (0x0000FFFF & reorderedLoopEnd);
 
-    outLoopEndMSB = (uint16_t) ((0x00FF & reorderedLoopEnd_MSB) << 8) | (uint16_t) ((0xFF00 & reorderedLoopEnd_MSB) >> 8);
-    outLoopEndLSB = (uint16_t) ((0x00FF & reorderedLoopEnd_LSB) << 8) | (uint16_t) ((0xFF00 & reorderedLoopEnd_LSB) >> 8);
+    outLoopEndMSB = static_cast<quint16>((0x00FF & reorderedLoopEnd_MSB) << 8) | static_cast<quint16>((0xFF00 & reorderedLoopEnd_MSB) >> 8);
+    outLoopEndLSB = static_cast<quint16>((0x00FF & reorderedLoopEnd_LSB) << 8) | static_cast<quint16>((0xFF00 & reorderedLoopEnd_LSB) >> 8);
 }
 
-int DuSample::initLevelDreamToReadable(uint16_t dreamValue)
+int DuSample::initLevelDreamToReadable(quint16 dreamValue)
 {
     return qFromBigEndian(dreamValue);
 }
 
-uint16_t DuSample::initReadableToDream(int level)
+quint16 DuSample::initReadableToDream(int level)
 {
-    return qToBigEndian((uint16_t) level);
+    return qToBigEndian(static_cast<quint16>(level));
 }
 
-int DuSample::attackRateDreamToReadable(uint16_t dreamValue)
+int DuSample::attackRateDreamToReadable(quint16 dreamValue)
 {
     return (qFromBigEndian(dreamValue) >> 8) & 0x7F;
 }
 
-int DuSample::attackLevelDreamToReadable(uint16_t dreamValue)
+int DuSample::attackLevelDreamToReadable(quint16 dreamValue)
 {
-    uint8_t LSB = ((qFromBigEndian(dreamValue) >> 8) >> 7) & 0x01;
-    uint8_t MSB = qFromBigEndian(dreamValue) & 0x1F;
+    quint8 LSB = ((qFromBigEndian(dreamValue) >> 8) >> 7) & 0x01;
+    quint8 MSB = qFromBigEndian(dreamValue) & 0x1F;
 
     return (LSB | (MSB << 1)) & 0xFF;
 }
 
-uint16_t DuSample::attackReadableToDream(int rate, int level)
+quint16 DuSample::attackReadableToDream(int rate, int level)
 {
-    uint8_t LSB = ((level >> 1) & 0x1F);
-    uint8_t MSB = ((level << 7) & 0x80) | (rate & 0x7F);
+    quint8 LSB = ((level >> 1) & 0x1F);
+    quint8 MSB = ((level << 7) & 0x80) | (rate & 0x7F);
 
-    return qToBigEndian((uint16_t) (((uint16_t) MSB << 8) | LSB));
+    return qToBigEndian(static_cast<quint16>((static_cast<quint16>(MSB) << 8) | LSB));
 }
 
-int DuSample::decayRateDreamToReadable(uint16_t dreamValue)
+int DuSample::decayRateDreamToReadable(quint16 dreamValue)
 {
     return (qFromBigEndian(dreamValue) >> 8) & 0x7F;
 }
 
-int DuSample::decayLevelDreamToReadable(uint16_t dreamValue)
+int DuSample::decayLevelDreamToReadable(quint16 dreamValue)
 {
-    uint8_t LSB = ((qFromBigEndian(dreamValue) >> 8) >> 7) & 0x01;
-    uint8_t MSB = qFromBigEndian(dreamValue) & 0x1F;
+    quint8 LSB = ((qFromBigEndian(dreamValue) >> 8) >> 7) & 0x01;
+    quint8 MSB = qFromBigEndian(dreamValue) & 0x1F;
 
     return (LSB | (MSB << 1)) & 0xFF;
 }
 
-uint16_t DuSample::decayReadableToDream(int rate, int level)
+quint16 DuSample::decayReadableToDream(int rate, int level)
 {
-    uint8_t code = level == 0 ? 4 : 2;
+    quint8 code = level == 0 ? 4 : 2;
 
-    uint8_t LSB = ((code << 5) & 0xE0) | ((level >> 1) & 0x1F);
-    uint8_t MSB = ((level << 7) & 0x80) | (rate & 0x7F);
+    quint8 LSB = ((code << 5) & 0xE0) | ((level >> 1) & 0x1F);
+    quint8 MSB = ((level << 7) & 0x80) | (rate & 0x7F);
 
-    return qToBigEndian((uint16_t) (((uint16_t) MSB << 8) | LSB));
+    return qToBigEndian(static_cast<quint16>((static_cast<quint16>(MSB) << 8) | LSB));
 }
 
-int DuSample::releaseRateDreamToReadable(uint16_t dreamValue)
+int DuSample::releaseRateDreamToReadable(quint16 dreamValue)
 {
     return (qFromBigEndian(dreamValue) >> 8) & 0x7F;
 }
 
-int DuSample::releaseLevelDreamToReadable(uint16_t dreamValue)
+int DuSample::releaseLevelDreamToReadable(quint16 dreamValue)
 {
-    uint8_t LSB = ((qFromBigEndian(dreamValue) >> 8) >> 7) & 0x01;
-    uint8_t MSB = qFromBigEndian(dreamValue) & 0x1F;
+    quint8 LSB = ((qFromBigEndian(dreamValue) >> 8) >> 7) & 0x01;
+    quint8 MSB = qFromBigEndian(dreamValue) & 0x1F;
 
     return (LSB | (MSB << 1)) & 0xFF;
 }
 
-uint16_t DuSample::releaseReadableToDream(int rate, int level)
+quint16 DuSample::releaseReadableToDream(int rate, int level)
 {
-    uint8_t code = 3;
+    quint8 code = 3;
 
-    uint8_t LSB = ((code << 5) & 0x70) | ((level >> 1) & 0x1F);
-    uint8_t MSB = ((level << 7) & 0x80) | (rate & 0x7F);
+    quint8 LSB = ((code << 5) & 0x70) | ((level >> 1) & 0x1F);
+    quint8 MSB = ((level << 7) & 0x80) | (rate & 0x7F);
 
-    return qToBigEndian((uint16_t) (((uint16_t) MSB << 8) | LSB));
+    return qToBigEndian(static_cast<quint16>((static_cast<quint16>(MSB) << 8) | LSB));
 }
 
-int DuSample::volumeDreamToReadable(uint16_t dreamValue)
+int DuSample::volumeDreamToReadable(quint16 dreamValue)
 {
-    uint8_t volumeRight = (dreamValue >> 9) & 0x7F;
-//    uint8_t volumeLeft  = dreamValue & 0xFF;
+    quint8 volumeRight = (dreamValue >> 9) & 0x7F;
+//    quint8 volumeLeft  = dreamValue & 0xFF;
 
     return volumeRight;
 }
 
-bool DuSample::isOneShotDreamToReadable(uint16_t dreamValue)
+bool DuSample::isOneShotDreamToReadable(quint16 dreamValue)
 {
-    uint8_t isOneShot = (dreamValue >> 8) & 0x01;
+    quint8 isOneShot = (dreamValue >> 8) & 0x01;
 
     return isOneShot == 1;
 }
 
-uint16_t DuSample::volumeReadableToDream(int volume, bool isOneShot)
+quint16 DuSample::volumeReadableToDream(int volume, bool isOneShot)
 {
-    uint8_t volumeRight = (uint8_t) ((volume << 1) | (isOneShot ? 1 : 0));
-    uint8_t volumeLeft  = (uint8_t) ((volume << 1) | 0x01);
+    quint8 volumeRight = static_cast<quint8>((volume << 1) | (isOneShot ? 1 : 0));
+    quint8 volumeLeft  = static_cast<quint8>((volume << 1) | 0x01);
 
-    uint16_t dreamValue = (((uint16_t)volumeRight << 8) & 0xFF00) | ((uint16_t)volumeLeft & 0x00FF);
+    quint16 dreamValue = ((static_cast<quint16>(volumeRight) << 8) & 0xFF00) | (static_cast<quint16>(volumeLeft) & 0x00FF);
 
     return dreamValue;
 }
 
-int DuSample::sizeWavDreamToReadable(uint32_t dreamValue)
+int DuSample::sizeWavDreamToReadable(quint32 dreamValue)
 {
-    return (int) dreamValue * 2;
+    return static_cast<int>(dreamValue) * 2;
 }
 
-uint32_t DuSample::sizeWavReadableToDream(int readableValue)
+quint32 DuSample::sizeWavReadableToDream(int readableValue)
 {
-    return (uint32_t) readableValue / 2;
+    return static_cast<quint32>(readableValue) / 2;
 }
 
 // Intrument Parameters

@@ -12,13 +12,9 @@ DU_OBJECT_IMPL(DuMidiBasicEvent)
 DuMidiBasicEvent::DuMidiBasicEvent(quint32 time, quint8 status) :
     DuContainer()
 {
-    addChild(KEY_MIDIEVENT_TIME, new DuMidiVariableLength(time));
+    addChild(KEY_MIDIEVENT_TIME, new DuMidiVariableLength(static_cast<int>(time)));
 
     addChild(KEY_MIDIEVENT_STATUS, new DuMidiStatus(status));
-}
-
-DuMidiBasicEvent::~DuMidiBasicEvent()
-{
 }
 
 
@@ -55,7 +51,7 @@ int DuMidiBasicEvent::getTime() const
     if (tmp == NULL)
         return -1;
 
-    return tmp->getAbsolute();
+    return static_cast<int>(tmp->getAbsolute());
 }
 
 void DuMidiBasicEvent::setTime(quint32 delta, quint32 offset)

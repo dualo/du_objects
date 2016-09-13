@@ -43,10 +43,6 @@ DuNumeric::DuNumeric(int value, int byteSize,
     Q_ASSERT(res);
 }
 
-DuNumeric::~DuNumeric()
-{
-}
-
 
 DuObjectPtr DuNumeric::clone() const
 {
@@ -76,7 +72,7 @@ QByteArray DuNumeric::toDuMusicBinary() const
 
     for (int i = 0; i < size; i++)
     {
-        retArray.append((quint8)((num >> (i * 8)) & 0xFF));
+        retArray.append(static_cast<char>((num >> (i * 8)) & 0xFF));
     }
 
     return retArray;
@@ -104,7 +100,7 @@ QByteArray DuNumeric::toMidiBinary() const
 
     for (int i = 1; i < size + 1; i++)
     {
-        retArray.append((quint8)((num >> ((size - i) * 8)) & 0xFF));
+        retArray.append(static_cast<char>((num >> ((size - i) * 8)) & 0xFF));
     }
 
     return retArray;

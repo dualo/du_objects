@@ -12,19 +12,19 @@ DuMixer::DuMixer() :
     DuEffectSettings()
 {
     addChild(KeyInputGain,
-             new DuNumeric(FX_MIX_INGAIN_MAXVALUE, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(FX_MIX_INGAIN_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_MIX_INGAIN_MAXVALUE, FX_MIX_INGAIN_MINVALUE));
 
     addChild(KeyLowCutFilterFrequency,
-             new DuNumeric(FX_MIX_LCFREQ_MAXVALUE, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(FX_MIX_LCFREQ_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_MIX_LCFREQ_MAXVALUE, FX_MIX_LCFREQ_MINVALUE));
 
     addChild(KeyHighCutFilterFrequency,
-             new DuNumeric(FX_MIX_HCFREQ_MINVALUE, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(FX_MIX_HCFREQ_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_MIX_HCFREQ_MAXVALUE, FX_MIX_HCFREQ_MINVALUE));
 
     addChild(KeyOutputLevel,
-             new DuNumeric(FX_MIX_OUTLEVEL_MAXVALUE, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(FX_MIX_OUTLEVEL_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_MIX_OUTLEVEL_MAXVALUE, FX_MIX_OUTLEVEL_MINVALUE));
 
     addChild(KeyOutputPanning,
@@ -32,20 +32,16 @@ DuMixer::DuMixer() :
                            FX_MIX_OUTPAN_MAXVALUE, FX_MIX_OUTPAN_MINVALUE));
 
     addChild(KeyOutputFrontRear,
-             new DuNumeric(FX_MIX_OUTFR_MINVALUE, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(FX_MIX_OUTFR_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_MIX_OUTFR_MAXVALUE, FX_MIX_OUTFR_MINVALUE));
 
     addChild(KeySendToReverb,
-             new DuNumeric(FX_MIX_REVERB_MINVALUE, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(FX_MIX_REVERB_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_MIX_REVERB_MAXVALUE, FX_MIX_REVERB_MINVALUE));
 
     addChild(KeySendToChorus,
-             new DuNumeric(FX_MIX_CHORUS_MINVALUE, NUMERIC_DEFAULT_SIZE,
+             new DuNumeric(FX_MIX_CHORUS_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_MIX_CHORUS_MAXVALUE, FX_MIX_CHORUS_MINVALUE));
-}
-
-DuMixer::~DuMixer()
-{
 }
 
 DuObjectPtr DuMixer::clone() const
@@ -83,52 +79,52 @@ DuMixerPtr DuMixer::fromDuMusicBinary(const FX_mix &du_mixer)
 QByteArray DuMixer::toDuMusicBinary() const
 {
     FX_mix du_mixer;
-    std::memset((char*)&du_mixer, 0, size());
+    std::memset(&du_mixer, 0, static_cast<size_t>(size()));
     int tmp = 0;
 
 
     tmp = getInputGain();
     if (tmp == -1)
         return QByteArray();
-    du_mixer.m_inputgain = tmp;
+    du_mixer.m_inputgain = static_cast<quint8>(tmp);
 
     tmp = getLowCutFilterFrequency();
     if (tmp == -1)
         return QByteArray();
-    du_mixer.m_locutfilterfrequency = tmp;
+    du_mixer.m_locutfilterfrequency = static_cast<quint8>(tmp);
 
     tmp = getHighCutFilterFrequency();
     if (tmp == -1)
         return QByteArray();
-    du_mixer.m_hicutfilterfrequency = tmp;
+    du_mixer.m_hicutfilterfrequency = static_cast<quint8>(tmp);
 
     tmp = getOutputLevel();
     if (tmp == -1)
         return QByteArray();
-    du_mixer.m_ouputlevel = tmp;
+    du_mixer.m_ouputlevel = static_cast<quint8>(tmp);
 
     tmp = getOutputPanning();
     if (tmp == -1)
         return QByteArray();
-    du_mixer.m_outputpanning = tmp;
+    du_mixer.m_outputpanning = static_cast<quint8>(tmp);
 
     tmp = getOutputFrontRear();
     if (tmp == -1)
         return QByteArray();
-    du_mixer.m_ouputfrontrear = tmp;
+    du_mixer.m_ouputfrontrear = static_cast<quint8>(tmp);
 
     tmp = getSendToReverb();
     if (tmp == -1)
         return QByteArray();
-    du_mixer.m_sendtoreverb = tmp;
+    du_mixer.m_sendtoreverb = static_cast<quint8>(tmp);
 
     tmp = getSendToChorus();
     if (tmp == -1)
         return QByteArray();
-    du_mixer.m_sendtochorus = tmp;
+    du_mixer.m_sendtochorus = static_cast<quint8>(tmp);
 
 
-    return QByteArray((char *)&(du_mixer), size());
+    return QByteArray(reinterpret_cast<char*>(&du_mixer), size());
 }
 
 
