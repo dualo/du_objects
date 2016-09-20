@@ -18,14 +18,14 @@ JsonApiErrorObject::JsonApiErrorObject(const QJsonObject &data) :
 
     if (!idValue.isDouble()
             || !statusValue.isDouble()
-            || !codeValue.isDouble()
+            || !codeValue.isString()
             || !titleValue.isString()
             || !detailValue.isString())
         return;
 
     m_id        = idValue.toInt();
     m_status    = statusValue.toInt();
-    m_code      = codeValue.toInt();
+    m_code      = codeValue.toString();
     m_title     = titleValue.toString();
     m_detail    = detailValue.toString();
 
@@ -43,7 +43,7 @@ JsonApiErrorObject::JsonApiErrorObject(const QJsonObject &data) :
 
 JsonApiErrorObject::JsonApiErrorObject(int id,
                                        int status,
-                                       int code,
+                                       const QString &code,
                                        const QString &title,
                                        const QString &detail,
                                        const QJsonObject &meta) :
@@ -93,7 +93,7 @@ int JsonApiErrorObject::status() const
     return m_status;
 }
 
-int JsonApiErrorObject::code() const
+QString JsonApiErrorObject::code() const
 {
     return m_code;
 }
