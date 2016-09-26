@@ -27,7 +27,7 @@
 extern "C"
 {
 #pragma pack(push, 4)
-#include "../du-touch/parameters/music_migration.h"
+#include "../du-touch/dualo_structs/music_migration.h"
 #pragma pack(pop)
 }
 

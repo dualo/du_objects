@@ -4,7 +4,7 @@
 
 #include <QJsonObject>
 
-#include "../du-touch/parameters/controler_parameters_mng.h"
+#include "../du-touch/dualo_structs/controler_structs.h"
 
 #include "../general/duarray.h"
 #include "../general/dunumeric.h"
