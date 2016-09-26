@@ -22,10 +22,10 @@ win32 {
 }
 
 HEADERS += \
-    $$PWD/du-touch/parameters/music_parameters_mng.h \
-    $$PWD/du-touch/parameters/sound_parameters_mng.h \
-    $$PWD/du-touch/parameters/g_parameters_mng.h \
-    $$PWD/du-touch/parameters/instr_mapping.h \
+    $$PWD/du-touch/dualo_structs/music_structs.h \
+    $$PWD/du-touch/dualo_structs/sound_structs.h \
+    $$PWD/du-touch/dualo_structs/g_structs.h \
+    $$PWD/du-touch/dualo_structs/instr_mapping.h \
     $$PWD/general/duobject.h \
     $$PWD/general/ducontainer.h \
     $$PWD/general/duarray.h \
@@ -71,17 +71,16 @@ HEADERS += \
     $$PWD/duprofile.h \
     $$PWD/dusoundfile/dusound.h \
     $$PWD/miditodumusic/duscalemodel.h \
-    $$PWD/du-touch/parameters/controler_parameters_mng.h \
+    $$PWD/du-touch/dualo_structs/controler_structs.h \
     $$PWD/dusoundfile/dunote.h \
     $$PWD/dusoundfile/dusoundinfo.h \
     $$PWD/dusoundfile/dulayer.h \
     $$PWD/dusoundfile/dusample.h \
     $$PWD/general/duboolean.h \
-    $$PWD/du-touch/parameters/old_sound_parameters_mng.h \
-    $$PWD/du-touch/parameters/music_migration.h
+    $$PWD/du-touch/dualo_structs/old_sound_structs.h \
+    $$PWD/du-touch/dualo_structs/music_migration.h
 
 SOURCES += \
-    $$PWD/du-touch/parameters/instr_mapping.c \
     $$PWD/general/duobject.cpp \
     $$PWD/general/ducontainer.cpp \
     $$PWD/general/duvalue.cpp \
@@ -131,7 +130,7 @@ SOURCES += \
     $$PWD/dusoundfile/dulayer.cpp \
     $$PWD/dusoundfile/dusample.cpp \
     $$PWD/general/duboolean.cpp \
-    $$PWD/du-touch/parameters/music_migration.c
+    $$PWD/du-touch/dualo_structs/music_migration.c
     
 RESOURCES += \
     $$PWD/miditodumusic/midiresources.qrc

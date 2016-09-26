@@ -6,7 +6,7 @@
 #include <QLoggingCategory>
 
 #pragma pack(push, 4)
-#include "../du-touch/parameters/music_parameters_mng.h"
+#include "../du-touch/dualo_structs/music_structs.h"
 #pragma pack(pop)
 
 Q_DECLARE_LOGGING_CATEGORY(LOG_CAT_DU_OBJECT)

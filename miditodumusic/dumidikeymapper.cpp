@@ -1,7 +1,7 @@
 #include "dumidikeymapper.h"
 
 #pragma pack(push, 4)
-#include "../du-touch/parameters/g_parameters_mng.h"
+#include "../du-touch/dualo_structs/g_structs.h"
 #pragma pack(pop)
 
 #include <QJsonArray>
