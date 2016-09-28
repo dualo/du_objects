@@ -159,15 +159,12 @@ DuSamplePtr DuSample::fromWav(QFile *input)
         return DuSamplePtr();
     }
 
-    if (QFile::exists(wavFileName))
+    int tmpCpt = 0;
+    while (QFile::exists(wavFileName) && tmpCpt < 10)
     {
         if (!QFile::remove(wavFileName))
         {
-            qCCritical(LOG_CAT_DU_OBJECT)
-                    << "Failed to generate DuSample\n"
-                    << "couldn't remove previous temp file :" << wavFileName;
-
-            return DuSamplePtr();
+            wavFileName = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/tmp" + QString::number(tmpCpt++) + ".wav";
         }
     }
 
@@ -336,14 +333,12 @@ QString DuSample::convertToMono(SndfileHandle &oldSoundFile)
         return QString();
     }
 
-    if (QFile::exists(monoWavFileName))
+    int tmpCpt = 0;
+    while (QFile::exists(monoWavFileName) && tmpCpt < 10)
     {
         if (!QFile::remove(monoWavFileName))
         {
-            qCCritical(LOG_CAT_DU_OBJECT)
-                    << "Failed to convert to mono\n"
-                    << "couldn't remove previous temp file :" << monoWavFileName;
-            return QString();
+            monoWavFileName = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/tmp_mono" + QString::number(tmpCpt++) + ".wav";
         }
     }
 
@@ -431,14 +426,12 @@ QString DuSample::convertTo44100samplerate(SndfileHandle &oldSoundFile, sf_count
         return QString();
     }
 
-    if (QFile::exists(wav44100samplerateFileName))
+    int tmpCpt = 0;
+    while (QFile::exists(wav44100samplerateFileName) && tmpCpt < 10)
     {
         if (!QFile::remove(wav44100samplerateFileName))
         {
-            qCCritical(LOG_CAT_DU_OBJECT)
-                    << "Failed to convert to 44100 samplerate\n"
-                    << "couldn't remove previous temp file :" << wav44100samplerateFileName;
-            return QString();
+            wav44100samplerateFileName = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/tmp_44100samplerate" + QString::number(tmpCpt++) + ".wav";
         }
     }
 
@@ -568,14 +561,12 @@ QString DuSample::convertTo16bits(SndfileHandle &oldSoundFile)
         return QString();
     }
 
-    if (QFile::exists(wav16bitsFileName))
+    int tmpCpt = 0;
+    while (QFile::exists(wav16bitsFileName) && tmpCpt < 10)
     {
         if (!QFile::remove(wav16bitsFileName))
         {
-            qCCritical(LOG_CAT_DU_OBJECT)
-                    << "Failed to convert to 16 bits\n"
-                    << "couldn't remove previous temp file :" << wav16bitsFileName;
-            return QString();
+            wav16bitsFileName = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/tmp_16bits" + QString::number(tmpCpt++) + ".wav";
         }
     }
 
