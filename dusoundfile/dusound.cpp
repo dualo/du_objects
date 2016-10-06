@@ -458,25 +458,6 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
         return QByteArray();
 
     int nbLayer = layerArray->count();
-    int totalNbSamples = 0;
-    for (int i = 0; i < nbLayer; ++i)
-    {
-        const DuLayerConstPtr& layer = layerArray->at(i);
-        if (layer == NULL)
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Layer" << i << "null";
-            return QByteArray();
-        }
-
-        const DuArrayConstPtr<DuSample>& samples = layer->getSampleArray();
-        if (samples == NULL)
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Sample array null";
-            return QByteArray();
-        }
-
-        totalNbSamples += samples->count();
-    }
 
     QByteArray ipHeader(2 * nbLayer, 0);
     QByteArray dreamIPData;
@@ -484,15 +465,22 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
     QByteArray dreamSamplesData;
     int sampleAddress = 0;
     int totalSampleSize = 0;
+    int totalNbSamples = 0;
     for (int i = 0; i < nbLayer; ++i)
     {
         DuLayerConstPtr layer = layerArray->at(i);
         if (layer == NULL)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "Layer" << i << "null";
             return QByteArray();
+        }
 
         DuArrayConstPtr<DuSample> samples = layer->getSampleArray();
         if (samples == NULL)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "Sample array null";
             return QByteArray();
+        }
 
         int nbSamples = samples->count();
 
@@ -502,9 +490,19 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
         else
             ipHeader[(i * 2) + 1] = 0;
 
+        // Sort samples by ref note
+        QMultiMap<int, DuSampleConstPtr> sortedSamples;
         for (int j = 0; j < nbSamples; ++j)
         {
             DuSampleConstPtr sample = samples->at(j);
+            if (sample == NULL)
+                return QByteArray();
+
+            sortedSamples.insert(sample->getUnityNote(), sample);
+        }
+
+        foreach (const DuSampleConstPtr& sample, sortedSamples)
+        {
             if (sample == NULL)
                 return QByteArray();
 
@@ -515,6 +513,8 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
             sampleAddress += sample->getData().size();
             totalSampleSize += sample->getData().size();
         }
+
+        totalNbSamples += nbSamples;
     }
 
     // HEADER
