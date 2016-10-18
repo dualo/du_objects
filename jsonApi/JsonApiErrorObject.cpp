@@ -47,7 +47,7 @@ JsonApiErrorObject::JsonApiErrorObject(int id,
                                        const QString &title,
                                        const QString &detail,
                                        const QJsonObject &meta) :
-    m_isNull(id < 0 || status < 0 || code < 0 || title.isEmpty() || detail.isEmpty()),
+    m_isNull(id < 0 || status < 0 || code.isEmpty() || title.isEmpty() || detail.isEmpty()),
     m_id(id),
     m_status(status),
     m_code(code),
