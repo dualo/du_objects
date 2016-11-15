@@ -4,6 +4,7 @@
 #include "tst_dusoundtest.h"
 #include "tst_dueffectstest.h"
 #include "tst_dupresettest.h"
+#include "tst_dujsonapitest.h"
 
 int main(int argc, char *argv[])
 {
@@ -12,6 +13,7 @@ int main(int argc, char *argv[])
     DuEffectsTest t3;
     DuPresetTest t4;
     DuMusicTest t5;
+    DuJsonApiTest t6;
 
     int result = 1;
     result = QTest::qExec(&t1, argc, argv) == 0 ? 0 : result;
@@ -19,6 +21,7 @@ int main(int argc, char *argv[])
     result = QTest::qExec(&t3, argc, argv) == 0 ? 0 : result;
     result = QTest::qExec(&t4, argc, argv) == 0 ? 0 : result;
     result = QTest::qExec(&t5, argc, argv) == 0 ? 0 : result;
+    result = QTest::qExec(&t6, argc, argv) == 0 ? 0 : result;
 
     return result;
 }

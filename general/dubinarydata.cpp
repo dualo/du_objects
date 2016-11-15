@@ -36,7 +36,10 @@ QJsonValue DuBinaryData::toJson() const
 
 QDebug DuBinaryData::debugPrint(QDebug dbg) const
 {
-    dbg.nospace() << "DuBinaryData(" << getBinaryData().toHex() << ")";
+    const QByteArray& hexData = getBinaryData().toHex();
+    dbg.nospace() << "DuBinaryData("
+                  << (hexData.size() < 40 ? hexData : (hexData.left(20) + "..." + hexData.right(20)))
+                  << ")";
 
     return dbg.space();
 }

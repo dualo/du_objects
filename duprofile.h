@@ -3,6 +3,8 @@
 
 #include "general/ducontainer.h"
 
+#include "jsonApi/JsonApiResourceObject.h"
+
 
 #ifdef Q_OS_WIN
 #include "general/duarray.h"
@@ -40,7 +42,7 @@ public:
      * @param recursionLevel  0: don't get friends, 1: get friends, 2: get friends and friends of friends, etc.
      * @return A DuProfilePtr (NULL if error occured)
      */
-    static DuProfilePtr fromJson(const QJsonObject &jsonProfile, int recursionLevel);
+    static DuProfilePtr fromJsonApi(const JsonApiResourceObject &jsonProfile, int recursionLevel);
 
     QHttpMultiPart *toHttpMultiPart(const QByteArray &boundary) const;
 

@@ -38,7 +38,7 @@ QHttpMultiPart *DuDevice::toHttpMultiPart(const QByteArray& boundary) const
     multiPart->append(getChild(KeySerialNumber)->toHttpPart(QStringLiteral("serial_number")));
     multiPart->append(getChild(KeyName)->toHttpPart(QStringLiteral("name")));
     multiPart->append(getChild(KeyVersion)->toHttpPart(QStringLiteral("version")));
-    multiPart->append(getChild(KeyOwnerId)->toHttpPart(QStringLiteral("user_id")));
+    multiPart->append(getChild(KeyOwnerId)->toHttpPart(QStringLiteral("user")));
 
     return multiPart;
 }

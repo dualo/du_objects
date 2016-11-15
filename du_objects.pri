@@ -78,7 +78,10 @@ HEADERS += \
     $$PWD/dusoundfile/dusample.h \
     $$PWD/general/duboolean.h \
     $$PWD/du-touch/dualo_structs/old_sound_structs.h \
-    $$PWD/du-touch/dualo_structs/music_migration.h
+    $$PWD/du-touch/dualo_structs/music_migration.h \
+    $$PWD/jsonApi/JsonApiDocument.h \
+    $$PWD/jsonApi/JsonApiErrorObject.h \
+    $$PWD/jsonApi/JsonApiResourceObject.h
 
 SOURCES += \
     $$PWD/general/duobject.cpp \
@@ -130,7 +133,10 @@ SOURCES += \
     $$PWD/dusoundfile/dulayer.cpp \
     $$PWD/dusoundfile/dusample.cpp \
     $$PWD/general/duboolean.cpp \
-    $$PWD/du-touch/dualo_structs/music_migration.c
+    $$PWD/du-touch/dualo_structs/music_migration.c \
+    $$PWD/jsonApi/JsonApiDocument.cpp \
+    $$PWD/jsonApi/JsonApiErrorObject.cpp \
+    $$PWD/jsonApi/JsonApiResourceObject.cpp
     
 RESOURCES += \
     $$PWD/miditodumusic/midiresources.qrc

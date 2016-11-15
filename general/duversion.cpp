@@ -6,22 +6,20 @@ DU_OBJECT_IMPL(DuVersion)
 
 DuVersion::DuVersion(const QString &version) :
     DuString(),
-    m_major(0),
-    m_minor(0),
-    m_patch(0)
+    m_major(-1),
+    m_minor(-1),
+    m_patch(-1)
 {
-    bool res = setVersion(version);
-    Q_ASSERT(res);
+    setVersion(version);
 }
 
 DuVersion::DuVersion(int major, int minor, int patch) :
     DuString(),
-    m_major(0),
-    m_minor(0),
-    m_patch(0)
+    m_major(-1),
+    m_minor(-1),
+    m_patch(-1)
 {
-    bool res = setVersion(major, minor, patch);
-    Q_ASSERT(res);
+    setVersion(major, minor, patch);
 }
 
 DuObjectPtr DuVersion::clone() const
@@ -63,6 +61,7 @@ bool DuVersion::setVersion(const QString &version)
     if (nbs.size() != 3)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "failed:" << version;
+        setString(tr("unknown"));
         return false;
     }
 
@@ -72,6 +71,7 @@ bool DuVersion::setVersion(const QString &version)
     if (!ok)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "failed:" << version;
+        setString(tr("unknown"));
         return false;
     }
 
@@ -79,6 +79,7 @@ bool DuVersion::setVersion(const QString &version)
     if (!ok)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "failed:" << version;
+        setString(tr("unknown"));
         return false;
     }
 
@@ -86,6 +87,7 @@ bool DuVersion::setVersion(const QString &version)
     if (!ok)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "failed:" << version;
+        setString(tr("unknown"));
         return false;
     }
 
@@ -102,6 +104,7 @@ bool DuVersion::setVersion(int major, int minor, int patch)
     if (major < 0 || minor < 0 || patch < 0)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "failed:" << major << minor << patch;
+        setString(tr("unknown"));
         return false;
     }
 

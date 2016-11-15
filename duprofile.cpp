@@ -36,24 +36,43 @@ DuObjectPtr DuProfile::clone() const
     return DuProfilePtr(new DuProfile(*this));
 }
 
-DuProfilePtr DuProfile::fromJson(const QJsonObject &jsonProfile, int recursionLevel)
+DuProfilePtr DuProfile::fromJsonApi(const JsonApiResourceObject &jsonProfile, int recursionLevel)
 {
-    if (jsonProfile.isEmpty())
-    {
+    if (jsonProfile.isNull())
         return DuProfilePtr();
-    }
+
+    // CHECK TYPE
+    if (jsonProfile.type() != "users")
+        return DuProfilePtr();
+
+    // ATTRIBUTES
+    const QJsonObject& dataObject = jsonProfile.attributes();
+
+    const QJsonValue& pseudoValue       = dataObject.value("name");
+    const QJsonValue& emailValue        = dataObject.value("email");
+    const QJsonValue& creationDateValue = dataObject.value("created_at");
+    const QJsonValue& roleValue         = dataObject.value("authorization");
+    if (!pseudoValue.isString()
+            || !emailValue.isString()
+            || !creationDateValue.isString()
+            || !roleValue.isString())
+        return DuProfilePtr();
+
+    // RELATIONSHIPS
+    const QList<JsonApiResourceObject>& dutouchsArray = jsonProfile.relationships().values("du-touchs");
+
+
+    // CREATE PROFILE
 
     DuProfilePtr outProfile(new DuProfile);
 
-    outProfile->setFirstname(jsonProfile.value(QStringLiteral("Firstname")).toString());
-    outProfile->setLastname(jsonProfile.value(QStringLiteral("Lastname")).toString());
-    outProfile->setPseudo(jsonProfile.value(QStringLiteral("username")).toString());
-    outProfile->setMail(jsonProfile.value(QStringLiteral("email")).toString());
-    outProfile->setCreationDate(QDateTime::fromTime_t(static_cast<uint>(jsonProfile.value(QStringLiteral("time_created")).toInt())));
-    outProfile->setGUID(jsonProfile.value(QStringLiteral("global_id")).toInt());
+    outProfile->setPseudo(pseudoValue.toString());
+    outProfile->setMail(emailValue.toString());
+    outProfile->setCreationDate(QDateTime::fromString(creationDateValue.toString(), "yyyy-MM-dd HH:mm:ss"));
+    outProfile->setGUID(jsonProfile.id());
 
-    QString role = jsonProfile.value(QStringLiteral("role")).toString();
-    if (role == QLatin1String("default") || role.isEmpty())
+    const QString& role = roleValue.toString();
+    if (role == QLatin1String("all") || role.isEmpty())
         outProfile->setRole(Default);
     else if (role == QLatin1String("beta"))
         outProfile->setRole(Beta);
@@ -71,69 +90,75 @@ DuProfilePtr DuProfile::fromJson(const QJsonObject &jsonProfile, int recursionLe
 
     // DU-TOUCH LIST
     DuArrayPtr<DuTouch> list(new DuArray<DuTouch>);
-    QJsonArray array = jsonProfile.value(QStringLiteral("device_list")).toArray();
-    for (QJsonArray::iterator it = array.begin(); it != array.end(); ++it)
+    foreach (const JsonApiResourceObject& duTouch, dutouchsArray)
     {
-        const QJsonValueRef& value = (*it);
-        if (!value.isObject())
-        {
+        const DuTouchPtr& device = DuTouch::fromJsonApi(duTouch);
+        if (device == NULL)
             continue;
-        }
 
-        const QJsonObject& object = value.toObject();
-        const QString& serial               = object.value(QStringLiteral("dutouch_serial")).toString();
-        const QString& name                 = object.value(QStringLiteral("dutouch_name")).toString();
-        const QString& firmware             = object.value(QStringLiteral("firmware")).toString();
-        const QString& firmwareUpdateDate   = object.value(QStringLiteral("firmware_update_date")).toString();
-        const QString& soundbank            = object.value(QStringLiteral("soundbank")).toString();
-        const QString& soundbankUpdateDate  = object.value(QStringLiteral("soundbank_update_date")).toString();
-        const QString& dissocScheduled      = object.value(QStringLiteral("dissociation_scheduled")).toString();
-
-        DuTouchPtr device(new DuTouch);
-        device->setSerialNumber(serial);
-        device->setName(name);
         device->setOwner(outProfile->getPseudo());
         device->setOwnerId(outProfile->getGUID());
-        device->setPlugged(false);
-        device->setConnected(false);
-        device->setBusy(false);
-        device->setVersion(firmware);
-        device->setUpdateDate(QDateTime::fromString(firmwareUpdateDate, QStringLiteral("yyyy-MM-dd HH:mm:ss")));
-        device->setSoundbankVersion(soundbank);
-        device->setSoundbankUpdateDate(QDateTime::fromString(soundbankUpdateDate, QStringLiteral("yyyy-MM-dd HH:mm:ss")));
-        device->setDissocScheduled(dissocScheduled == QStringLiteral("yes"));
 
         list->append(device);
     }
     outProfile->setDuTouchList(list);
 
+    // FIRSTNAME
+    if (dataObject.contains("firstname"))
+    {
+        const QJsonValue& firstnameValue = dataObject.value("firstname");
+        if (!firstnameValue.isString())
+            return DuProfilePtr();
+
+        outProfile->setFirstname(firstnameValue.toString());
+    }
+
+    // LASTNAME
+    if (dataObject.contains("lastname"))
+    {
+        const QJsonValue& lastnameValue = dataObject.value("lastname");
+        if (!lastnameValue.isString())
+            return DuProfilePtr();
+
+        outProfile->setLastname(lastnameValue.toString());
+    }
+
     // AVATAR
-    outProfile->setAvatarUrl(jsonProfile.value(QStringLiteral("avatar")).toString());
+    if (dataObject.contains("avatar"))
+    {
+        const QJsonValue& avatarValue = dataObject.value("avatar");
+        if (!avatarValue.isString())
+            return DuProfilePtr();
+
+        outProfile->setAvatarUrl(avatarValue.toString());
+    }
 
     // FRIENDS
-    if (recursionLevel > 0)
-    {
-        QJsonArray friendsList = jsonProfile.value(QStringLiteral("friends")).toArray();
+    //TODO
+    Q_UNUSED(recursionLevel)
+//    if (recursionLevel > 0)
+//    {
+//        QJsonArray friendsList = jsonProfile.value(QStringLiteral("friends")).toArray();
 
-        DuArrayPtr<DuProfile> friends(new DuArray<DuProfile>);
-        for (QJsonArray::iterator it = friendsList.begin(); it != friendsList.end(); ++it)
-        {
-            if (!(*it).isObject())
-            {
-                qCCritical(LOG_CAT_DU_OBJECT) << "user not an object :" << *it;
-                continue;
-            }
+//        DuArrayPtr<DuProfile> friends(new DuArray<DuProfile>);
+//        for (QJsonArray::iterator it = friendsList.begin(); it != friendsList.end(); ++it)
+//        {
+//            if (!(*it).isObject())
+//            {
+//                qCCritical(LOG_CAT_DU_OBJECT) << "user not an object :" << *it;
+//                continue;
+//            }
 
-            DuProfilePtr friendProfile = fromJson((*it).toObject(), recursionLevel - 1);
+//            DuProfilePtr friendProfile = fromJson((*it).toObject(), recursionLevel - 1);
 
-            if (friendProfile != NULL)
-            {
-                friends->append(friendProfile);
-            }
-        }
+//            if (friendProfile != NULL)
+//            {
+//                friends->append(friendProfile);
+//            }
+//        }
 
-        outProfile->setFriends(friends);
-    }
+//        outProfile->setFriends(friends);
+//    }
 
     return outProfile;
 }
@@ -143,9 +168,9 @@ QHttpMultiPart *DuProfile::toHttpMultiPart(const QByteArray &boundary) const
     QHttpMultiPart* multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
     multiPart->setBoundary(boundary);
 
-    multiPart->append(getChild(KeyGUID)->toHttpPart(QStringLiteral("guid")));
-    multiPart->append(getChild(KeyLastname)->toHttpPart(QStringLiteral("Lastname")));
-    multiPart->append(getChild(KeyFirstname)->toHttpPart(QStringLiteral("Firstname")));
+    multiPart->append(getChild(KeyGUID)->toHttpPart(QStringLiteral("id")));
+    multiPart->append(getChild(KeyLastname)->toHttpPart(QStringLiteral("lastname")));
+    multiPart->append(getChild(KeyFirstname)->toHttpPart(QStringLiteral("firstname")));
     multiPart->append(getChild(KeyMail)->toHttpPart(QStringLiteral("email")));
 
     QUrl avatarUrl = getAvatarUrl();

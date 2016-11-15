@@ -22,15 +22,19 @@ SOURCES += \
     tst_dusoundtest.cpp \
     tst_dumusictest.cpp \
     tst_dueffectstest.cpp \
-    tst_dupresettest.cpp
+    tst_dupresettest.cpp \
+    tst_dujsonapitest.cpp
 
 HEADERS += \
     tst_dusampletest.h \
     tst_dusoundtest.h \
     tst_dumusictest.h \
     tst_dueffectstest.h \
-    tst_dupresettest.h
+    tst_dupresettest.h \
+    tst_dujsonapitest.h
 
 DEFINES += SRCDIR=\\\"$$PWD/..\\\"
 
 INCLUDEPATH += $$PWD/..
+
+QMAKE_CXXFLAGS_WARN_ON += -Wno-inconsistent-missing-override

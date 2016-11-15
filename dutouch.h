@@ -3,6 +3,8 @@
 
 #include "dudevice.h"
 
+#include "jsonApi/JsonApiResourceObject.h"
+
 
 DU_OBJECT(DuTouch);
 
@@ -13,6 +15,8 @@ public:
     virtual ~DuTouch() = default;
 
     virtual DuObjectPtr clone() const;
+
+    static DuTouchPtr fromJsonApi(const JsonApiResourceObject& jsonDuTouch);
 
     QHttpMultiPart *toHttpMultiPart(const QByteArray &boundary) const;
 
