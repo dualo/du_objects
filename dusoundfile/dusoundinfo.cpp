@@ -13,7 +13,8 @@ DuSoundInfo::DuSoundInfo()
 {
     addChild(KeyInstrumentInfo, new DuInstrumentInfo);
 
-    addChild(KeyPresetNum,      new DuNumeric(0, NUMERIC_DEFAULT_SIZE, FX_NUM_PRESET_INTR, 0));
+    addChild(KeyPresetNum,      new DuNumeric(SOUND_PRESET_DEFAULT, NUMERIC_DEFAULT_SIZE,
+                                              SOUND_PRESET_MIN, SOUND_PRESET_MAX));
 
     addChild(KeyName,           new DuString(SOUND_NAME_SIZE));
 
