@@ -33,7 +33,7 @@ QByteArray DuString::toDuMusicBinary() const
     int bytesLeft = getMaxSize() - getString().size();
     for (int i= 0; i < bytesLeft; i++)
     {
-        array.append('0');
+        array.append('\0');
     }
 
     return array;
