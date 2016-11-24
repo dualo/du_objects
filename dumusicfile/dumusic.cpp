@@ -321,6 +321,13 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
 
     verif = music->setSongId(local_song.s_id & 0x7FFFFFFF) ? verif : false;
     verif = music->setSongName(DuString::fromStruct(local_song.s_name, MUSIC_SONG_NAME_SIZE)) ? verif : false;
+
+    // The MSB of s_version_song is used by the du-touch to know if the du-music has been read by du-station.
+    // The version number is incremented by the du-touch ONLY IF the du-music
+    // has been read by du-station since the last time the du-music was modified.
+    // After the du-music has been read by du-station, the MSB is set to 1.
+    // After the du-music has been modified, the MSB is set to 0.
+    // Therefore, du-station ignores the MSB, hence the 0x7FFFFFFF mask.
     verif = music->setSongVersion(local_song.s_version_song & 0x7FFFFFFF) ? verif : false;
 
     verif = music->setVolume(local_song.s_volume) ? verif : false;
