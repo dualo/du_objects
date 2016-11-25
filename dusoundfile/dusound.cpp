@@ -490,7 +490,7 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
         else
             ipHeader[(i * 2) + 1] = 0;
 
-        // Sort samples by ref note
+        // Sort samples by start note
         QMultiMap<int, DuSampleConstPtr> sortedSamples;
         for (int j = 0; j < nbSamples; ++j)
         {
@@ -498,7 +498,7 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
             if (sample == NULL)
                 return QByteArray();
 
-            sortedSamples.insert(sample->getUnityNote(), sample);
+            sortedSamples.insert(sample->getStartNote(), sample);
         }
 
         foreach (const DuSampleConstPtr& sample, sortedSamples)
