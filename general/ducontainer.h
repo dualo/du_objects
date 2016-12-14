@@ -89,6 +89,9 @@
     static const QString Key ## key;
 
 #define DU_KEY_ACCESSORS_IN_CHILD_IMPL(className, key, childType, childKey, type, defaultReturn) \
+    DU_KEY_ACCESSORS_IN_CHILD_IMPL_DIFF_KEYS(className, key, key, childType, childKey, type, defaultReturn)
+
+#define DU_KEY_ACCESSORS_IN_CHILD_IMPL_DIFF_KEYS(className, key, keyInChild, childType, childKey, type, defaultReturn) \
     type className::get ## key() const \
     { \
         const childType ## ConstPtr& child = get ## childKey(); \
@@ -96,7 +99,7 @@
         if (child == NULL) \
             return defaultReturn; \
          \
-        return child->get ## key(); \
+        return child->get ## keyInChild(); \
     } \
     \
     bool className::set ## key(const type& value) \
@@ -106,7 +109,7 @@
         if (child == NULL) \
             return false; \
          \
-        return child->set ## key(value); \
+        return child->set ## keyInChild(value); \
     } \
     \
     const QString className::Key ## key = QStringLiteral(#key);
