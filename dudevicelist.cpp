@@ -7,12 +7,10 @@
 
 DU_OBJECT_IMPL(DuDeviceList)
 
-DuDeviceList::DuDeviceList(const DuDeviceConstPtr& device) :
-    DuList(device->getDisplayName(), Device),
-    connected(device->getConnected()),
-    busy(device->getBusy())
+DuDeviceList::DuDeviceList(const DuDeviceConstPtr &device) :
+    DuList(device->getDisplayName(), Device)
 {
-    addChild(KeySerialNumber, new DuString(device->getSerialNumber()));
+    addChild(KeyDevice, device->cloneAs<DuDevice>());
 }
 
 DuObjectPtr DuDeviceList::clone() const
@@ -36,26 +34,6 @@ bool DuDeviceList::equals(const DuListConstPtr& other) const
     return this->getSerialNumber() == casted->getSerialNumber();
 }
 
-bool DuDeviceList::getConnected() const
-{
-    return connected;
-}
-
-void DuDeviceList::setConnected(bool value)
-{
-    connected = value;
-}
-
-bool DuDeviceList::getBusy() const
-{
-    return busy;
-}
-
-void DuDeviceList::setBusy(bool value)
-{
-    busy = value;
-}
-
 bool DuDeviceList::setType(Type value)
 {
     Q_UNREACHABLE();
@@ -63,4 +41,9 @@ bool DuDeviceList::setType(Type value)
     return false;
 }
 
-DU_KEY_ACCESSORS_IMPL(DuDeviceList, SerialNumber, String, QString, QString())
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuDeviceList, Device, DuDevice)
+
+DU_KEY_ACCESSORS_IN_CHILD_IMPL_DIFF_KEYS(DuDeviceList, DeviceType, Type, DuDevice, Device, DuDevice::Type, DuDevice::Type_Unknown)
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuDeviceList, SerialNumber, DuDevice, Device, QString, QString())
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuDeviceList, Connected, DuDevice, Device, bool, false)
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuDeviceList, Busy, DuDevice, Device, bool, false)

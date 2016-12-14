@@ -11,7 +11,19 @@ DU_OBJECT(DuDevice);
 class DuDevice : public DuContainer
 {
 public:
-    DuDevice();
+    enum Type
+    {
+        Type_Unknown = 0,
+        Type_DuTouchPro,
+        Type_DuTouchS,
+        Type_DuTouchL,
+
+        Type_Other
+
+        // Keep in sync with DuDeviceObject::Type
+    };
+
+    DuDevice(Type type = Type_Unknown);
     virtual ~DuDevice() = default;
 
     virtual DuObjectPtr clone() const;
@@ -27,11 +39,12 @@ public:
     void setPlugged(bool value);
 
     bool getConnected() const;
-    void setConnected(bool value);
+    bool setConnected(bool value);
 
     bool getBusy() const;
-    void setBusy(bool value);
+    bool setBusy(bool value);
 
+    DU_KEY_ACCESSORS(Type,            Type)
     DU_KEY_ACCESSORS(SerialNumber,    QString)
     DU_KEY_ACCESSORS(Name,            QString)
     DU_KEY_ACCESSORS(Owner,           QString)

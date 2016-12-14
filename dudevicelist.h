@@ -2,9 +2,7 @@
 #define DUDEVICELIST_H
 
 #include "dulist.h"
-
-
-DU_OBJECT(DuDevice);
+#include "dudevice.h"
 
 DU_OBJECT(DuDeviceList);
 
@@ -18,19 +16,14 @@ public:
 
     bool equals(const DuListConstPtr& other) const;
 
-    bool getConnected() const;
-    void setConnected(bool value);
-
-    bool getBusy() const;
-    void setBusy(bool value);
-
     bool setType(Type value);
 
-    DU_KEY_ACCESSORS(SerialNumber, QString)
+    DU_KEY_ACCESSORS_OBJECT(Device, DuDevice)
 
-private:
-    bool connected;
-    bool busy;
+    DU_KEY_ACCESSORS_IN_CHILD(DeviceType,   DuDevice::Type)
+    DU_KEY_ACCESSORS_IN_CHILD(SerialNumber, QString)
+    DU_KEY_ACCESSORS_IN_CHILD(Connected, bool)
+    DU_KEY_ACCESSORS_IN_CHILD(Busy, bool)
 };
 
 #endif // DUDEVICELIST_H

@@ -6,8 +6,8 @@
 
 DU_OBJECT_IMPL(DuTouch)
 
-DuTouch::DuTouch() :
-    DuDevice()
+DuTouch::DuTouch(Type type) :
+    DuDevice(type)
 {
     addChild(KeySoundbankVersion,    new DuVersion());
     addChild(KeySoundbankUpdateDate, new DuDate());

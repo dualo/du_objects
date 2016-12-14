@@ -9,12 +9,13 @@
 
 DU_OBJECT_IMPL(DuDevice)
 
-DuDevice::DuDevice() :
+DuDevice::DuDevice(Type type) :
     DuContainer(),
     plugged(false),
     connected(false),
     busy(false)
 {
+    addChild(KeyType,            new DuNumeric(type));
     addChild(KeySerialNumber,    new DuString);
     addChild(KeyName,            new DuString);
     addChild(KeyOwner,           new DuString);
@@ -84,9 +85,10 @@ bool DuDevice::getConnected() const
     return connected;
 }
 
-void DuDevice::setConnected(bool value)
+bool DuDevice::setConnected(bool value)
 {
     connected = value;
+    return true;
 }
 
 bool DuDevice::getBusy() const
@@ -94,11 +96,13 @@ bool DuDevice::getBusy() const
     return busy;
 }
 
-void DuDevice::setBusy(bool value)
+bool DuDevice::setBusy(bool value)
 {
     busy = value;
+    return true;
 }
 
+DU_KEY_ACCESSORS_IMPL(DuDevice, Type,            Numeric, DuDevice::Type, Type_Unknown)
 DU_KEY_ACCESSORS_IMPL(DuDevice, SerialNumber,    String, QString, QString())
 DU_KEY_ACCESSORS_IMPL(DuDevice, Name,            String, QString, QString())
 DU_KEY_ACCESSORS_IMPL(DuDevice, Owner,           String, QString, QString())

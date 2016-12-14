@@ -11,7 +11,7 @@ DU_OBJECT(DuTouch);
 class DuTouch : public DuDevice
 {
 public:
-    DuTouch();
+    DuTouch(Type type = Type_Unknown);
     virtual ~DuTouch() = default;
 
     virtual DuObjectPtr clone() const;
