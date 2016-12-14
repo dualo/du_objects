@@ -15,7 +15,7 @@ DuNote::DuNote() :
     addChild(KeyIsExclusive,    new DuBoolean(false));
     addChild(KeyExclusiveNote,  new DuNumeric(0, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
     addChild(KeyNoteOff,        new DuBoolean(true));
-    addChild(KeyNote,           new DuNumeric(1, NUMERIC_DEFAULT_SIZE, NUM_BUTTON_KEYBOARD * 2, 1));
+    addChild(KeyNote,           new DuNumeric(1, NUMERIC_DEFAULT_SIZE, NUM_BUTTON_KEYBOARD_L * 2, 1));
     addChild(KeyName,           new DuString(NOTE_NAME_CARACT));
     addChild(KeyCategoryName,   new DuString(NAME_CARACT));
 }

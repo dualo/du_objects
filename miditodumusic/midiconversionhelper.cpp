@@ -333,7 +333,7 @@ int MidiConversionHelper::percuToMidi(quint8 duKey, quint8 keyboardIndex,
                                       quint8 mapIndex)
 {
     quint32 mapIndexRef = (NUM_KEY_MAP - 1) / 2 - 1;
-    quint32 keyIndexRef = NUM_BUTTON_KEYBOARD + 35 - 1;
+    quint32 keyIndexRef = NUM_BUTTON_KEYBOARD_L + 35 - 1;
 
     if (duKey > keyIndexRef || keyboardIndex > 1 || mapIndex > mapIndexRef)
     {
