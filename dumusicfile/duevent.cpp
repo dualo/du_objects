@@ -149,11 +149,11 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
     {
         if (midiType <= DuMidiChannelEvent::KeyAftertouch)
         {
-            const DuArrayConstPtr<DuNote>& mapping = sound->getMapping();
-            int mappingSize = mapping->count();
-            for (int i = 0; i < mappingSize; ++i)
+            const DuArrayConstPtr<DuNote>& mappingL = sound->getMappingL();
+            int mappingLSize = mappingL->count();
+            for (int i = 0; i < mappingLSize; ++i)
             {
-                const DuNoteConstPtr& note = mapping->at(i);
+                const DuNoteConstPtr& note = mappingL->at(i);
                 if (note != NULL && note->getNoteGM() == midiKey)
                 {
                     key = note->getNote();

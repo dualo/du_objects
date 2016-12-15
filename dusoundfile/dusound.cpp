@@ -36,7 +36,7 @@ DuSound::DuSound() :
 
     addChild(KeyLayerArray, new DuArray<DuLayer>);
 
-    addChild(KeyMapping,    new DuArray<DuNote>);
+    addChild(KeyMappingL,   new DuArray<DuNote>);
 
     addChild(KeyMetadata,   new DuArray<DuBinaryData>);
 }
@@ -97,17 +97,17 @@ int DuSound::size() const
         totalNbSamples += nbSamples;
     }
 
-    int mappingSize = 0;
-    const DuArrayConstPtr<DuNote>& mapping = getMapping();
-    if (mapping == NULL)
+    int mappingLSize = 0;
+    const DuArrayConstPtr<DuNote>& mappingL = getMappingL();
+    if (mappingL == NULL)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Mapping array null";
         return -1;
     }
 
-    if (mapping->count() != 0)
+    if (mappingL->count() != 0)
     {
-        mappingSize = MAPPING_SIZE;
+        mappingLSize = MAPPING_L_SIZE;
     }
 
     int metadataSize = 0;
@@ -127,7 +127,7 @@ int DuSound::size() const
             + nbLayer * 2
             + totalNbSamples * (INSTR_DREAM_IP_SIZE + INSTR_DREAM_SP_SIZE)
             + sampleSize
-            + mappingSize
+            + mappingLSize
             + metadataSize;
 }
 
@@ -384,11 +384,11 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
 
     if (soundHeader.mapping_addr != 0)
     {
-        DuArrayPtr<DuNote> mapping(new DuArray<DuNote>);
-        for (uint i = 0; i < MAPPING_SIZE; i += S_NOTE_SIZE)
+        DuArrayPtr<DuNote> mappingL(new DuArray<DuNote>);
+        for (uint i = 0; i < MAPPING_L_SIZE; i += S_NOTE_SIZE)
         {
             // --- WE HAVE TO DO A CORRESPONDANCE ---
-            const uint halfMappingSize = MAPPING_SIZE / 2;
+            const uint halfMappingSize = MAPPING_L_SIZE / 2;
             uint corI = i < halfMappingSize ? i + halfMappingSize : i - halfMappingSize;
 
             s_note note;
@@ -397,7 +397,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
             DuNotePtr noteObject = DuNote::fromBinary(note);
             if (noteObject != NULL)
             {
-                mapping->append(noteObject);
+                mappingL->append(noteObject);
             }
             else
             {
@@ -407,7 +407,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
                 return DuSoundPtr();
             }
         }
-        sound->setMapping(mapping);
+        sound->setMappingL(mappingL);
     }
 
 
@@ -443,7 +443,7 @@ QByteArray DuSound::toBinary() const
     QByteArray data;
 
     data += headerIpSpSamplesBinary();
-    data += mappingBinary();
+    data += mappingLBinary();
     data += metadataBinary();
 
     return data;
@@ -530,11 +530,11 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
     soundHeader.SW_version = static_cast<quint16>(getSoftInstrVersion());
 
     int mappingAddr = 0;
-    const DuArrayConstPtr<DuNote>& mapping = getMapping();
-    if (mapping == NULL)
+    const DuArrayConstPtr<DuNote>& mappingL = getMappingL();
+    if (mappingL == NULL)
         return QByteArray();
 
-    if (mapping->count() != 0)
+    if (mappingL->count() != 0)
     {
         mappingAddr = INSTR_NB_SAMPLES_PER_LAYER_ADDRESS + 2 * nbLayer + (INSTR_DREAM_IP_SIZE + INSTR_DREAM_SP_SIZE) * totalNbSamples + totalSampleSize;
     }
@@ -550,7 +550,7 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
     {
         if (mappingAddr != 0)
         {
-            metadataAddr = mappingAddr + MAPPING_SIZE;
+            metadataAddr = mappingAddr + MAPPING_L_SIZE;
         }
         else
         {
@@ -578,23 +578,23 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
     return data;
 }
 
-QByteArray DuSound::mappingBinary() const
+QByteArray DuSound::mappingLBinary() const
 {
-    const QByteArray& data = getMapping()->toDuMusicBinary();
+    const QByteArray& data = getMappingL()->toDuMusicBinary();
     if (data.isEmpty())
     {
         return QByteArray();
     }
-    else if (data.size() != MAPPING_SIZE)
+    else if (data.size() != MAPPING_L_SIZE)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Mapping size is incorrect:" << data.size() << "!=" << MAPPING_SIZE;
+        qCCritical(LOG_CAT_DU_OBJECT) << "Mapping size is incorrect:" << data.size() << "!=" << MAPPING_L_SIZE;
         return QByteArray();
     }
     else
     {
         // --- WE HAVE TO DO A CORRESPONDANCE ---
-        const int halpMappingSize = MAPPING_SIZE / 2;
-        return data.mid(halpMappingSize, halpMappingSize) + data.mid(0, halpMappingSize);
+        const int halfMappingLSize = MAPPING_L_SIZE / 2;
+        return data.mid(halfMappingLSize, halfMappingLSize) + data.mid(0, halfMappingLSize);
     }
 }
 
@@ -742,6 +742,6 @@ DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, Info,         DuSoundInfo)
 
 DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuSound, LayerArray, DuArray, DuLayer)
 
-DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuSound, Mapping,    DuArray, DuNote)
+DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuSound, MappingL,   DuArray, DuNote)
 
 DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuSound, Metadata,   DuArray, DuBinaryData)
