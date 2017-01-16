@@ -449,7 +449,7 @@ QByteArray DuSound::toBinary() const
     return data;
 }
 
-QByteArray DuSound::headerIpSpSamplesBinary() const
+QByteArray DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL) const
 {
     QByteArray data;
 
@@ -459,13 +459,21 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
 
     int nbLayer = layerArray->count();
 
-    QByteArray ipHeader(2 * nbLayer, 0);
+    int ipHeaderSize = 2 * nbLayer + (forDuTouchSOrL ? 2 : 0);
+    QByteArray ipHeader(ipHeaderSize, 0);
     QByteArray dreamIPData;
     QByteArray dreamSPData;
     QByteArray dreamSamplesData;
     int sampleAddress = 0;
     int totalSampleSize = 0;
     int totalNbSamples = 0;
+
+    if (forDuTouchSOrL)
+    {
+        ipHeader[0] = 0x40;
+        ipHeader[1] = static_cast<char>(nbLayer);
+    }
+
     for (int i = 0; i < nbLayer; ++i)
     {
         DuLayerConstPtr layer = layerArray->at(i);
@@ -484,11 +492,19 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
 
         int nbSamples = samples->count();
 
-        ipHeader[i * 2] = static_cast<char>(nbSamples);
-        if (i == 0)
-            ipHeader[(i * 2) + 1] = static_cast<char>(nbLayer);
+        if (forDuTouchSOrL)
+        {
+            ipHeader[(i + 1) * 2] = static_cast<char>(nbSamples);
+            ipHeader[((i + 1) * 2) + 1] = 0;
+        }
         else
-            ipHeader[(i * 2) + 1] = 0;
+        {
+            ipHeader[i * 2] = static_cast<char>(nbSamples);
+            if (i == 0)
+                ipHeader[(i * 2) + 1] = static_cast<char>(nbLayer);
+            else
+                ipHeader[(i * 2) + 1] = 0;
+        }
 
         // Sort samples by start note
         QMultiMap<int, DuSampleConstPtr> sortedSamples;
@@ -524,7 +540,7 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
     soundHeader.KW_INST = 0x54534E49;
     soundHeader.KW_META = 0x4154454D;
 
-    soundHeader.full_size = static_cast<quint32>(size());
+    soundHeader.full_size = static_cast<quint32>(size() + (forDuTouchSOrL ? 2 : 0));
 
     soundHeader.HW_version = static_cast<quint16>(getHardInstrVersion());
     soundHeader.SW_version = static_cast<quint16>(getSoftInstrVersion());
@@ -536,7 +552,7 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
 
     if (mappingL->count() != 0)
     {
-        mappingAddr = INSTR_NB_SAMPLES_PER_LAYER_ADDRESS + 2 * nbLayer + (INSTR_DREAM_IP_SIZE + INSTR_DREAM_SP_SIZE) * totalNbSamples + totalSampleSize;
+        mappingAddr = INSTR_NB_SAMPLES_PER_LAYER_ADDRESS + ipHeaderSize + (INSTR_DREAM_IP_SIZE + INSTR_DREAM_SP_SIZE) * totalNbSamples + totalSampleSize;
     }
 
     soundHeader.mapping_addr = static_cast<quint32>(mappingAddr);
@@ -554,7 +570,7 @@ QByteArray DuSound::headerIpSpSamplesBinary() const
         }
         else
         {
-            metadataAddr = INSTR_NB_SAMPLES_PER_LAYER_ADDRESS + 2 * nbLayer + (INSTR_DREAM_IP_SIZE + INSTR_DREAM_SP_SIZE) * totalNbSamples + totalSampleSize;
+            metadataAddr = INSTR_NB_SAMPLES_PER_LAYER_ADDRESS + ipHeaderSize + (INSTR_DREAM_IP_SIZE + INSTR_DREAM_SP_SIZE) * totalNbSamples + totalSampleSize;
         }
     }
 
