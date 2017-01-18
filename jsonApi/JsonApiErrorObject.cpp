@@ -115,7 +115,7 @@ QJsonObject JsonApiErrorObject::meta() const
 
 QString JsonApiErrorObject::toString() const
 {
-    return tr("%1: %2").arg(m_title).arg(m_detail);
+    return tr("%1: %2").arg(m_title, m_detail);
 }
 
 bool operator==(const JsonApiErrorObject &first, const JsonApiErrorObject &second)
