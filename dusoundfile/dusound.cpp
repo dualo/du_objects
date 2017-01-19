@@ -227,18 +227,20 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
     }
 
     int nbLayers = soundStruct.s_instrument.nb_layer;
+    DuInstrumentInfo::DreamFormat dreamFormat = static_cast<DuInstrumentInfo::DreamFormat>(soundStruct.s_instrument.format_id);
 
     QList<quint8> nbSamplesPerLayerArray;
     nbSamplesPerLayerArray.reserve(nbLayers);
     for (int i = 0; i < nbLayers; ++i)
     {
-        quint8 nbSamples = static_cast<quint8>(data.data()[INSTR_NB_SAMPLES_PER_LAYER_ADDRESS + (2*i)]);
+        quint8 nbSamples = static_cast<quint8>(data.data()[INSTR_NB_SAMPLES_PER_LAYER_ADDRESS + (2 * i) + (dreamFormat == DuInstrumentInfo::SDK_5000 ? 2 : 0)]);
         nbSamplesPerLayerArray << nbSamples;
     }
 
     QList<dream_ip> dreamIPArray;
-    int firstIPAddress = INSTR_NB_SAMPLES_PER_LAYER_ADDRESS + (2 * nbLayers);
-    int ipSize = soundStruct.s_instrument.ip_size - (2 * nbLayers);
+    int ipHeaderSize = (2 * nbLayers) + (dreamFormat == DuInstrumentInfo::SDK_5000 ? 2 : 0);
+    int firstIPAddress = INSTR_NB_SAMPLES_PER_LAYER_ADDRESS + ipHeaderSize;
+    int ipSize = soundStruct.s_instrument.ip_size - ipHeaderSize;
     dreamIPArray.reserve(ipSize / INSTR_DREAM_IP_SIZE);
     for (int i = 0; i < ipSize; i += INSTR_DREAM_IP_SIZE)
     {
@@ -257,7 +259,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
         dream_sp dreamSP;
         std::memcpy(&dreamSP, &data.data()[firstSPAddress + i], INSTR_DREAM_SP_SIZE);
 
-        if (m3Infos->getDreamFormatId() == DuInstrumentInfo::SDK_3000)
+        if (dreamFormat == DuInstrumentInfo::SDK_3000)
         {
             if (dreamSP.loopType != DuSample::SND3000_Forward)
             {
@@ -268,7 +270,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
                 return DuSoundPtr();
             }
         }
-        else if (m3Infos->getDreamFormatId() == DuInstrumentInfo::SDK_5000)
+        else if (dreamFormat == DuInstrumentInfo::SDK_5000)
         {
             if (dreamSP.loopType != DuSample::SND5000_Forward
                     && dreamSP.loopType != DuSample::SND5000_OneShot)
@@ -438,11 +440,11 @@ DuSoundPtr DuSound::fromBinary(QIODevice *input)
     return DuSound::fromBinary(array);
 }
 
-QByteArray DuSound::toBinary() const
+QByteArray DuSound::toBinary(bool forDuTouchSOrL) const
 {
     QByteArray data;
 
-    data += headerIpSpSamplesBinary();
+    data += headerIpSpSamplesBinary(forDuTouchSOrL);
     data += mappingLBinary();
     data += metadataBinary();
 
@@ -523,7 +525,7 @@ QByteArray DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL) const
                 return QByteArray();
 
             dreamIPData += sample->ipBinary(static_cast<quint8>(layer->getMinVelocity()) - 1, static_cast<quint8>(layer->getMaxVelocity()));
-            dreamSPData += sample->spBinary(static_cast<quint32>(sampleAddress));
+            dreamSPData += sample->spBinary(static_cast<quint32>(sampleAddress), forDuTouchSOrL);
             dreamSamplesData += sample->getData();
 
             sampleAddress += sample->getData().size();
@@ -583,7 +585,7 @@ QByteArray DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL) const
     if (info == NULL)
         return QByteArray();
 
-    data += info->toBinary(static_cast<quint8>(nbLayer), totalNbSamples, static_cast<quint32>(totalSampleSize));
+    data += info->toBinary(static_cast<quint8>(nbLayer), totalNbSamples, static_cast<quint32>(totalSampleSize), forDuTouchSOrL);
     data += QByteArray(INTR_STRUCT_ALIGN, 0);
 
     data += ipHeader;

@@ -25,7 +25,7 @@ public:
 
     static DuSoundInfoPtr fromBinary(const sound_instr& data);
 
-    QByteArray toBinary(uint8_t nbLayer, int nbSamples, uint32_t sampleSize) const;
+    QByteArray toBinary(uint8_t nbLayer, int nbSamples, uint32_t sampleSize, bool forDuTouchSOrL) const;
 
     virtual DuObjectPtr getChild(const QString &key) override;
     virtual DuObjectConstPtr getChild(const QString &key) const override;

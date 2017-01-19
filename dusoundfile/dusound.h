@@ -35,8 +35,8 @@ public:
     static DuSoundPtr fromBinary(const QByteArray &data);
     static DuSoundPtr fromBinary(QIODevice *input);
 
-    QByteArray toBinary() const;
-    QByteArray headerIpSpSamplesBinary(bool forDuTouchSOrL = false) const;
+    QByteArray toBinary(bool forDuTouchSOrL) const;
+    QByteArray headerIpSpSamplesBinary(bool forDuTouchSOrL) const;
     QByteArray mappingLBinary() const;
     QByteArray metadataBinary() const;
 

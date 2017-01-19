@@ -112,10 +112,6 @@ DuInstrumentInfo::DuInstrumentInfo() :
              new DuNumeric(0x7F, NUMERIC_DEFAULT_SIZE,
                            0x7F, 0x00));
 
-    addChild(KeyDreamFormatId,
-             new DuNumeric(NO_FORMAT, NUMERIC_DEFAULT_SIZE,
-                           SDK_5000, FORMAT_ERROR)); //TODO: delete that
-
     addChild(KeyInstrType,
              new DuNumeric(INSTR_HARMONIC, NUMERIC_DEFAULT_SIZE,
                            NUM_INSTR_TYPE - 1, INSTR_HARMONIC));
@@ -154,8 +150,6 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const info_instr &du_ins
 
     verif = instrInfo->setRelativeVolume(du_instrInfo.instr_relvolume) ? verif : false;
 
-    verif = instrInfo->setDreamFormatId(static_cast<DreamFormat>(du_instrInfo.format_id)) ? verif : false;
-
     verif = instrInfo->setInstrType(static_cast<INSTRUMENT_TYPE>(du_instrInfo.instr_type)) ? verif : false;
     verif = instrInfo->setInstrVersion(static_cast<int>(du_instrInfo.instr_version)) ? verif : false;
     verif = instrInfo->setHardInstrVersion(du_instrInfo.HW_instr_version) ? verif : false;
@@ -169,7 +163,7 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const info_instr &du_ins
     return instrInfo;
 }
 
-bool DuInstrumentInfo::toStruct(info_instr& outStruct) const
+bool DuInstrumentInfo::toStruct(info_instr& outStruct, bool forDuTouchSOrL) const
 {
     QString tmpStr;
     int tmpNum = 0;
@@ -227,10 +221,7 @@ bool DuInstrumentInfo::toStruct(info_instr& outStruct) const
         return false;
     outStruct.instr_relvolume = static_cast<quint8>(tmpNum);
 
-    DreamFormat tmpFormat = getDreamFormatId();
-    if (tmpFormat == FORMAT_ERROR)
-        return false;
-    outStruct.format_id = static_cast<quint8>(tmpFormat);
+    outStruct.format_id = static_cast<quint8>(forDuTouchSOrL ? SDK_5000 : SDK_3000);
 
     INSTRUMENT_TYPE tmpType = getInstrType();
     if (tmpType == NUM_INSTR_TYPE)
@@ -258,7 +249,7 @@ bool DuInstrumentInfo::toStruct(info_instr& outStruct) const
 QByteArray DuInstrumentInfo::toDuMusicBinary() const
 {
     info_instr du_instrumentinfo;
-    if (!toStruct(du_instrumentinfo))
+    if (!toStruct(du_instrumentinfo, false))
     {
         return QByteArray();
     }
@@ -267,17 +258,17 @@ QByteArray DuInstrumentInfo::toDuMusicBinary() const
 }
 
 
-QByteArray DuInstrumentInfo::toBinary(uint8_t nbLayer, int nbSamples, uint32_t sampleSize) const
+QByteArray DuInstrumentInfo::toBinary(uint8_t nbLayer, int nbSamples, uint32_t sampleSize, bool forDuTouchSOrL) const
 {
     info_instr du_instrumentinfo;
-    if (!toStruct(du_instrumentinfo))
+    if (!toStruct(du_instrumentinfo, forDuTouchSOrL))
     {
         return QByteArray();
     }
 
     du_instrumentinfo.nb_layer = nbLayer;
 
-    du_instrumentinfo.ip_size = static_cast<quint16>(nbLayer) * 2 + static_cast<quint16>(nbSamples) * INSTR_DREAM_IP_SIZE;
+    du_instrumentinfo.ip_size = static_cast<quint16>(nbLayer) * 2 + (forDuTouchSOrL ? 2 : 0) + static_cast<quint16>(nbSamples) * INSTR_DREAM_IP_SIZE;
 
     du_instrumentinfo.sp_size = static_cast<quint16>(nbSamples) * INSTR_DREAM_SP_SIZE;
 
@@ -305,8 +296,6 @@ DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, ActiveNoteOff,      Boolean, bool, false
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, Category,           String, QString, QString())
 
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, RelativeVolume,     Numeric, int, -1)
-
-DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, DreamFormatId,      Numeric, DuInstrumentInfo::DreamFormat, FORMAT_ERROR)
 
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, InstrType,          Numeric, INSTRUMENT_TYPE, NUM_INSTR_TYPE)
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, InstrVersion,       Numeric, int, -1)

@@ -16,9 +16,8 @@ class DuInstrumentInfo : public DuContainer
 public:
     enum DreamFormat {
         FORMAT_ERROR = -1,
-        NO_FORMAT = 0,
-        SDK_3000 = 1,
-        SDK_5000 = 2,
+        SDK_3000 = 0,
+        SDK_5000 = 1,
     };
 
     struct Category
@@ -41,9 +40,9 @@ public:
 
     static DuInstrumentInfoPtr fromDuMusicBinary(const info_instr &du_instrInfo);
 
-    bool toStruct(info_instr& outStruct) const;
+    bool toStruct(info_instr& outStruct, bool forDuTouchSOrL) const;
     QByteArray toDuMusicBinary() const;
-    QByteArray toBinary(uint8_t nbLayer, int nbSamples, uint32_t sampleSize) const;
+    QByteArray toBinary(uint8_t nbLayer, int nbSamples, uint32_t sampleSize, bool forDuTouchSOrL) const;
 
     int size() const;
 
@@ -60,8 +59,6 @@ public:
     DU_KEY_ACCESSORS(Category,           QString)
 
     DU_KEY_ACCESSORS(RelativeVolume,     int)
-
-    DU_KEY_ACCESSORS(DreamFormatId,      DreamFormat)
 
     DU_KEY_ACCESSORS(InstrType,          INSTRUMENT_TYPE)
     DU_KEY_ACCESSORS(InstrVersion,       int)

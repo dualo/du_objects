@@ -46,7 +46,7 @@ private:
 
 public:
     QByteArray ipBinary(quint8 min_vel, quint8 max_vel) const;
-    QByteArray spBinary(quint32 sampleAddress) const;
+    QByteArray spBinary(quint32 sampleAddress, bool forDuTouchSOrL) const;
 
     static quint32 wavAddressDreamToReadable(quint32 dreamValue);
     static quint32 wavAddressReadableToDream(quint32 readableValue);

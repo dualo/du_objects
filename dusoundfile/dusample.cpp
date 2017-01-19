@@ -665,7 +665,7 @@ QByteArray DuSample::ipBinary(quint8 min_vel, quint8 max_vel) const
     return QByteArray(reinterpret_cast<char*>(&dataStruct), INSTR_DREAM_IP_SIZE);
 }
 
-QByteArray DuSample::spBinary(quint32 sampleAddress) const
+QByteArray DuSample::spBinary(quint32 sampleAddress, bool forDuTouchSOrL) const
 {
     dream_sp data;
 
@@ -678,10 +678,7 @@ QByteArray DuSample::spBinary(quint32 sampleAddress) const
         return QByteArray();
     data.address1 = static_cast<quint16>(tmpNum);
 
-    SampleType tmpSampleType = getLoopType();
-    if (tmpSampleType == Unknown)
-        return QByteArray();
-    data.loopType = static_cast<quint16>(tmpSampleType);
+    data.loopType = static_cast<quint16>(forDuTouchSOrL ? SND5000_OneShot : SND3000_Forward);
 
     tmpNum = getAddress2();
     if (tmpNum == -1)
