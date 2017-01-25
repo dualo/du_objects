@@ -37,6 +37,7 @@ DuSound::DuSound() :
     addChild(KeyLayerArray, new DuArray<DuLayer>);
 
     addChild(KeyMappingL,   new DuArray<DuNote>);
+    addChild(KeyMappingS,   new DuArray<DuNote>);
 
     addChild(KeyMetadata,   new DuArray<DuBinaryData>);
 }
@@ -101,13 +102,26 @@ int DuSound::size() const
     const DuArrayConstPtr<DuNote>& mappingL = getMappingL();
     if (mappingL == NULL)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Mapping array null";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Mapping L array null";
         return -1;
     }
 
     if (mappingL->count() != 0)
     {
         mappingLSize = MAPPING_L_SIZE;
+    }
+
+    int mappingSSize = 0;
+    const DuArrayConstPtr<DuNote>& mappingS = getMappingS();
+    if (mappingS == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "Mapping S array null";
+        return -1;
+    }
+
+    if (mappingS->count() != 0)
+    {
+        mappingSSize = MAPPING_S_SIZE;
     }
 
     int metadataSize = 0;
@@ -128,6 +142,7 @@ int DuSound::size() const
             + totalNbSamples * (INSTR_DREAM_IP_SIZE + INSTR_DREAM_SP_SIZE)
             + sampleSize
             + mappingLSize
+            + mappingSSize
             + metadataSize;
 }
 
@@ -404,12 +419,55 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
             else
             {
                 qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
-                                              << "Note" << i / S_NOTE_SIZE << "was not properly generated";
+                                              << "Note" << i / S_NOTE_SIZE << "in mapping L was not properly generated";
 
                 return DuSoundPtr();
             }
         }
         sound->setMappingL(mappingL);
+
+        DuArrayPtr<DuNote> mappingS(new DuArray<DuNote>);
+        if (soundHeader.SW_version < 3)
+        {
+            // Before version 3, we didn't have the du-touch S mapping.
+            // To migrate, we just apply a mask on the du-touch L mapping.
+            for (int i = 0; i < NUM_BUTTON_KEYBOARD_L * 2; ++i)
+            {
+                if (!DuNote::mappingSDefaultMask[i])
+                    continue;
+
+                const DuNotePtr& note = mappingL->at(i)->cloneAs<DuNote>();
+
+                mappingS->append(note);
+            }
+
+            sound->setSoftInstrVersion(DUSOUND_SW_VERSION);
+        }
+        else
+        {
+            for (uint i = 0; i < MAPPING_S_SIZE; i += S_NOTE_SIZE)
+            {
+                // --- WE HAVE TO DO A CORRESPONDANCE ---
+                const uint halfMappingSize = MAPPING_S_SIZE / 2;
+                uint corI = i < halfMappingSize ? i + halfMappingSize : i - halfMappingSize;
+
+                s_note note;
+                std::memcpy(&note, &data.data()[soundHeader.mapping_addr + MAPPING_L_SIZE + corI], S_NOTE_SIZE);
+
+                DuNotePtr noteObject = DuNote::fromBinary(note);
+                if (noteObject != NULL)
+                {
+                    mappingS->append(noteObject);
+                }
+                else
+                {
+                    qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
+                                                  << "Note" << i / S_NOTE_SIZE << "in mapping S was not properly generated";
+                    return DuSoundPtr();
+                }
+            }
+        }
+        sound->setMappingS(mappingS);
     }
 
 
@@ -460,6 +518,7 @@ QByteArray DuSound::toBinary(bool forDuTouchSOrL) const
     data += sp;
     data += samples;
     data += mappingLBinary();
+    data += mappingSBinary();
     data += metadataBinary();
 
     return data;
@@ -569,7 +628,11 @@ bool DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL,
     if (mappingL == NULL)
         return false;
 
-    if (mappingL->count() != 0)
+    const DuArrayConstPtr<DuNote>& mappingS = getMappingS();
+    if (mappingS == NULL)
+        return false;
+
+    if (mappingL->count() != 0 && mappingS->count() != 0)
     {
         mappingAddr = INSTR_NB_SAMPLES_PER_LAYER_ADDRESS + ipHeaderSize + (INSTR_DREAM_IP_SIZE + INSTR_DREAM_SP_SIZE) * totalNbSamples + totalSampleSize;
     }
@@ -585,7 +648,7 @@ bool DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL,
     {
         if (mappingAddr != 0)
         {
-            metadataAddr = mappingAddr + MAPPING_L_SIZE;
+            metadataAddr = mappingAddr + MAPPING_L_SIZE + MAPPING_S_SIZE;
         }
         else
         {
@@ -623,7 +686,7 @@ QByteArray DuSound::mappingLBinary() const
     }
     else if (data.size() != MAPPING_L_SIZE)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Mapping size is incorrect:" << data.size() << "!=" << MAPPING_L_SIZE;
+        qCCritical(LOG_CAT_DU_OBJECT) << "Mapping L size is incorrect:" << data.size() << "!=" << MAPPING_L_SIZE;
         return QByteArray();
     }
     else
@@ -631,6 +694,26 @@ QByteArray DuSound::mappingLBinary() const
         // --- WE HAVE TO DO A CORRESPONDANCE ---
         const int halfMappingLSize = MAPPING_L_SIZE / 2;
         return data.mid(halfMappingLSize, halfMappingLSize) + data.mid(0, halfMappingLSize);
+    }
+}
+
+QByteArray DuSound::mappingSBinary() const
+{
+    const QByteArray& data = getMappingS()->toDuMusicBinary();
+    if (data.isEmpty())
+    {
+        return QByteArray();
+    }
+    else if (data.size() != MAPPING_S_SIZE)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "Mapping S size is incorrect:" << data.size() << "!=" << MAPPING_S_SIZE;
+        return QByteArray();
+    }
+    else
+    {
+        // --- WE HAVE TO DO A CORRESPONDANCE ---
+        const int halfMappingSSize = MAPPING_S_SIZE / 2;
+        return data.mid(halfMappingSSize, halfMappingSSize) + data.mid(0, halfMappingSSize);
     }
 }
 
@@ -779,5 +862,6 @@ DU_KEY_ACCESSORS_OBJECT_IMPL(DuSound, Info,         DuSoundInfo)
 DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuSound, LayerArray, DuArray, DuLayer)
 
 DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuSound, MappingL,   DuArray, DuNote)
+DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuSound, MappingS,   DuArray, DuNote)
 
 DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuSound, Metadata,   DuArray, DuBinaryData)

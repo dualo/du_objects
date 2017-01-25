@@ -43,6 +43,7 @@ public:
                                  QByteArray& outSP,
                                  QByteArray& outSamples) const;
     QByteArray mappingLBinary() const;
+    QByteArray mappingSBinary() const;
     QByteArray metadataBinary() const;
 
     virtual DuObjectPtr getChild(const QString &key) override;
@@ -86,6 +87,7 @@ public:
     DU_KEY_ACCESSORS_OBJECT_TEMPLATE(LayerArray,    DuArray, DuLayer)
 
     DU_KEY_ACCESSORS_OBJECT_TEMPLATE(MappingL,      DuArray, DuNote)
+    DU_KEY_ACCESSORS_OBJECT_TEMPLATE(MappingS,      DuArray, DuNote)
 
     DU_KEY_ACCESSORS_OBJECT_TEMPLATE(Metadata,      DuArray, DuBinaryData)
 

@@ -28,6 +28,9 @@ public:
     DU_KEY_ACCESSORS(CategoryName,  QString)
 
     static const int drumMapping[];
+    static const bool mappingSDefaultMask[];
+    static const int drumMappingS[];
+    static const int sampleMappingS[];
 };
 
 #endif // DUNOTE_H
