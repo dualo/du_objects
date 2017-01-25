@@ -444,20 +444,37 @@ QByteArray DuSound::toBinary(bool forDuTouchSOrL) const
 {
     QByteArray data;
 
-    data += headerIpSpSamplesBinary(forDuTouchSOrL);
+    QByteArray header;
+    QByteArray ipHeader;
+    QByteArray ip;
+    QByteArray sp;
+    QByteArray samples;
+
+    bool ret = headerIpSpSamplesBinary(forDuTouchSOrL, header, ipHeader, ip, sp, samples);
+    if (!ret)
+        return QByteArray();
+
+    data += header;
+    data += ipHeader;
+    data += ip;
+    data += sp;
+    data += samples;
     data += mappingLBinary();
     data += metadataBinary();
 
     return data;
 }
 
-QByteArray DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL) const
+bool DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL,
+                                      QByteArray& outHeader,
+                                      QByteArray& outIpHeader,
+                                      QByteArray& outIP,
+                                      QByteArray& outSP,
+                                      QByteArray& outSamples) const
 {
-    QByteArray data;
-
     const DuArrayConstPtr<DuLayer>& layerArray = getLayerArray();
     if (layerArray == NULL)
-        return QByteArray();
+        return false;
 
     int nbLayer = layerArray->count();
 
@@ -482,14 +499,14 @@ QByteArray DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL) const
         if (layer == NULL)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "Layer" << i << "null";
-            return QByteArray();
+            return false;
         }
 
         DuArrayConstPtr<DuSample> samples = layer->getSampleArray();
         if (samples == NULL)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "Sample array null";
-            return QByteArray();
+            return false;
         }
 
         int nbSamples = samples->count();
@@ -514,7 +531,7 @@ QByteArray DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL) const
         {
             DuSampleConstPtr sample = samples->at(j);
             if (sample == NULL)
-                return QByteArray();
+                return false;
 
             sortedSamples.insert(sample->getStartNote(), sample);
         }
@@ -522,7 +539,7 @@ QByteArray DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL) const
         foreach (const DuSampleConstPtr& sample, sortedSamples)
         {
             if (sample == NULL)
-                return QByteArray();
+                return false;
 
             dreamIPData += sample->ipBinary(static_cast<quint8>(layer->getMinVelocity()) - 1, static_cast<quint8>(layer->getMaxVelocity()));
             dreamSPData += sample->spBinary(static_cast<quint32>(sampleAddress), forDuTouchSOrL);
@@ -550,7 +567,7 @@ QByteArray DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL) const
     int mappingAddr = 0;
     const DuArrayConstPtr<DuNote>& mappingL = getMappingL();
     if (mappingL == NULL)
-        return QByteArray();
+        return false;
 
     if (mappingL->count() != 0)
     {
@@ -562,7 +579,7 @@ QByteArray DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL) const
     int metadataAddr = 0;
     const DuArrayConstPtr<DuBinaryData>& metadata = getMetadata();
     if (metadata == NULL)
-        return QByteArray();
+        return false;
 
     if (metadata->count() != 0)
     {
@@ -578,22 +595,23 @@ QByteArray DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL) const
 
     soundHeader.meta_addr = static_cast<quint32>(metadataAddr);
 
-    data.append(reinterpret_cast<char*>(&soundHeader), INSTR_HEADER_SIZE);
+    outHeader.clear();
+    outHeader.append(reinterpret_cast<char*>(&soundHeader), INSTR_HEADER_SIZE);
 
     // SOUND STRUCT
     const DuSoundInfoConstPtr &info = getInfo();
     if (info == NULL)
-        return QByteArray();
+        return false;
 
-    data += info->toBinary(static_cast<quint8>(nbLayer), totalNbSamples, static_cast<quint32>(totalSampleSize), forDuTouchSOrL);
-    data += QByteArray(INTR_STRUCT_ALIGN, 0);
+    outHeader += info->toBinary(static_cast<quint8>(nbLayer), totalNbSamples, static_cast<quint32>(totalSampleSize), forDuTouchSOrL);
+    outHeader += QByteArray(INTR_STRUCT_ALIGN, 0);
 
-    data += ipHeader;
-    data += dreamIPData;
-    data += dreamSPData;
-    data += dreamSamplesData;
+    outIpHeader.swap(ipHeader);
+    outIP.swap(dreamIPData);
+    outSP.swap(dreamSPData);
+    outSamples.swap(dreamSamplesData);
 
-    return data;
+    return true;
 }
 
 QByteArray DuSound::mappingLBinary() const
