@@ -48,14 +48,14 @@ public:
     QByteArray ipBinary(quint8 min_vel, quint8 max_vel) const;
     QByteArray spBinary(quint32 sampleAddress, bool forDuTouchSOrL) const;
 
-    static quint32 wavAddressDreamToReadable(quint32 dreamValue);
-    static quint32 wavAddressReadableToDream(quint32 readableValue);
+    static quint32 wavAddressDreamToReadable(quint32 dreamValue, quint32 soundbankStartAddr = SOUNDBANK_STARTADRESS);
+    static quint32 wavAddressReadableToDream(quint32 readableValue, quint32 soundbankStartAddr = SOUNDBANK_STARTADRESS);
 
-    static quint32 loopStartDreamToReadable(quint16 loopStartMSB, quint16 loopStartLSB, quint32 sampleStartAddress);
-    static void loopStartReadableToDream(quint32 readableValue, quint32 sampleStartAddress, quint16 &outLoopStartMSB, quint16 &outLoopStartLSB);
+    static quint32 loopStartDreamToReadable(quint16 loopStartMSB, quint16 loopStartLSB, quint32 sampleStartAddress, quint32 soundbankStartAddr = SOUNDBANK_STARTADRESS);
+    static void loopStartReadableToDream(quint32 readableValue, quint32 sampleStartAddress, quint16 &outLoopStartMSB, quint16 &outLoopStartLSB, quint32 soundbankStartAddr = SOUNDBANK_STARTADRESS);
 
-    static quint32 loopEndDreamToReadable(quint16 loopEndMSB, quint16 loopEndLSB, quint32 sampleStartAddress);
-    static void loopEndReadableToDream(quint32 readableValue, quint32 sampleStartAddress, quint16 &outLoopEndMSB, quint16 &outLoopEndLSB);
+    static quint32 loopEndDreamToReadable(quint16 loopEndMSB, quint16 loopEndLSB, quint32 sampleStartAddress, quint32 soundbankStartAddr = SOUNDBANK_STARTADRESS);
+    static void loopEndReadableToDream(quint32 readableValue, quint32 sampleStartAddress, quint16 &outLoopEndMSB, quint16 &outLoopEndLSB, quint32 soundbankStartAddr = SOUNDBANK_STARTADRESS);
 
     static int initLevelDreamToReadable(quint16 dreamValue);
     static quint16 initReadableToDream(int level);

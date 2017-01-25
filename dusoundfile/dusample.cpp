@@ -784,19 +784,19 @@ QByteArray DuSample::spBinary(quint32 sampleAddress, bool forDuTouchSOrL) const
     return QByteArray(reinterpret_cast<char*>(&data), INSTR_DREAM_SP_SIZE);
 }
 
-quint32 DuSample::wavAddressDreamToReadable(quint32 dreamValue)
+quint32 DuSample::wavAddressDreamToReadable(quint32 dreamValue, quint32 soundbankStartAddr)
 {
     quint32 reorderedWavAddress = 0;
     reorderedWavAddress |= (0x000000FF & dreamValue) << 0;
     reorderedWavAddress |= (0x0000FF00 & dreamValue) << 16;
     reorderedWavAddress |= (0x00FF0000 & dreamValue) >> 8;
     reorderedWavAddress |= (0xFF000000 & dreamValue) >> 8;
-    return (reorderedWavAddress - SOUNDBANK_STARTADRESS) * 2;
+    return (reorderedWavAddress - soundbankStartAddr) * 2;
 }
 
-quint32 DuSample::wavAddressReadableToDream(quint32 readableValue)
+quint32 DuSample::wavAddressReadableToDream(quint32 readableValue, quint32 soundbankStartAddr)
 {
-    quint32 tmpNum = (readableValue / 2) + SOUNDBANK_STARTADRESS;
+    quint32 tmpNum = (readableValue / 2) + soundbankStartAddr;
     quint32 reorderedWavAddress = 0;
     reorderedWavAddress |= (0x000000FF & tmpNum) << 0;
     reorderedWavAddress |= (0x0000FF00 & tmpNum) << 8;
@@ -805,7 +805,7 @@ quint32 DuSample::wavAddressReadableToDream(quint32 readableValue)
     return reorderedWavAddress;
 }
 
-quint32 DuSample::loopStartDreamToReadable(quint16 loopStartMSB, quint16 loopStartLSB, quint32 sampleStartAddress)
+quint32 DuSample::loopStartDreamToReadable(quint16 loopStartMSB, quint16 loopStartLSB, quint32 sampleStartAddress, quint32 soundbankStartAddr)
 {
     quint32 loopStart = static_cast<quint32>(loopStartMSB << 16) | static_cast<quint32>(loopStartLSB);
     quint32 reorderedLoopStart = 0;
@@ -814,12 +814,12 @@ quint32 DuSample::loopStartDreamToReadable(quint16 loopStartMSB, quint16 loopSta
     reorderedLoopStart |=  (0x00FF0000 & loopStart) >> 8;
     reorderedLoopStart |=  (0xFF000000 & loopStart) >> 8;
 
-    return (reorderedLoopStart - SOUNDBANK_STARTADRESS) * 2 - sampleStartAddress;
+    return (reorderedLoopStart - soundbankStartAddr) * 2 - sampleStartAddress;
 }
 
-void DuSample::loopStartReadableToDream(quint32 readableValue, quint32 sampleStartAddress, quint16& outLoopStartMSB, quint16& outLoopStartLSB)
+void DuSample::loopStartReadableToDream(quint32 readableValue, quint32 sampleStartAddress, quint16& outLoopStartMSB, quint16& outLoopStartLSB, quint32 soundbankStartAddr)
 {
-    quint32 readableValueOffseted = ((readableValue + sampleStartAddress) / 2) + SOUNDBANK_STARTADRESS;
+    quint32 readableValueOffseted = ((readableValue + sampleStartAddress) / 2) + soundbankStartAddr;
 
     quint32 reorderedLoopStart = 0;
     reorderedLoopStart |=  (0x000000FF & readableValueOffseted) << 0;
@@ -834,7 +834,7 @@ void DuSample::loopStartReadableToDream(quint32 readableValue, quint32 sampleSta
     outLoopStartLSB = static_cast<quint16>((0x00FF & reorderedLoopStart_LSB) << 8) | static_cast<quint16>((0xFF00 & reorderedLoopStart_LSB) >> 8);
 }
 
-quint32 DuSample::loopEndDreamToReadable(quint16 loopEndMSB, quint16 loopEndLSB, quint32 sampleStartAddress)
+quint32 DuSample::loopEndDreamToReadable(quint16 loopEndMSB, quint16 loopEndLSB, quint32 sampleStartAddress, quint32 soundbankStartAddr)
 {
     quint32 loopEnd = static_cast<quint32>(loopEndMSB << 16) | static_cast<quint32>(loopEndLSB);
     quint32 reorderedLoopEnd = 0;
@@ -843,12 +843,12 @@ quint32 DuSample::loopEndDreamToReadable(quint16 loopEndMSB, quint16 loopEndLSB,
     reorderedLoopEnd |= (0x00FF0000 & loopEnd) >> 16;
     reorderedLoopEnd |= (0xFF000000 & loopEnd) << 0;
 
-    return (reorderedLoopEnd - SOUNDBANK_STARTADRESS) * 2 - sampleStartAddress;
+    return (reorderedLoopEnd - soundbankStartAddr) * 2 - sampleStartAddress;
 }
 
-void DuSample::loopEndReadableToDream(quint32 readableValue, quint32 sampleStartAddress, quint16& outLoopEndMSB, quint16& outLoopEndLSB)
+void DuSample::loopEndReadableToDream(quint32 readableValue, quint32 sampleStartAddress, quint16& outLoopEndMSB, quint16& outLoopEndLSB, quint32 soundbankStartAddr)
 {
-    quint32 readableValueOffseted = ((readableValue + sampleStartAddress) / 2) + SOUNDBANK_STARTADRESS;
+    quint32 readableValueOffseted = ((readableValue + sampleStartAddress) / 2) + soundbankStartAddr;
 
     quint32 reorderedLoopEnd = 0;
     reorderedLoopEnd |= (0x000000FF & readableValueOffseted) << 24;
