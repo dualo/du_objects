@@ -15,6 +15,8 @@
 #include <QFile>
 #include <QDateTime>
 
+#include <QtMath>
+
 QAtomicInt DuSound::m_currentGlobalID = static_cast<int>(QDateTime::currentDateTimeUtc().toTime_t());
 
 int DuSound::currentGlobalID()
@@ -206,6 +208,10 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
         return DuSoundPtr();
     }
 
+    // MIGRATIONS
+    bool migrateOneShotSamples = soundHeader.SW_version < 3;
+    bool migrateAddMappingS = soundHeader.SW_version < 3;
+
     sound_instr soundStruct;
     std::memcpy(&soundStruct, &data.data()[INSTR_HEADER_SIZE], INSTRU_STRUCT_SIZE);
 
@@ -306,9 +312,9 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
     sampleArray.reserve(dreamSPArray.count());
     for (int i = 0; i < dreamSPArray.count(); ++i)
     {
-        const dream_sp& currentSampleParam = dreamSPArray[i];
+        dream_sp& currentSampleParam = dreamSPArray[i];
 
-        int currentWavAddress = static_cast<int>(DuSample::wavAddressDreamToReadable(currentSampleParam.wav_address));
+        quint32 currentWavAddress = DuSample::wavAddressDreamToReadable(currentSampleParam.wav_address);
 
         int sampleSize = DuSample::sizeWavDreamToReadable(currentSampleParam.size_wav);
         if (sampleSize <= 0)
@@ -320,7 +326,39 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
             return DuSoundPtr();
         }
 
-        QByteArray sample(data.mid(sampleAddress + currentWavAddress, sampleSize));
+        QByteArray sample(data.mid(sampleAddress + static_cast<int>(currentWavAddress), sampleSize));
+        if (migrateOneShotSamples)
+        {
+            int currentLoopStart = static_cast<int>(DuSample::loopStartDreamToReadable(currentSampleParam.loop_start_MSB,
+                                                                                       currentSampleParam.loop_start_LSB,
+                                                                                       currentWavAddress));
+            int currentLoopEnd = static_cast<int>(DuSample::loopEndDreamToReadable(currentSampleParam.loop_end_MSB,
+                                                                                   currentSampleParam.loop_end_LSB,
+                                                                                   currentWavAddress));
+            if (currentLoopEnd > currentLoopStart)
+            {
+                int currentLoopSize = currentLoopEnd - currentLoopStart;
+                if (currentLoopSize < 64)
+                {
+                    int nbDuplicates = qCeil(64.0 / currentLoopSize);
+                    QByteArray modifiedSample = sample.left(currentLoopStart);
+                    const QByteArray& loop = sample.mid(currentLoopStart, currentLoopSize);
+                    for (int i = 0; i < nbDuplicates; ++i)
+                    {
+                        modifiedSample += loop;
+                    }
+                    modifiedSample += sample.mid(currentLoopEnd);
+
+                    sample.swap(modifiedSample);
+
+                    DuSample::loopEndReadableToDream(static_cast<quint32>(currentLoopStart + (nbDuplicates * currentLoopSize)),
+                                                     currentWavAddress,
+                                                     currentSampleParam.loop_end_MSB,
+                                                     currentSampleParam.loop_end_LSB);
+                    currentSampleParam.size_wav = DuSample::sizeWavReadableToDream(sample.size());
+                }
+            }
+        }
 
         sampleArray << sample;
     }
@@ -427,7 +465,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
         sound->setMappingL(mappingL);
 
         DuArrayPtr<DuNote> mappingS(new DuArray<DuNote>);
-        if (soundHeader.SW_version < 3)
+        if (migrateAddMappingS)
         {
             // Before version 3, we didn't have the du-touch S mapping.
             // To migrate, we just apply a mask on the du-touch L mapping.
