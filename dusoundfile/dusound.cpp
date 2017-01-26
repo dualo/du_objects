@@ -196,6 +196,7 @@ DuSoundPtr DuSound::fromHeaderBinary(const QByteArray &data)
 
 DuSoundPtr DuSound::fromBinary(const QByteArray &data)
 {
+    // HEADER
     s_instr_header soundHeader;
     std::memcpy(&soundHeader, data.data(), INSTR_HEADER_SIZE);
 
@@ -208,10 +209,8 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
         return DuSoundPtr();
     }
 
-    // MIGRATIONS
-    bool migrateOneShotSamples = soundHeader.SW_version < 3;
-    bool migrateAddMappingS = soundHeader.SW_version < 3;
 
+    // STRUCTURE
     sound_instr soundStruct;
     std::memcpy(&soundStruct, &data.data()[INSTR_HEADER_SIZE], INSTRU_STRUCT_SIZE);
 
@@ -247,6 +246,15 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
         return DuSoundPtr();
     }
 
+
+    // MIGRATIONS
+    bool migrateOneShotSamples = soundHeader.SW_version < 3;
+    bool migrateAddMappingS = soundHeader.SW_version < 3;
+
+    sound->setSoftInstrVersion(DUSOUND_SW_VERSION);
+
+
+    // LAYERS - IP - SP - SAMPLES
     int nbLayers = soundStruct.s_instrument.nb_layer;
     DuInstrumentInfo::DreamFormat dreamFormat = static_cast<DuInstrumentInfo::DreamFormat>(soundStruct.s_instrument.format_id);
 
@@ -437,6 +445,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
     sound->setLayerArray(layerArray);
 
 
+    // MAPPING
     if (soundHeader.mapping_addr != 0)
     {
         DuArrayPtr<DuNote> mappingL(new DuArray<DuNote>);
@@ -478,8 +487,6 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
 
                 mappingS->append(note);
             }
-
-            sound->setSoftInstrVersion(DUSOUND_SW_VERSION);
         }
         else
         {
@@ -509,6 +516,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
     }
 
 
+    // METADATA
     if (soundHeader.meta_addr != 0)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "There are metadata in this du-sound, but we don't handle them yet.\n"
