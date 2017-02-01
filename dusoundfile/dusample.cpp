@@ -67,10 +67,6 @@ DuSamplePtr DuSample::fromBinary(const dream_ip& dreamIP,
     DuSamplePtr sample(new DuSample);
     bool verif = true;
 
-    // Intrument Parameters
-    verif = sample->setStartNote(dreamIP.start_note + 1) ? verif : false;
-    verif = sample->setEndNote(dreamIP.end_note) ? verif : false;
-
     // Sample Parameters
     verif = sample->setAddress1(dreamSP.address1) ? verif : false;
     verif = sample->setLoopType(static_cast<SampleType>(dreamSP.loopType)) ? verif : false;
@@ -134,6 +130,14 @@ DuSamplePtr DuSample::fromBinary(const dream_ip& dreamIP,
     verif = sample->setDecayLevel(decayLevelDreamToReadable(dreamSP.decay))         ? verif : false;
     verif = sample->setReleaseRate(releaseRateDreamToReadable(dreamSP.release))     ? verif : false;
     verif = sample->setReleaseLevel(releaseLevelDreamToReadable(dreamSP.release))   ? verif : false;
+
+    // Intrument Parameters
+    verif = sample->setStartNote(dreamIP.start_note + 1) ? verif : false;
+
+    int endNote = dreamIP.end_note;
+    if (endNote - unityNote > MAX_REF_NOTE_END_NOTE_INTERVAL)
+        endNote = unityNote + MAX_REF_NOTE_END_NOTE_INTERVAL;
+    verif = sample->setEndNote(endNote) ? verif : false;
 
     // Data
     verif = sample->setData(data) ? verif : false;

@@ -7,6 +7,8 @@
 
 #include <sndfile.hh>
 
+#define MAX_REF_NOTE_END_NOTE_INTERVAL 43
+
 // TODO: Get this from external
 #ifndef SOUNDBANK_STARTADRESS
 #define SOUNDBANK_STARTADRESS 0x10000
