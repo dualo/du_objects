@@ -23,6 +23,8 @@ public:
         // Keep in sync with DuDeviceObject::Type
     };
 
+    static QString typeToString(Type type);
+
     DuDevice(Type type = Type_Unknown);
     virtual ~DuDevice() = default;
 

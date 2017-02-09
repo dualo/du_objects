@@ -9,6 +9,23 @@
 
 DU_OBJECT_IMPL(DuDevice)
 
+QString DuDevice::typeToString(DuDevice::Type type)
+{
+    switch (type)
+    {
+        case Type_Unknown:
+            return "Unknown";
+        case Type_DuTouchPro:
+            return "du-touch Pro";
+        case Type_DuTouchS:
+            return "du-touch S";
+        case Type_DuTouchL:
+            return "du-touch L";
+        case Type_Other:
+            return "Other";
+    }
+}
+
 DuDevice::DuDevice(Type type) :
     DuContainer(),
     plugged(false),
