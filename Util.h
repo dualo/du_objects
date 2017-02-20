@@ -8,6 +8,7 @@
 namespace Util
 {
     QString sizeToString(int size);
+    QString timeToString(qint64 msTime);
 
     template <typename T>
     QVariantList listToVariantList(const QList<T> &list)
