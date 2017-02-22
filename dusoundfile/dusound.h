@@ -30,6 +30,7 @@ public:
     virtual DuObjectPtr clone() const override;
 
     virtual int size() const override;
+    bool isEmpty() const;
 
     static DuSoundPtr fromHeaderBinary(const QByteArray &data);
     static DuSoundPtr fromBinary(const QByteArray &data);

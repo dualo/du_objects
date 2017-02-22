@@ -148,6 +148,11 @@ int DuSound::size() const
             + metadataSize;
 }
 
+bool DuSound::isEmpty() const
+{
+    return size() <= INSTR_NB_SAMPLES_PER_LAYER_ADDRESS;
+}
+
 DuSoundPtr DuSound::fromHeaderBinary(const QByteArray &data)
 {
     if (data.size() != INSTR_HEADER_SIZE + FULL_PRESET_ALIGN)
