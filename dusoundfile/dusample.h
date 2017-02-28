@@ -74,10 +74,6 @@ public:
     static int releaseLevelDreamToReadable(quint16 dreamValue);
     static quint16 releaseReadableToDream(int rate, int level);
 
-    static int volumeDreamToReadable(quint16 dreamValue);
-    static bool isOneShotDreamToReadable(quint16 dreamValue);
-    static quint16 volumeReadableToDream(int volume, bool isOneShot);
-
     static int sizeWavDreamToReadable(quint32 dreamValue);
     static quint32 sizeWavReadableToDream(int readableValue);
 
@@ -86,10 +82,7 @@ public:
     DU_KEY_ACCESSORS(EndNote,         int)
 
     // Sample Parameters
-    DU_KEY_ACCESSORS(Address1,        int)
     DU_KEY_ACCESSORS(LoopType,        SampleType)
-    DU_KEY_ACCESSORS(Address2,        int)
-    DU_KEY_ACCESSORS(Address3,        int)
 
     DU_KEY_ACCESSORS(VolumeAmplifier, int)
 
@@ -99,14 +92,9 @@ public:
     DU_KEY_ACCESSORS(UnityNote,       int)
 
     DU_KEY_ACCESSORS(LoopStart,       int)
-
-    DU_KEY_ACCESSORS(VolumeMixer1,    int)
-    DU_KEY_ACCESSORS(IsOneShot,       bool)
-
     DU_KEY_ACCESSORS(LoopEnd,         int)
 
     DU_KEY_ACCESSORS(AmplitudeOscAmp, int)
-    DU_KEY_ACCESSORS(VolumeMixer2,    int)
 
     DU_KEY_ACCESSORS(InitLevel,       int)
     DU_KEY_ACCESSORS(AttackRate,      int)

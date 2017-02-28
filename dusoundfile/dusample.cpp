@@ -21,10 +21,7 @@ DuSample::DuSample() :
     addChild(KeyEndNote,         new DuNumeric(0x7F, NUMERIC_DEFAULT_SIZE, 0x7F, 0x01));
 
     // Sample Parameters
-    addChild(KeyAddress1,        new DuNumeric(0x0000, 2, 0xFFFF, 0x0000));
     addChild(KeyLoopType,        new DuNumeric(SND3000_Forward, 2, 0xFFFF, 0x0000));
-    addChild(KeyAddress2,        new DuNumeric(0x0000, 2, 0xFFFF, 0x0000));
-    addChild(KeyAddress3,        new DuNumeric(0x0000, 2, 0xFFFF, 0x0000));
 
     addChild(KeyVolumeAmplifier, new DuNumeric(0xFF, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
 
@@ -34,14 +31,9 @@ DuSample::DuSample() :
     addChild(KeyUnityNote,       new DuNumeric(0x01, NUMERIC_DEFAULT_SIZE, 0x7F, 0x01));
 
     addChild(KeyLoopStart,       new DuNumeric(0));
-
-    addChild(KeyVolumeMixer1,    new DuNumeric(0x7F, NUMERIC_DEFAULT_SIZE, 0x7F, 0x00));
-    addChild(KeyIsOneShot,       new DuBoolean(true));
-
     addChild(KeyLoopEnd,         new DuNumeric(0));
 
     addChild(KeyAmplitudeOscAmp, new DuNumeric(0x46, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
-    addChild(KeyVolumeMixer2,    new DuNumeric(0xEFEF, 2, 0xFFFF, 0x0000));
 
     addChild(KeyInitLevel,       new DuNumeric(127, NUMERIC_DEFAULT_SIZE, 127, 0));
     addChild(KeyAttackRate,      new DuNumeric(99,  NUMERIC_DEFAULT_SIZE, 127, 0));
@@ -68,10 +60,7 @@ DuSamplePtr DuSample::fromBinary(const dream_ip& dreamIP,
     bool verif = true;
 
     // Sample Parameters
-    verif = sample->setAddress1(dreamSP.address1) ? verif : false;
     verif = sample->setLoopType(static_cast<SampleType>(dreamSP.loopType)) ? verif : false;
-    verif = sample->setAddress2(dreamSP.address2) ? verif : false;
-    verif = sample->setAddress3(dreamSP.address3) ? verif : false;
 
     verif = sample->setVolumeAmplifier(dreamSP.volume_amplifier) ? verif : false;
 
@@ -114,14 +103,9 @@ DuSamplePtr DuSample::fromBinary(const dream_ip& dreamIP,
     quint32 sampleStartAddress = wavAddressDreamToReadable(dreamSP.wav_address);
 
     verif = sample->setLoopStart(static_cast<int>(loopStartDreamToReadable(dreamSP.loop_start_MSB, dreamSP.loop_start_LSB, sampleStartAddress))) ? verif : false;
-
-    verif = sample->setVolumeMixer1(volumeDreamToReadable(dreamSP.volume_mixer1)) ? verif : false;
-    verif = sample->setIsOneShot(isOneShotDreamToReadable(dreamSP.volume_mixer1)) ? verif : false;
-
     verif = sample->setLoopEnd(static_cast<int>(loopEndDreamToReadable(dreamSP.loop_end_MSB, dreamSP.loop_end_LSB, sampleStartAddress))) ? verif : false;
 
     verif = sample->setAmplitudeOscAmp(dreamSP.amplitude_osc_amp) ? verif : false;
-    verif = sample->setVolumeMixer2(dreamSP.volume_mixer2) ? verif : false;
 
     verif = sample->setInitLevel(initLevelDreamToReadable(dreamSP.init))            ? verif : false;
     verif = sample->setAttackRate(attackRateDreamToReadable(dreamSP.attack))        ? verif : false;
@@ -677,22 +661,12 @@ QByteArray DuSample::spBinary(quint32 sampleAddress, bool forDuTouchSOrL) const
 
     int tmpNum = 0;
 
-    tmpNum = getAddress1();
-    if (tmpNum == -1)
-        return QByteArray();
-    data.address1 = static_cast<quint16>(tmpNum);
+    data.address1 = 0x0000;
 
     data.loopType = static_cast<quint16>(forDuTouchSOrL ? SND5000_OneShot : SND3000_Forward);
 
-    tmpNum = getAddress2();
-    if (tmpNum == -1)
-        return QByteArray();
-    data.address2 = static_cast<quint16>(tmpNum);
-
-    tmpNum = getAddress3();
-    if (tmpNum == -1)
-        return QByteArray();
-    data.address3 = static_cast<quint16>(tmpNum);
+    data.address2 = 0x0000;
+    data.address3 = 0x0000;
 
     data.unknown1 = 0xB5F0;
     data.unknown2 = 0x0814;
@@ -727,10 +701,7 @@ QByteArray DuSample::spBinary(quint32 sampleAddress, bool forDuTouchSOrL) const
 
     data.wav_address = wavAddressReadableToDream(sampleAddress);
 
-    tmpNum = volumeReadableToDream(getVolumeMixer1(), getIsOneShot());
-    if (tmpNum == -1)
-        return QByteArray();
-    data.volume_mixer1 = static_cast<quint16>(tmpNum);
+    data.volume_mixer1 = 0xFEFF;
 
     tmpNum = getLoopEnd();
     if (tmpNum == -1)
@@ -745,10 +716,7 @@ QByteArray DuSample::spBinary(quint32 sampleAddress, bool forDuTouchSOrL) const
         return QByteArray();
     data.amplitude_osc_amp = static_cast<quint8>(tmpNum);
 
-    tmpNum = getVolumeMixer2();
-    if (tmpNum == -1)
-        return QByteArray();
-    data.volume_mixer2 = static_cast<quint16>(tmpNum);
+    data.volume_mixer2 = 0xEFEF;
 
     tmpNum = initReadableToDream(getInitLevel());
     if (tmpNum == -1)
@@ -944,31 +912,6 @@ quint16 DuSample::releaseReadableToDream(int rate, int level)
     return qToBigEndian(static_cast<quint16>((static_cast<quint16>(MSB) << 8) | LSB));
 }
 
-int DuSample::volumeDreamToReadable(quint16 dreamValue)
-{
-    quint8 volumeRight = (dreamValue >> 9) & 0x7F;
-//    quint8 volumeLeft  = dreamValue & 0xFF;
-
-    return volumeRight;
-}
-
-bool DuSample::isOneShotDreamToReadable(quint16 dreamValue)
-{
-    quint8 isOneShot = (dreamValue >> 8) & 0x01;
-
-    return isOneShot == 1;
-}
-
-quint16 DuSample::volumeReadableToDream(int volume, bool isOneShot)
-{
-    quint8 volumeRight = static_cast<quint8>((volume << 1) | (isOneShot ? 1 : 0));
-    quint8 volumeLeft  = static_cast<quint8>((volume << 1) | 0x01);
-
-    quint16 dreamValue = ((static_cast<quint16>(volumeRight) << 8) & 0xFF00) | (static_cast<quint16>(volumeLeft) & 0x00FF);
-
-    return dreamValue;
-}
-
 int DuSample::sizeWavDreamToReadable(quint32 dreamValue)
 {
     return static_cast<int>(dreamValue) * 2;
@@ -984,10 +927,7 @@ DU_KEY_ACCESSORS_IMPL(DuSample, StartNote,       Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuSample, EndNote,         Numeric, int, -1)
 
 // Sample Parameters
-DU_KEY_ACCESSORS_IMPL(DuSample, Address1,        Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuSample, LoopType,        Numeric, DuSample::SampleType, Unknown)
-DU_KEY_ACCESSORS_IMPL(DuSample, Address2,        Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuSample, Address3,        Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuSample, VolumeAmplifier, Numeric, int, -1)
 
@@ -997,14 +937,9 @@ DU_KEY_ACCESSORS_IMPL(DuSample, FineTune,        Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuSample, UnityNote,       Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuSample, LoopStart,       Numeric, int, -1)
-
-DU_KEY_ACCESSORS_IMPL(DuSample, VolumeMixer1,    Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuSample, IsOneShot,       Boolean, bool, false)
-
 DU_KEY_ACCESSORS_IMPL(DuSample, LoopEnd,         Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuSample, AmplitudeOscAmp, Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuSample, VolumeMixer2,    Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuSample, InitLevel,       Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuSample, AttackRate,      Numeric, int, -1)
