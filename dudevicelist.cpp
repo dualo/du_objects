@@ -36,7 +36,7 @@ bool DuDeviceList::equals(const DuListConstPtr& other) const
 
 bool DuDeviceList::setType(Type value)
 {
-    Q_UNREACHABLE();
+    Q_ASSERT_X(false, "setType", "unreachable");
     Q_UNUSED(value)
     return false;
 }
