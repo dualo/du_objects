@@ -24,6 +24,9 @@ QString DuDevice::typeToString(DuDevice::Type type)
         case Type_Other:
             return "Other";
     }
+
+    Q_UNREACHABLE();
+    return QString();
 }
 
 DuDevice::DuDevice(Type type) :
