@@ -299,12 +299,12 @@ DuSamplePtr DuSample::fromWav(QFile *input)
     }
 
     QByteArray rawData = wavFileData.mid(dataKeywordIndex + 4 + 4, static_cast<int>(wavSize)); // +4 for "data", +4 for size
-    rawData.append(QByteArray(16, 0x00)); // Append 8 half words to loop over at the end of the sample
+    rawData.append(QByteArray(64, 0x00)); // Append 32 half words to loop over at the end of the sample
 
     DuSamplePtr sample(new DuSample);
 
     sample->setData(rawData);
-    sample->setLoopStart(rawData.size() - 16);
+    sample->setLoopStart(rawData.size() - 64);
     sample->setLoopEnd(rawData.size() - 2);
 
     return sample;
