@@ -53,7 +53,7 @@ QString DuInstrumentInfo::getCategoryNameFromProgramChange(int programChange)
         }
     }
 
-    return "unknown";
+    return QStringLiteral("unknown");
 }
 
 int DuInstrumentInfo::getProgramChangeFromCategoryName(const QString name)

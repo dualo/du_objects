@@ -14,15 +14,15 @@ QString DuDevice::typeToString(DuDevice::Type type)
     switch (type)
     {
         case Type_Unknown:
-            return "Unknown";
+            return QStringLiteral("Unknown");
         case Type_DuTouchPro:
-            return "du-touch Pro";
+            return QStringLiteral("du-touch Pro");
         case Type_DuTouchS:
-            return "du-touch S";
+            return QStringLiteral("du-touch S");
         case Type_DuTouchL:
-            return "du-touch L";
+            return QStringLiteral("du-touch L");
         case Type_Other:
-            return "Other";
+            return QStringLiteral("Other");
     }
 
     Q_UNREACHABLE();
