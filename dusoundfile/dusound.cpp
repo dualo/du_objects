@@ -350,7 +350,15 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
                                                                                    currentWavAddress));
             if (currentLoopEnd > currentLoopStart)
             {
-                int currentLoopSize = currentLoopEnd - currentLoopStart;
+                /**
+                 * [[ | ]...............[ | ][ | ][ | ]............[ | ][ | ]]
+                 *  ^^^^^                     ^                          ^
+                 * 16-bits sample          loop start                 loop end
+                 *
+                 * Loop size in sample = loop end/2 - loop start/2 + 1
+                 * Loop size in bytes = loop end - loop start + 2
+                 */
+                int currentLoopSize = currentLoopEnd - currentLoopStart + 2;
                 if (currentLoopSize < 64)
                 {
                     int nbDuplicates = qCeil(64.0 / currentLoopSize);
