@@ -10,6 +10,8 @@ DU_OBJECT(DuDevice);
 
 class DuDevice : public DuContainer
 {
+    Q_GADGET
+
 public:
     enum Type
     {
@@ -19,9 +21,8 @@ public:
         Type_DuTouchL,
 
         Type_Other
-
-        // Keep in sync with DuDeviceObject::Type
     };
+    Q_ENUM(Type)
 
     static QString typeToString(Type type);
 

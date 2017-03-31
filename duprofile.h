@@ -18,6 +18,8 @@ DU_OBJECT(DuProfile);
 
 class DuProfile : public DuContainer
 {
+    Q_GADGET
+
 public:
     enum Role
     {
@@ -27,9 +29,8 @@ public:
         Temp,
         Test,
         Dev
-
-        // Keep in sync with DuProfileObject::Type
     };
+    Q_ENUM(Role)
 
     DuProfile();
     virtual ~DuProfile() = default;

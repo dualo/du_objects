@@ -8,6 +8,8 @@ DU_OBJECT(DuList);
 
 class DuList : public DuContainer
 {
+    Q_GADGET
+
 public:
     enum Type
     {
@@ -20,9 +22,8 @@ public:
         Trash,
         Lessons,
         Shop
-
-        // Keep in sync with DuListObject::Type
     };
+    Q_ENUM(Type)
 
     explicit DuList(const QString& name = QString(), Type type = None);
     virtual ~DuList() = default;
