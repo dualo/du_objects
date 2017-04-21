@@ -2,13 +2,9 @@
 
 #include <QObject>
 
-QString Util::sizeToString(int size)
+QString Util::sizeToString(quint64 size)
 {
-    if (size < 0)
-    {
-        return QString();
-    }
-    else if (size < 1000)
+    if (size < 1000)
     {
         return QObject::tr("%1 Bytes").arg(size);
     }

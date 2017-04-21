@@ -7,7 +7,7 @@
 
 namespace Util
 {
-    QString sizeToString(int size);
+    QString sizeToString(quint64 size);
     QString timeToString(qint64 msTime);
 
     template <typename T>
