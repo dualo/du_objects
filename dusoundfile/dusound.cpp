@@ -170,6 +170,8 @@ DuSoundPtr DuSound::fromHeaderBinary(const QByteArray &data)
     sound_instr soundStruct;
     std::memcpy(&soundStruct, &data.data()[INSTR_HEADER_SIZE], INSTRU_STRUCT_SIZE);
 
+    DuInstrumentInfo::DreamFormat dreamFormat = static_cast<DuInstrumentInfo::DreamFormat>(soundStruct.s_instrument.format_id);
+
     DuSoundPtr sound(new DuSound);
 
     if (soundStruct.s_instrument.instr_midi_pc == 0xFF)
@@ -178,7 +180,7 @@ DuSoundPtr DuSound::fromHeaderBinary(const QByteArray &data)
         return sound;
     }
 
-    sound->setSizeWithSamples(static_cast<int>(soundHeader.full_size));
+    sound->setSizeWithSamples(static_cast<int>(soundHeader.full_size - (dreamFormat == DuInstrumentInfo::SDK_5000 ? 2 : 0)));
     sound->setHasSamplesDownloaded(false);
 
     DuSoundInfoPtr info = DuSoundInfo::fromBinary(soundStruct);
