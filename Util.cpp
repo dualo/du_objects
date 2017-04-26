@@ -38,10 +38,13 @@ QString Util::timeToString(qint64 msTime)
     }
     else if (msTime < 3600000)
     {
-        return QObject::tr("%1 min").arg(QString::number(static_cast<double>(msTime) / 60000.0, 'f', 1));
+        return QObject::tr("%1 min %2 sec").arg(QString::number(msTime / 60000),
+                                                QString::number(static_cast<double>(msTime % 60000) / 1000.0, 'f', 1));
     }
     else
     {
-        return QObject::tr("%1 hrs").arg(QString::number(static_cast<double>(msTime) / 3600000.0, 'f', 1));
+        return QObject::tr("%1 hrs %2 min %3 sec").arg(QString::number(msTime / 3600000),
+                                                       QString::number((msTime % 3600000) / 60000),
+                                                       QString::number(static_cast<double>(msTime % 60000) / 1000.0, 'f', 1));
     }
 }
