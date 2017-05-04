@@ -28,7 +28,7 @@ public:
     explicit DuList(const QString& name = QString(), Type type = None);
     virtual ~DuList() = default;
 
-    virtual DuObjectPtr clone() const;
+    virtual DuObjectPtr clone() const Q_DECL_OVERRIDE;
 
     virtual bool equals(const DuListConstPtr& other) const;
 

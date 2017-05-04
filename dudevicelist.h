@@ -12,7 +12,7 @@ public:
     explicit DuDeviceList(const DuDeviceConstPtr &device);
     virtual ~DuDeviceList() = default;
 
-    virtual DuObjectPtr clone() const;
+    virtual DuObjectPtr clone() const Q_DECL_OVERRIDE;
 
     bool equals(const DuListConstPtr& other) const;
 
