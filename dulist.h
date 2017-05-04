@@ -30,7 +30,7 @@ public:
 
     virtual DuObjectPtr clone() const Q_DECL_OVERRIDE;
 
-    virtual bool equals(const DuListConstPtr& other) const;
+    virtual bool hasSameAttributes(const DuListConstPtr& other) const;
 
     DU_KEY_ACCESSORS(Name, QString)
     DU_KEY_ACCESSORS(Type, Type)

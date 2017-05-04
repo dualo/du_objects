@@ -18,7 +18,7 @@ DuObjectPtr DuDeviceList::clone() const
     return DuDeviceListPtr(new DuDeviceList(*this));
 }
 
-bool DuDeviceList::equals(const DuListConstPtr& other) const
+bool DuDeviceList::hasSameAttributes(const DuListConstPtr& other) const
 {
     if (other->getType() != Device)
     {

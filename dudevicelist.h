@@ -14,7 +14,7 @@ public:
 
     virtual DuObjectPtr clone() const Q_DECL_OVERRIDE;
 
-    bool equals(const DuListConstPtr& other) const;
+    bool hasSameAttributes(const DuListConstPtr& other) const Q_DECL_OVERRIDE;
 
     bool setType(Type value);
 

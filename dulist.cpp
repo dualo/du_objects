@@ -18,7 +18,7 @@ DuObjectPtr DuList::clone() const
     return DuListPtr(new DuList(*this));
 }
 
-bool DuList::equals(const DuListConstPtr &other) const
+bool DuList::hasSameAttributes(const DuListConstPtr &other) const
 {
     return this->getName() == other->getName() && this->getType() == other->getType();
 }
