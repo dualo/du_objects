@@ -31,6 +31,8 @@ protected:
 
     virtual QVariant checkValue(const QVariant &value, bool &success);
 
+    virtual bool equals(const DuObject &other) const Q_DECL_OVERRIDE;
+
 private:
     QVariant m_value;
 

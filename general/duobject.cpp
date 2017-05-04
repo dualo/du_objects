@@ -35,3 +35,18 @@ QDebug DuObject::debugPrint(QDebug dbg) const
 
     return dbg.space();
 }
+
+bool operator==(const DuObject &lhs, const DuObject &rhs)
+{
+    return lhs.equals(rhs);
+}
+
+bool operator!=(const DuObject &lhs, const DuObject &rhs)
+{
+    return !(lhs == rhs);
+}
+
+bool DuObject::equals(const DuObject &other) const
+{
+    return typeid(*this) == typeid(other);
+}

@@ -202,6 +202,38 @@ int DuContainer::size() const
     return size;
 }
 
+bool DuContainer::equals(const DuObject &other) const
+{
+    if (!DuObject::equals(other))
+        return false;
+
+    const DuContainer& castedOther = static_cast<const DuContainer&>(other);
+    if (m_children.size() != castedOther.m_children.size())
+        return false;
+
+    if (m_children.keys() != castedOther.m_children.keys())
+        return false;
+
+    QMapIterator<QString, DuObjectPtr> it(m_children);
+    while (it.hasNext())
+    {
+        it.next();
+
+        const DuObjectConstPtr& child = it.value();
+        const DuObjectConstPtr& otherChild = castedOther.m_children.value(it.key());
+        if (child.isNull() && otherChild.isNull())
+            continue;
+
+        if (child.isNull() || otherChild.isNull())
+            return false;
+
+        if (*child != *otherChild)
+            return false;
+    }
+
+    return true;
+}
+
 
 QStringList DuContainer::keys() const
 {

@@ -35,6 +35,8 @@ public:
 
     virtual QDebug debugPrint(QDebug dbg) const override;
 
+    virtual bool equals(const DuObject &other) const Q_DECL_OVERRIDE;
+
     int getMaxSize() const;
     void setMaxSize(int value);
 
@@ -261,6 +263,38 @@ QDebug DuArray<T>::debugPrint(QDebug dbg) const
     dbg.nospace() << ")";
 
     return dbg.space();
+}
+
+template<class T>
+bool DuArray<T>::equals(const DuObject &other) const
+{
+    if (!DuObject::equals(other))
+        return false;
+
+    const DuArray<T>& castedOther = static_cast<const DuArray<T>&>(other);
+
+    if (m_maxSize != castedOther.m_maxSize)
+        return false;
+
+    int count = m_array.size();
+    if (count != castedOther.m_array.size())
+        return false;
+
+    for (int i = 0; i < count; ++i)
+    {
+        const QSharedPointer<const T>& element = m_array.at(i);
+        const QSharedPointer<const T>& otherElement = castedOther.m_array.at(i);
+        if (element.isNull() && otherElement.isNull())
+            continue;
+
+        if (element.isNull() || otherElement.isNull())
+            return false;
+
+        if (*element != *otherElement)
+            return false;
+    }
+
+    return true;
 }
 
 template <class T>

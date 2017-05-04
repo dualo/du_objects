@@ -88,6 +88,12 @@ public:
     virtual QDebug debugPrint(QDebug dbg) const;
 
     virtual int size() const = 0;
+
+    friend bool operator==(const DuObject& lhs, const DuObject& rhs);
+    friend bool operator!=(const DuObject& lhs, const DuObject& rhs);
+
+protected:
+    virtual bool equals(const DuObject& other) const;
 };
 
 template <class T>

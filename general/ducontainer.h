@@ -139,6 +139,10 @@ public:
 
     virtual int size() const override;
 
+protected:
+    virtual bool equals(const DuObject &other) const Q_DECL_OVERRIDE;
+
+public:
     QStringList keys() const;
 
     DuObjectPtr operator[](const QString &key);

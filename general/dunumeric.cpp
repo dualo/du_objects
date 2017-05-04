@@ -130,6 +130,18 @@ QDebug DuNumeric::debugPrint(QDebug dbg) const
     return dbg.space();
 }
 
+bool DuNumeric::equals(const DuObject &other) const
+{
+    if (!DuValue::equals(other))
+        return false;
+
+    const DuNumeric& castedOther = static_cast<const DuNumeric&>(other);
+    return m_defaultValue == castedOther.m_defaultValue
+            && m_maxValue == castedOther.m_maxValue
+            && m_minValue == castedOther.m_minValue
+            && m_forbiddenValues == castedOther.m_forbiddenValues;
+}
+
 QVariant DuNumeric::checkValue(const QVariant &value, bool &success)
 {
     if (!value.canConvert<int>())

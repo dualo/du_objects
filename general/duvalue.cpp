@@ -84,3 +84,12 @@ QVariant &DuValue::getValue()
 {
     return m_value;
 }
+
+bool DuValue::equals(const DuObject &other) const
+{
+    if (!DuObject::equals(other))
+        return false;
+
+    const DuValue& castedOther = static_cast<const DuValue&>(other);
+    return this->m_value == castedOther.m_value && this->m_maxSize == castedOther.m_maxSize;
+}
