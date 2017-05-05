@@ -716,7 +716,7 @@ QByteArray DuSample::spBinary(quint32 sampleAddress, bool forDuTouchSOrL) const
         return QByteArray();
     data.amplitude_osc_amp = static_cast<quint8>(tmpNum);
 
-    data.volume_mixer2 = 0xEFEF;
+    data.volume_mixer2 = forDuTouchSOrL ? 0xFFFF : 0xEFEF;
 
     tmpNum = initReadableToDream(getInitLevel());
     if (tmpNum == -1)
