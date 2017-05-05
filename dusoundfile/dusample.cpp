@@ -33,8 +33,6 @@ DuSample::DuSample() :
     addChild(KeyLoopStart,       new DuNumeric(0));
     addChild(KeyLoopEnd,         new DuNumeric(0));
 
-    addChild(KeyAmplitudeOscAmp, new DuNumeric(0x46, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
-
     addChild(KeyInitLevel,       new DuNumeric(127, NUMERIC_DEFAULT_SIZE, 127, 0));
     addChild(KeyAttackRate,      new DuNumeric(99,  NUMERIC_DEFAULT_SIZE, 127, 0));
     addChild(KeyAttackLevel,     new DuNumeric(63,  NUMERIC_DEFAULT_SIZE, 63,  0));
@@ -104,8 +102,6 @@ DuSamplePtr DuSample::fromBinary(const dream_ip& dreamIP,
 
     verif = sample->setLoopStart(static_cast<int>(loopStartDreamToReadable(dreamSP.loop_start_MSB, dreamSP.loop_start_LSB, sampleStartAddress))) ? verif : false;
     verif = sample->setLoopEnd(static_cast<int>(loopEndDreamToReadable(dreamSP.loop_end_MSB, dreamSP.loop_end_LSB, sampleStartAddress))) ? verif : false;
-
-    verif = sample->setAmplitudeOscAmp(dreamSP.amplitude_osc_amp) ? verif : false;
 
     verif = sample->setInitLevel(initLevelDreamToReadable(dreamSP.init))            ? verif : false;
     verif = sample->setAttackRate(attackRateDreamToReadable(dreamSP.attack))        ? verif : false;
@@ -711,10 +707,7 @@ QByteArray DuSample::spBinary(quint32 sampleAddress, bool forDuTouchSOrL) const
     data.unknown7 = 0x7F0E;
     data.unknown8 = 0x06;
 
-    tmpNum = getAmplitudeOscAmp();
-    if (tmpNum == -1)
-        return QByteArray();
-    data.amplitude_osc_amp = static_cast<quint8>(tmpNum);
+    data.amplitude_osc_amp = forDuTouchSOrL ? 0x64 : 0x46;
 
     data.volume_mixer2 = forDuTouchSOrL ? 0xFFFF : 0xEFEF;
 
@@ -938,8 +931,6 @@ DU_KEY_ACCESSORS_IMPL(DuSample, UnityNote,       Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuSample, LoopStart,       Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuSample, LoopEnd,         Numeric, int, -1)
-
-DU_KEY_ACCESSORS_IMPL(DuSample, AmplitudeOscAmp, Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuSample, InitLevel,       Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuSample, AttackRate,      Numeric, int, -1)

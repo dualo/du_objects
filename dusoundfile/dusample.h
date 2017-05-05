@@ -94,8 +94,6 @@ public:
     DU_KEY_ACCESSORS(LoopStart,       int)
     DU_KEY_ACCESSORS(LoopEnd,         int)
 
-    DU_KEY_ACCESSORS(AmplitudeOscAmp, int)
-
     DU_KEY_ACCESSORS(InitLevel,       int)
     DU_KEY_ACCESSORS(AttackRate,      int)
     DU_KEY_ACCESSORS(AttackLevel,     int)
