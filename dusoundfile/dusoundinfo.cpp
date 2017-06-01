@@ -92,7 +92,12 @@ QByteArray DuSoundInfo::toBinary(uint8_t nbLayer, int nbSamples, uint32_t sample
     const DuInstrumentInfoConstPtr &m3infos = getInstrumentInfo();
     if (m3infos == NULL)
         return QByteArray();
-    std::memcpy(&(soundStruct.s_instrument), m3infos->toBinary(nbLayer, nbSamples, sampleSize, forDuTouchSOrL).constData(), static_cast<size_t>(m3infos->size()));
+
+    const QByteArray& m3infosData = m3infos->toBinary(nbLayer, nbSamples, sampleSize, forDuTouchSOrL);
+    if (m3infosData.isNull())
+        return QByteArray();
+
+    std::memcpy(&(soundStruct.s_instrument), m3infosData.constData(), static_cast<size_t>(m3infos->size()));
 
     tmpInt = getPresetNum();
     if (tmpInt == -1)

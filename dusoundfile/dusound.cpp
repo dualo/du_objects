@@ -573,14 +573,26 @@ QByteArray DuSound::toBinary(bool forDuTouchSOrL) const
     if (!ret)
         return QByteArray();
 
+    const QByteArray& mappingL = mappingLBinary();
+    if (mappingL.isNull())
+        return QByteArray();
+
+    const QByteArray& mappingS = mappingSBinary();
+    if (mappingS.isNull())
+        return QByteArray();
+
+    const QByteArray& metadata = metadataBinary();
+    if (metadata.isNull())
+        return QByteArray();
+
     data += header;
     data += ipHeader;
     data += ip;
     data += sp;
     data += samples;
-    data += mappingLBinary();
-    data += mappingSBinary();
-    data += metadataBinary();
+    data += mappingL;
+    data += mappingS;
+    data += metadata;
 
     return data;
 }
@@ -727,7 +739,11 @@ bool DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL,
     if (info == NULL)
         return false;
 
-    outHeader += info->toBinary(static_cast<quint8>(nbLayer), totalNbSamples, static_cast<quint32>(totalSampleSize), forDuTouchSOrL);
+    const QByteArray& infoData = info->toBinary(static_cast<quint8>(nbLayer), totalNbSamples, static_cast<quint32>(totalSampleSize), forDuTouchSOrL);
+    if (infoData.isNull())
+        return false;
+
+    outHeader += infoData;
     outHeader += QByteArray(INTR_STRUCT_ALIGN, 0);
 
     outIpHeader.swap(ipHeader);
@@ -743,7 +759,7 @@ QByteArray DuSound::mappingLBinary() const
     const QByteArray& data = getMappingL()->toDuMusicBinary();
     if (data.isEmpty())
     {
-        return QByteArray();
+        return data; // will return "" if empty and QByteArray() if null
     }
     else if (data.size() != MAPPING_L_SIZE)
     {
@@ -763,7 +779,7 @@ QByteArray DuSound::mappingSBinary() const
     const QByteArray& data = getMappingS()->toDuMusicBinary();
     if (data.isEmpty())
     {
-        return QByteArray();
+        return data; // will return "" if empty and QByteArray() if null
     }
     else if (data.size() != MAPPING_S_SIZE)
     {
