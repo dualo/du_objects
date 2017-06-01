@@ -98,7 +98,7 @@ QByteArray DuArray<T>::toDuMusicBinary() const
 
     if (m_array.isEmpty())
     {
-        return QByteArray();
+        return "";
     }
 
     foreach (const QSharedPointer<T>& obj, m_array)
