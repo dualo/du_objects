@@ -61,7 +61,10 @@
     X_OBJECT_TEMPLATE(Tracks, DuArray, DuTrack)
 
 
+#ifndef NO_MIDI
 class MidiConversionHelper;
+#endif
+
 class QIODevice;
 #ifdef Q_OS_WIN
 #include "../general/duarray.h"
@@ -87,10 +90,16 @@ public:
     static DuMusicPtr fromBinary(const QByteArray &data);
     static DuMusicPtr fromBinary(QIODevice *input);
     static DuMusicPtr fromJson(const QJsonObject &jsonMusic);
+
+#ifndef NO_MIDI
     static DuMusicPtr fromMidi(const MidiConversionHelper &helper);
+#endif
 
     QByteArray toDuMusicBinary() const override;
+
+#ifndef NO_MIDI
     QByteArray toMidiBinary() const override;
+#endif
 
     int size() const override;
     bool isEmpty() const;

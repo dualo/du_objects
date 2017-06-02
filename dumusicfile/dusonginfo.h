@@ -9,10 +9,10 @@
 
 //NOTE: the 2 #define above could be replaced if dummy sizes were defined
 
+#ifndef NO_MIDI
 class MidiConversionHelper;
-DU_OBJECT(DuMixer);
+#endif
 
-class MidiConversionHelper;
 DU_OBJECT(DuMixer);
 
 DU_OBJECT(DuSongInfo);
@@ -26,7 +26,10 @@ public:
     virtual DuObjectPtr clone() const;
 
     static DuSongInfoPtr fromDuMusicBinary(const music_song &du_song);
+
+#ifndef NO_MIDI
     static DuSongInfoPtr fromMidi(const MidiConversionHelper &helper);
+#endif
 
     QByteArray toDuMusicBinary() const;
 

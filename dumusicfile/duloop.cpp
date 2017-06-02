@@ -123,6 +123,7 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
 }
 
 
+#ifndef NO_MIDI
 DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int midiTrackIndex)
 {
     if (!helper.isValid())
@@ -284,6 +285,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int midiTrackInde
 
     return loop;
 }
+#endif
 
 
 QByteArray DuLoop::toDuMusicBinary() const
@@ -335,6 +337,7 @@ QByteArray DuLoop::toDuMusicBinary() const
     return QByteArray(reinterpret_cast<char*>(&du_loop), size());
 }
 
+#ifndef NO_MIDI
 DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
                                      int transpose) const
 {
@@ -571,6 +574,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
     midiTrack->setEvents(midiEvents);
     return midiTrack;
 }
+#endif
 
 
 int DuLoop::size() const

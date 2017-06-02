@@ -123,6 +123,7 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
 }
 
 
+#ifndef NO_MIDI
 DuTrackPtr DuTrack::fromMidi(const MidiConversionHelper &helper, int trackIndex)
 {
     if (!helper.isValid())
@@ -191,6 +192,7 @@ DuTrackPtr DuTrack::fromMidi(const MidiConversionHelper &helper, int trackIndex)
 
     return track;
 }
+#endif
 
 
 QByteArray DuTrack::toDuMusicBinary() const
@@ -232,6 +234,7 @@ QByteArray DuTrack::toDuMusicBinary() const
 }
 
 
+#ifndef NO_MIDI
 QVector<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef,
                                                     int transpose) const
 {
@@ -278,6 +281,7 @@ QVector<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef,
 
     return retList;
 }
+#endif
 
 
 int DuTrack::size() const

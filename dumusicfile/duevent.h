@@ -4,8 +4,11 @@
 #include "../general/ducontainer.h"
 
 
+#ifndef NO_MIDI
 class MidiConversionHelper;
 DU_OBJECT(DuMidiChannelEvent);
+#endif
+
 DU_OBJECT(DuSound);
 
 DU_OBJECT(DuEvent);
@@ -19,14 +22,20 @@ public:
     virtual DuObjectPtr clone() const;
 
     static DuEventPtr fromDuMusicBinary(const music_sample &du_sample);
+
+#ifndef NO_MIDI
     static DuEventPtr fromMidi(const DuMidiChannelEventPtr &channelEvent,
                                const DuSoundConstPtr &sound,
                                const MidiConversionHelper &helper);
+#endif
 
     QByteArray toDuMusicBinary() const;
+
+#ifndef NO_MIDI
     DuMidiChannelEventPtr toDuMidiChannelEvent(quint32 prevTime, quint8 prevType,
                                                int presetOctave, int transpose,
                                                bool isPercu, int instrKeyMap) const;
+#endif
 
     int size() const;
 

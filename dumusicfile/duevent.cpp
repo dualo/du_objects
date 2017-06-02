@@ -73,6 +73,7 @@ DuEventPtr DuEvent::fromDuMusicBinary(const music_sample &du_sample)
     return event;
 }
 
+#ifndef NO_MIDI
 DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
                              const DuSoundConstPtr& sound,
                              const MidiConversionHelper &helper)
@@ -202,6 +203,7 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
 
     return event;
 }
+#endif
 
 
 QByteArray DuEvent::toDuMusicBinary() const
@@ -245,6 +247,7 @@ QByteArray DuEvent::toDuMusicBinary() const
     return QByteArray(reinterpret_cast<char*>(&du_sample), MUSIC_SAMPLE_SIZE);
 }
 
+#ifndef NO_MIDI
 DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
                                                     quint8 prevType,
                                                     int presetOctave,
@@ -383,6 +386,7 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
 
     return channelEvent;
 }
+#endif
 
 
 int DuEvent::size() const

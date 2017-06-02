@@ -133,6 +133,7 @@ DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
 }
 
 
+#ifndef NO_MIDI
 DuSongInfoPtr DuSongInfo::fromMidi(const MidiConversionHelper &helper)
 {
     if (!helper.isValid())
@@ -175,6 +176,7 @@ DuSongInfoPtr DuSongInfo::fromMidi(const MidiConversionHelper &helper)
 
     return songInfo;
 }
+#endif
 
 
 QByteArray DuSongInfo::toDuMusicBinary() const

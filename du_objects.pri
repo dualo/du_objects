@@ -52,25 +52,12 @@ HEADERS += \
     $$PWD/instrument/effects/duequalizer.h \
     $$PWD/instrument/effects/dumixer.h \
     $$PWD/instrument/effects/dureverb.h \
-    $$PWD/midifile/dumidivariablelength.h \
-    $$PWD/midifile/dumidistatus.h \
-    $$PWD/midifile/dumidibasicevent.h \
-    $$PWD/midifile/dumidichannelevent.h \
-    $$PWD/midifile/dumidimetaevent.h \
-    $$PWD/midifile/dumidisysexevent.h \
-    $$PWD/midifile/dumiditrack.h \
-    $$PWD/midifile/dumidifile.h \
-    $$PWD/miditodumusic/dumidikeymapper.h \
-    $$PWD/miditodumusic/midiconversionhelper.h \
-    $$PWD/miditodumusic/dutimesignaturemodel.h \
-    $$PWD/miditodumusic/dutonalitymodel.h \
     $$PWD/dudevice.h \
     $$PWD/dutouch.h \
     $$PWD/dulist.h \
     $$PWD/dudevicelist.h \
     $$PWD/duprofile.h \
     $$PWD/dusoundfile/dusound.h \
-    $$PWD/miditodumusic/duscalemodel.h \
     $$PWD/du-touch/dualo_structs/controler_structs.h \
     $$PWD/dusoundfile/dunote.h \
     $$PWD/dusoundfile/dusoundinfo.h \
@@ -109,18 +96,6 @@ SOURCES += \
     $$PWD/instrument/effects/duequalizer.cpp \
     $$PWD/instrument/effects/dumixer.cpp \
     $$PWD/instrument/effects/dureverb.cpp \
-    $$PWD/midifile/dumidivariablelength.cpp \
-    $$PWD/midifile/dumidistatus.cpp \
-    $$PWD/midifile/dumidibasicevent.cpp \
-    $$PWD/midifile/dumidichannelevent.cpp \
-    $$PWD/midifile/dumidimetaevent.cpp \
-    $$PWD/midifile/dumidisysexevent.cpp \
-    $$PWD/midifile/dumiditrack.cpp \
-    $$PWD/midifile/dumidifile.cpp \
-    $$PWD/miditodumusic/dumidikeymapper.cpp \
-    $$PWD/miditodumusic/midiconversionhelper.cpp \
-    $$PWD/miditodumusic/dutimesignaturemodel.cpp \
-    $$PWD/miditodumusic/dutonalitymodel.cpp \
     $$PWD/dudevice.cpp \
     $$PWD/dutouch.cpp \
     $$PWD/dulist.cpp \
@@ -129,7 +104,6 @@ SOURCES += \
     $$PWD/dusoundfile/dusound.cpp \
     $$PWD/dusoundfile/dunote.cpp \
     $$PWD/dusoundfile/dusoundinfo.cpp \
-    $$PWD/miditodumusic/duscalemodel.cpp \
     $$PWD/dusoundfile/dulayer.cpp \
     $$PWD/dusoundfile/dusample.cpp \
     $$PWD/general/duboolean.cpp \
@@ -137,6 +111,38 @@ SOURCES += \
     $$PWD/jsonApi/JsonApiDocument.cpp \
     $$PWD/jsonApi/JsonApiErrorObject.cpp \
     $$PWD/jsonApi/JsonApiResourceObject.cpp
+
+DEFINES += NO_MIDI
+
+#HEADERS += \
+#    $$PWD/midifile/dumidivariablelength.h \
+#    $$PWD/midifile/dumidistatus.h \
+#    $$PWD/midifile/dumidibasicevent.h \
+#    $$PWD/midifile/dumidichannelevent.h \
+#    $$PWD/midifile/dumidimetaevent.h \
+#    $$PWD/midifile/dumidisysexevent.h \
+#    $$PWD/midifile/dumiditrack.h \
+#    $$PWD/midifile/dumidifile.h \
+#    $$PWD/miditodumusic/dumidikeymapper.h \
+#    $$PWD/miditodumusic/midiconversionhelper.h \
+#    $$PWD/miditodumusic/dutimesignaturemodel.h \
+#    $$PWD/miditodumusic/dutonalitymodel.h \
+#    $$PWD/miditodumusic/duscalemodel.h
+
+#SOURCES += \
+#    $$PWD/midifile/dumidivariablelength.cpp \
+#    $$PWD/midifile/dumidistatus.cpp \
+#    $$PWD/midifile/dumidibasicevent.cpp \
+#    $$PWD/midifile/dumidichannelevent.cpp \
+#    $$PWD/midifile/dumidimetaevent.cpp \
+#    $$PWD/midifile/dumidisysexevent.cpp \
+#    $$PWD/midifile/dumiditrack.cpp \
+#    $$PWD/midifile/dumidifile.cpp \
+#    $$PWD/miditodumusic/dumidikeymapper.cpp \
+#    $$PWD/miditodumusic/midiconversionhelper.cpp \
+#    $$PWD/miditodumusic/dutimesignaturemodel.cpp \
+#    $$PWD/miditodumusic/dutonalitymodel.cpp \
+#    $$PWD/miditodumusic/duscalemodel.cpp
     
-RESOURCES += \
-    $$PWD/miditodumusic/midiresources.qrc
+#RESOURCES += \
+#    $$PWD/miditodumusic/midiresources.qrc

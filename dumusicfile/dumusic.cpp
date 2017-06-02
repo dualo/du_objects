@@ -411,6 +411,7 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
 }
 
 
+#ifndef NO_MIDI
 DuMusicPtr DuMusic::fromMidi(const MidiConversionHelper &helper)
 {
     if (!helper.isValid())
@@ -493,6 +494,7 @@ DuMusicPtr DuMusic::fromMidi(const MidiConversionHelper &helper)
 
     return music;
 }
+#endif
 
 QByteArray DuMusic::toDuMusicBinary() const
 {
@@ -825,6 +827,7 @@ QByteArray DuMusic::toDuMusicBinary() const
 }
 
 
+#ifndef NO_MIDI
 QByteArray DuMusic::toMidiBinary() const
 {
     const DuArrayConstPtr<DuTrack> &tracks = getTracks();
@@ -941,6 +944,7 @@ QByteArray DuMusic::toMidiBinary() const
 
     return midiFile->toMidiBinary();
 }
+#endif
 
 int DuMusic::size() const
 {

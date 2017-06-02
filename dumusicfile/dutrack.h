@@ -7,14 +7,17 @@
 #define TRACK_DUMMY_SIZE        2
 
 
+#ifndef NO_MIDI
 class MidiConversionHelper;
+DU_OBJECT(DuMidiTrack);
+#endif
+
 #ifdef Q_OS_WIN
 #include "../general/duarray.h"
 #else
 DU_OBJECT_TEMPLATE(DuArray);
 #endif
 DU_OBJECT(DuLoop);
-DU_OBJECT(DuMidiTrack);
 
 DU_OBJECT(DuTrack);
 
@@ -29,10 +32,16 @@ public:
     static DuTrackPtr fromDuMusicBinary(const music_track &du_track,
                                         const music_sample *du_sample_start,
                                         uint totalNbSamples);
+
+#ifndef NO_MIDI
     static DuTrackPtr fromMidi(const MidiConversionHelper &helper, int trackIndex);
+#endif
 
     QByteArray toDuMusicBinary() const;
+
+#ifndef NO_MIDI
     QVector<DuMidiTrackPtr> toDuMidiTrackArray(int durationRef, int transpose) const;
+#endif
 
     int size() const;
 

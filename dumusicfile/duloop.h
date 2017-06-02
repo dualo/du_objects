@@ -4,7 +4,11 @@
 #include "../general/ducontainer.h"
 
 
+#ifndef NO_MIDI
 class MidiConversionHelper;
+DU_OBJECT(DuMidiTrack);
+#endif
+
 #ifdef Q_OS_WIN
 #include "../general/duarray.h"
 #else
@@ -12,7 +16,6 @@ DU_OBJECT_TEMPLATE(DuArray);
 #endif
 DU_OBJECT(DuEvent);
 DU_OBJECT(DuMusicInstrument);
-DU_OBJECT(DuMidiTrack);
 
 DU_OBJECT(DuLoop);
 
@@ -26,10 +29,16 @@ public:
 
     static DuLoopPtr fromDuMusicBinary(const music_loop &du_loop,
                                        const music_sample *du_sample);
+
+#ifndef NO_MIDI
     static DuLoopPtr fromMidi(const MidiConversionHelper &helper, int midiTrackIndex);
+#endif
 
     QByteArray toDuMusicBinary() const override;
+
+#ifndef NO_MIDI
     DuMidiTrackPtr toDuMidiTrack(int durationRef, int channel, int transpose) const;
+#endif
 
     int size() const override;
 
