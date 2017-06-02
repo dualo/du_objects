@@ -92,10 +92,6 @@ DuInstrumentInfo::DuInstrumentInfo() :
 {
     addChild(KeyNameForDevice, new DuString(NAME_CARACT));
 
-    addChild(KeyKeyMapping,
-             new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE,
-                           INSTRUMENT_MAPPING_MAX, 0x00));
-
     addChild(KeyOctave,
              new DuNumeric(MAIN_OCTAVE_DEFAULT, NUMERIC_DEFAULT_SIZE,
                            MAIN_OCTAVE_MAX, MAIN_OCTAVE_MIN));
@@ -138,7 +134,6 @@ DuInstrumentInfoPtr DuInstrumentInfo::fromDuMusicBinary(const info_instr &du_ins
 
     verif = instrInfo->setNameForDevice(DuString::fromStruct(du_instrInfo.instr_name, NAME_CARACT)) ? verif : false;
 
-    verif = instrInfo->setKeyMapping(du_instrInfo.instr_key_map) ? verif : false;
     verif = instrInfo->setOctave(du_instrInfo.instr_octave) ? verif : false;
 
     verif = instrInfo->setUserID(static_cast<int>(du_instrInfo.instr_user_id)) ? verif : false;
@@ -183,10 +178,7 @@ bool DuInstrumentInfo::toStruct(info_instr& outStruct, bool forDuTouchSOrL) cons
         return false;
     outStruct.instr_midi_pc = static_cast<quint8>(tmpNum);
 
-    tmpNum = getKeyMapping();
-    if (tmpNum == -1)
-        return false;
-    outStruct.instr_key_map = static_cast<quint8>(tmpNum);
+    outStruct.instr_key_map = 0;
 
     tmpNum = getOctave();
     if (tmpNum == -1)
@@ -285,7 +277,6 @@ int DuInstrumentInfo::size() const
 
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, NameForDevice,      String, QString, QString())
 
-DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, KeyMapping,         Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, Octave,             Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, UserID,             Numeric, int, -1)

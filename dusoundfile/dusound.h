@@ -69,7 +69,6 @@ public:
     void setSizeWithSamples(int sizeWithSamples);
 
     DU_KEY_ACCESSORS_IN_CHILD(NameForDevice,        QString)
-    DU_KEY_ACCESSORS_IN_CHILD(KeyMapping,           int)
     DU_KEY_ACCESSORS_IN_CHILD(Octave,               int)
     DU_KEY_ACCESSORS_IN_CHILD(UserID,               int)
     DU_KEY_ACCESSORS_IN_CHILD(ID,                   int)

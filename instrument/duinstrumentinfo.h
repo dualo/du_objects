@@ -48,7 +48,6 @@ public:
 
     DU_KEY_ACCESSORS(NameForDevice,      QString)
 
-    DU_KEY_ACCESSORS(KeyMapping,         int)
     DU_KEY_ACCESSORS(Octave,             int)
 
     DU_KEY_ACCESSORS(UserID,             int)
