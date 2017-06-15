@@ -32,7 +32,9 @@ DuSound::DuSound() :
     m_databaseId(-1),
     m_indexInDevice(-1),
     m_hasSamplesDownloaded(false),
-    m_sizeWithSamples(0)
+    m_sizeWithSamples(0),
+    m_defaultSlotL(0),
+    m_defaultSlotS(0)
 {
     addChild(KeyInfo,       new DuSoundInfo);
 
@@ -915,6 +917,26 @@ int DuSound::getSizeWithSamples() const
 void DuSound::setSizeWithSamples(int sizeWithSamples)
 {
     m_sizeWithSamples = sizeWithSamples;
+}
+
+int DuSound::getDefaultSlotL() const
+{
+    return m_defaultSlotL;
+}
+
+void DuSound::setDefaultSlotL(int defaultSlotL)
+{
+    m_defaultSlotL = defaultSlotL;
+}
+
+int DuSound::getDefaultSlotS() const
+{
+    return m_defaultSlotS;
+}
+
+void DuSound::setDefaultSlotS(int defaultSlotS)
+{
+    m_defaultSlotS = defaultSlotS;
 }
 
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, NameForDevice,      DuSoundInfo, Info, QString, QString())

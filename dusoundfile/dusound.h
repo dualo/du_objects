@@ -68,6 +68,12 @@ public:
     int getSizeWithSamples() const;
     void setSizeWithSamples(int sizeWithSamples);
 
+    int getDefaultSlotL() const;
+    void setDefaultSlotL(int defaultSlotL);
+
+    int getDefaultSlotS() const;
+    void setDefaultSlotS(int defaultSlotS);
+
     DU_KEY_ACCESSORS_IN_CHILD(NameForDevice,        QString)
     DU_KEY_ACCESSORS_IN_CHILD(Octave,               int)
     DU_KEY_ACCESSORS_IN_CHILD(UserID,               int)
@@ -99,6 +105,9 @@ private:
     QString m_deviceSerialNumber;
     bool m_hasSamplesDownloaded;
     int m_sizeWithSamples;
+
+    int m_defaultSlotL;
+    int m_defaultSlotS;
 };
 
 Q_DECLARE_METATYPE(DuSoundPtr)
