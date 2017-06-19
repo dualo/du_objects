@@ -50,7 +50,21 @@ DuTouchPtr DuTouch::fromJsonApi(const JsonApiResourceObject &jsonDuTouch)
     const QString& soundbankUpdateDate  = soundbankUpdateDateValue.toString();
     bool dissocScheduled      = dissocScheduledValue.toBool();
 
-    DuTouchPtr device(new DuTouch);
+    Type type = Type_Unknown;
+    if (serial.startsWith("DT"))
+    {
+        type = Type_DuTouchPro;
+    }
+    else if (serial.startsWith("DS"))
+    {
+        type = Type_DuTouchS;
+    }
+    else if (serial.startsWith("DL"))
+    {
+        type = Type_DuTouchL;
+    }
+
+    DuTouchPtr device(new DuTouch(type));
     device->setSerialNumber(serial);
     device->setName(name);
     device->setPlugged(false);
