@@ -74,6 +74,12 @@ public:
     int getDefaultSlotS() const;
     void setDefaultSlotS(int defaultSlotS);
 
+    bool getIsInLFactorySndbk() const;
+    void setIsInLFactorySndbk(bool isInLFactorySndbk);
+
+    bool getIsInSFactorySndbk() const;
+    void setIsInSFactorySndbk(bool isInSFactorySndbk);
+
     DU_KEY_ACCESSORS_IN_CHILD(NameForDevice,        QString)
     DU_KEY_ACCESSORS_IN_CHILD(Octave,               int)
     DU_KEY_ACCESSORS_IN_CHILD(UserID,               int)
@@ -108,6 +114,9 @@ private:
 
     int m_defaultSlotL;
     int m_defaultSlotS;
+
+    bool m_isInLFactorySndbk;
+    bool m_isInSFactorySndbk;
 };
 
 Q_DECLARE_METATYPE(DuSoundPtr)

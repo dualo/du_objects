@@ -34,7 +34,9 @@ DuSound::DuSound() :
     m_hasSamplesDownloaded(false),
     m_sizeWithSamples(0),
     m_defaultSlotL(0),
-    m_defaultSlotS(0)
+    m_defaultSlotS(0),
+    m_isInLFactorySndbk(false),
+    m_isInSFactorySndbk(false)
 {
     addChild(KeyInfo,       new DuSoundInfo);
 
@@ -937,6 +939,26 @@ int DuSound::getDefaultSlotS() const
 void DuSound::setDefaultSlotS(int defaultSlotS)
 {
     m_defaultSlotS = defaultSlotS;
+}
+
+bool DuSound::getIsInLFactorySndbk() const
+{
+    return m_isInLFactorySndbk;
+}
+
+void DuSound::setIsInLFactorySndbk(bool isInLFactorySndbk)
+{
+    m_isInLFactorySndbk = isInLFactorySndbk;
+}
+
+bool DuSound::getIsInSFactorySndbk() const
+{
+    return m_isInSFactorySndbk;
+}
+
+void DuSound::setIsInSFactorySndbk(bool isInSFactorySndbk)
+{
+    m_isInSFactorySndbk = isInSFactorySndbk;
 }
 
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, NameForDevice,      DuSoundInfo, Info, QString, QString())
