@@ -78,11 +78,11 @@ DuSamplePtr DuSample::fromBinary(const dream_ip& dreamIP,
     verif = sample->setFineTune(convertedFineTune) ? verif : false;
 
     int unityNote = 0;
-    if (dreamSP.coarse_tune >= 0 && dreamSP.coarse_tune <= 64)
+    if (/*dreamSP.coarse_tune >= 0 &&*/ dreamSP.coarse_tune <= 64)
     {
         unityNote = 64 - dreamSP.coarse_tune;
     }
-    else if (dreamSP.coarse_tune >= 193 && dreamSP.coarse_tune <= 255)
+    else if (dreamSP.coarse_tune >= 193 /*&& dreamSP.coarse_tune <= 255*/)
     {
         unityNote = 320 - dreamSP.coarse_tune;
     }
