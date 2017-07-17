@@ -291,6 +291,7 @@ DuSamplePtr DuSample::fromWav(QFile *input)
     }
 
     QByteArray rawData = wavFileData.mid(dataKeywordIndex + 4 + 4, static_cast<int>(wavSize)); // +4 for "data", +4 for size
+    rawData.truncate(MAX_SAMPLE_SIZE - 64); // Truncate sample to the maximum length accepted by DREAM
     rawData.append(QByteArray(64, 0x00)); // Append 32 half words to loop over at the end of the sample
 
     DuSamplePtr sample(new DuSample);
