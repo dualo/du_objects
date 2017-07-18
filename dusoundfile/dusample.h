@@ -20,6 +20,8 @@ DU_OBJECT(DuSample);
 
 class DuSample : public DuContainer
 {
+    Q_GADGET
+
 public:
     enum SampleType
     {
@@ -28,6 +30,18 @@ public:
         SND5000_Forward = 0x846C, // Incorrect value
         SND3000_Forward = 0xC56C
     };
+    Q_ENUM(SampleType)
+
+    enum WavConvertionResult
+    {
+        StereoToMonoConvertion  = 0x0001,
+        SampleRateConvertion    = 0x0002,
+        SampleSizeConvertion    = 0x0004,
+        TruncateConvertion      = 0x0008
+    };
+    Q_ENUM(WavConvertionResult)
+    Q_DECLARE_FLAGS(WavConvertionResults, WavConvertionResult)
+    Q_FLAG(WavConvertionResults)
 
     DuSample();
     virtual ~DuSample() = default;
@@ -37,7 +51,7 @@ public:
     static DuSamplePtr fromBinary(const dream_ip &dreamIP,
                                   const dream_sp &dreamSP,
                                   const QByteArray& data);
-    static DuSamplePtr fromWav(QFile *input);
+    static DuSamplePtr fromWav(QFile *input, WavConvertionResults& outResults);
 
 private:
     static QString convertToMono(SndfileHandle& oldSoundFile);
@@ -106,5 +120,7 @@ public:
 private:
     static const quint8 finetune_convert[101];
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(DuSample::WavConvertionResults)
 
 #endif // DUSAMPLE_H

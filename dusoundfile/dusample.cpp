@@ -126,8 +126,10 @@ DuSamplePtr DuSample::fromBinary(const dream_ip& dreamIP,
     return sample;
 }
 
-DuSamplePtr DuSample::fromWav(QFile *input)
+DuSamplePtr DuSample::fromWav(QFile *input, WavConvertionResults& outResults)
 {
+    outResults = WavConvertionResults();
+
     // Copy file to temp folder
     QString wavFileName = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/tmp.wav";
     if (wavFileName.isEmpty())
@@ -188,6 +190,8 @@ DuSamplePtr DuSample::fromWav(QFile *input)
             return DuSamplePtr();
         }
 
+        outResults |= StereoToMonoConvertion;
+
         nbFrames /= 2;
     }
 
@@ -211,6 +215,8 @@ DuSamplePtr DuSample::fromWav(QFile *input)
                                           << soundFile.strError();
             return DuSamplePtr();
         }
+
+        outResults |= SampleRateConvertion;
 
         nbFrames = newNbFrames;
     }
@@ -236,6 +242,8 @@ DuSamplePtr DuSample::fromWav(QFile *input)
                                           << soundFile.strError();
             return DuSamplePtr();
         }
+
+        outResults |= SampleSizeConvertion;
 
         wavSize = 2 * nbFrames; // 16 bits
     }
@@ -291,7 +299,12 @@ DuSamplePtr DuSample::fromWav(QFile *input)
     }
 
     QByteArray rawData = wavFileData.mid(dataKeywordIndex + 4 + 4, static_cast<int>(wavSize)); // +4 for "data", +4 for size
-    rawData.truncate(MAX_SAMPLE_SIZE - 64); // Truncate sample to the maximum length accepted by DREAM
+    if (rawData.size() > MAX_SAMPLE_SIZE - 64)
+    {
+        outResults |= TruncateConvertion;
+
+        rawData.truncate(MAX_SAMPLE_SIZE - 64); // Truncate sample to the maximum length accepted by DREAM
+    }
     rawData.append(QByteArray(64, 0x00)); // Append 32 half words to loop over at the end of the sample
 
     DuSamplePtr sample(new DuSample);
