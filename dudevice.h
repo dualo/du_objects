@@ -47,6 +47,9 @@ public:
     bool getBusy() const;
     bool setBusy(bool value);
 
+    bool getIsInFlashMeState() const;
+    void setIsInFlashMeState(bool value);
+
     DU_KEY_ACCESSORS(Type,            Type)
     DU_KEY_ACCESSORS(SerialNumber,    QString)
     DU_KEY_ACCESSORS(Name,            QString)
@@ -62,6 +65,7 @@ private:
     bool plugged;
     bool connected;
     bool busy;
+    bool isInFlashMeState;
 };
 
 Q_DECLARE_METATYPE(DuDevicePtr)

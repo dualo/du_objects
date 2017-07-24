@@ -33,7 +33,8 @@ DuDevice::DuDevice(Type type) :
     DuContainer(),
     plugged(false),
     connected(false),
-    busy(false)
+    busy(false),
+    isInFlashMeState(false)
 {
     addChild(KeyType,            new DuNumeric(type));
     addChild(KeySerialNumber,    new DuString);
@@ -120,6 +121,16 @@ bool DuDevice::setBusy(bool value)
 {
     busy = value;
     return true;
+}
+
+bool DuDevice::getIsInFlashMeState() const
+{
+    return isInFlashMeState;
+}
+
+void DuDevice::setIsInFlashMeState(bool value)
+{
+    isInFlashMeState = value;
 }
 
 DU_KEY_ACCESSORS_IMPL(DuDevice, Type,            Numeric, DuDevice::Type, Type_Unknown)
