@@ -46,6 +46,9 @@ public:
     virtual DuObjectConstPtr getChild(const QString &key) const override;
 
     DU_KEY_ACCESSORS_IN_CHILD(NameForDevice, QString)
+    DU_KEY_ACCESSORS_IN_CHILD(UserID,        int)
+    DU_KEY_ACCESSORS_IN_CHILD(ID,            int)
+    DU_KEY_ACCESSORS_IN_CHILD(InstrVersion,  int)
 
     DU_KEY_ACCESSORS(State,            int)
     DU_KEY_ACCESSORS(DurationModifier, int)

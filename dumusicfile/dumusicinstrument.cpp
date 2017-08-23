@@ -121,6 +121,9 @@ DuObjectConstPtr DuMusicInstrument::getChild(const QString &key) const
 }
 
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuMusicInstrument, NameForDevice, DuInstrumentInfo, InstrumentInfo, QString, QString())
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuMusicInstrument, UserID,        DuInstrumentInfo, InstrumentInfo, int, -1)
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuMusicInstrument, ID,            DuInstrumentInfo, InstrumentInfo, int, -1)
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuMusicInstrument, InstrVersion,  DuInstrumentInfo, InstrumentInfo, int, -1)
 
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusicInstrument, InstrumentInfo, DuInstrumentInfo)
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusicInstrument, Preset,         DuPreset)

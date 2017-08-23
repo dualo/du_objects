@@ -619,6 +619,9 @@ DuObjectConstPtr DuLoop::getChild(const QString &key) const
 }
 
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuLoop, NameForDevice, DuMusicInstrument, Instrument, QString, QString())
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuLoop, UserID,        DuMusicInstrument, Instrument, int, -1)
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuLoop, ID,            DuMusicInstrument, Instrument, int, -1)
+DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuLoop, InstrVersion,  DuMusicInstrument, Instrument, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuLoop, State,            Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuLoop, DurationModifier, Numeric, int, -1)
