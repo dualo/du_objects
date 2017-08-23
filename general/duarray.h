@@ -55,6 +55,14 @@ public:
 
     QSharedPointer<T> operator[](int index);
 
+    // STL container functions
+    inline typename QList< QSharedPointer<T> >::iterator begin() { return m_array.begin(); }
+    inline typename QList< QSharedPointer<T> >::const_iterator begin() const { return m_array.begin(); }
+    inline typename QList< QSharedPointer<T> >::const_iterator cbegin() const { return m_array.cbegin(); }
+    inline typename QList< QSharedPointer<T> >::iterator end() { return m_array.end(); }
+    inline typename QList< QSharedPointer<T> >::const_iterator end() const { return m_array.end(); }
+    inline typename QList< QSharedPointer<T> >::const_iterator cend() const { return m_array.cend(); }
+
 protected:
     const QList< QSharedPointer<T> > &getArray() const;
 
