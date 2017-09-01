@@ -10,6 +10,8 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+#include "../dusoundfile/dusound.h"
+
 #include "../general/duarray.h"
 #include "../general/dubinarydata.h"
 #include "../general/dunumeric.h"
@@ -358,9 +360,72 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
 }
 
 
-DuMusicPtr DuMusic::fromBinary(const QByteArray &data)
+DuMusicPtr DuMusic::fromBinary(const QByteArray &data, QVector<DuSoundPtr> &outIntegratedSounds)
 {
-    int dataSize = data.size() ;
+    QByteArray musicData;
+
+    if (data.startsWith("DUMB"))
+    {
+        QDataStream stream(data);
+        stream.skipRawData(4);
+
+        quint32 version;
+        stream >> version;
+
+        if (version < DU_MUSIC_BUNDLE_STRUCT_CURRENT_VERSION)
+        {
+            // migrate
+        }
+
+        while (!stream.atEnd())
+        {
+            char* chunkTypeBuffer = new char[4];
+            stream.readRawData(chunkTypeBuffer, 4);
+            QByteArray chunkType(chunkTypeBuffer, 4);
+            delete[] chunkTypeBuffer;
+
+            quint32 chunkLength;
+            stream >> chunkLength;
+
+            char* chunkDataBuffer = new char[chunkLength];
+            stream.readRawData(chunkDataBuffer, static_cast<int>(chunkLength));
+            QByteArray chunkData(chunkDataBuffer, static_cast<int>(chunkLength));
+            delete[] chunkDataBuffer;
+
+            quint16 chunkCRC;
+            stream >> chunkCRC;
+
+            if (qChecksum(chunkData.constData(), chunkLength) != chunkCRC)
+            {
+                qCCritical(LOG_CAT_DU_OBJECT) << "Failed to parse DuMusic bundle: a chunk is corrupted (type:" << chunkType << ")";
+                return DuMusicPtr();
+            }
+
+            if (chunkType == "DMSC")
+            {
+                musicData = chunkData;
+            }
+            else if (chunkType == "DSND")
+            {
+                const DuSoundPtr& sound = DuSound::fromBinary(chunkData);
+                if (sound == NULL)
+                    continue;
+
+                outIntegratedSounds << sound;
+            }
+            else
+            {
+                qCCritical(LOG_CAT_DU_OBJECT) << "Failed to parse DuMusic bundle: chunk type unknown:" << chunkType;
+                return DuMusicPtr();
+            }
+        }
+    }
+    else
+    {
+        musicData = data;
+    }
+
+    int dataSize = musicData.size();
     int totalSampleSize = dataSize - MUSIC_SONG_SIZE;
 
     if (totalSampleSize < 0
@@ -375,12 +440,12 @@ DuMusicPtr DuMusic::fromBinary(const QByteArray &data)
 
     QScopedPointer<s_total_buffer> temp_total_buffer(new s_total_buffer);
 
-    std::memcpy(reinterpret_cast<char*>(temp_total_buffer.data()), data.constData(), static_cast<size_t>(dataSize));
+    std::memcpy(reinterpret_cast<char*>(temp_total_buffer.data()), musicData.constData(), static_cast<size_t>(dataSize));
 
     return DuMusic::fromDuMusicBinary(*temp_total_buffer, dataSize);
 }
 
-DuMusicPtr DuMusic::fromBinary(QIODevice *input)
+DuMusicPtr DuMusic::fromBinary(QIODevice *input, QVector<DuSoundPtr>& outIntegratedSounds)
 {
     QByteArray array = input->readAll();
 
@@ -393,7 +458,7 @@ DuMusicPtr DuMusic::fromBinary(QIODevice *input)
         return DuMusicPtr();
     }
 
-    return DuMusic::fromBinary(array);
+    return DuMusic::fromBinary(array, outIntegratedSounds);
 }
 
 
@@ -824,6 +889,49 @@ QByteArray DuMusic::toDuMusicBinary() const
 
 
     return QByteArray(reinterpret_cast<char*>(du_music.data()), musicSize);
+}
+
+QByteArray DuMusic::toDuMusicBundleBinary(const QVector<DuSoundConstPtr> &integratedSounds) const
+{
+    QByteArray musicBinaryData;
+
+    QDataStream stream(&musicBinaryData, QIODevice::WriteOnly);
+    stream.setByteOrder(QDataStream::BigEndian);
+    stream.writeRawData("DUMB", 4);
+    stream << static_cast<quint32>(DU_MUSIC_BUNDLE_STRUCT_CURRENT_VERSION);
+
+    stream.writeRawData("DMSC", 4);
+
+    const QByteArray& musicData = toDuMusicBinary();
+    if (musicData.isEmpty())
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "Error converting du-music to binary";
+        return QByteArray();
+    }
+
+    int musicSize = musicData.size();
+    stream << static_cast<quint32>(musicSize);
+    stream.writeRawData(musicData.constData(), musicSize);
+    stream << qChecksum(musicData.constData(), static_cast<uint>(musicSize));
+
+    for (const DuSoundConstPtr& sound : integratedSounds)
+    {
+        stream.writeRawData("DSND", 4);
+
+        const QByteArray& soundData = sound->toBinary(false);
+        if (soundData.isEmpty())
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "Error converting du-sound to binary";
+            return QByteArray();
+        }
+
+        int soundSize = soundData.size();
+        stream << static_cast<quint32>(soundSize);
+        stream.writeRawData(soundData.constData(), soundSize);
+        stream << qChecksum(soundData.constData(), static_cast<uint>(soundSize));
+    }
+
+    return musicBinaryData;
 }
 
 

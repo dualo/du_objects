@@ -5,6 +5,8 @@
 
 #include <QSet>
 
+#define DU_MUSIC_BUNDLE_STRUCT_CURRENT_VERSION 1
+
 
 #define DuMusic_Children \
     X(FileVersion,           Numeric, int, -1) \
@@ -75,6 +77,7 @@ DU_OBJECT_TEMPLATE(DuArray);
 #endif
 DU_OBJECT(DuMixer);
 DU_OBJECT(DuReverb);
+DU_OBJECT(DuSound);
 DU_OBJECT(DuTrack);
 
 
@@ -89,8 +92,8 @@ public:
     virtual DuObjectPtr clone() const override;
 
     static DuMusicPtr fromDuMusicBinary(s_total_buffer &du_music, int fileSize);
-    static DuMusicPtr fromBinary(const QByteArray &data);
-    static DuMusicPtr fromBinary(QIODevice *input);
+    static DuMusicPtr fromBinary(const QByteArray &data, QVector<DuSoundPtr> &outIntegratedSounds);
+    static DuMusicPtr fromBinary(QIODevice *input, QVector<DuSoundPtr> &outIntegratedSounds);
     static DuMusicPtr fromJson(const QJsonObject &jsonMusic);
 
 #ifndef NO_MIDI
@@ -98,6 +101,7 @@ public:
 #endif
 
     QByteArray toDuMusicBinary() const override;
+    QByteArray toDuMusicBundleBinary(const QVector<DuSoundConstPtr> &integratedSounds) const;
 
 #ifndef NO_MIDI
     QByteArray toMidiBinary() const override;
