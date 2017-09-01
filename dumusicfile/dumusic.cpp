@@ -1017,6 +1017,68 @@ bool DuMusic::appendTrack(const DuTrackPtr &track)
     return tmp->append(track);
 }
 
+QSet<DuMusic::InstrumentIdentifier> DuMusic::getUsedInstrumentsIdentifiers() const
+{
+    QSet<InstrumentIdentifier> returnedList;
+
+    const DuArrayConstPtr<DuTrack>& tracks = getTracks();
+    if (tracks == NULL)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "Can't get du-music tracks";
+        return QSet<InstrumentIdentifier>();
+    }
+
+    for (const DuTrackConstPtr& track : *(tracks))
+    {
+        const DuArrayConstPtr<DuLoop>& loops = track->getLoops();
+        if (loops == NULL)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "Can't get track's loops";
+            continue;
+        }
+
+        for (const DuLoopConstPtr& loop : *(loops))
+        {
+            if (loop->getState() == REC_EMPTY)
+            {
+                continue;
+            }
+
+            int id = loop->getID();
+            if (id == -1)
+            {
+                qCCritical(LOG_CAT_DU_OBJECT) << "Can't get loop's id";
+                continue;
+            }
+
+            int userId = loop->getUserID();
+            if (userId == -1)
+            {
+                qCCritical(LOG_CAT_DU_OBJECT) << "Can't get loop's user id";
+                continue;
+            }
+
+            const QString& name = loop->getNameForDevice();
+            if (name.isNull())
+            {
+                qCCritical(LOG_CAT_DU_OBJECT) << "Can't get loop's name";
+                continue;
+            }
+
+            int version = loop->getInstrVersion();
+            if (version == -1)
+            {
+                qCCritical(LOG_CAT_DU_OBJECT) << "Can't get loop's version";
+                continue;
+            }
+
+            returnedList << InstrumentIdentifier{id, userId, name, version};
+        }
+    }
+
+    return returnedList;
+}
+
 int DuMusic::indexInDevice() const
 {
     return m_indexInDevice;
