@@ -68,7 +68,8 @@ HEADERS += \
     $$PWD/du-touch/dualo_structs/music_migration.h \
     $$PWD/jsonApi/JsonApiDocument.h \
     $$PWD/jsonApi/JsonApiErrorObject.h \
-    $$PWD/jsonApi/JsonApiResourceObject.h
+    $$PWD/jsonApi/JsonApiResourceObject.h \
+    $$PWD/instrument/IntrumentIdentifier.h
 
 SOURCES += \
     $$PWD/general/duobject.cpp \

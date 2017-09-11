@@ -2,6 +2,7 @@
 #define DUMUSIC_H
 
 #include "../general/ducontainer.h"
+#include "../instrument/IntrumentIdentifier.h"
 
 #include <QSet>
 
@@ -124,17 +125,6 @@ public:
 
     bool appendTrack(const DuTrackPtr &track);
 
-    struct InstrumentIdentifier
-    {
-        // ID and user ID identify the instrument.
-        // If two instruments have the same id and user id, then they represent the same instrument.
-        int id;
-        int userId;
-
-        // Following data may change between different versions of the same instrument.
-        QString name;
-        int version;
-    };
     QSet<InstrumentIdentifier> getUsedInstrumentsIdentifiers() const;
 
 #define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS(key, type)
@@ -152,16 +142,6 @@ private:
     int m_indexInDevice;
     QString m_deviceSerialNumber;
 };
-
-inline bool operator==(const DuMusic::InstrumentIdentifier &i1, const DuMusic::InstrumentIdentifier &i2)
-{
-    return i1.id == i2.id && i1.userId == i2.userId;
-}
-
-inline uint qHash(const DuMusic::InstrumentIdentifier &key, uint seed)
-{
-    return qHash(qMakePair(key.id, key.userId), seed);
-}
 
 Q_DECLARE_METATYPE(DuMusicPtr)
 Q_DECLARE_METATYPE(DuMusicConstPtr)

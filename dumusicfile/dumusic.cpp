@@ -1125,7 +1125,7 @@ bool DuMusic::appendTrack(const DuTrackPtr &track)
     return tmp->append(track);
 }
 
-QSet<DuMusic::InstrumentIdentifier> DuMusic::getUsedInstrumentsIdentifiers() const
+QSet<InstrumentIdentifier> DuMusic::getUsedInstrumentsIdentifiers() const
 {
     QSet<InstrumentIdentifier> returnedList;
 
