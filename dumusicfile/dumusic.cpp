@@ -39,7 +39,8 @@ DU_OBJECT_IMPL(DuMusic)
 DuMusic::DuMusic() :
     DuContainer(),
     m_databaseId(-1),
-    m_indexInDevice(-1)
+    m_indexInDevice(-1),
+    m_isFromCommunity(false)
 {
     addChild(KeyFileVersion, new DuNumeric(VERSION_MUSIC));
 
@@ -1205,6 +1206,16 @@ QString DuMusic::deviceSerialNumber() const
 void DuMusic::setDeviceSerialNumber(const QString &deviceSerialNumber)
 {
     m_deviceSerialNumber = deviceSerialNumber;
+}
+
+bool DuMusic::getIsFromCommunity() const
+{
+    return m_isFromCommunity;
+}
+
+void DuMusic::setIsFromCommunity(bool isFromCommunity)
+{
+    m_isFromCommunity = isFromCommunity;
 }
 
 #define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS_IMPL(DuMusic, key, dutype, type, defaultReturn)

@@ -36,7 +36,8 @@ DuSound::DuSound() :
     m_defaultSlotL(0),
     m_defaultSlotS(0),
     m_isInLFactorySndbk(false),
-    m_isInSFactorySndbk(false)
+    m_isInSFactorySndbk(false),
+    m_isFromCommunity(false)
 {
     addChild(KeyInfo,       new DuSoundInfo);
 
@@ -959,6 +960,16 @@ bool DuSound::getIsInSFactorySndbk() const
 void DuSound::setIsInSFactorySndbk(bool isInSFactorySndbk)
 {
     m_isInSFactorySndbk = isInSFactorySndbk;
+}
+
+bool DuSound::getIsFromCommunity() const
+{
+    return m_isFromCommunity;
+}
+
+void DuSound::setIsFromCommunity(bool isFromCommunity)
+{
+    m_isFromCommunity = isFromCommunity;
 }
 
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, NameForDevice,      DuSoundInfo, Info, QString, QString())

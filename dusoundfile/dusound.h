@@ -80,6 +80,9 @@ public:
     bool getIsInSFactorySndbk() const;
     void setIsInSFactorySndbk(bool isInSFactorySndbk);
 
+    bool getIsFromCommunity() const;
+    void setIsFromCommunity(bool isFromCommunity);
+
     DU_KEY_ACCESSORS_IN_CHILD(NameForDevice,        QString)
     DU_KEY_ACCESSORS_IN_CHILD(Octave,               int)
     DU_KEY_ACCESSORS_IN_CHILD(UserID,               int)
@@ -117,6 +120,8 @@ private:
 
     bool m_isInLFactorySndbk;
     bool m_isInSFactorySndbk;
+
+    bool m_isFromCommunity;
 };
 
 Q_DECLARE_METATYPE(DuSoundPtr)

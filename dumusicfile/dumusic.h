@@ -123,6 +123,9 @@ public:
     QString deviceSerialNumber() const;
     void setDeviceSerialNumber(const QString &deviceSerialNumber);
 
+    bool getIsFromCommunity() const;
+    void setIsFromCommunity(bool isFromCommunity);
+
     bool appendTrack(const DuTrackPtr &track);
 
     QSet<InstrumentIdentifier> getUsedInstrumentsIdentifiers() const;
@@ -141,6 +144,8 @@ private:
 
     int m_indexInDevice;
     QString m_deviceSerialNumber;
+
+    bool m_isFromCommunity;
 };
 
 Q_DECLARE_METATYPE(DuMusicPtr)
