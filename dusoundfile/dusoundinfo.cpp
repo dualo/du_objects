@@ -39,7 +39,7 @@ DuSoundInfoPtr DuSoundInfo::fromBinary(const sound_instr &data)
     DuSoundInfoPtr soundInfo(new DuSoundInfo);
 
     DuInstrumentInfoPtr m3Infos = DuInstrumentInfo::fromDuMusicBinary(data.s_instrument);
-    if (m3Infos != NULL)
+    if (m3Infos != Q_NULLPTR)
     {
         soundInfo->setInstrumentInfo(m3Infos);
     }
@@ -65,7 +65,7 @@ DuSoundInfoPtr DuSoundInfo::fromBinary(const sound_instr &data)
     for (int i = 0; i < FX_NUM_PRESET_INTR; ++i)
     {
         DuPresetPtr preset = DuPreset::fromDuMusicBinary(data.s_preset[i]);
-        if (preset != NULL)
+        if (preset != Q_NULLPTR)
         {
             presetArray->append(preset);
         }
@@ -90,7 +90,7 @@ QByteArray DuSoundInfo::toBinary(uint8_t nbLayer, int nbSamples, uint32_t sample
     std::memset(&soundStruct, 0, static_cast<size_t>(size()));
 
     const DuInstrumentInfoConstPtr &m3infos = getInstrumentInfo();
-    if (m3infos == NULL)
+    if (m3infos == Q_NULLPTR)
         return QByteArray();
 
     const QByteArray& m3infosData = m3infos->toBinary(nbLayer, nbSamples, sampleSize, forDuTouchSOrL);
@@ -112,7 +112,7 @@ QByteArray DuSoundInfo::toBinary(uint8_t nbLayer, int nbSamples, uint32_t sample
     std::memcpy(soundStruct.s_complete_name, tmpName.constData(), SOUND_NAME_SIZE);
 
     const DuArrayConstPtr<DuPreset> &presetArray = getPresetArray();
-    if (presetArray == NULL)
+    if (presetArray == Q_NULLPTR)
         return QByteArray();
     std::memcpy(&(soundStruct.s_preset), presetArray->toDuMusicBinary().constData(), static_cast<size_t>(presetArray->size()));
 
@@ -134,7 +134,7 @@ DuObjectPtr DuSoundInfo::getChild(const QString &key)
             key == KeySoftInstrVersion)
     {
         DuInstrumentInfoPtr info = getInstrumentInfo();
-        if (info == NULL)
+        if (info == Q_NULLPTR)
         {
             return DuObjectPtr();
         }
@@ -162,7 +162,7 @@ DuObjectConstPtr DuSoundInfo::getChild(const QString &key) const
             key == KeySoftInstrVersion)
     {
         DuInstrumentInfoConstPtr info = getInstrumentInfo();
-        if (info == NULL)
+        if (info == Q_NULLPTR)
         {
             return DuObjectPtr();
         }

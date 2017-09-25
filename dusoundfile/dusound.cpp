@@ -66,7 +66,7 @@ int DuSound::size() const
     int sampleSize = 0;
 
     const DuArrayConstPtr<DuLayer>& layers = getLayerArray();
-    if (layers == NULL)
+    if (layers == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Layer array null";
         return -1;
@@ -76,14 +76,14 @@ int DuSound::size() const
     for (int i = 0; i < nbLayer; ++i)
     {
         const DuLayerConstPtr& layer = layers->at(i);
-        if (layer == NULL)
+        if (layer == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "Layer" << i << "null";
             return -1;
         }
 
         const DuArrayConstPtr<DuSample>& samples = layer->getSampleArray();
-        if (samples == NULL)
+        if (samples == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "Sample array null";
             return -1;
@@ -93,7 +93,7 @@ int DuSound::size() const
         for (int j = 0; j < nbSamples; ++j)
         {
             const DuSampleConstPtr& sample = samples->at(j);
-            if (sample == NULL)
+            if (sample == Q_NULLPTR)
             {
                 qCCritical(LOG_CAT_DU_OBJECT) << "Sample" << j << "null";
                 return -1;
@@ -107,7 +107,7 @@ int DuSound::size() const
 
     int mappingLSize = 0;
     const DuArrayConstPtr<DuNote>& mappingL = getMappingL();
-    if (mappingL == NULL)
+    if (mappingL == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Mapping L array null";
         return -1;
@@ -120,7 +120,7 @@ int DuSound::size() const
 
     int mappingSSize = 0;
     const DuArrayConstPtr<DuNote>& mappingS = getMappingS();
-    if (mappingS == NULL)
+    if (mappingS == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Mapping S array null";
         return -1;
@@ -133,7 +133,7 @@ int DuSound::size() const
 
     int metadataSize = 0;
     const DuArrayConstPtr<DuBinaryData>& metadata = getMetadata();
-    if (metadata == NULL)
+    if (metadata == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Metadata array null";
         return -1;
@@ -189,7 +189,7 @@ DuSoundPtr DuSound::fromHeaderBinary(const QByteArray &data)
     sound->setHasSamplesDownloaded(false);
 
     DuSoundInfoPtr info = DuSoundInfo::fromBinary(soundStruct);
-    if (info != NULL)
+    if (info != Q_NULLPTR)
     {
         sound->setInfo(info);
     }
@@ -237,7 +237,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
     sound->setHasSamplesDownloaded(true);
 
     DuSoundInfoPtr info = DuSoundInfo::fromBinary(soundStruct);
-    if (info != NULL)
+    if (info != Q_NULLPTR)
     {
         sound->setInfo(info);
     }
@@ -250,7 +250,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
     }
 
     DuInstrumentInfoConstPtr m3Infos = info->getInstrumentInfo();
-    if (m3Infos == NULL)
+    if (m3Infos == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate du-sound:\n"
                                       << "Can't get InstrumentInfo from Info";
@@ -447,7 +447,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
                                                    effectiveDreamSPArray,
                                                    effectiveSampleArray);
 
-            if (layer != NULL)
+            if (layer != Q_NULLPTR)
             {
                 layerArray->append(layer);
             }
@@ -479,7 +479,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
             std::memcpy(&note, &data.data()[soundHeader.mapping_addr + corI], S_NOTE_SIZE);
 
             DuNotePtr noteObject = DuNote::fromBinary(note);
-            if (noteObject != NULL)
+            if (noteObject != Q_NULLPTR)
             {
                 mappingL->append(noteObject);
             }
@@ -520,7 +520,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
                 std::memcpy(&note, &data.data()[soundHeader.mapping_addr + MAPPING_L_SIZE + corI], S_NOTE_SIZE);
 
                 DuNotePtr noteObject = DuNote::fromBinary(note);
-                if (noteObject != NULL)
+                if (noteObject != Q_NULLPTR)
                 {
                     mappingS->append(noteObject);
                 }
@@ -610,7 +610,7 @@ bool DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL,
                                       QByteArray& outSamples) const
 {
     const DuArrayConstPtr<DuLayer>& layerArray = getLayerArray();
-    if (layerArray == NULL)
+    if (layerArray == Q_NULLPTR)
         return false;
 
     int nbLayer = layerArray->count();
@@ -633,14 +633,14 @@ bool DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL,
     for (int i = 0; i < nbLayer; ++i)
     {
         DuLayerConstPtr layer = layerArray->at(i);
-        if (layer == NULL)
+        if (layer == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "Layer" << i << "null";
             return false;
         }
 
         DuArrayConstPtr<DuSample> samples = layer->getSampleArray();
-        if (samples == NULL)
+        if (samples == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "Sample array null";
             return false;
@@ -667,7 +667,7 @@ bool DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL,
         for (int j = 0; j < nbSamples; ++j)
         {
             DuSampleConstPtr sample = samples->at(j);
-            if (sample == NULL)
+            if (sample == Q_NULLPTR)
                 return false;
 
             sortedSamples.insert(sample->getStartNote(), sample);
@@ -675,7 +675,7 @@ bool DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL,
 
         for (const DuSampleConstPtr& sample : sortedSamples)
         {
-            if (sample == NULL)
+            if (sample == Q_NULLPTR)
                 return false;
 
             dreamIPData += sample->ipBinary(static_cast<quint8>(layer->getMinVelocity()) - 1, static_cast<quint8>(layer->getMaxVelocity()));
@@ -703,11 +703,11 @@ bool DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL,
 
     int mappingAddr = 0;
     const DuArrayConstPtr<DuNote>& mappingL = getMappingL();
-    if (mappingL == NULL)
+    if (mappingL == Q_NULLPTR)
         return false;
 
     const DuArrayConstPtr<DuNote>& mappingS = getMappingS();
-    if (mappingS == NULL)
+    if (mappingS == Q_NULLPTR)
         return false;
 
     if (mappingL->count() != 0 && mappingS->count() != 0)
@@ -719,7 +719,7 @@ bool DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL,
 
     int metadataAddr = 0;
     const DuArrayConstPtr<DuBinaryData>& metadata = getMetadata();
-    if (metadata == NULL)
+    if (metadata == Q_NULLPTR)
         return false;
 
     if (metadata->count() != 0)
@@ -741,7 +741,7 @@ bool DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL,
 
     // SOUND STRUCT
     const DuSoundInfoConstPtr &info = getInfo();
-    if (info == NULL)
+    if (info == Q_NULLPTR)
         return false;
 
     const QByteArray& infoData = info->toBinary(static_cast<quint8>(nbLayer), totalNbSamples, static_cast<quint32>(totalSampleSize), forDuTouchSOrL);
@@ -820,7 +820,7 @@ DuObjectPtr DuSound::getChild(const QString &key)
             key == KeyName)
     {
         DuSoundInfoPtr info = getInfo();
-        if (info == NULL)
+        if (info == Q_NULLPTR)
         {
             return DuObjectPtr();
         }
@@ -849,7 +849,7 @@ DuObjectConstPtr DuSound::getChild(const QString &key) const
             key == KeyName)
     {
         DuSoundInfoConstPtr info = getInfo();
-        if (info == NULL)
+        if (info == Q_NULLPTR)
         {
             return DuObjectPtr();
         }

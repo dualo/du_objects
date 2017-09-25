@@ -26,7 +26,7 @@ bool DuDeviceList::hasSameAttributes(const DuListConstPtr& other) const
     }
 
     const DuDeviceListConstPtr& casted = other.dynamicCast<const DuDeviceList>();
-    if (casted == NULL)
+    if (casted == Q_NULLPTR)
     {
         return false;
     }

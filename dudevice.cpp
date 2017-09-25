@@ -75,7 +75,7 @@ bool DuDevice::setVersion(const QString &value)
 {
     DuVersionPtr tmp = getVersion();
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return false;
 
     return tmp->setVersion(value);
@@ -85,7 +85,7 @@ bool DuDevice::setVersion(int major, int minor, int patch)
 {
     DuVersionPtr tmp = getVersion();
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return false;
 
     return tmp->setVersion(major, minor, patch);

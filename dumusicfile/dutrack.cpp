@@ -100,7 +100,7 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
             loop = DuLoop::fromDuMusicBinary(du_loop, du_sample_address);
         }
 
-        if (loop == NULL)
+        if (loop == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "DuTrack::fromDuMusicBinary():\n"
                                           << "failed to generate DuTrack\n"
@@ -169,7 +169,7 @@ DuTrackPtr DuTrack::fromMidi(const MidiConversionHelper &helper, int trackIndex)
         else
         {
             const DuLoopPtr &loop = DuLoop::fromMidi(helper, index);
-            if (loop == NULL)
+            if (loop == Q_NULLPTR)
             {
                 qCCritical(LOG_CAT_DU_OBJECT)
                         << "DuTrack::fromMidi():\n"
@@ -207,7 +207,7 @@ QByteArray DuTrack::toDuMusicBinary() const
 
 
     const DuArrayConstPtr<DuLoop> &loops = getLoops();
-    if (loops == NULL)
+    if (loops == Q_NULLPTR)
         return QByteArray();
 
     int loopSize = loops->size();
@@ -240,7 +240,7 @@ QVector<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef,
                                                     int transpose) const
 {
     const DuArrayConstPtr<DuLoop> &loops = getLoops();
-    if (loops == NULL)
+    if (loops == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuTrack::toDuMidiTrackArray():\n"
@@ -264,7 +264,7 @@ QVector<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef,
     for (int i = 0; i < MUSIC_MAXLAYER; i++)
     {
         const DuLoopConstPtr &loop = loops->at(i).dynamicCast<const DuLoop>();
-        if (loop == NULL)
+        if (loop == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT)
                     << "DuTrack::toDuMidiTrackArray():\n"
@@ -276,7 +276,7 @@ QVector<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef,
         const DuMidiTrackPtr &midiTrack =
                 loop->toDuMidiTrack(durationRef, channel, transpose);
 
-        if (midiTrack != NULL)
+        if (midiTrack != Q_NULLPTR)
             retList.append(midiTrack);
     }
 
@@ -298,7 +298,7 @@ bool DuTrack::appendLoop(const DuLoopPtr &loop)
 {
     const DuArrayPtr<DuLoop> &tmp = getLoops();
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return false;
 
     return tmp->append(loop);
@@ -311,14 +311,14 @@ int DuTrack::eventsSize() const
     int tmpSize = 0;
 
     const DuArrayConstPtr<DuLoop> &loops = getLoops();
-    if (loops == NULL)
+    if (loops == Q_NULLPTR)
         return -1;
 
     int count = loops->count();
     for (int i = 0; i < count; i++)
     {
         const DuLoopConstPtr &loop = loops->at(i);
-        if (loop == NULL)
+        if (loop == Q_NULLPTR)
             return -1;
 
         tmpSize = loop->eventsSize();

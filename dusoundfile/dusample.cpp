@@ -161,7 +161,7 @@ DuSamplePtr DuSample::fromWav(QFile *input, WavConvertionResults& outResults)
 
     // Open file
     SndfileHandle soundFile(wavFileName.toStdString(), SFM_READ, 0);
-    if (soundFile.rawHandle() == NULL)
+    if (soundFile.rawHandle() == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Failed to open the file" << wavFileName << ":\n"
                                       << soundFile.strError();
@@ -183,7 +183,7 @@ DuSamplePtr DuSample::fromWav(QFile *input, WavConvertionResults& outResults)
         }
 
         soundFile = SndfileHandle(wavFileName.toStdString(), SFM_READ, 0);
-        if (soundFile.rawHandle() == NULL)
+        if (soundFile.rawHandle() == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "Failed to open the file" << wavFileName << ":\n"
                                           << soundFile.strError();
@@ -209,7 +209,7 @@ DuSamplePtr DuSample::fromWav(QFile *input, WavConvertionResults& outResults)
         }
 
         soundFile = SndfileHandle(wavFileName.toStdString(), SFM_READ, 0);
-        if (soundFile.rawHandle() == NULL)
+        if (soundFile.rawHandle() == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "Failed to open the file" << wavFileName << ":\n"
                                           << soundFile.strError();
@@ -236,7 +236,7 @@ DuSamplePtr DuSample::fromWav(QFile *input, WavConvertionResults& outResults)
         }
 
         soundFile = SndfileHandle(wavFileName.toStdString(), SFM_READ, 0);
-        if (soundFile.rawHandle() == NULL)
+        if (soundFile.rawHandle() == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "Failed to open the file" << wavFileName << ":\n"
                                           << soundFile.strError();
@@ -337,7 +337,7 @@ QString DuSample::convertToMono(SndfileHandle &oldSoundFile)
     }
 
     SndfileHandle newSoundFile(monoWavFileName.toStdString(), SFM_WRITE, oldSoundFile.format(), 1, oldSoundFile.samplerate());
-    if (newSoundFile.rawHandle() == NULL)
+    if (newSoundFile.rawHandle() == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Failed to open the file" << monoWavFileName << ":\n"
                                       << newSoundFile.strError();
@@ -430,7 +430,7 @@ QString DuSample::convertTo44100samplerate(SndfileHandle &oldSoundFile, sf_count
     }
 
     SndfileHandle newSoundFile(wav44100samplerateFileName.toStdString(), SFM_WRITE, oldSoundFile.format(), 1, 44100);
-    if (newSoundFile.rawHandle() == NULL)
+    if (newSoundFile.rawHandle() == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Failed to open the file" << wav44100samplerateFileName << ":\n"
                                       << newSoundFile.strError();
@@ -527,7 +527,7 @@ QString DuSample::convertTo44100samplerate(SndfileHandle &oldSoundFile, sf_count
 
     newSoundFile.writeSync();
 
-    if (outNbFrames != NULL)
+    if (outNbFrames != Q_NULLPTR)
         *outNbFrames = newNbFrames;
 
     return wav44100samplerateFileName;
@@ -565,7 +565,7 @@ QString DuSample::convertTo16bits(SndfileHandle &oldSoundFile)
     }
 
     SndfileHandle newSoundFile(wav16bitsFileName.toStdString(), SFM_WRITE, normalizeWaveType(oldSoundFile.format()), oldSoundFile.channels(), oldSoundFile.samplerate());
-    if (newSoundFile.rawHandle() == NULL)
+    if (newSoundFile.rawHandle() == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Failed to open the file" << wav16bitsFileName << ":\n"
                                       << newSoundFile.strError();

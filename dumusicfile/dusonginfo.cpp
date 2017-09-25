@@ -92,7 +92,7 @@ DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
     bool verif = true;
 
     const DuMixerPtr &mixer = DuMixer::fromDuMusicBinary(du_song.s_mix);
-    if (mixer == NULL)
+    if (mixer == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuSongInfo::fromDuMusicBinary():\n"
@@ -194,7 +194,7 @@ QByteArray DuSongInfo::toDuMusicBinary() const
 
 
     const DuMixerConstPtr &mixer = getMixer();
-    if (mixer == NULL)
+    if (mixer == Q_NULLPTR)
         return QByteArray();
     const QByteArray &mixerArray = mixer->toDuMusicBinary();
     if (mixerArray.isNull())

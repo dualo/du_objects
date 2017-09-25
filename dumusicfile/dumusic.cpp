@@ -236,7 +236,7 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
     DuMusicPtr music(new DuMusic);
 
     const DuMixerPtr &mixer = DuMixer::fromDuMusicBinary(local_song.s_mix);
-    if (mixer == NULL)
+    if (mixer == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "Failed to generate DuMusic\n"
@@ -247,7 +247,7 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
     music->setMixer(mixer);
 
     const DuReverbPtr &reverb = DuReverb::fromDuMusicBinary(local_song.s_reverb);
-    if (reverb == NULL)
+    if (reverb == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "Failed to generate DuMusic\n"
@@ -264,7 +264,7 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
         const DuTrackPtr &track = DuTrack::fromDuMusicBinary(local_song.s_track[i],
                                                              du_music.local_buffer,
                                                              nbSamples);
-        if (track == NULL)
+        if (track == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT)
                     << "Failed to generate DuMusic\n"
@@ -417,7 +417,7 @@ DuMusicPtr DuMusic::fromBinary(const QByteArray &data, QVector<DuSoundPtr> &outI
             else if (chunkType == "DSND")
             {
                 const DuSoundPtr& sound = DuSound::fromBinary(chunkData);
-                if (sound == NULL)
+                if (sound == Q_NULLPTR)
                     continue;
 
                 outIntegratedSounds << sound;
@@ -534,7 +534,7 @@ DuMusicPtr DuMusic::fromMidi(const MidiConversionHelper &helper)
     for (int i = 0; i < MUSIC_MAXTRACK; i++)
     {
         const DuTrackPtr &track = DuTrack::fromMidi(helper, i);
-        if (track == NULL)
+        if (track == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT)
                     << "DuMusic::fromMidi():\n"
@@ -588,7 +588,7 @@ QByteArray DuMusic::toDuMusicBinary() const
     }
 
     void* res = std::memset(du_music.data(), 0, MUSIC_SONG_SIZE + RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE);
-    Q_ASSERT(res != NULL);
+    Q_ASSERT(res != Q_NULLPTR);
 
 
     music_song& local_song = du_music->local_song;
@@ -790,7 +790,7 @@ QByteArray DuMusic::toDuMusicBinary() const
 
 
     const DuMixerConstPtr &mixer = getMixer();
-    if (mixer == NULL)
+    if (mixer == Q_NULLPTR)
         return QByteArray();
     const QByteArray &mixerArray = mixer->toDuMusicBinary();
     if (mixerArray.isNull())
@@ -830,7 +830,7 @@ QByteArray DuMusic::toDuMusicBinary() const
     local_song.s_reverb_preset = static_cast<quint8>(tmpNum);
 
     const DuReverbConstPtr &reverb = getReverb();
-    if (reverb == NULL)
+    if (reverb == Q_NULLPTR)
         return QByteArray();
     const QByteArray &reverbArray = reverb->toDuMusicBinary();
     if (reverbArray.isNull())
@@ -839,7 +839,7 @@ QByteArray DuMusic::toDuMusicBinary() const
 
 
     const DuArrayConstPtr<DuTrack> &tracks = getTracks();
-    if (tracks == NULL)
+    if (tracks == Q_NULLPTR)
         return QByteArray();
     const QByteArray &tracksArray = tracks->toDuMusicBinary();
     if (tracksArray.isNull())
@@ -856,11 +856,11 @@ QByteArray DuMusic::toDuMusicBinary() const
     {
         const DuTrackConstPtr &track =
                 tracks->at(i).dynamicCast<const DuTrack>();
-        if (track == NULL)
+        if (track == Q_NULLPTR)
             return QByteArray();
 
         const DuArrayConstPtr<DuLoop> &loops = track->getLoops();
-        if (loops == NULL)
+        if (loops == Q_NULLPTR)
             return QByteArray();
 
         int loopCount = loops->count();
@@ -868,7 +868,7 @@ QByteArray DuMusic::toDuMusicBinary() const
         {
             const DuLoopConstPtr &loop =
                     loops->at(j).dynamicCast<const DuLoop>();
-            if (loop == NULL)
+            if (loop == Q_NULLPTR)
                 return QByteArray();
 
             int tmp = loop->countEvents();
@@ -884,7 +884,7 @@ QByteArray DuMusic::toDuMusicBinary() const
                 tmp_loop->l_adress = 0;
 
             const DuArrayConstPtr<DuEvent> &events = loop->getEvents();
-            if (events == NULL)
+            if (events == Q_NULLPTR)
                 return QByteArray();
             tmpLocalBuffer.append(events->toDuMusicBinary());
 
@@ -947,7 +947,7 @@ QByteArray DuMusic::toDuMusicBundleBinary(const QVector<DuSoundConstPtr> &integr
 QByteArray DuMusic::toMidiBinary() const
 {
     const DuArrayConstPtr<DuTrack> &tracks = getTracks();
-    if (tracks == NULL)
+    if (tracks == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                << "DuMusic::toMidiBinary():\n"
@@ -992,7 +992,7 @@ QByteArray DuMusic::toMidiBinary() const
     {
         const DuTrackConstPtr &track =
                 tracks->at(i).dynamicCast<const DuTrack>();
-        if (track == NULL)
+        if (track == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT)
                     << "DuMusic::toMidiBinary():\n"
@@ -1073,7 +1073,7 @@ int DuMusic::size() const
     int tmpSize = 0;
 
     const DuArrayConstPtr<DuTrack> &tracks = getTracks();
-    if (tracks == NULL)
+    if (tracks == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "KEY_MUSIC_TRACKS is NULL";
         return -1;
@@ -1083,7 +1083,7 @@ int DuMusic::size() const
     for (int i = 0; i < count; i++)
     {
         const DuTrackConstPtr &track = tracks->at(i);
-        if (track == NULL)
+        if (track == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "track" << i << "is NULL";
             return -1;
@@ -1132,7 +1132,7 @@ bool DuMusic::appendTrack(const DuTrackPtr &track)
 {
     DuArrayPtr<DuTrack> tmp = getChildAs< DuArray<DuTrack> >(KeyTracks);
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return false;
 
     return tmp->append(track);
@@ -1143,7 +1143,7 @@ QSet<InstrumentIdentifier> DuMusic::getUsedInstrumentsIdentifiers() const
     QSet<InstrumentIdentifier> returnedList;
 
     const DuArrayConstPtr<DuTrack>& tracks = getTracks();
-    if (tracks == NULL)
+    if (tracks == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Can't get du-music tracks";
         return QSet<InstrumentIdentifier>();
@@ -1152,7 +1152,7 @@ QSet<InstrumentIdentifier> DuMusic::getUsedInstrumentsIdentifiers() const
     for (const DuTrackConstPtr& track : *(tracks))
     {
         const DuArrayConstPtr<DuLoop>& loops = track->getLoops();
-        if (loops == NULL)
+        if (loops == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "Can't get track's loops";
             continue;

@@ -63,7 +63,7 @@ DuLayerPtr DuLayer::fromBinary(const QList<dream_ip>& dreamIPArray,
         }
 
         DuSamplePtr sample = DuSample::fromBinary(dreamIPArray[i], dreamSPArray[i], sampleDataArray[i]);
-        if (sample != NULL)
+        if (sample != Q_NULLPTR)
         {
             sampleArray->append(sample);
         }

@@ -15,7 +15,7 @@
     { \
         const Du ## dutype ## ConstPtr &tmp = getChildAs<Du ## dutype>(QStringLiteral(#key)); \
          \
-        if (tmp == NULL) \
+        if (tmp == Q_NULLPTR) \
             return defaultReturn; \
          \
         return static_cast<type>(tmp->get ## dutype()); \
@@ -25,7 +25,7 @@
     { \
         const Du ## dutype ## Ptr &tmp = getChildAs<Du ## dutype>(QStringLiteral(#key)); \
          \
-        if (tmp == NULL) \
+        if (tmp == Q_NULLPTR) \
             return false; \
          \
         return tmp->set ## dutype(value); \
@@ -96,7 +96,7 @@
     { \
         const childType ## ConstPtr& child = get ## childKey(); \
          \
-        if (child == NULL) \
+        if (child == Q_NULLPTR) \
             return defaultReturn; \
          \
         return child->get ## keyInChild(); \
@@ -106,7 +106,7 @@
     { \
         const childType ## Ptr &child = getChildAs<childType>(QStringLiteral(#childKey)); \
          \
-        if (child == NULL) \
+        if (child == Q_NULLPTR) \
             return false; \
          \
         return child->set ## keyInChild(value); \

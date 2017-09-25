@@ -73,7 +73,7 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
 
     const DuMusicInstrumentPtr &instrument =
             DuMusicInstrument::fromDuMusicBinary(du_loop.l_instr);
-    if (instrument != NULL)
+    if (instrument != Q_NULLPTR)
         loop->setInstrument(instrument);
     else
     {
@@ -101,7 +101,7 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
     for (int i = 0; i < du_loop.l_numsample; i++)
     {
         const DuEventPtr &event = DuEvent::fromDuMusicBinary(du_sample[i]);
-        if (event == NULL)
+        if (event == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT)
                     << "DuLoop::fromDuMusicBinary():\n"
@@ -140,7 +140,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int midiTrackInde
 
 
     const DuMidiTrackPtr &midiTrack = helper.getMidiTrack(midiTrackIndex);
-    if (midiTrack == NULL)
+    if (midiTrack == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "failed to generate DuLoop\n"
@@ -150,7 +150,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int midiTrackInde
     }
 
     const DuArrayPtr<DuMidiBasicEvent> &midiEvents = midiTrack->getEvents();
-    if (midiEvents == NULL)
+    if (midiEvents == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "failed to generate DuLoop\n"
@@ -171,7 +171,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int midiTrackInde
 
 
     const DuSoundPtr &sound = helper.getSound(midiTrackIndex);
-    if (sound == NULL)
+    if (sound == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "failed to generate DuLoop\n"
@@ -181,7 +181,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int midiTrackInde
     }
 
     const DuSoundInfoConstPtr& soundInfo = sound->getInfo();
-    if (soundInfo == NULL)
+    if (soundInfo == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "failed to generate DuLoop\n"
@@ -191,7 +191,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int midiTrackInde
     }
 
     const DuInstrumentInfoConstPtr &instrInfo = soundInfo->getInstrumentInfo();
-    if (instrInfo == NULL)
+    if (instrInfo == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "failed to generate DuLoop\n"
@@ -201,7 +201,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int midiTrackInde
     }
 
     const DuPresetConstPtr &instrPreset = soundInfo->getPresetArray()->at(0);
-    if (instrPreset == NULL)
+    if (instrPreset == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "failed to generate DuLoop\n"
@@ -214,7 +214,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int midiTrackInde
     instrument->setInstrumentInfo(instrInfo->cloneAs<DuInstrumentInfo>());
     instrument->setPreset(instrPreset->cloneAs<DuPreset>());
 
-    if (instrument == NULL)
+    if (instrument == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "failed to generate DuLoop\n"
@@ -242,7 +242,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int midiTrackInde
     for (int i = 0; i < count; i++)
     {
         const DuObjectPtr &tmpObject = midiEvents->at(i);
-        if (tmpObject == NULL)
+        if (tmpObject == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT)
                     << "failed to generate DuLoop\n"
@@ -253,7 +253,7 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int midiTrackInde
 
         const DuMidiBasicEventPtr &midiEvent =
                 tmpObject.dynamicCast<DuMidiBasicEvent>();
-        if (midiEvent == NULL)
+        if (midiEvent == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT)
                     << "failed to generate DuLoop\n"
@@ -265,12 +265,12 @@ DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int midiTrackInde
         const DuMidiChannelEventPtr &channelEvent
                 = midiEvent.dynamicCast<DuMidiChannelEvent>();
 
-        if (channelEvent != NULL)
+        if (channelEvent != Q_NULLPTR)
         {
             if (channelEvent->getType() != DuMidiChannelEvent::ProgramChange)
             {
                 const DuEventPtr &event = DuEvent::fromMidi(channelEvent, sound, helper);
-                if (event == NULL)
+                if (event == Q_NULLPTR)
                 {
                     qCWarning(LOG_CAT_DU_OBJECT) << "DuEvent" << i << "not properly generated";
                 }
@@ -301,7 +301,7 @@ QByteArray DuLoop::toDuMusicBinary() const
 
 
     const DuMusicInstrumentConstPtr &instrument = getInstrument();
-    if (instrument == NULL)
+    if (instrument == Q_NULLPTR)
         return QByteArray();
 
     const QByteArray &instrumentArray = instrument->toDuMusicBinary();
@@ -363,7 +363,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel, int transpose
 
 
     const DuMusicInstrumentConstPtr &instrument = getInstrument();
-    if (instrument == NULL)
+    if (instrument == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuLoop::toDuMidiTrack():\n"
@@ -373,7 +373,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel, int transpose
     }
 
     const DuInstrumentInfoConstPtr &instrInfo = instrument->getInstrumentInfo();
-    if (instrInfo == NULL)
+    if (instrInfo == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuLoop::toDuMidiTrack():\n"
@@ -383,7 +383,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel, int transpose
     }
 
     const DuPresetConstPtr &instrPreset = instrument->getPreset();
-    if (instrPreset == NULL)
+    if (instrPreset == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuLoop::toDuMidiTrack():\n"
@@ -467,7 +467,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel, int transpose
 
 
     const DuArrayConstPtr<DuEvent> &events = getEvents();
-    if (events == NULL)
+    if (events == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuLoop::toDuMidiTrack():\n"
@@ -481,7 +481,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel, int transpose
     for (int i = 0; i < count; i++)
     {
         const DuEventConstPtr &event = events->at(i).dynamicCast<const DuEvent>();
-        if (event == NULL)
+        if (event == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT)
                     << "DuLoop::toDuMidiTrack():\n"
@@ -497,7 +497,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel, int transpose
         {
             channelEvent = event->toDuMidiChannelEvent(0, prevType,
                                                        presetOctave, transpose);
-            if (channelEvent != NULL)
+            if (channelEvent != Q_NULLPTR)
             {
                 channelEvent->setTime(static_cast<quint32>(durationRef) * static_cast<quint8>(durationMod)
                                       + tmpTime - prevTime, prevTime);
@@ -510,7 +510,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel, int transpose
                                                        presetOctave, transpose);
         }
 
-        if (channelEvent == NULL)
+        if (channelEvent == Q_NULLPTR)
         {
             qCWarning(LOG_CAT_DU_OBJECT)
                     << "DuLoop::toDuMidiTrack():\n"
@@ -560,7 +560,7 @@ DuObjectPtr DuLoop::getChild(const QString &key)
     if (key == KeyNameForDevice)
     {
         DuMusicInstrumentPtr instrument = getInstrument();
-        if (instrument == NULL)
+        if (instrument == Q_NULLPTR)
         {
             return DuObjectPtr();
         }
@@ -578,7 +578,7 @@ DuObjectConstPtr DuLoop::getChild(const QString &key) const
     if (key == KeyNameForDevice)
     {
         DuMusicInstrumentConstPtr instrument = getInstrument();
-        if (instrument == NULL)
+        if (instrument == Q_NULLPTR)
         {
             return DuObjectPtr();
         }
@@ -620,7 +620,7 @@ int DuLoop::countEvents() const
 {
     const DuArrayConstPtr<DuEvent> &tmp = getEvents();
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return -1;
 
     return tmp->count();
@@ -630,7 +630,7 @@ bool DuLoop::appendEvent(const DuEventPtr &event)
 {
     const DuArrayPtr<DuEvent> &tmp = getEvents();
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return false;
 
     tmp->append(event);
