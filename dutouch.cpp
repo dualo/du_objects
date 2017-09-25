@@ -92,7 +92,7 @@ bool DuTouch::setSoundbankVersion(const QString &value)
 {
     DuVersionPtr tmp = getSoundbankVersion();
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return false;
 
     return tmp->setVersion(value);
@@ -102,7 +102,7 @@ bool DuTouch::setSoundbankVersion(int major, int minor, int patch)
 {
     DuVersionPtr tmp = getSoundbankVersion();
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return false;
 
     return tmp->setVersion(major, minor, patch);

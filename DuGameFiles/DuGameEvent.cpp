@@ -109,7 +109,7 @@ QByteArray DuGameEvent::toDuMusicBinary() const
 
 
     const DuGameEventMessageConstPtr &introMessage = getIntroMessage();
-    if (introMessage == NULL)
+    if (introMessage == Q_NULLPTR)
         return QByteArray();
     const QByteArray &introMessageData = introMessage->toDuMusicBinary();
     if (introMessageData.isNull())
@@ -118,7 +118,7 @@ QByteArray DuGameEvent::toDuMusicBinary() const
 
 
     const DuGameEventMessageConstPtr &introComment = getIntroComment();
-    if (introComment == NULL)
+    if (introComment == Q_NULLPTR)
         return QByteArray();
     const QByteArray &introCommentData = introComment->toDuMusicBinary();
     if (introCommentData.isNull())
@@ -127,7 +127,7 @@ QByteArray DuGameEvent::toDuMusicBinary() const
 
 
     const DuArrayConstPtr<DuArrangementAction> &actions = getActions();
-    if (actions == NULL)
+    if (actions == Q_NULLPTR)
         return QByteArray();
 
     event.ae_nb_actions = actions->count();
@@ -139,7 +139,7 @@ QByteArray DuGameEvent::toDuMusicBinary() const
 
 
     const DuGameExitConditionConstPtr &exitConditon = getExitCondition();
-    if (exitConditon == NULL)
+    if (exitConditon == Q_NULLPTR)
         return QByteArray();
     const QByteArray &exitConditonData = exitConditon->toDuMusicBinary();
     if (exitConditonData.isNull())
@@ -148,7 +148,7 @@ QByteArray DuGameEvent::toDuMusicBinary() const
 
 
     const DuArrayConstPtr<DuNumeric> &leds = getLeds();
-    if (leds == NULL)
+    if (leds == Q_NULLPTR)
         return QByteArray();
     std::memcpy(event.ae_led, leds->toDuMusicBinary().constData(), static_cast<size_t>(leds->size()));
 

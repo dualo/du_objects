@@ -155,7 +155,7 @@ DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
             for (int i = 0; i < mappingLSize; ++i)
             {
                 const DuNoteConstPtr& note = mappingL->at(i);
-                if (note != NULL && note->getNoteGM() == midiKey)
+                if (note != Q_NULLPTR && note->getNoteGM() == midiKey)
                 {
                     key = note->getNote();
                 }

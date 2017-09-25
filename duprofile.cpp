@@ -93,7 +93,7 @@ DuProfilePtr DuProfile::fromJsonApi(const JsonApiResourceObject &jsonProfile, in
     for (const JsonApiResourceObject& duTouch : dutouchsArray)
     {
         const DuTouchPtr& device = DuTouch::fromJsonApi(duTouch);
-        if (device == NULL)
+        if (device == Q_NULLPTR)
             continue;
 
         device->setOwner(outProfile->getPseudo());
@@ -151,7 +151,7 @@ DuProfilePtr DuProfile::fromJsonApi(const JsonApiResourceObject &jsonProfile, in
 
 //            DuProfilePtr friendProfile = fromJson((*it).toObject(), recursionLevel - 1);
 
-//            if (friendProfile != NULL)
+//            if (friendProfile != Q_NULLPTR)
 //            {
 //                friends->append(friendProfile);
 //            }

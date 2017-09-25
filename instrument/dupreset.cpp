@@ -269,7 +269,7 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
     for (int i = 0; i < NUM_LED_VALUE; ++i)
     {
         DuNumericPtr leds(new DuNumeric(du_preset.s_leds[i], NUMERIC_DEFAULT_SIZE, 0xFF, 0x00, 0));
-        if (leds == NULL)
+        if (leds == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate DuPreset\n"
                                           << "Leds" << i << "was not properly generated";
@@ -339,7 +339,7 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
 
     // fx
     const DuMixerPtr &mixer = DuMixer::fromDuMusicBinary(du_preset.s_mix);
-    if (mixer == NULL)
+    if (mixer == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate DuPreset\n"
                                       << "the DuMixer was not properly generated";
@@ -349,7 +349,7 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
     preset->setMixer(mixer);
 
     const DuDistortionPtr &distortion = DuDistortion::fromDuMusicBinary(du_preset.s_distortion);
-    if (distortion == NULL)
+    if (distortion == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate DuPreset\n"
                                       << "the DuDistortion was not properly generated";
@@ -359,7 +359,7 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
     preset->setDistortion(distortion);
 
     const DuCompressorPtr &compressor = DuCompressor::fromDuMusicBinary(du_preset.s_compressor);
-    if (compressor == NULL)
+    if (compressor == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate DuPreset\n"
                                       << "the DuCompressor was not properly generated";
@@ -369,7 +369,7 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
     preset->setCompressor(compressor);
 
     const DuEqualizerPtr &equalizer = DuEqualizer::fromDuMusicBinary(du_preset.s_equalizer);
-    if (equalizer == NULL)
+    if (equalizer == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate DuPreset\n"
                                       << "the DuEqualizer was not properly generated";
@@ -379,7 +379,7 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
     preset->setEqualizer(equalizer);
 
     const DuDelayPtr &delay = DuDelay::fromDuMusicBinary(du_preset.s_delay);
-    if (delay == NULL)
+    if (delay == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate DuPreset\n"
                                       << "the DuDelay was not properly generated";
@@ -392,7 +392,7 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
     for (int i = 0; i < 3; ++i)
     {
         const DuChorusPtr &chorus = DuChorus::fromDuMusicBinary(du_preset.s_chorus[i]);
-        if (chorus == NULL)
+        if (chorus == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "Failed to generate DuPreset\n"
                                           << "Chorus" << i << "was not properly generated";
@@ -560,7 +560,7 @@ QByteArray DuPreset::toDuMusicBinary() const
     du_preset.s_displayled = static_cast<uint8_t>(tmpNum);
 
     const DuArrayConstPtr<DuNumeric> &ledsArray = getLedArray();
-    if (ledsArray == NULL)
+    if (ledsArray == Q_NULLPTR)
         return QByteArray();
     std::memcpy(du_preset.s_leds, ledsArray->toDuMusicBinary().constData(), static_cast<size_t>(ledsArray->size()));
 
@@ -613,7 +613,7 @@ QByteArray DuPreset::toDuMusicBinary() const
     du_preset.s_multinote_act = static_cast<uint8_t>(tmpNum);
 
     const DuArrayConstPtr<DuNumeric> &multinoteArray = getMultinote();
-    if (multinoteArray == NULL)
+    if (multinoteArray == Q_NULLPTR)
         return QByteArray();
     std::memcpy(du_preset.s_multinote, multinoteArray->toDuMusicBinary().constData(), static_cast<size_t>(multinoteArray->size()));
 
@@ -717,32 +717,32 @@ QByteArray DuPreset::toDuMusicBinary() const
 
     // fx
     const DuMixerConstPtr& mixer = getMixer();
-    if (mixer == NULL)
+    if (mixer == Q_NULLPTR)
         return QByteArray();
     std::memcpy(&(du_preset.s_mix), mixer->toDuMusicBinary().constData(), static_cast<size_t>(mixer->size()));
 
     const DuDistortionConstPtr& distortion = getDistortion();
-    if (distortion == NULL)
+    if (distortion == Q_NULLPTR)
         return QByteArray();
     std::memcpy(&(du_preset.s_distortion), distortion->toDuMusicBinary().constData(), static_cast<size_t>(distortion->size()));
 
     const DuCompressorConstPtr& compressor = getCompressor();
-    if (compressor == NULL)
+    if (compressor == Q_NULLPTR)
         return QByteArray();
     std::memcpy(&(du_preset.s_compressor), compressor->toDuMusicBinary().constData(), static_cast<size_t>(compressor->size()));
 
     const DuEqualizerConstPtr& equalizer = getEqualizer();
-    if (equalizer == NULL)
+    if (equalizer == Q_NULLPTR)
         return QByteArray();
     std::memcpy(&(du_preset.s_equalizer), equalizer->toDuMusicBinary().constData(), static_cast<size_t>(equalizer->size()));
 
     const DuDelayConstPtr& delay = getDelay();
-    if (delay == NULL)
+    if (delay == Q_NULLPTR)
         return QByteArray();
     std::memcpy(&(du_preset.s_delay), delay->toDuMusicBinary().constData(), static_cast<size_t>(delay->size()));
 
     const DuArrayConstPtr<DuChorus> &chorusArray = getChorusArray();
-    if (chorusArray == NULL)
+    if (chorusArray == Q_NULLPTR)
         return QByteArray();
     std::memcpy(&(du_preset.s_chorus), chorusArray->toDuMusicBinary().constData(), static_cast<size_t>(chorusArray->size()));
 

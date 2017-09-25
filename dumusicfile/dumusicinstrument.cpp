@@ -28,7 +28,7 @@ DuMusicInstrumentPtr DuMusicInstrument::fromDuMusicBinary(const music_instr &du_
 
     const DuInstrumentInfoPtr &instrInfo =
             DuInstrumentInfo::fromDuMusicBinary(du_instr.i_instrument);
-    if (instrInfo == NULL)
+    if (instrInfo == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromDuMusicBinary():\n"
                     << "failed to generate DuMusicInstrument\n"
@@ -40,7 +40,7 @@ DuMusicInstrumentPtr DuMusicInstrument::fromDuMusicBinary(const music_instr &du_
 
     const DuPresetPtr &preset =
             DuPreset::fromDuMusicBinary(du_instr.i_preset);
-    if (preset == NULL)
+    if (preset == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "DuMusicInstrument::fromDuMusicBinary():\n"
                     << "failed to generate DuMusicInstrument\n"
@@ -60,7 +60,7 @@ QByteArray DuMusicInstrument::toDuMusicBinary() const
 
 
     const DuInstrumentInfoConstPtr& instrInfo = getInstrumentInfo();
-    if (instrInfo == NULL)
+    if (instrInfo == Q_NULLPTR)
         return QByteArray();
 
     std::memcpy(&(du_instrument.i_instrument),
@@ -68,7 +68,7 @@ QByteArray DuMusicInstrument::toDuMusicBinary() const
                 static_cast<size_t>(instrInfo->size()));
 
     const DuPresetConstPtr& preset = getPreset();
-    if (preset == NULL)
+    if (preset == Q_NULLPTR)
         return QByteArray();
 
     std::memcpy(&(du_instrument.i_preset),
@@ -89,7 +89,7 @@ DuObjectPtr DuMusicInstrument::getChild(const QString &key)
     if (key == KeyNameForDevice)
     {
         DuInstrumentInfoPtr info = getInstrumentInfo();
-        if (info == NULL)
+        if (info == Q_NULLPTR)
         {
             return DuObjectPtr();
         }
@@ -107,7 +107,7 @@ DuObjectConstPtr DuMusicInstrument::getChild(const QString &key) const
     if (key == KeyNameForDevice)
     {
         DuInstrumentInfoConstPtr info = getInstrumentInfo();
-        if (info == NULL)
+        if (info == Q_NULLPTR)
         {
             return DuObjectPtr();
         }

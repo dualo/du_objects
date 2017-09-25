@@ -36,7 +36,7 @@ QByteArray DuContainer::toDuMusicBinary() const
     while (i.hasNext())
     {
         i.next();
-        if (i.value() == NULL)
+        if (i.value() == Q_NULLPTR)
         {
             qCWarning(LOG_CAT_DU_OBJECT) << "DuContainer::toDuMusicBinary():\n"
                        << "element was null";
@@ -68,7 +68,7 @@ QJsonValue DuContainer::toJson() const
     while (i.hasNext())
     {
         i.next();
-        if (i.value() == NULL)
+        if (i.value() == Q_NULLPTR)
         {
             qCWarning(LOG_CAT_DU_OBJECT) << "DuContainer::toJson():\n"
                        << "element was null";
@@ -101,7 +101,7 @@ QHttpMultiPart *DuContainer::toHttpMultiPart(const QByteArray &boundary) const
     while (i.hasNext())
     {
         i.next();
-        if (i.value() != NULL)
+        if (i.value() != Q_NULLPTR)
         {
             QHttpPart part = i.value()->toHttpPart(i.key());
             if (part != QHttpPart())
@@ -142,7 +142,7 @@ bool DuContainer::parseJson(const QJsonValue &jsonValue)
         i.next();
 
         const DuObjectPtr& obj = i.value();
-        if (obj == NULL)
+        if (obj == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "DuObject associated to key" << i.key() << "is null:" << obj;
             return false;
@@ -189,7 +189,7 @@ int DuContainer::size() const
     while (i.hasNext())
     {
         i.next();
-        if (i.value() == NULL)
+        if (i.value() == Q_NULLPTR)
             return -1;
 
         int tmpSize = i.value()->size();

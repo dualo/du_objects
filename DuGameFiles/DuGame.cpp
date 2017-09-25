@@ -92,7 +92,7 @@ QByteArray DuGame::toDuMusicBinary() const
     arrangement.as_currentevent = 0;
 
     const DuArrayConstPtr<DuGameEvent>& events = getEvents();
-    if (events == NULL)
+    if (events == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Can't get events";
         return QByteArray();
@@ -117,7 +117,7 @@ QByteArray DuGame::toDuMusicBinary() const
 int DuGame::size() const
 {
     const DuArrayConstPtr<DuGameEvent>& events = getEvents();
-    if (events == NULL)
+    if (events == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Can't get events";
         return -1;
