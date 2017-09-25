@@ -11,7 +11,7 @@ Version Version::extractVersionFromStr(const QString &str, bool *ok)
     if (!str.contains(QRegularExpression("^[0-9]+\\.[0-9]+(\\.[0-9]+(-(dev|(beta|alpha|RC|patch)[0-9]+))?)?$")))
     {
         qCritical() << "Version string format incorrect. Should be major.minor.patch(-suffix) : " << str;
-        if (ok != NULL)
+        if (ok != Q_NULLPTR)
             *ok = false;
         return versionStruct;
     }
@@ -33,7 +33,7 @@ Version Version::extractVersionFromStr(const QString &str, bool *ok)
         }
     }
 
-    if (ok != NULL)
+    if (ok != Q_NULLPTR)
         *ok = true;
 
     return versionStruct;

@@ -117,7 +117,7 @@ struct Version
         return !(v1 == v2);
     }
 
-    static Version extractVersionFromStr(const QString& str, bool *ok = NULL);
+    static Version extractVersionFromStr(const QString& str, bool *ok = Q_NULLPTR);
 };
 
 QDebug operator<<(QDebug dbg, const Version& version);
