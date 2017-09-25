@@ -2,6 +2,7 @@
 
 #include "duevent.h"
 #include "duloop.h"
+#include "DuMusicMetadata.h"
 #include "dutrack.h"
 
 #include <cstring>
@@ -55,7 +56,6 @@ DuMusic::DuMusic() :
     addChild(KeyLastModifUserId,       new DuString(MUSIC_SONG_OWNER_STR_SIZE));
 
     addChild(KeySize,     new DuNumeric(0));
-    addChild(KeyMetaData, new DuNumeric(0));
 
     addChild(KeyPlayhead,  new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
     addChild(KeyTranspose,
@@ -125,6 +125,8 @@ DuMusic::DuMusic() :
     for (int i = 0; i < MUSIC_MAXTRACK; ++i)
         trackArray->append(new DuTrack);
     addChild(KeyTracks, trackArray);
+
+    addChild(KeyMetadata, Q_NULLPTR);
 }
 
 DuObjectPtr DuMusic::clone() const
@@ -133,7 +135,7 @@ DuObjectPtr DuMusic::clone() const
 }
 
 
-DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
+DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int totalBufferSize, const QByteArray &metadataBin)
 {
     // Migration
     MUSIC_MIGRATION_ERROR result = static_cast<MUSIC_MIGRATION_ERROR>(migrate_music(&du_music));
@@ -187,29 +189,30 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
 
     const music_song& local_song = du_music.local_song;
 
-    uint fileSampleSize = static_cast<uint>(fileSize - MUSIC_SONG_SIZE);
+    // Check total buffer struct
+    uint totalSampleSize = static_cast<uint>(totalBufferSize - MUSIC_SONG_SIZE);
 
-    if (fileSampleSize != local_song.s_totalsample * MUSIC_SAMPLE_SIZE)
+    if (totalSampleSize != local_song.s_totalsample * MUSIC_SAMPLE_SIZE)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "Failed to generate DuMusic\n"
                 << "invalid total event size :"
-                << fileSampleSize << "!="
+                << totalSampleSize << "!="
                 << local_song.s_totalsample * MUSIC_SAMPLE_SIZE;
 
         return DuMusicPtr();
     }
 
-    if (fileSampleSize % MUSIC_SAMPLE_SIZE != 0)
+    if (totalSampleSize % MUSIC_SAMPLE_SIZE != 0)
     {
         qCWarning(LOG_CAT_DU_OBJECT)
                 << "File size (without header) is"
                 << "not a multiple of MUSIC_SAMPLE_SIZE\n"
-                << "fileSampleSize =" << fileSampleSize << "\n"
+                << "fileSampleSize =" << totalSampleSize << "\n"
                 << "MUSIC_SAMPLE_SIZE =" << MUSIC_SAMPLE_SIZE;
     }
 
-    uint nbSamples = fileSampleSize / MUSIC_SAMPLE_SIZE;
+    uint nbSamples = totalSampleSize / MUSIC_SAMPLE_SIZE;
 
     if (nbSamples != local_song.s_totalsample)
     {
@@ -281,14 +284,19 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
     }
     music->setTracks(trackArray);
 
-    if (music->size() > MUSIC_SONG_SIZE + RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT)
-                << "du-music size above max possible size"
-                << music->size()
-                << MUSIC_SONG_SIZE + RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE;
 
-        return DuMusicPtr();
+    if (!metadataBin.isEmpty())
+    {
+        const DuMusicMetadataPtr& metadata = DuMusicMetadata::fromBinary(metadataBin);
+        if (metadata == Q_NULLPTR)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "Failed to generate DuMusic\n"
+                    << "the DuMusicMetadata was not properly generated";
+
+            return DuMusicPtr();
+        }
+        music->setMetadata(metadata);
     }
 
 
@@ -307,7 +315,6 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int fileSize)
     verif = music->setLastModifUserId(DuString::fromStruct(local_song.s_modif_userid, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
 
     verif = music->setSize(static_cast<int>(local_song.s_size)) ? verif : false;
-    verif = music->setMetaData(static_cast<int>(local_song.s_metadata)) ? verif : false;
 
     verif = music->setPlayhead(local_song.s_playhead) ? verif : false;
     verif = music->setTranspose(local_song.s_transpose) ? verif : false;
@@ -433,23 +440,61 @@ DuMusicPtr DuMusic::fromBinary(const QByteArray &data, QVector<DuSoundPtr> &outI
     }
 
     int dataSize = musicData.size();
-    int totalSampleSize = dataSize - MUSIC_SONG_SIZE;
+    int totalSampleAndMetadataSize = dataSize - MUSIC_SONG_SIZE;
 
-    if (totalSampleSize < 0
-            || totalSampleSize > RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE)
+    if (totalSampleAndMetadataSize < 0)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "Failed to generate DuMusic\n"
-                << "this file is not a valid dumusic file";
+                << "this file is not a valid dumusic file\n"
+                << "total size too small:"
+                << dataSize << "when should be >" << MUSIC_SONG_SIZE;
 
         return DuMusicPtr();
     }
 
     QScopedPointer<s_total_buffer> temp_total_buffer(new s_total_buffer);
 
-    std::memcpy(reinterpret_cast<char*>(temp_total_buffer.data()), musicData.constData(), static_cast<size_t>(dataSize));
+    std::memcpy(reinterpret_cast<char*>(&(temp_total_buffer->local_song)), musicData.constData(), static_cast<size_t>(MUSIC_SONG_SIZE));
 
-    return DuMusic::fromDuMusicBinary(*temp_total_buffer, dataSize);
+    QByteArray metadata;
+    int totalSampleSize;
+    if (temp_total_buffer->local_song.s_metadata != 0)
+    {
+        totalSampleSize = temp_total_buffer->local_song.s_totalsample * MUSIC_SAMPLE_SIZE;
+
+        if (static_cast<int>(temp_total_buffer->local_song.s_metadata) != MUSIC_SONG_SIZE + totalSampleSize)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "Failed to generate DuMusic\n"
+                    << "this file is not a valid dumusic file\n"
+                    << "s_metadata != size of du-music data without metadata:"
+                    << temp_total_buffer->local_song.s_metadata << "!=" << MUSIC_SONG_SIZE + temp_total_buffer->local_song.s_totalsample * MUSIC_SAMPLE_SIZE;
+
+            return DuMusicPtr();
+        }
+
+        metadata = musicData.mid(static_cast<int>(temp_total_buffer->local_song.s_metadata));
+    }
+    else
+    {
+        totalSampleSize = totalSampleAndMetadataSize;
+    }
+
+    if (totalSampleSize > RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT)
+                << "Failed to generate DuMusic\n"
+                << "this file is not a valid dumusic file\n"
+                << "total sample data size > max size:"
+                << totalSampleAndMetadataSize << ">" << RECORD_SAMPLEBUFFERSIZE * MUSIC_SAMPLE_SIZE;
+
+        return DuMusicPtr();
+    }
+
+    std::memcpy(temp_total_buffer->local_buffer, &(musicData.constData()[MUSIC_SONG_SIZE]), static_cast<size_t>(totalSampleSize));
+
+    return DuMusic::fromDuMusicBinary(*temp_total_buffer, MUSIC_SONG_SIZE + totalSampleSize, metadata);
 }
 
 DuMusicPtr DuMusic::fromBinary(QIODevice *input, QVector<DuSoundPtr>& outIntegratedSounds)
@@ -659,11 +704,6 @@ QByteArray DuMusic::toDuMusicBinary() const
     if (tmpNum == -1)
         return QByteArray();
     local_song.s_size = static_cast<quint32>(tmpNum);
-
-    tmpNum = getMetaData();
-    if (tmpNum == -1)
-        return QByteArray();
-    local_song.s_metadata = static_cast<quint32>(tmpNum);
 
 
     tmpNum = getPlayhead();
@@ -892,10 +932,22 @@ QByteArray DuMusic::toDuMusicBinary() const
 
     local_song.s_totalsample = static_cast<quint16>(eventTotal);
 
+    const DuMusicMetadataConstPtr& metadata = getMetadata();
+    QByteArray metadataBin;
+    if (metadata == Q_NULLPTR)
+    {
+        local_song.s_metadata = 0;
+    }
+    else
+    {
+        local_song.s_metadata = MUSIC_SONG_SIZE + eventTotal * MUSIC_SAMPLE_SIZE;
+        metadataBin = metadata->toDuMusicBinary();
+    }
+
     std::memcpy(du_music->local_buffer, tmpLocalBuffer.constData(), static_cast<size_t>(eventTotal) * MUSIC_SAMPLE_SIZE);
 
 
-    return QByteArray(reinterpret_cast<char*>(du_music.data()), musicSize);
+    return QByteArray(reinterpret_cast<char*>(du_music.data()), MUSIC_SONG_SIZE + eventTotal * MUSIC_SAMPLE_SIZE) + metadataBin;
 }
 
 QByteArray DuMusic::toDuMusicBundleBinary(const QVector<DuSoundConstPtr> &integratedSounds) const

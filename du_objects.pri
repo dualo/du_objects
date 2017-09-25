@@ -71,7 +71,14 @@ HEADERS += \
     $$PWD/jsonApi/JsonApiResourceObject.h \
     $$PWD/instrument/IntrumentIdentifier.h \
     $$PWD/du-touch/dualo_structs/arrangement_structs.h \
-    $$PWD/du-touch/dualo_structs/metadata_structs.h
+    $$PWD/du-touch/dualo_structs/metadata_structs.h \
+    $$PWD/DuGameFiles/DuGame.h \
+    $$PWD/metadata/DuMetadataChunk.h \
+    $$PWD/dumusicfile/DuMusicMetadata.h \
+    $$PWD/DuGameFiles/DuGameEvent.h \
+    $$PWD/DuGameFiles/DuGameEventMessage.h \
+    $$PWD/DuGameFiles/DuArrangementAction.h \
+    $$PWD/DuGameFiles/DuGameExitCondition.h
 
 SOURCES += \
     $$PWD/general/duobject.cpp \
@@ -114,7 +121,14 @@ SOURCES += \
     $$PWD/jsonApi/JsonApiDocument.cpp \
     $$PWD/jsonApi/JsonApiErrorObject.cpp \
     $$PWD/jsonApi/JsonApiResourceObject.cpp \
-    $$PWD/general/duarray.cpp
+    $$PWD/general/duarray.cpp \
+    $$PWD/DuGameFiles/DuGame.cpp \
+    $$PWD/metadata/DuMetadataChunk.cpp \
+    $$PWD/dumusicfile/DuMusicMetadata.cpp \
+    $$PWD/DuGameFiles/DuGameEvent.cpp \
+    $$PWD/DuGameFiles/DuGameEventMessage.cpp \
+    $$PWD/DuGameFiles/DuArrangementAction.cpp \
+    $$PWD/DuGameFiles/DuGameExitCondition.cpp
 
 DEFINES += NO_MIDI
 

@@ -23,7 +23,6 @@
     X(LastModifUserId,       String, QString, QString()) \
     \
     X(Size,                  Numeric, int, -1) \
-    X(MetaData,              Numeric, int, -1) \
     \
     X(Playhead,              Numeric, int, -1) \
     X(Transpose,             Numeric, int, -1) \
@@ -63,7 +62,9 @@
     X(ReverbPreset,          Numeric, int, -1) \
     X_OBJECT(Reverb, DuReverb) \
     \
-    X_OBJECT_TEMPLATE(Tracks, DuArray, DuTrack)
+    X_OBJECT_TEMPLATE(Tracks, DuArray, DuTrack) \
+    \
+    X_OBJECT(Metadata, DuMusicMetadata)
 
 
 #ifndef NO_MIDI
@@ -76,6 +77,7 @@ class QIODevice;
 #else
 DU_OBJECT_TEMPLATE(DuArray);
 #endif
+DU_OBJECT(DuMusicMetadata);
 DU_OBJECT(DuMixer);
 DU_OBJECT(DuReverb);
 DU_OBJECT(DuSound);
@@ -92,7 +94,7 @@ public:
 
     virtual DuObjectPtr clone() const override;
 
-    static DuMusicPtr fromDuMusicBinary(s_total_buffer &du_music, int fileSize);
+    static DuMusicPtr fromDuMusicBinary(s_total_buffer &du_music, int totalBufferSize, const QByteArray& metadataBin);
     static DuMusicPtr fromBinary(const QByteArray &data, QVector<DuSoundPtr> &outIntegratedSounds);
     static DuMusicPtr fromBinary(QIODevice *input, QVector<DuSoundPtr> &outIntegratedSounds);
     static DuMusicPtr fromJson(const QJsonObject &jsonMusic);
