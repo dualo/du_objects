@@ -69,7 +69,9 @@ HEADERS += \
     $$PWD/jsonApi/JsonApiDocument.h \
     $$PWD/jsonApi/JsonApiErrorObject.h \
     $$PWD/jsonApi/JsonApiResourceObject.h \
-    $$PWD/instrument/IntrumentIdentifier.h
+    $$PWD/instrument/IntrumentIdentifier.h \
+    $$PWD/du-touch/dualo_structs/arrangement_structs.h \
+    $$PWD/du-touch/dualo_structs/metadata_structs.h
 
 SOURCES += \
     $$PWD/general/duobject.cpp \
