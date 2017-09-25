@@ -173,6 +173,14 @@ public:
     template <class T>
     QSharedPointer<const T> getChildAs(const QString &key) const;
 
+    // STL container functions
+    inline QMap<QString, DuObjectPtr>::iterator begin() { return m_children.begin(); }
+    inline QMap<QString, DuObjectPtr>::const_iterator begin() const { return m_children.begin(); }
+    inline QMap<QString, DuObjectPtr>::const_iterator cbegin() const { return m_children.cbegin(); }
+    inline QMap<QString, DuObjectPtr>::iterator end() { return m_children.end(); }
+    inline QMap<QString, DuObjectPtr>::const_iterator end() const { return m_children.end(); }
+    inline QMap<QString, DuObjectPtr>::const_iterator cend() const { return m_children.cend(); }
+
 private:
     QMap<QString, DuObjectPtr> m_children;
 };
