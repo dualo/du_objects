@@ -6,6 +6,7 @@
 
 #include <cstring>
 
+#include <QtEndian>
 #include <QIODevice>
 #include <QJsonArray>
 #include <QJsonObject>
@@ -370,12 +371,17 @@ DuMusicPtr DuMusic::fromBinary(const QByteArray &data, QVector<DuSoundPtr> &outI
     if (data.startsWith("DUMB"))
     {
         QDataStream stream(data);
+        stream.setByteOrder(QDataStream::LittleEndian);
         stream.skipRawData(4);
 
         quint32 version;
         stream >> version;
 
-        if (version < DU_MUSIC_BUNDLE_STRUCT_CURRENT_VERSION)
+        if (qFromBigEndian<quint32>(version) == 1)
+        {
+            stream.setByteOrder(QDataStream::BigEndian);
+        }
+        else if (version < DU_MUSIC_BUNDLE_STRUCT_CURRENT_VERSION)
         {
             // migrate
         }
@@ -899,7 +905,7 @@ QByteArray DuMusic::toDuMusicBundleBinary(const QVector<DuSoundConstPtr> &integr
     QByteArray musicBinaryData;
 
     QDataStream stream(&musicBinaryData, QIODevice::WriteOnly);
-    stream.setByteOrder(QDataStream::BigEndian);
+    stream.setByteOrder(QDataStream::LittleEndian);
     stream.writeRawData("DUMB", 4);
     stream << static_cast<quint32>(DU_MUSIC_BUNDLE_STRUCT_CURRENT_VERSION);
 
