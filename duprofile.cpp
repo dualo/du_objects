@@ -90,7 +90,7 @@ DuProfilePtr DuProfile::fromJsonApi(const JsonApiResourceObject &jsonProfile, in
 
     // DU-TOUCH LIST
     DuArrayPtr<DuTouch> list(new DuArray<DuTouch>);
-    foreach (const JsonApiResourceObject& duTouch, dutouchsArray)
+    for (const JsonApiResourceObject& duTouch : dutouchsArray)
     {
         const DuTouchPtr& device = DuTouch::fromJsonApi(duTouch);
         if (device == NULL)

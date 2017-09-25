@@ -130,7 +130,7 @@ QJsonDocument JsonApiDocument::toJsonDocument() const
     if (m_isError)
     {
         QJsonArray errors;
-        foreach (const JsonApiErrorObject& error, m_errors)
+        for (const JsonApiErrorObject& error : m_errors)
         {
             errors << error.toJsonObject();
         }
@@ -142,12 +142,12 @@ QJsonDocument JsonApiDocument::toJsonDocument() const
         QJsonArray dataArray;
         QJsonArray includedArray;
         QList<QPair<int, QString>> foundIncludedResources;
-        foreach (const JsonApiResourceObject& data, m_primaryData)
+        for (const JsonApiResourceObject& data : m_primaryData)
         {
             dataArray << data.toJsonObject();
 
             const QList<JsonApiResourceObject>& includedResources = data.includedResources();
-            foreach (const JsonApiResourceObject& includedResource, includedResources)
+            for (const JsonApiResourceObject& includedResource : includedResources)
             {
                 QPair<int, QString> pair(includedResource.id(), includedResource.type());
                 if (!foundIncludedResources.contains(pair))
@@ -201,7 +201,7 @@ QString JsonApiDocument::errorStr() const
     }
 
     QString errorsStr = QObject::tr("Errors:");
-    foreach (const JsonApiErrorObject& error, m_errors)
+    for (const JsonApiErrorObject& error : m_errors)
     {
         errorsStr += tr("\n  - %1").arg(error.toString());
     }

@@ -430,13 +430,13 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
 
         // Then, for each group, we create a new layer.
         // The resulting number of layers can be greater than the one given in the binary file.
-        foreach (const QList<int>& indexList, effectiveLayers)
+        for (const QList<int>& indexList : effectiveLayers)
         {
             QList<dream_ip> effectiveDreamIPArray;
             QVector<dream_sp> effectiveDreamSPArray;
             QByteArrayList effectiveSampleArray;
 
-            foreach (int index, indexList)
+            for (int index : indexList)
             {
                 effectiveDreamIPArray << dreamIPArray.at(index);
                 effectiveDreamSPArray << dreamSPArray.at(index);
@@ -673,7 +673,7 @@ bool DuSound::headerIpSpSamplesBinary(bool forDuTouchSOrL,
             sortedSamples.insert(sample->getStartNote(), sample);
         }
 
-        foreach (const DuSampleConstPtr& sample, sortedSamples)
+        for (const DuSampleConstPtr& sample : sortedSamples)
         {
             if (sample == NULL)
                 return false;

@@ -109,7 +109,7 @@ DuArray<T>::DuArray(const DuArray<T> &other) :
     m_maxSize(other.m_maxSize)
 {
     m_array.reserve(other.m_array.size());
-    foreach (const QSharedPointer<T>& obj, other.m_array)
+    for (const QSharedPointer<T>& obj : other.m_array)
     {
         m_array.append(obj->clone().template dynamicCast<T>());
     }
@@ -132,7 +132,7 @@ QByteArray DuArray<T>::toDuMusicBinary() const
         return "";
     }
 
-    foreach (const QSharedPointer<T>& obj, m_array)
+    for (const QSharedPointer<T>& obj : m_array)
     {
         QByteArray tmpArray = obj->toDuMusicBinary();
 
@@ -159,7 +159,7 @@ QByteArray DuArray<T>::toMidiBinary() const
         return QByteArray("");
     }
 
-    foreach (const QSharedPointer<T>& obj, m_array)
+    for (const QSharedPointer<T>& obj : m_array)
     {
         QByteArray tmpArray = obj->toMidiBinary();
 
@@ -185,7 +185,7 @@ QJsonValue DuArray<T>::toJson() const
         return QJsonValue(QJsonArray());
     }
 
-    foreach (const QSharedPointer<T>& obj, m_array)
+    for (const QSharedPointer<T>& obj : m_array)
     {
         QJsonValue tmpValue = obj->toJson();
 
@@ -261,7 +261,7 @@ int DuArray<T>::size() const
 {
     int size = 0;
 
-    foreach (const QSharedPointer<T>& obj, m_array)
+    for (const QSharedPointer<T>& obj : m_array)
     {
         int tmpSize = obj->size();
 
