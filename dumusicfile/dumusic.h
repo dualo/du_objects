@@ -6,7 +6,7 @@
 
 #include <QSet>
 
-#define DU_MUSIC_BUNDLE_STRUCT_CURRENT_VERSION 1
+#define DU_MUSIC_BUNDLE_STRUCT_CURRENT_VERSION 2
 
 
 #define DuMusic_Children \
