@@ -29,6 +29,20 @@ namespace Util
 
         return newList;
     }
+
+    template <typename T>
+    QByteArray intToByteArray(T value)
+    {
+        static_assert(std::is_integral<T>::value, "Integer required.");
+        return QByteArray(reinterpret_cast<const char*>(&value), sizeof(T));
+    }
+
+    template <typename T>
+    T byteArrayToInt(const QByteArray& data)
+    {
+        static_assert(std::is_integral<T>::value, "Integer required.");
+        return *(reinterpret_cast<const T*>(data.data()));
+    }
 }
 
 #endif // UTIL_H
