@@ -6,10 +6,28 @@
 #include <QList>
 
 
+DU_OBJECT(DuArrayNoTemplate);
+
+class DuArrayNoTemplate : public DuObject
+{
+public:
+    explicit DuArrayNoTemplate();
+    virtual ~DuArrayNoTemplate() = default;
+
+    virtual int count() const = 0;
+    virtual DuObjectPtr objectAt(int index) = 0;
+    virtual DuObjectConstPtr objectAt(int index) const = 0;
+
+    virtual bool appendDefault() = 0;
+    virtual bool insertDefault(int index) = 0;
+    virtual void removeAt(int index) = 0;
+};
+
+
 DU_OBJECT_TEMPLATE(DuArray);
 
 template <class T>
-class DuArray : public DuObject
+class DuArray : public DuArrayNoTemplate
 {
 #if QT_VERSION >= 0x050500
     static_assert(std::is_base_of<DuObject, T>::value, "DuArray requires DuObject derived type");
@@ -40,15 +58,20 @@ public:
     int getMaxSize() const;
     void setMaxSize(int value);
 
+    virtual bool appendDefault() Q_DECL_OVERRIDE;
     bool append(const QSharedPointer<T> &element);
     bool append(T* element);
+    virtual bool insertDefault(int index) Q_DECL_OVERRIDE;
     void insert(int index, const QSharedPointer<T> &element);
 
-    void removeAt(int index);
+    virtual void removeAt(int index) Q_DECL_OVERRIDE;
     void replace(int index, const QSharedPointer<T> &element);
 
-    int count() const;
+    virtual int count() const Q_DECL_OVERRIDE;
     bool isEmpty() const;
+
+    virtual DuObjectPtr objectAt(int index) Q_DECL_OVERRIDE;
+    virtual DuObjectConstPtr objectAt(int index) const Q_DECL_OVERRIDE;
 
     QSharedPointer<T> at(int index);
     QSharedPointer<const T> at(int index) const;
@@ -75,14 +98,14 @@ DU_OBJEC_TEMPLATE_IMPL(DuArray)
 
 template <class T>
 DuArray<T>::DuArray(int maxSize) :
-    DuObject(),
+    DuArrayNoTemplate(),
     m_maxSize(maxSize)
 {
 }
 
 template <class T>
 DuArray<T>::DuArray(const DuArray<T> &other) :
-    DuObject(other),
+    DuArrayNoTemplate(other),
     m_maxSize(other.m_maxSize)
 {
     m_array.reserve(other.m_array.size());
@@ -323,6 +346,12 @@ void DuArray<T>::setMaxSize(int value)
     m_maxSize = value;
 }
 
+template<class T>
+bool DuArray<T>::appendDefault()
+{
+    return append(new T);
+}
+
 template <class T>
 bool DuArray<T>::append(const QSharedPointer<T> &element)
 {
@@ -344,6 +373,14 @@ template <class T>
 bool DuArray<T>::append(T *element)
 {
     return append(QSharedPointer<T>(element));
+}
+
+template<class T>
+bool DuArray<T>::insertDefault(int index)
+{
+    insert(index, QSharedPointer<T>(new T));
+
+    return true;
 }
 
 template <class T>
@@ -400,6 +437,18 @@ template <class T>
 bool DuArray<T>::isEmpty() const
 {
     return m_array.isEmpty();
+}
+
+template <class T>
+DuObjectPtr DuArray<T>::objectAt(int index)
+{
+    return at(index);
+}
+
+template <class T>
+DuObjectConstPtr DuArray<T>::objectAt(int index) const
+{
+    return at(index);
 }
 
 template <class T>

@@ -111,7 +111,8 @@ SOURCES += \
     $$PWD/du-touch/dualo_structs/music_migration.c \
     $$PWD/jsonApi/JsonApiDocument.cpp \
     $$PWD/jsonApi/JsonApiErrorObject.cpp \
-    $$PWD/jsonApi/JsonApiResourceObject.cpp
+    $$PWD/jsonApi/JsonApiResourceObject.cpp \
+    $$PWD/general/duarray.cpp
 
 DEFINES += NO_MIDI
 
