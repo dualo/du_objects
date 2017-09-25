@@ -178,7 +178,7 @@ QList<JsonApiResourceObject> JsonApiResourceObject::includedResources() const
     QList<JsonApiResourceObject> includedResources;
     QList<QPair<int, QString>> foundIncludedResources;
 
-    foreach (const JsonApiResourceObject& resource, m_relationships)
+    for (const JsonApiResourceObject& resource : m_relationships)
     {
         QPair<int, QString> pair(resource.id(), resource.type());
         if (!foundIncludedResources.contains(pair))
