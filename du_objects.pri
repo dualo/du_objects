@@ -79,7 +79,8 @@ HEADERS += \
     $$PWD/DuGameFiles/DuGameEvent.h \
     $$PWD/DuGameFiles/DuGameEventMessage.h \
     $$PWD/DuGameFiles/DuArrangementAction.h \
-    $$PWD/DuGameFiles/DuGameExitCondition.h
+    $$PWD/DuGameFiles/DuGameExitCondition.h \
+    $$PWD/general/DuEnum.h
 
 SOURCES += \
     $$PWD/general/duobject.cpp \
@@ -129,7 +130,8 @@ SOURCES += \
     $$PWD/DuGameFiles/DuGameEvent.cpp \
     $$PWD/DuGameFiles/DuGameEventMessage.cpp \
     $$PWD/DuGameFiles/DuArrangementAction.cpp \
-    $$PWD/DuGameFiles/DuGameExitCondition.cpp
+    $$PWD/DuGameFiles/DuGameExitCondition.cpp \
+    $$PWD/general/DuEnum.cpp
 
 DEFINES += NO_MIDI
 
