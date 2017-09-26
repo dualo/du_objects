@@ -23,7 +23,7 @@ public:
     virtual QByteArray toDuMusicBinary() const Q_DECL_OVERRIDE;
     virtual int size() const Q_DECL_OVERRIDE;
 
-    DU_KEY_ACCESSORS(Type, ARRANGEMENT_EXITCONDITION)
+    DU_KEY_ACCESSORS_TEMPLATE(Type, ARRANGEMENT_EXITCONDITION)
     DU_KEY_ACCESSORS(Value, int)
 };
 

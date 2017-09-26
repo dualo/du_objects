@@ -1,6 +1,7 @@
 #include "duinstrumentinfo.h"
 
 #include "../general/duboolean.h"
+#include "../general/DuEnum.h"
 #include "../general/dustring.h"
 #include "../general/dunumeric.h"
 
@@ -109,8 +110,8 @@ DuInstrumentInfo::DuInstrumentInfo() :
                            0x7F, 0x00));
 
     addChild(KeyInstrType,
-             new DuNumeric(INSTR_HARMONIC, NUMERIC_DEFAULT_SIZE,
-                           NUM_INSTR_TYPE - 1, INSTR_HARMONIC));
+             new DuEnum<INSTRUMENT_TYPE>(INSTR_HARMONIC, NUMERIC_DEFAULT_SIZE,
+                                         NUM_INSTR_TYPE, INSTR_HARMONIC));
 
     addChild(KeyInstrVersion, new DuNumeric(0));
 
@@ -216,7 +217,7 @@ bool DuInstrumentInfo::toStruct(info_instr& outStruct, bool forDuTouchSOrL) cons
     outStruct.format_id = static_cast<quint8>(forDuTouchSOrL ? SDK_5000 : SDK_3000);
 
     INSTRUMENT_TYPE tmpType = getInstrType();
-    if (tmpType == NUM_INSTR_TYPE)
+    if (tmpType == static_cast<INSTRUMENT_TYPE>(-1))
         return false;
     outStruct.instr_type = static_cast<quint8>(tmpType);
 
@@ -288,7 +289,7 @@ DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, Category,           String, QString, QSt
 
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, RelativeVolume,     Numeric, int, -1)
 
-DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, InstrType,          Numeric, INSTRUMENT_TYPE, NUM_INSTR_TYPE)
+DU_KEY_ACCESSORS_TEMPLATE_IMPL(DuInstrumentInfo, InstrType, Enum, INSTRUMENT_TYPE, INSTRUMENT_TYPE, static_cast<INSTRUMENT_TYPE>(-1))
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, InstrVersion,       Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, HardInstrVersion,   Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, SoftInstrVersion,   Numeric, int, -1)

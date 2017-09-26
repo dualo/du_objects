@@ -59,7 +59,7 @@ public:
 
     DU_KEY_ACCESSORS(RelativeVolume,     int)
 
-    DU_KEY_ACCESSORS(InstrType,          INSTRUMENT_TYPE)
+    DU_KEY_ACCESSORS_TEMPLATE(InstrType, INSTRUMENT_TYPE)
     DU_KEY_ACCESSORS(InstrVersion,       int)
     DU_KEY_ACCESSORS(HardInstrVersion,   int)
     DU_KEY_ACCESSORS(SoftInstrVersion,   int)

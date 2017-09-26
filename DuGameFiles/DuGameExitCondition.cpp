@@ -1,12 +1,13 @@
 #include "DuGameExitCondition.h"
 
+#include "../general/DuEnum.h"
 #include "../general/dunumeric.h"
 
 DU_OBJECT_IMPL(DuGameExitCondition)
 
 DuGameExitCondition::DuGameExitCondition() : DuContainer()
 {
-    addChild(KeyType, new DuNumeric(ARRANGEMENTEXITCONDITION_NONE, 4, NUM_ARRANGEMENTEXITCONDITION - 1, ARRANGEMENTEXITCONDITION_NONE));
+    addChild(KeyType, new DuEnum<ARRANGEMENT_EXITCONDITION>(ARRANGEMENTEXITCONDITION_NONE, 4, NUM_ARRANGEMENTEXITCONDITION, ARRANGEMENTEXITCONDITION_NONE));
     addChild(KeyValue, new DuNumeric);
 }
 
@@ -37,7 +38,7 @@ QByteArray DuGameExitCondition::toDuMusicBinary() const
     s_arrangement_exit_condition condition;
 
     ARRANGEMENT_EXITCONDITION tmpEnum = getType();
-    if (tmpEnum == NUM_ARRANGEMENTEXITCONDITION)
+    if (tmpEnum == static_cast<ARRANGEMENT_EXITCONDITION>(-1))
         return QByteArray();
     condition.aec_type = static_cast<quint32>(tmpEnum);
 
@@ -54,5 +55,5 @@ int DuGameExitCondition::size() const
     return ARRANGEMENT_EXITCONDITION_SIZE;
 }
 
-DU_KEY_ACCESSORS_IMPL(DuGameExitCondition, Type, Numeric, ARRANGEMENT_EXITCONDITION, NUM_ARRANGEMENTEXITCONDITION)
+DU_KEY_ACCESSORS_TEMPLATE_IMPL(DuGameExitCondition, Type, Enum, ARRANGEMENT_EXITCONDITION, ARRANGEMENT_EXITCONDITION, static_cast<ARRANGEMENT_EXITCONDITION>(-1))
 DU_KEY_ACCESSORS_IMPL(DuGameExitCondition, Value, Numeric, int, -1)
