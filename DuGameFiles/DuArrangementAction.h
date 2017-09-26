@@ -24,7 +24,7 @@ public:
     virtual int size() const Q_DECL_OVERRIDE;
 
     DU_KEY_ACCESSORS_TEMPLATE(Type, ARRANGEMENT_EVENTACTION)
-    DU_KEY_ACCESSORS(Loop, int)
+    DU_KEY_ACCESSORS(Item, int)
     DU_KEY_ACCESSORS(Command, int)
     DU_KEY_ACCESSORS(Value, int)
 };

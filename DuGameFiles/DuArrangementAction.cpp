@@ -8,7 +8,7 @@ DU_OBJECT_IMPL(DuArrangementAction)
 DuArrangementAction::DuArrangementAction() : DuContainer()
 {
     addChild(KeyType, new DuEnum<ARRANGEMENT_EVENTACTION>(ARRANGEMENTEVENTACTION_NONE, NUMERIC_DEFAULT_SIZE, NUM_ARRANGEMENTEVENTACTION, ARRANGEMENTEVENTACTION_NONE));
-    addChild(KeyLoop, new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
+    addChild(KeyItem, new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
     addChild(KeyCommand, new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
     addChild(KeyValue, new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
 }
@@ -20,7 +20,7 @@ DuArrangementActionPtr DuArrangementAction::fromStruct(const s_arrangement_event
     bool verif = true;
 
     verif = action->setType(static_cast<ARRANGEMENT_EVENTACTION>(actionStruct.aea_type)) ? verif : false;
-    verif = action->setLoop(actionStruct.aea_loop) ? verif : false;
+    verif = action->setItem(actionStruct.aea_item) ? verif : false;
     verif = action->setCommand(actionStruct.aea_cmd) ? verif : false;
     verif = action->setValue(actionStruct.aea_value) ? verif : false;
 
@@ -48,10 +48,10 @@ QByteArray DuArrangementAction::toDuMusicBinary() const
 
     int tmp = 0;
 
-    tmp = getLoop();
+    tmp = getItem();
     if (tmp == -1)
         return QByteArray();
-    action.aea_loop = static_cast<quint8>(tmp);
+    action.aea_item = static_cast<quint8>(tmp);
 
     tmp = getCommand();
     if (tmp == -1)
@@ -72,6 +72,6 @@ int DuArrangementAction::size() const
 }
 
 DU_KEY_ACCESSORS_TEMPLATE_IMPL(DuArrangementAction, Type, Enum, ARRANGEMENT_EVENTACTION, ARRANGEMENT_EVENTACTION, static_cast<ARRANGEMENT_EVENTACTION>(-1))
-DU_KEY_ACCESSORS_IMPL(DuArrangementAction, Loop, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuArrangementAction, Item, Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuArrangementAction, Command, Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuArrangementAction, Value, Numeric, int, -1)
