@@ -94,7 +94,7 @@ private:
     int m_maxSize;
 };
 
-DU_OBJEC_TEMPLATE_IMPL(DuArray)
+DU_OBJECT_TEMPLATE_IMPL(DuArray)
 
 template <class T>
 DuArray<T>::DuArray(int maxSize) :
