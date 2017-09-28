@@ -97,6 +97,13 @@ DuGameEventPtr DuGameEvent::fromStruct(const s_arrangement_event& eventStruct)
     return event;
 }
 
+DuGameEventPtr DuGameEvent::fromBinary(const QByteArray &data)
+{
+    s_arrangement_event eventStruct;
+    std::memcpy(&eventStruct, data.constData(), data.size());
+    return fromStruct(eventStruct);
+}
+
 DuObjectPtr DuGameEvent::clone() const
 {
     return DuGameEventPtr(new DuGameEvent(*this));

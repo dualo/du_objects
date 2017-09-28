@@ -26,6 +26,7 @@ public:
     virtual ~DuGameEvent() = default;
 
     static DuGameEventPtr fromStruct(const s_arrangement_event& eventStruct);
+    static DuGameEventPtr fromBinary(const QByteArray& data);
 
     // DuObject interface
 public:

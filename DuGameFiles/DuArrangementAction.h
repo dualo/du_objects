@@ -16,6 +16,7 @@ public:
     virtual ~DuArrangementAction() = default;
 
     static DuArrangementActionPtr fromStruct(const s_arrangement_event_action& actionStruct);
+    static DuArrangementActionPtr fromBinary(const QByteArray& data);
 
     // DuObject interface
 public:

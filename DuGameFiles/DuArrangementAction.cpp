@@ -32,6 +32,13 @@ DuArrangementActionPtr DuArrangementAction::fromStruct(const s_arrangement_event
     return action;
 }
 
+DuArrangementActionPtr DuArrangementAction::fromBinary(const QByteArray &data)
+{
+    s_arrangement_event_action actionStruct;
+    std::memcpy(&actionStruct, data.constData(), data.size());
+    return fromStruct(actionStruct);
+}
+
 DuObjectPtr DuArrangementAction::clone() const
 {
     return DuArrangementActionPtr(new DuArrangementAction(*this));
