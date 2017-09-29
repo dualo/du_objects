@@ -66,7 +66,7 @@
     X_OBJECT_TEMPLATE(Tracks, DuArray, DuTrack)
 
 
-#ifndef NO_MIDI
+#ifndef NO_MIDI_IMPORT
 class MidiConversionHelper;
 #endif
 
@@ -97,16 +97,14 @@ public:
     static DuMusicPtr fromBinary(QIODevice *input, QVector<DuSoundPtr> &outIntegratedSounds);
     static DuMusicPtr fromJson(const QJsonObject &jsonMusic);
 
-#ifndef NO_MIDI
+#ifndef NO_MIDI_IMPORT
     static DuMusicPtr fromMidi(const MidiConversionHelper &helper);
 #endif
 
     QByteArray toDuMusicBinary() const override;
     QByteArray toDuMusicBundleBinary(const QVector<DuSoundConstPtr> &integratedSounds) const;
 
-#ifndef NO_MIDI
     QByteArray toMidiBinary() const override;
-#endif
 
     int size() const override;
     bool isEmpty() const;

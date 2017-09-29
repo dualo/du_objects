@@ -10,7 +10,9 @@
 #include "../general/duarray.h"
 #include "../general/dunumeric.h"
 
+#ifndef NO_MIDI_IMPORT
 #include "../miditodumusic/midiconversionhelper.h"
+#endif
 
 #include "../midifile/dumidichannelevent.h"
 
@@ -73,7 +75,7 @@ DuEventPtr DuEvent::fromDuMusicBinary(const music_sample &du_sample)
     return event;
 }
 
-#ifndef NO_MIDI
+#ifndef NO_MIDI_IMPORT
 DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
                              const DuSoundConstPtr& sound,
                              const MidiConversionHelper &helper)
@@ -247,7 +249,6 @@ QByteArray DuEvent::toDuMusicBinary() const
     return QByteArray(reinterpret_cast<char*>(&du_sample), MUSIC_SAMPLE_SIZE);
 }
 
-#ifndef NO_MIDI
 DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
                                                     quint8 prevType,
                                                     int presetOctave,
@@ -386,7 +387,6 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
 
     return channelEvent;
 }
-#endif
 
 
 int DuEvent::size() const

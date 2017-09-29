@@ -10,7 +10,9 @@
 #include "../general/duarray.h"
 #include "../general/dunumeric.h"
 
+#ifndef NO_MIDI_IMPORT
 #include "../miditodumusic/midiconversionhelper.h"
+#endif
 
 DU_OBJECT_IMPL(DuTrack)
 
@@ -123,7 +125,7 @@ DuTrackPtr DuTrack::fromDuMusicBinary(const music_track &du_track,
 }
 
 
-#ifndef NO_MIDI
+#ifndef NO_MIDI_IMPORT
 DuTrackPtr DuTrack::fromMidi(const MidiConversionHelper &helper, int trackIndex)
 {
     if (!helper.isValid())
@@ -234,7 +236,6 @@ QByteArray DuTrack::toDuMusicBinary() const
 }
 
 
-#ifndef NO_MIDI
 QVector<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef,
                                                     int transpose) const
 {
@@ -281,7 +282,6 @@ QVector<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef,
 
     return retList;
 }
-#endif
 
 
 int DuTrack::size() const

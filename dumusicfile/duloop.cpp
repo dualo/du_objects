@@ -17,7 +17,9 @@
 #include "../instrument/dupreset.h"
 #include "../instrument/duinstrumentinfo.h"
 
+#ifndef NO_MIDI_IMPORT
 #include "../miditodumusic/midiconversionhelper.h"
+#endif
 
 #include "../midifile/dumidichannelevent.h"
 #include "../midifile/dumidimetaevent.h"
@@ -123,7 +125,7 @@ DuLoopPtr DuLoop::fromDuMusicBinary(const music_loop &du_loop,
 }
 
 
-#ifndef NO_MIDI
+#ifndef NO_MIDI_IMPORT
 DuLoopPtr DuLoop::fromMidi(const MidiConversionHelper &helper, int midiTrackIndex)
 {
     if (!helper.isValid())
@@ -337,7 +339,6 @@ QByteArray DuLoop::toDuMusicBinary() const
     return QByteArray(reinterpret_cast<char*>(&du_loop), size());
 }
 
-#ifndef NO_MIDI
 DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
                                      int transpose) const
 {
@@ -574,7 +575,6 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
     midiTrack->setEvents(midiEvents);
     return midiTrack;
 }
-#endif
 
 
 int DuLoop::size() const

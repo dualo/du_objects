@@ -9,7 +9,7 @@
 
 //NOTE: the 2 #define above could be replaced if dummy sizes were defined
 
-#ifndef NO_MIDI
+#ifndef NO_MIDI_IMPORT
 class MidiConversionHelper;
 #endif
 
@@ -27,7 +27,7 @@ public:
 
     static DuSongInfoPtr fromDuMusicBinary(const music_song &du_song);
 
-#ifndef NO_MIDI
+#ifndef NO_MIDI_IMPORT
     static DuSongInfoPtr fromMidi(const MidiConversionHelper &helper);
 #endif
 

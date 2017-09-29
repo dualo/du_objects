@@ -24,7 +24,9 @@
 #include "../midifile/dumidimetaevent.h"
 #include "../midifile/dumiditrack.h"
 
+#ifndef NO_MIDI_IMPORT
 #include "../miditodumusic/midiconversionhelper.h"
+#endif
 
 extern "C"
 {
@@ -477,7 +479,7 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
 }
 
 
-#ifndef NO_MIDI
+#ifndef NO_MIDI_IMPORT
 DuMusicPtr DuMusic::fromMidi(const MidiConversionHelper &helper)
 {
     if (!helper.isValid())
@@ -936,7 +938,6 @@ QByteArray DuMusic::toDuMusicBundleBinary(const QVector<DuSoundConstPtr> &integr
 }
 
 
-#ifndef NO_MIDI
 QByteArray DuMusic::toMidiBinary() const
 {
     const DuArrayConstPtr<DuTrack> &tracks = getTracks();
@@ -1053,7 +1054,6 @@ QByteArray DuMusic::toMidiBinary() const
 
     return midiFile->toMidiBinary();
 }
-#endif
 
 int DuMusic::size() const
 {
