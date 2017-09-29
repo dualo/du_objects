@@ -339,8 +339,7 @@ QByteArray DuLoop::toDuMusicBinary() const
     return QByteArray(reinterpret_cast<char*>(&du_loop), size());
 }
 
-DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
-                                     int transpose) const
+DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel, int transpose) const
 {
     if (getState() == REC_EMPTY)
     {
@@ -392,17 +391,6 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
         return DuMidiTrackPtr();
     }
 
-
-    int instrKeyMap = instrInfo->getKeyMapping();
-    if (instrKeyMap == -1)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT)
-                << "DuLoop::toDuMidiTrack():\n"
-                << "invalid instrument key map:" << instrKeyMap;
-
-        return DuMidiTrackPtr();
-    }
-
     int instrType = instrInfo->getInstrType();
     if (instrType == -1)
     {
@@ -432,30 +420,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
     int instrPC = 0;
     int instrC0 = 0;
 
-    bool isPercu = false;
-
     int midiChannel = channel;
-
-    if (instrType == INSTR_PERCU)
-    {
-        if (instrKeyMap <= 0)
-        {
-            //NOTE: maybe a qCCritical and return DuMidiTrackPtr() would be better
-
-            qCWarning(LOG_CAT_DU_OBJECT)
-                    << "DuLoop::toDuMidiTrack():\n"
-                    << "invalid mapping for percussive instrument";
-
-            instrKeyMap = 1;
-        }
-
-        isPercu = true;
-        midiChannel = 0x09;
-
-        //GM for drum kit PC and C0
-        instrPC = 0;
-        instrC0 = 120;
-    }
 
 
     DuMidiTrackPtr midiTrack(new DuMidiTrack);
@@ -530,8 +495,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
         if (tmpTime < prevTime)
         {
             channelEvent = event->toDuMidiChannelEvent(0, prevType,
-                                                       presetOctave, transpose,
-                                                       isPercu, instrKeyMap);
+                                                       presetOctave, transpose);
             if (channelEvent != NULL)
             {
                 channelEvent->setTime(static_cast<quint32>(durationRef) * static_cast<quint8>(durationMod)
@@ -542,8 +506,7 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel,
         else
         {
             channelEvent = event->toDuMidiChannelEvent(prevTime, prevType,
-                                                       presetOctave, transpose,
-                                                       isPercu, instrKeyMap);
+                                                       presetOctave, transpose);
         }
 
         if (channelEvent == NULL)
