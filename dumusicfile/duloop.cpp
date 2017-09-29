@@ -22,6 +22,7 @@
 #endif
 
 #include "../midifile/dumidichannelevent.h"
+#include "../midifile/dumidifile.h"
 #include "../midifile/dumidimetaevent.h"
 #include "../midifile/dumiditrack.h"
 
@@ -537,6 +538,15 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel, int transpose
 
     midiTrack->setEvents(midiEvents);
     return midiTrack;
+}
+
+QByteArray DuLoop::toMidiOneLoopBinary(const DuMidiTrackPtr& tempoTrack, int durationRef, int transpose) const
+{
+    DuMidiFilePtr midiFile(new DuMidiFile);
+    midiFile->appendTrack(tempoTrack);
+    midiFile->appendTrack(toDuMidiTrack(durationRef, 0, transpose));
+
+    return midiFile->toMidiBinary();
 }
 
 

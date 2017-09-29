@@ -76,6 +76,7 @@ class QIODevice;
 #else
 DU_OBJECT_TEMPLATE(DuArray);
 #endif
+DU_OBJECT(DuMidiTrack);
 DU_OBJECT(DuMixer);
 DU_OBJECT(DuReverb);
 DU_OBJECT(DuSound);
@@ -105,6 +106,7 @@ public:
     QByteArray toDuMusicBundleBinary(const QVector<DuSoundConstPtr> &integratedSounds) const;
 
     QByteArray toMidiBinary() const override;
+    DuMidiTrackPtr getTempoTrack() const;
 
     int size() const override;
     bool isEmpty() const;
