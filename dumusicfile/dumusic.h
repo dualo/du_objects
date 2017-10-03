@@ -23,8 +23,6 @@
     X(LastModifUser,         String, QString, QString()) \
     X(LastModifUserId,       String, QString, QString()) \
     \
-    X(Size,                  Numeric, int, -1) \
-    \
     X(Playhead,              Numeric, int, -1) \
     X(Transpose,             Numeric, int, -1) \
     X(State,                 Numeric, int, -1) \

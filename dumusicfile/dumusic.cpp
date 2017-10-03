@@ -32,6 +32,7 @@ extern "C"
 {
 #pragma pack(push, 4)
 #include "../du-touch/dualo_structs/music_migration.h"
+#include "../du-touch/dualo_structs/metadata_structs.h"
 #pragma pack(pop)
 }
 
@@ -54,8 +55,6 @@ DuMusic::DuMusic() :
     addChild(KeyLastModifName,         new DuString(MUSIC_SONG_OWNER_STR_SIZE));
     addChild(KeyLastModifUser,         new DuString(MUSIC_SONG_OWNER_STR_SIZE));
     addChild(KeyLastModifUserId,       new DuString(MUSIC_SONG_OWNER_STR_SIZE));
-
-    addChild(KeySize,     new DuNumeric(0));
 
     addChild(KeyPlayhead,  new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
     addChild(KeyTranspose,
@@ -313,8 +312,6 @@ DuMusicPtr DuMusic::fromDuMusicBinary(s_total_buffer &du_music, int totalBufferS
     verif = music->setLastModifName(DuString::fromStruct(local_song.s_modif_name, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
     verif = music->setLastModifUser(DuString::fromStruct(local_song.s_modif_user, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
     verif = music->setLastModifUserId(DuString::fromStruct(local_song.s_modif_userid, MUSIC_SONG_OWNER_STR_SIZE)) ? verif : false;
-
-    verif = music->setSize(static_cast<int>(local_song.s_size)) ? verif : false;
 
     verif = music->setPlayhead(local_song.s_playhead) ? verif : false;
     verif = music->setTranspose(local_song.s_transpose) ? verif : false;
@@ -834,7 +831,7 @@ QByteArray DuMusic::toDuMusicBinary() const
     std::memcpy(local_song.s_modif_userid, tmpArray.constData(), MUSIC_SONG_OWNER_STR_SIZE);
 
 
-    tmpNum = getSize();
+    tmpNum = size();
     if (tmpNum == -1)
         return QByteArray();
     local_song.s_size = static_cast<quint32>(tmpNum);
@@ -1322,7 +1319,7 @@ int DuMusic::size() const
         eventsSize += tmpSize;
     }
 
-    return eventsSize + MUSIC_SONG_SIZE;
+    return eventsSize + MUSIC_SONG_SIZE + (getMetadata() != Q_NULLPTR ? METADATA_HEADER_SIZE + getMetadata()->size() : 0);
 }
 
 bool DuMusic::isEmpty() const
