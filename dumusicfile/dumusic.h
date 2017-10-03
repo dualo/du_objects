@@ -7,6 +7,7 @@
 #include <QSet>
 
 #define DU_MUSIC_BUNDLE_STRUCT_CURRENT_VERSION 2
+#define DU_GAME_STRUCT_CURRENT_VERSION 1
 
 
 #define DuMusic_Children \
@@ -97,6 +98,8 @@ public:
     static DuMusicPtr fromDuMusicBinary(s_total_buffer &du_music, int totalBufferSize, const QByteArray& metadataBin);
     static DuMusicPtr fromBinary(const QByteArray &data, QVector<DuSoundPtr> &outIntegratedSounds);
     static DuMusicPtr fromBinary(QIODevice *input, QVector<DuSoundPtr> &outIntegratedSounds);
+    static DuMusicPtr fromDuGameBinary(const QByteArray &data, QVector<DuSoundPtr> &outSystemSounds);
+    static DuMusicPtr fromDuGameBinary(QIODevice *input, QVector<DuSoundPtr> &outSystemSounds);
     static DuMusicPtr fromJson(const QJsonObject &jsonMusic);
 
 #ifndef NO_MIDI
@@ -105,6 +108,7 @@ public:
 
     QByteArray toDuMusicBinary() const override;
     QByteArray toDuMusicBundleBinary(const QVector<DuSoundConstPtr> &integratedSounds) const;
+    QByteArray toDuGameBinary(const QVector<DuSoundConstPtr> &systemSounds) const;
 
 #ifndef NO_MIDI
     QByteArray toMidiBinary() const override;
