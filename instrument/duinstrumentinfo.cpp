@@ -110,8 +110,14 @@ DuInstrumentInfo::DuInstrumentInfo() :
                            0x7F, 0x00));
 
     addChild(KeyInstrType,
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
              new DuEnum<INSTRUMENT_TYPE>(INSTR_HARMONIC, NUMERIC_DEFAULT_SIZE,
-                                         NUM_INSTR_TYPE, INSTR_HARMONIC));
+                                         NUM_INSTR_TYPE, INSTR_HARMONIC)
+#else
+             new DuNumeric(INSTR_HARMONIC, NUMERIC_DEFAULT_SIZE,
+                           NUM_INSTR_TYPE, INSTR_HARMONIC)
+#endif
+    );
 
     addChild(KeyInstrVersion, new DuNumeric(0));
 
@@ -289,7 +295,11 @@ DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, Category,           String, QString, QSt
 
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, RelativeVolume,     Numeric, int, -1)
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 DU_KEY_ACCESSORS_TEMPLATE_IMPL(DuInstrumentInfo, InstrType, Enum, INSTRUMENT_TYPE, INSTRUMENT_TYPE, static_cast<INSTRUMENT_TYPE>(-1))
+#else
+DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, InstrType,          Numeric, INSTRUMENT_TYPE, static_cast<INSTRUMENT_TYPE>(-1))
+#endif
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, InstrVersion,       Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, HardInstrVersion,   Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuInstrumentInfo, SoftInstrVersion,   Numeric, int, -1)
