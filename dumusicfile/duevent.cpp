@@ -10,7 +10,9 @@
 #include "../general/duarray.h"
 #include "../general/dunumeric.h"
 
+#ifndef NO_MIDI_IMPORT
 #include "../miditodumusic/midiconversionhelper.h"
+#endif
 
 #include "../midifile/dumidichannelevent.h"
 
@@ -73,7 +75,7 @@ DuEventPtr DuEvent::fromDuMusicBinary(const music_sample &du_sample)
     return event;
 }
 
-#ifndef NO_MIDI
+#ifndef NO_MIDI_IMPORT
 DuEventPtr DuEvent::fromMidi(const DuMidiChannelEventPtr &channelEvent,
                              const DuSoundConstPtr& sound,
                              const MidiConversionHelper &helper)
@@ -247,25 +249,11 @@ QByteArray DuEvent::toDuMusicBinary() const
     return QByteArray(reinterpret_cast<char*>(&du_sample), MUSIC_SAMPLE_SIZE);
 }
 
-#ifndef NO_MIDI
 DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
                                                     quint8 prevType,
                                                     int presetOctave,
-                                                    int transpose,
-                                                    bool isPercu,
-                                                    int instrKeyMap) const
+                                                    int transpose) const
 {
-    //This case should not occur
-    //Already tested in DuLoop::toDuMidiTrack()
-    if (isPercu && instrKeyMap <= 0)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT)
-                << "DuEvent::toDuMidiChannelEvent():\n"
-                << "invalid mapping for a percussive type instrument";
-
-        return DuMidiChannelEventPtr();
-    }
-
     DuMidiChannelEventPtr channelEvent(new DuMidiChannelEvent);
     int tmp = 0;
 
@@ -300,8 +288,6 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
     channelEvent->setRunningStatus(midiType == prevType);
     channelEvent->setType(midiType);
 
-
-    int keyboard = getKeyboard();
     tmp = getNote();
 
     if (tmp == -1)
@@ -317,49 +303,16 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
 
     if (midiType < DuMidiChannelEvent::KeyAftertouch)
     {
-        if (isPercu)
+        midiKey = tmp + 12 * presetOctave + transpose - RECORD_TRANSPOSEMAX;
+        if (midiKey > 0x7F)
         {
-            if (keyboard == -1)
-            {
-                qCCritical(LOG_CAT_DU_OBJECT)
-                        << "DuEvent::toDuMidiChannelEvent():\n"
-                        << "invalid keyboard:" << keyboard;
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuEvent::toDuMidiChannelEvent():\n"
+                    << "invalid harmonic key:" << midiKey << "\n"
+                    << "(instrument preset octave =" << presetOctave << "\n"
+                    << "transpose =" << transpose - RECORD_TRANSPOSEMAX << ")";
 
-                return DuMidiChannelEventPtr();
-            }
-
-            //The keyboard value is not the same as the keyboard index to be used
-            //when calling MidiConversionHelper::percuKey()
-
-            //Percussion instrKeyMap starts from 1 in du-musics
-            //Percussion map index starts from 0 in instr_mapping.c arrays
-
-            quint8 keyboardIndex = (keyboard >> 7) & 0x01;
-            midiKey = MidiConversionHelper::percuToMidi(static_cast<quint8>(tmp), keyboardIndex,
-                                                        static_cast<quint8>(instrKeyMap) - 1);
-
-            if (midiKey == -1 || static_cast<quint8>(midiKey) > 0x7F)
-            {
-                qCCritical(LOG_CAT_DU_OBJECT)
-                        << "DuEvent::toDuMidiChannelEvent():\n"
-                        << "invalid percussion key:" << midiKey;
-
-                return DuMidiChannelEventPtr();
-            }
-        }
-        else
-        {
-            midiKey = tmp + 12 * presetOctave + transpose - RECORD_TRANSPOSEMAX;
-            if (midiKey > 0x7F)
-            {
-                qCCritical(LOG_CAT_DU_OBJECT)
-                        << "DuEvent::toDuMidiChannelEvent():\n"
-                        << "invalid harmonic key:" << midiKey << "\n"
-                        << "(instrument preset octave =" << presetOctave << "\n"
-                        << "transpose =" << transpose - RECORD_TRANSPOSEMAX << ")";
-
-                return DuMidiChannelEventPtr();
-            }
+            return DuMidiChannelEventPtr();
         }
     }
     else
@@ -386,7 +339,6 @@ DuMidiChannelEventPtr DuEvent::toDuMidiChannelEvent(quint32 prevTime,
 
     return channelEvent;
 }
-#endif
 
 
 int DuEvent::size() const

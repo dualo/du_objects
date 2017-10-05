@@ -10,7 +10,9 @@
 #include "../general/dunumeric.h"
 #include "../general/dustring.h"
 
+#ifndef NO_MIDI_IMPORT
 #include "../miditodumusic/midiconversionhelper.h"
+#endif
 
 
 DU_OBJECT_IMPL(DuSongInfo)
@@ -133,7 +135,7 @@ DuSongInfoPtr DuSongInfo::fromDuMusicBinary(const music_song &du_song)
 }
 
 
-#ifndef NO_MIDI
+#ifndef NO_MIDI_IMPORT
 DuSongInfoPtr DuSongInfo::fromMidi(const MidiConversionHelper &helper)
 {
     if (!helper.isValid())

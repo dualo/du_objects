@@ -26,7 +26,9 @@
 #include "../midifile/dumidimetaevent.h"
 #include "../midifile/dumiditrack.h"
 
+#ifndef NO_MIDI_IMPORT
 #include "../miditodumusic/midiconversionhelper.h"
+#endif
 
 extern "C"
 {
@@ -659,7 +661,7 @@ DuMusicPtr DuMusic::fromJson(const QJsonObject &jsonMusic)
 }
 
 
-#ifndef NO_MIDI
+#ifndef NO_MIDI_IMPORT
 DuMusicPtr DuMusic::fromMidi(const MidiConversionHelper &helper)
 {
     if (!helper.isValid())
@@ -1168,7 +1170,6 @@ QByteArray DuMusic::toDuGameBinary(const QVector<DuSoundConstPtr> &systemSounds)
 }
 
 
-#ifndef NO_MIDI
 QByteArray DuMusic::toMidiBinary() const
 {
     const DuArrayConstPtr<DuTrack> &tracks = getTracks();
@@ -1191,13 +1192,6 @@ QByteArray DuMusic::toMidiBinary() const
         transpose = RECORD_TRANSPOSEDEFAULT;
     }
 
-
-    const QString &songName = getSongName();
-    int tempo = getTempo();
-    int timeSig = getTimeSignature();
-    int tonality = getTonality();
-    int scale = getScale();
-
     int durationRef = getReferenceLoopDuration();
     if (durationRef == -1)
     {
@@ -1209,16 +1203,59 @@ QByteArray DuMusic::toMidiBinary() const
     }
 
 
-    if (songName.isEmpty() || tempo == -1  ||  timeSig == -1
-            ||  tonality == -1  || scale == -1)
+    DuMidiTrackPtr tempoTrack = getTempoTrack();
+    if (tempoTrack == Q_NULLPTR)
     {
-        qCCritical(LOG_CAT_DU_OBJECT)
-                << "DuMusic::toMidiBinary():\n"
-                << "invalid song data";
-
+        qCCritical(LOG_CAT_DU_OBJECT) << "tempo track error";
         return QByteArray();
     }
 
+    DuMidiFilePtr midiFile(new DuMidiFile());
+    midiFile->appendTrack(tempoTrack);
+
+
+    for (int i = 0; i < MUSIC_MAXTRACK; i++)
+    {
+        const DuTrackConstPtr &track =
+                tracks->at(i).dynamicCast<const DuTrack>();
+        if (track == Q_NULLPTR)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuMusic::toMidiBinary():\n"
+                    << "DuTrack" << i << "is NULL";
+
+            return QByteArray();
+        }
+
+        if (!midiFile->appendTracks(track->toDuMidiTrackArray(durationRef,
+                                                              transpose)))
+        {
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuMusic::toMidiBinary():\n"
+                    << "DuTrack" << i
+                    << "was not successfully converted/appended";
+
+            return QByteArray();
+        }
+    }
+
+    return midiFile->toMidiBinary();
+}
+
+DuMidiTrackPtr DuMusic::getTempoTrack() const
+{
+    const QString &songName = getSongName();
+    int tempo = getTempo();
+    int timeSig = getTimeSignature();
+    int tonality = getTonality();
+    int scale = getScale();
+
+    if (songName.isEmpty() || tempo == -1  ||  timeSig == -1
+            ||  tonality == -1  || scale == -1)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "invalid song data";
+        return {};
+    }
 
     DuMidiTrackPtr tempoTrack(new DuMidiTrack);
 
@@ -1253,39 +1290,8 @@ QByteArray DuMusic::toMidiBinary() const
     eotEvent->setEndOfTrack();
     tempoTrack->appendEvent(eotEvent);
 
-
-    DuMidiFilePtr midiFile(new DuMidiFile());
-    midiFile->appendTrack(tempoTrack);
-
-
-    for (int i = 0; i < MUSIC_MAXTRACK; i++)
-    {
-        const DuTrackConstPtr &track =
-                tracks->at(i).dynamicCast<const DuTrack>();
-        if (track == Q_NULLPTR)
-        {
-            qCCritical(LOG_CAT_DU_OBJECT)
-                    << "DuMusic::toMidiBinary():\n"
-                    << "DuTrack" << i << "is NULL";
-
-            return QByteArray();
-        }
-
-        if (!midiFile->appendTracks(track->toDuMidiTrackArray(durationRef,
-                                                              transpose)))
-        {
-            qCCritical(LOG_CAT_DU_OBJECT)
-                    << "DuMusic::toMidiBinary():\n"
-                    << "DuTrack" << i
-                    << "was not successfully converted/appended";
-
-            return QByteArray();
-        }
-    }
-
-    return midiFile->toMidiBinary();
+    return tempoTrack;
 }
-#endif
 
 int DuMusic::size() const
 {

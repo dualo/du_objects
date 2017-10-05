@@ -66,7 +66,7 @@
     X_OBJECT(Metadata, DuMusicMetadata)
 
 
-#ifndef NO_MIDI
+#ifndef NO_MIDI_IMPORT
 class MidiConversionHelper;
 #endif
 
@@ -76,6 +76,7 @@ class QIODevice;
 #else
 DU_OBJECT_TEMPLATE(DuArray);
 #endif
+DU_OBJECT(DuMidiTrack);
 DU_OBJECT(DuMusicMetadata);
 DU_OBJECT(DuMixer);
 DU_OBJECT(DuReverb);
@@ -100,7 +101,7 @@ public:
     static DuMusicPtr fromDuGameBinary(QIODevice *input, QVector<DuSoundPtr> &outSystemSounds);
     static DuMusicPtr fromJson(const QJsonObject &jsonMusic);
 
-#ifndef NO_MIDI
+#ifndef NO_MIDI_IMPORT
     static DuMusicPtr fromMidi(const MidiConversionHelper &helper);
 #endif
 
@@ -108,9 +109,8 @@ public:
     QByteArray toDuMusicBundleBinary(const QVector<DuSoundConstPtr> &integratedSounds) const;
     QByteArray toDuGameBinary(const QVector<DuSoundConstPtr> &systemSounds) const;
 
-#ifndef NO_MIDI
     QByteArray toMidiBinary() const override;
-#endif
+    DuMidiTrackPtr getTempoTrack() const;
 
     int size() const override;
     bool isEmpty() const;
