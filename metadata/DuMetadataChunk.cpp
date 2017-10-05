@@ -3,8 +3,6 @@
 #include <QDataStream>
 #include <QDebug>
 
-#include "Util/Util.h"
-
 DuMetadataChunk::DuMetadataChunk(quint32 signature, quint32 version, const QByteArray& data) :
     m_signature(signature),
     m_version(version),
@@ -22,7 +20,7 @@ QMultiMap<quint32, DuMetadataChunk> DuMetadataChunk::parse(const QByteArray &dat
 
     if (generalHeader.meta_signature != METADATA_SIGNATURE)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Metadata format error: doesn't start with expected root signature (" << Util::intToByteArray(METADATA_SIGNATURE) << ")";
+        qCCritical(LOG_CAT_DU_OBJECT) << "Metadata format error: doesn't start with expected root signature (" << METADATA_SIGNATURE << ")";
         return {};
     }
 
