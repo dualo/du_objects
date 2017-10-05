@@ -5,6 +5,8 @@
 
 #include <QDataStream>
 
+DU_OBJECT_IMPL(DuMusicMetadata)
+
 DuMusicMetadata::DuMusicMetadata() : DuContainer()
 {
     addChild(KeyGame, Q_NULLPTR);
