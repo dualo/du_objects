@@ -78,7 +78,7 @@ QMap<int, QString> DuEnum<T>::getAvailableValues() const
     QMap<int, QString> values;
     for (int i = 0; i < meta.keyCount(); ++i)
     {
-        values.insert(meta.value(i), QString(meta.key(i)));
+        values.insert(meta.value(i), QString::fromUtf8(meta.key(i)));
     }
 
     return values;
@@ -87,7 +87,7 @@ QMap<int, QString> DuEnum<T>::getAvailableValues() const
 template<class T>
 QString DuEnum<T>::getEnumString() const
 {
-    return QString(QMetaEnum::fromType<T>().valueToKey(getNumeric()));
+    return QString::fromUtf8(QMetaEnum::fromType<T>().valueToKey(getNumeric()));
 }
 
 template<class T>
