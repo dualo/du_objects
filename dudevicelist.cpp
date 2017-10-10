@@ -41,6 +41,23 @@ bool DuDeviceList::setType(Type value)
     return false;
 }
 
+int DuDeviceList::getNumButtonKeyboard() const
+{
+    switch (getDeviceType())
+    {
+        case DuDevice::Type_DuTouchPro:
+        case DuDevice::Type_DuTouchL:
+            return NUM_BUTTON_KEYBOARD_L;
+        case DuDevice::Type_DuTouchS:
+            return NUM_BUTTON_KEYBOARD_S;
+        default:
+            Q_UNREACHABLE();
+            break;
+    }
+
+    return -1;
+}
+
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuDeviceList, Device, DuDevice)
 
 DU_KEY_ACCESSORS_IN_CHILD_IMPL_DIFF_KEYS(DuDeviceList, DeviceType, Type, DuDevice, Device, DuDevice::Type, DuDevice::Type_Unknown)
