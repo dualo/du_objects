@@ -40,12 +40,7 @@ DuMusicMetadataPtr DuMusicMetadata::fromBinary(const QByteArray &data)
     return metadata;
 }
 
-DuObjectPtr DuMusicMetadata::clone() const
-{
-    return DuMusicMetadataPtr(new DuMusicMetadata(*this));
-}
-
-QByteArray DuMusicMetadata::toDuMusicBinary() const
+QByteArray DuMusicMetadata::toBinary(const QVector<DuSoundConstPtr> &systemSounds) const
 {
     if (size() == 0)
         return QByteArray();
@@ -61,10 +56,15 @@ QByteArray DuMusicMetadata::toDuMusicBinary() const
     {
         s_metadata_header header{MUSICMETADATA_GAME_SIGNATURE, MUSICMETADATA_GAME_CURRENT_VERSION, static_cast<quint32>(game->size())};
         data += QByteArray(reinterpret_cast<const char*>(&header), METADATA_HEADER_SIZE);
-        data += game->toDuMusicBinary();
+        data += game->toDuGameBinary(systemSounds);
     }
 
     return data;
+}
+
+DuObjectPtr DuMusicMetadata::clone() const
+{
+    return DuMusicMetadataPtr(new DuMusicMetadata(*this));
 }
 
 int DuMusicMetadata::size() const

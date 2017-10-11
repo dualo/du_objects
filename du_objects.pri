@@ -88,7 +88,8 @@ HEADERS += \
     $$PWD/DuGameFiles/DuGameEventMessage.h \
     $$PWD/DuGameFiles/DuArrangementAction.h \
     $$PWD/DuGameFiles/DuGameExitCondition.h \
-    $$PWD/general/DuEnum.h
+    $$PWD/general/DuEnum.h \
+    $$PWD/du-touch/dualo_structs/dugame_structs.h
 
 SOURCES += \
     $$PWD/general/duobject.cpp \

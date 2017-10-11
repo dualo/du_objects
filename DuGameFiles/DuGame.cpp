@@ -4,12 +4,15 @@
 
 #pragma pack(push, 4)
 #include "../du-touch/dualo_structs/metadata_structs.h"
+#include "../du-touch/dualo_structs/dugame_structs.h"
 #pragma pack(pop)
 
 #include "../general/duarray.h"
 #include "../general/dunumeric.h"
 
 #include <QDataStream>
+
+#include <du_objects/dusoundfile/dusound.h>
 
 DU_OBJECT_IMPL(DuGame)
 
@@ -29,10 +32,10 @@ DuGamePtr DuGame::fromBinary(const QByteArray &data, quint32 version)
     QDataStream stream(data);
     stream.setByteOrder(QDataStream::LittleEndian);
 
-    s_arrangement arrangement;
-    stream.readRawData(reinterpret_cast<char*>(&arrangement), ARRANGEMENT_HEADER);
+    s_dugame gameStruct;
+    stream.readRawData(reinterpret_cast<char*>(&gameStruct), DUGAME_HEADER);
 
-    const int expectedSize = ARRANGEMENT_HEADER + (arrangement.as_numevent * ARRANGEMENT_EVENT_SIZE);
+    const int expectedSize = DUGAME_HEADER + (gameStruct.dg_numevent * ARRANGEMENT_EVENT_SIZE);
     if (data.size() != expectedSize)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Can't parse DuGame: data size incorrect -> expected" << expectedSize << ", got" << data.size();
@@ -42,7 +45,7 @@ DuGamePtr DuGame::fromBinary(const QByteArray &data, quint32 version)
     DuGamePtr game(new DuGame);
 
     DuArrayPtr<DuGameEvent> eventsArray(new DuArray<DuGameEvent>);
-    for (uint i = 0; i < arrangement.as_numevent; ++i)
+    for (uint i = 0; i < gameStruct.dg_numevent; ++i)
     {
         s_arrangement_event eventStruct;
         stream.readRawData(reinterpret_cast<char*>(&eventStruct), ARRANGEMENT_EVENT_SIZE);
@@ -65,7 +68,7 @@ DuGamePtr DuGame::fromBinary(const QByteArray &data, quint32 version)
 
     bool verif = true;
 
-    verif = game->setGrade(arrangement.as_grade) ? verif : false;
+    verif = game->setGrade(gameStruct.dg_grade) ? verif : false;
 
     if (!verif)
     {
@@ -75,21 +78,17 @@ DuGamePtr DuGame::fromBinary(const QByteArray &data, quint32 version)
     return game;
 }
 
-DuObjectPtr DuGame::clone() const
+QByteArray DuGame::toDuGameBinary(const QVector<DuSoundConstPtr> &systemSounds) const
 {
-    return DuGamePtr(new DuGame(*this));
-}
-
-QByteArray DuGame::toDuMusicBinary() const
-{
-    s_arrangement arrangement;
+    s_dugame game;
+    std::memset(&game, 0x00, DUGAME_HEADER);
 
     int grade = getGrade();
     if (grade == -1)
         return QByteArray();
-    arrangement.as_grade = grade;
+    game.dg_grade = grade;
 
-    arrangement.as_currentevent = 0;
+    game.dg_currentevent = 0;
 
     const DuArrayConstPtr<DuGameEvent>& events = getEvents();
     if (events == Q_NULLPTR)
@@ -98,9 +97,28 @@ QByteArray DuGame::toDuMusicBinary() const
         return QByteArray();
     }
 
-    arrangement.as_numevent = events->count();
+    game.dg_numevent = events->count();
 
-    QByteArray data(reinterpret_cast<const char*>(&arrangement), ARRANGEMENT_HEADER);
+    if (systemSounds.size() > MAX_DUGAME_SOUND)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "Too many system sounds:" << systemSounds.size() << ">" << MAX_DUGAME_SOUND;
+        return QByteArray();
+    }
+
+    for (int i = 0; i < systemSounds.size(); ++i)
+    {
+        const DuSoundConstPtr& sound = systemSounds.at(i);
+        if (sound == Q_NULLPTR)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "Sound null at index" << i;
+            return QByteArray();
+        }
+
+        game.dg_sound[i].dg_sound_id = sound->getID();
+        game.dg_sound[i].dg_sound_user_id = sound->getUserID();
+    }
+
+    QByteArray data(reinterpret_cast<const char*>(&game), DUGAME_HEADER);
 
     for (const DuGameEventConstPtr& event : *(events))
     {
@@ -114,6 +132,11 @@ QByteArray DuGame::toDuMusicBinary() const
     return data;
 }
 
+DuObjectPtr DuGame::clone() const
+{
+    return DuGamePtr(new DuGame(*this));
+}
+
 int DuGame::size() const
 {
     const DuArrayConstPtr<DuGameEvent>& events = getEvents();
@@ -123,7 +146,7 @@ int DuGame::size() const
         return -1;
     }
 
-    return ARRANGEMENT_HEADER + events->size();
+    return DUGAME_HEADER + events->size();
 }
 
 DU_KEY_ACCESSORS_IMPL(DuGame, Grade, Numeric, int, -1)
