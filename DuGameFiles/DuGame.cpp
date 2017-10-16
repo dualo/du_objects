@@ -19,7 +19,12 @@ DU_OBJECT_IMPL(DuGame)
 DuGame::DuGame() : DuContainer()
 {
     addChild(KeyGrade, new DuNumeric);
-    addChild(KeySounds, new DuArray<DuSystemSoundIdentifier>(MAX_DUGAME_SOUND));
+
+    DuArrayPtr<DuSystemSoundIdentifier> soundsArray(new DuArray<DuSystemSoundIdentifier>(MAX_DUGAME_SOUND));
+    for (int i = 0; i < MAX_DUGAME_SOUND; ++i)
+        soundsArray->append(new DuSystemSoundIdentifier);
+    addChild(KeySounds, soundsArray);
+
     addChild(KeyEvents, new DuArray<DuGameEvent>);
 }
 
