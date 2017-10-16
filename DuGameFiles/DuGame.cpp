@@ -12,13 +12,14 @@
 
 #include <QDataStream>
 
-#include <du_objects/dusoundfile/dusound.h>
+#include "../instrument/DuSystemSoundIdentifier.h"
 
 DU_OBJECT_IMPL(DuGame)
 
 DuGame::DuGame() : DuContainer()
 {
     addChild(KeyGrade, new DuNumeric);
+    addChild(KeySounds, new DuArray<DuSystemSoundIdentifier>(MAX_DUGAME_SOUND));
     addChild(KeyEvents, new DuArray<DuGameEvent>);
 }
 
@@ -43,6 +44,26 @@ DuGamePtr DuGame::fromBinary(const QByteArray &data, quint32 version)
     }
 
     DuGamePtr game(new DuGame);
+
+    DuArrayPtr<DuSystemSoundIdentifier> soundsArray(new DuArray<DuSystemSoundIdentifier>(MAX_DUGAME_SOUND));
+    for (uint i = 0; i < MAX_DUGAME_SOUND; ++i)
+    {
+        const s_dugame_sound& soundStruct = gameStruct.dg_sound[i];
+
+        const DuSystemSoundIdentifierPtr& sound = DuSystemSoundIdentifier::fromBinary(soundStruct);
+        if (sound == Q_NULLPTR)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "Can't parse DuGame: sound" << i << "corrupted";
+            return {};
+        }
+
+        if (!soundsArray->append(sound))
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "Can't parse DuGame: the sound" << i << "could not be appended";
+            return {};
+        }
+    }
+    game->setSounds(soundsArray);
 
     DuArrayPtr<DuGameEvent> eventsArray(new DuArray<DuGameEvent>);
     for (uint i = 0; i < gameStruct.dg_numevent; ++i)
@@ -78,7 +99,12 @@ DuGamePtr DuGame::fromBinary(const QByteArray &data, quint32 version)
     return game;
 }
 
-QByteArray DuGame::toDuGameBinary(const QVector<DuSoundConstPtr> &systemSounds) const
+DuObjectPtr DuGame::clone() const
+{
+    return DuGamePtr(new DuGame(*this));
+}
+
+QByteArray DuGame::toDuMusicBinary() const
 {
     s_dugame game;
     std::memset(&game, 0x00, DUGAME_HEADER);
@@ -90,6 +116,22 @@ QByteArray DuGame::toDuGameBinary(const QVector<DuSoundConstPtr> &systemSounds) 
 
     game.dg_currentevent = 0;
 
+
+    const DuArrayConstPtr<DuSystemSoundIdentifier> &sounds = getSounds();
+    if (sounds == Q_NULLPTR)
+        return QByteArray();
+
+    int soundsSize = sounds->size();
+    if (soundsSize == -1)
+        return QByteArray();
+
+    const QByteArray &soundsArray = sounds->toDuMusicBinary();
+    if (soundsArray.isNull())
+        return QByteArray();
+
+    std::memcpy(&(game.dg_sound), soundsArray.data(), static_cast<size_t>(soundsSize));
+
+
     const DuArrayConstPtr<DuGameEvent>& events = getEvents();
     if (events == Q_NULLPTR)
     {
@@ -99,24 +141,6 @@ QByteArray DuGame::toDuGameBinary(const QVector<DuSoundConstPtr> &systemSounds) 
 
     game.dg_numevent = events->count();
 
-    if (systemSounds.size() > MAX_DUGAME_SOUND)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Too many system sounds:" << systemSounds.size() << ">" << MAX_DUGAME_SOUND;
-        return QByteArray();
-    }
-
-    for (int i = 0; i < systemSounds.size(); ++i)
-    {
-        const DuSoundConstPtr& sound = systemSounds.at(i);
-        if (sound == Q_NULLPTR)
-        {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Sound null at index" << i;
-            return QByteArray();
-        }
-
-        game.dg_sound[i].dg_sound_id = sound->getID();
-        game.dg_sound[i].dg_sound_user_id = sound->getUserID();
-    }
 
     QByteArray data(reinterpret_cast<const char*>(&game), DUGAME_HEADER);
 
@@ -132,11 +156,6 @@ QByteArray DuGame::toDuGameBinary(const QVector<DuSoundConstPtr> &systemSounds) 
     return data;
 }
 
-DuObjectPtr DuGame::clone() const
-{
-    return DuGamePtr(new DuGame(*this));
-}
-
 int DuGame::size() const
 {
     const DuArrayConstPtr<DuGameEvent>& events = getEvents();
@@ -150,4 +169,5 @@ int DuGame::size() const
 }
 
 DU_KEY_ACCESSORS_IMPL(DuGame, Grade, Numeric, int, -1)
+DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuGame, Sounds, DuArray, DuSystemSoundIdentifier)
 DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuGame, Events, DuArray, DuGameEvent)

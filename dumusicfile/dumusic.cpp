@@ -1066,6 +1066,7 @@ QByteArray DuMusic::toDuMusicBinary() const
     local_song.s_totalsample = static_cast<quint16>(eventTotal);
 
     const DuMusicMetadataConstPtr& metadata = getMetadata();
+    QByteArray metadataBin;
     if (metadata == Q_NULLPTR)
     {
         local_song.s_metadata = 0;
@@ -1073,12 +1074,13 @@ QByteArray DuMusic::toDuMusicBinary() const
     else
     {
         local_song.s_metadata = MUSIC_SONG_SIZE + eventTotal * MUSIC_SAMPLE_SIZE;
+        metadataBin = metadata->toDuMusicBinary();
     }
 
     std::memcpy(du_music->local_buffer, tmpLocalBuffer.constData(), static_cast<size_t>(eventTotal) * MUSIC_SAMPLE_SIZE);
 
 
-    return QByteArray(reinterpret_cast<char*>(du_music.data()), MUSIC_SONG_SIZE + eventTotal * MUSIC_SAMPLE_SIZE);
+    return QByteArray(reinterpret_cast<char*>(du_music.data()), MUSIC_SONG_SIZE + eventTotal * MUSIC_SAMPLE_SIZE) + metadataBin;
 }
 
 QByteArray DuMusic::toDuMusicBundleBinary(const QVector<DuSoundConstPtr> &integratedSounds) const
@@ -1097,12 +1099,6 @@ QByteArray DuMusic::toDuMusicBundleBinary(const QVector<DuSoundConstPtr> &integr
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Error converting du-music to binary";
         return QByteArray();
-    }
-
-    const DuMusicMetadataConstPtr& metadata = getMetadata();
-    if (metadata != Q_NULLPTR)
-    {
-        musicData += metadata->toBinary();
     }
 
     int musicSize = musicData.size();
@@ -1146,12 +1142,6 @@ QByteArray DuMusic::toDuGameBinary(const QVector<DuSoundConstPtr> &systemSounds)
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Error converting du-music to binary";
         return QByteArray();
-    }
-
-    const DuMusicMetadataConstPtr& metadata = getMetadata();
-    if (metadata != Q_NULLPTR)
-    {
-        musicData += metadata->toBinary(systemSounds);
     }
 
     int musicSize = musicData.size();
