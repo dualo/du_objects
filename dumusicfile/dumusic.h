@@ -135,6 +135,7 @@ public:
     bool appendTrack(const DuTrackPtr &track);
 
     QSet<InstrumentIdentifier> getUsedInstrumentsIdentifiers() const;
+    QSet<InstrumentIdentifier> getUsedSystemSoundsIdentifiers() const;
 
 #define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS(key, type)
 #define X_OBJECT(key, dutype) DU_KEY_ACCESSORS_OBJECT(key, dutype)

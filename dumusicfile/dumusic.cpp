@@ -12,12 +12,16 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+#include "../DuGameFiles/DuGame.h"
+
 #include "../dusoundfile/dusound.h"
 
 #include "../general/duarray.h"
 #include "../general/dubinarydata.h"
 #include "../general/dunumeric.h"
 #include "../general/dustring.h"
+
+#include "../instrument/DuSystemSoundIdentifier.h"
 
 #include "../instrument/effects/dumixer.h"
 #include "../instrument/effects/dureverb.h"
@@ -1431,6 +1435,42 @@ QSet<InstrumentIdentifier> DuMusic::getUsedInstrumentsIdentifiers() const
 
             returnedList << InstrumentIdentifier{id, userId, name, version};
         }
+    }
+
+    return returnedList;
+}
+
+QSet<InstrumentIdentifier> DuMusic::getUsedSystemSoundsIdentifiers() const
+{
+    const DuMusicMetadataConstPtr& metadata = getMetadata();
+    if (metadata == Q_NULLPTR)
+    {
+        return {};
+    }
+
+    const DuGameConstPtr& game = metadata->getGame();
+    if (game == Q_NULLPTR)
+    {
+        return {};
+    }
+
+    const DuArrayConstPtr<DuSystemSoundIdentifier>& systemSounds = game->getSounds();
+    if (systemSounds == Q_NULLPTR)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "game sounds array null";
+        return {};
+    }
+
+    QSet<InstrumentIdentifier> returnedList;
+    for (const DuSystemSoundIdentifierConstPtr& sound : *systemSounds)
+    {
+        if (sound == Q_NULLPTR)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "system sound identifier null";
+            continue;
+        }
+
+        returnedList << InstrumentIdentifier{sound->getID(), sound->getUserID(), QString(), 0};
     }
 
     return returnedList;
