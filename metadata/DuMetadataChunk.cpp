@@ -32,7 +32,7 @@ QMultiMap<quint32, DuMetadataChunk> DuMetadataChunk::parse(const QByteArray &dat
     if (generalHeader.meta_size != static_cast<quint32>(data.size() - METADATA_HEADER_SIZE))
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Metadata format error: size in general header incorrect"
-                                      << "(total data size is" << data.size() << "while in header" << generalHeader.meta_size << "was read)";
+                                      << "(total data size is" << data.size() - METADATA_HEADER_SIZE << "while in header" << generalHeader.meta_size << "was read)";
         return {};
     }
 
