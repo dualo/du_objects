@@ -1333,6 +1333,16 @@ bool DuMusic::isEmpty() const
     return size() <= MUSIC_SONG_SIZE;
 }
 
+bool DuMusic::getIsDuGame() const
+{
+    const DuMusicMetadataConstPtr& metadata = getMetadata();
+    if (metadata == Q_NULLPTR)
+        return false;
+
+    const DuGameConstPtr& game = metadata->getGame();
+
+    return game != Q_NULLPTR;
+}
 
 int DuMusic::databaseId() const
 {

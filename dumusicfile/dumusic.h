@@ -115,6 +115,8 @@ public:
     int size() const override;
     bool isEmpty() const;
 
+    bool getIsDuGame() const;
+
     int databaseId() const;
     void setDatabaseId(int databaseId);
 
