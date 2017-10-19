@@ -13,7 +13,6 @@ DuMetadataChunk::DuMetadataChunk(quint32 signature, quint32 version, const QByte
 QMultiMap<quint32, DuMetadataChunk> DuMetadataChunk::parse(const QByteArray &data)
 {
     QDataStream stream(data);
-    stream.setByteOrder(QDataStream::LittleEndian);
 
     s_metadata_header generalHeader;
     stream.readRawData(reinterpret_cast<char*>(&generalHeader), METADATA_HEADER_SIZE);
