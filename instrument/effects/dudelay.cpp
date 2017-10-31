@@ -29,8 +29,8 @@ DuDelay::DuDelay() :
                            FX_DELAY_LEVEL_MAXVALUE, FX_DELAY_LEVEL_MINVALUE));
 
     addChild(KeyEffectTime,
-             new DuNumeric(FX_DELAY_TIME_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
-                           FX_DELAY_TIME_MAXVALUE, FX_DELAY_TIME_MINVALUE));
+             new DuNumeric(FX_DELAY_BPM_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
+                           FX_DELAY_BPM_MAXVALUE, FX_DELAY_BPM_MINVALUE));
 
     addChild(KeyFeedback,
              new DuNumeric(FX_DELAY_FEEDBACK_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
