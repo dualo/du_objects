@@ -35,7 +35,7 @@
     X(PortamentoControl,    Numeric, int, -1) \
     X(PortamentoTime,       Numeric, int, -1) \
     \
-    X(DisplayLed,           Numeric, int, -1) \
+    X(DisplayLed,           Boolean, bool, false) \
     X_OBJECT_TEMPLATE(LedArray, DuArray, DuNumeric) \
     \
     X(Pitch,                Numeric, int, -1) \
@@ -48,7 +48,7 @@
     X(WahFrequency,         Numeric, int, -1) \
     X(WahResonance,         Numeric, int, -1) \
     \
-    X(MultinoteAct,         Numeric, int, -1) \
+    X(MultinoteAct,         Boolean, bool, false) \
     X_OBJECT_TEMPLATE(Multinote, DuArray, DuNumeric) \
     \
     X(ArpeggiatorType,      Numeric, int, -1) \
@@ -67,12 +67,12 @@
     X(AutowahRange,         Numeric, int, -1) \
     \
     X(ChorusPreset,         Numeric, int, -1) \
-    X(CompressorOnOff,      Numeric, int, -1) \
-    X(DelayOnOff,           Numeric, int, -1) \
-    X(DistortionOnOff,      Numeric, int, -1) \
-    X(EqualizerOnOff,       Numeric, int, -1) \
-    X(ChorusOnOff,          Numeric, int, -1) \
-    X(ReverbOnOff,          Numeric, int, -1) \
+    X(CompressorOnOff,      Boolean, bool, false) \
+    X(DelayOnOff,           Boolean, bool, false) \
+    X(DistortionOnOff,      Boolean, bool, false) \
+    X(EqualizerOnOff,       Boolean, bool, false) \
+    X(ChorusOnOff,          Boolean, bool, false) \
+    X(ReverbOnOff,          Boolean, bool, false) \
     \
     X_OBJECT(Mixer,         DuMixer) \
     X_OBJECT(Distortion,    DuDistortion) \

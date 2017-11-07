@@ -7,6 +7,7 @@
 #include "../du-touch/dualo_structs/controler_structs.h"
 
 #include "../general/duarray.h"
+#include "../general/duboolean.h"
 #include "../general/dunumeric.h"
 #include "../general/dustring.h"
 
@@ -112,7 +113,7 @@ DuPreset::DuPreset() :
 
 
     // led marks
-    addChild(KeyDisplayLed, new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
+    addChild(KeyDisplayLed, new DuBoolean(false));
 
     DuArrayPtr<DuNumeric> ledArray(new DuArray<DuNumeric>(NUM_LED_VALUE));
     for (int i = 0; i < NUM_LED_VALUE; ++i)
@@ -153,7 +154,7 @@ DuPreset::DuPreset() :
 
 
     // multi-note
-    addChild(KeyMultinoteAct, new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
+    addChild(KeyMultinoteAct, new DuBoolean(false));
 
     DuArrayPtr<DuNumeric> multinoteArray(new DuArray<DuNumeric>(4));
     for (int i = 0; i < 4; ++i)
@@ -192,12 +193,12 @@ DuPreset::DuPreset() :
              new DuNumeric(FX_CHORUS_PRESET_DEFAULTVALUE, NUMERIC_DEFAULT_SIZE,
                            FX_NUM_FX_INTR - 1, 0x00));
 
-    addChild(KeyCompressorOnOff, new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
-    addChild(KeyDelayOnOff,      new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
-    addChild(KeyDistortionOnOff, new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
-    addChild(KeyEqualizerOnOff,  new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
-    addChild(KeyChorusOnOff,     new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
-    addChild(KeyReverbOnOff,     new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0x01, 0x00));
+    addChild(KeyCompressorOnOff, new DuBoolean(false));
+    addChild(KeyDelayOnOff,      new DuBoolean(false));
+    addChild(KeyDistortionOnOff, new DuBoolean(false));
+    addChild(KeyEqualizerOnOff,  new DuBoolean(false));
+    addChild(KeyChorusOnOff,     new DuBoolean(false));
+    addChild(KeyReverbOnOff,     new DuBoolean(false));
 
     addChild(KeyMixer,      new DuMixer);
     addChild(KeyDistortion, new DuDistortion);
@@ -263,7 +264,7 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
     verif = preset->setPortamentoTime(du_preset.s_portamento_time) ? verif : false;
 
     // led marks
-    verif = preset->setDisplayLed(du_preset.s_displayled) ? verif : false;
+    verif = preset->setDisplayLed(du_preset.s_displayled == 1) ? verif : false;
 
     DuArrayPtr<DuNumeric> ledsArray(new DuArray<DuNumeric>(NUM_LED_VALUE));
     for (int i = 0; i < NUM_LED_VALUE; ++i)
@@ -294,7 +295,7 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
     verif = preset->setWahResonance(du_preset.s_wah_res) ? verif : false;
 
     // multi-note
-    verif = preset->setMultinoteAct(du_preset.s_multinote_act) ? verif : false;
+    verif = preset->setMultinoteAct(du_preset.s_multinote_act == 1) ? verif : false;
 
     DuArrayPtr<DuNumeric> multinoteArray(new DuArray<DuNumeric>(4));
     for (int i = 0; i < 4; ++i)
@@ -325,12 +326,12 @@ DuPresetPtr DuPreset::fromDuMusicBinary(const preset_instr &du_preset)
 
     // FX structs
     verif = preset->setChorusPreset(du_preset.s_chorus_preset) ? verif : false;
-    verif = preset->setCompressorOnOff(du_preset.s_compressor_onoff) ? verif : false;
-    verif = preset->setDelayOnOff(du_preset.s_delay_onoff) ? verif : false;
-    verif = preset->setDistortionOnOff(du_preset.s_distortion_onoff) ? verif : false;
-    verif = preset->setEqualizerOnOff(du_preset.s_eq_onoff) ? verif : false;
-    verif = preset->setChorusOnOff(du_preset.s_chorus_onoff) ? verif : false;
-    verif = preset->setReverbOnOff(du_preset.s_reverb_onoff) ? verif : false;
+    verif = preset->setCompressorOnOff(du_preset.s_compressor_onoff == 1) ? verif : false;
+    verif = preset->setDelayOnOff(du_preset.s_delay_onoff == 1) ? verif : false;
+    verif = preset->setDistortionOnOff(du_preset.s_distortion_onoff == 1) ? verif : false;
+    verif = preset->setEqualizerOnOff(du_preset.s_eq_onoff == 1) ? verif : false;
+    verif = preset->setChorusOnOff(du_preset.s_chorus_onoff == 1) ? verif : false;
+    verif = preset->setReverbOnOff(du_preset.s_reverb_onoff == 1) ? verif : false;
 
     if (!verif)
     {
@@ -554,9 +555,7 @@ QByteArray DuPreset::toDuMusicBinary() const
 
 
     // led marks
-    tmpNum = getDisplayLed();
-    if (tmpNum == -1)
-        return QByteArray();
+    tmpNum = getDisplayLed() ? 1 : 0;
     du_preset.s_displayled = static_cast<uint8_t>(tmpNum);
 
     const DuArrayConstPtr<DuNumeric> &ledsArray = getLedArray();
@@ -607,9 +606,7 @@ QByteArray DuPreset::toDuMusicBinary() const
 
 
     // multi-note
-    tmpNum = getMultinoteAct();
-    if (tmpNum == -1)
-        return QByteArray();
+    tmpNum = getMultinoteAct() ? 1 : 0;
     du_preset.s_multinote_act = static_cast<uint8_t>(tmpNum);
 
     const DuArrayConstPtr<DuNumeric> &multinoteArray = getMultinote();
@@ -684,34 +681,22 @@ QByteArray DuPreset::toDuMusicBinary() const
         return QByteArray();
     du_preset.s_chorus_preset = static_cast<uint8_t>(tmpNum);
 
-    tmpNum = getCompressorOnOff();
-    if (tmpNum == -1)
-        return QByteArray();
+    tmpNum = getCompressorOnOff() ? 1 : 0;
     du_preset.s_compressor_onoff = static_cast<uint8_t>(tmpNum);
 
-    tmpNum = getDelayOnOff();
-    if (tmpNum == -1)
-        return QByteArray();
+    tmpNum = getDelayOnOff() ? 1 : 0;
     du_preset.s_delay_onoff = static_cast<uint8_t>(tmpNum);
 
-    tmpNum = getDistortionOnOff();
-    if (tmpNum == -1)
-        return QByteArray();
+    tmpNum = getDistortionOnOff() ? 1 : 0;
     du_preset.s_distortion_onoff = static_cast<uint8_t>(tmpNum);
 
-    tmpNum = getEqualizerOnOff();
-    if (tmpNum == -1)
-        return QByteArray();
+    tmpNum = getEqualizerOnOff() ? 1 : 0;
     du_preset.s_eq_onoff = static_cast<uint8_t>(tmpNum);
 
-    tmpNum = getChorusOnOff();
-    if (tmpNum == -1)
-        return QByteArray();
+    tmpNum = getChorusOnOff() ? 1 : 0;
     du_preset.s_chorus_onoff = static_cast<uint8_t>(tmpNum);
 
-    tmpNum = getReverbOnOff();
-    if (tmpNum == -1)
-        return QByteArray();
+    tmpNum = getReverbOnOff() ? 1 : 0;
     du_preset.s_reverb_onoff = static_cast<uint8_t>(tmpNum);
 
 
