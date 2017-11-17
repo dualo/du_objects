@@ -22,6 +22,14 @@ DuVersion::DuVersion(int major, int minor, int patch) :
     setVersion(major, minor, patch);
 }
 
+DuVersion::DuVersion() :
+    DuString(tr("unknown")),
+    m_major(-1),
+    m_minor(-1),
+    m_patch(-1)
+{
+}
+
 DuObjectPtr DuVersion::clone() const
 {
     return DuVersionPtr(new DuVersion(*this));

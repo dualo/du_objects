@@ -14,7 +14,8 @@ class DuVersion : public DuString
 
 public:
     explicit DuVersion(const QString& version);
-    explicit DuVersion(int major = -1, int minor = -1, int patch = -1);
+    explicit DuVersion(int major, int minor, int patch);
+    explicit DuVersion();
     virtual ~DuVersion() = default;
 
     virtual DuObjectPtr clone() const;
