@@ -430,7 +430,7 @@ DuSoundPtr DuSound::fromBinary(const QByteArray &data)
 
         // Then, for each group, we create a new layer.
         // The resulting number of layers can be greater than the one given in the binary file.
-        for (const QList<int>& indexList : effectiveLayers)
+        for (const QList<int>& indexList : qAsConst(effectiveLayers))
         {
             QList<dream_ip> effectiveDreamIPArray;
             QVector<dream_sp> effectiveDreamSPArray;

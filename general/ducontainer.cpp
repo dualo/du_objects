@@ -211,7 +211,8 @@ bool DuContainer::equals(const DuObject &other) const
     if (m_children.size() != castedOther.m_children.size())
         return false;
 
-    if (m_children.keys() != castedOther.m_children.keys())
+    // Compare keys
+    if (!std::equal(m_children.keyBegin(), m_children.keyEnd(), castedOther.m_children.keyBegin()))
         return false;
 
     QMapIterator<QString, DuObjectPtr> it(m_children);

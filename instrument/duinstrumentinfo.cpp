@@ -45,7 +45,7 @@ QList<DuInstrumentInfo::Category> DuInstrumentInfo::categoryMap = QList<DuInstru
 
 QString DuInstrumentInfo::getCategoryNameFromProgramChange(int programChange)
 {
-    for (const Category& category : categoryMap)
+    for (const Category& category : qAsConst(categoryMap))
     {
         if (category.programChange == programChange)
         {
@@ -58,7 +58,7 @@ QString DuInstrumentInfo::getCategoryNameFromProgramChange(int programChange)
 
 int DuInstrumentInfo::getProgramChangeFromCategoryName(const QString name)
 {
-    for (const Category& category : categoryMap)
+    for (const Category& category : qAsConst(categoryMap))
     {
         if (category.name == name)
         {
@@ -74,7 +74,7 @@ QStringList DuInstrumentInfo::getCategoriesFromType(int type)
 {
     QStringList list;
 
-    for (const Category& category : categoryMap)
+    for (const Category& category : qAsConst(categoryMap))
     {
         if (category.type == type)
         {
