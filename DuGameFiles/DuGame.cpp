@@ -10,6 +10,8 @@
 #include "../general/duarray.h"
 #include "../general/dunumeric.h"
 
+#include <cstring>
+
 #include <QDataStream>
 
 #include "../instrument/DuSystemSoundIdentifier.h"

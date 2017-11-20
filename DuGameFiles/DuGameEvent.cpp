@@ -7,6 +7,8 @@
 #include "../general/duarray.h"
 #include "../general/dunumeric.h"
 
+#include <cstring>
+
 DU_OBJECT_IMPL(DuGameEvent)
 
 DuGameEvent::DuGameEvent() : DuContainer()

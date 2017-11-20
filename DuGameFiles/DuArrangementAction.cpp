@@ -3,6 +3,8 @@
 #include "../general/DuEnum.h"
 #include "../general/dunumeric.h"
 
+#include <cstring>
+
 DU_OBJECT_IMPL(DuArrangementAction)
 
 DuArrangementAction::DuArrangementAction() : DuContainer()

@@ -2,6 +2,8 @@
 
 #include "../general/dustring.h"
 
+#include <cstring>
+
 DU_OBJECT_IMPL(DuGameEventMessage)
 
 DuGameEventMessage::DuGameEventMessage() : DuContainer()
