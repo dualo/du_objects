@@ -972,6 +972,72 @@ void DuSound::setIsFromCommunity(bool isFromCommunity)
     m_isFromCommunity = isFromCommunity;
 }
 
+void DuSound::cleanMappingForSpecificKey(int note)
+{
+    const DuArrayPtr<DuLayer>& layerArray = getLayerArray();
+
+    bool otherSoundOnSameKeyFound = false;
+    for (int i = 0; i < layerArray->count(); ++i)
+    {
+        const DuLayerPtr& l = layerArray->at(i);
+        if (l == NULL)
+            continue;
+
+        const DuArrayPtr<DuSample>& sampleArray = l->getSampleArray();
+        if (sampleArray == NULL)
+            continue;
+
+        for (int j = 0; j < sampleArray->count(); ++j)
+        {
+            const DuSampleConstPtr& s = sampleArray->at(j);
+            if (s == NULL)
+                continue;
+
+            if (s->getStartNote() == note)
+            {
+                otherSoundOnSameKeyFound = true;
+                break;
+            }
+        }
+
+        if (otherSoundOnSameKeyFound)
+            break;
+    }
+
+    if (!otherSoundOnSameKeyFound)
+    {
+        const DuArrayPtr<DuNote>& mappingL = getMappingL();
+        for (int i = 0; i < mappingL->count(); ++i)
+        {
+            const DuNotePtr& newNote = mappingL->at(i);
+            if (newNote != NULL && newNote->getNote() == note)
+            {
+                newNote->setNoteGM(0);
+                newNote->setIsExclusive(false);
+                newNote->setExclusiveNote(0);
+                newNote->setNoteOff(true);
+                newNote->setName("");
+                newNote->setCategoryName("");
+            }
+        }
+
+        const DuArrayPtr<DuNote>& mappingS = getMappingS();
+        for (int i = 0; i < mappingS->count(); ++i)
+        {
+            const DuNotePtr& newNote = mappingS->at(i);
+            if (newNote != NULL && newNote->getNote() == note)
+            {
+                newNote->setNoteGM(0);
+                newNote->setIsExclusive(false);
+                newNote->setExclusiveNote(0);
+                newNote->setNoteOff(true);
+                newNote->setName("");
+                newNote->setCategoryName("");
+            }
+        }
+    }
+}
+
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, NameForDevice,      DuSoundInfo, Info, QString, QString())
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, Octave,             DuSoundInfo, Info, int, -1)
 DU_KEY_ACCESSORS_IN_CHILD_IMPL(DuSound, UserID,             DuSoundInfo, Info, int, -1)
