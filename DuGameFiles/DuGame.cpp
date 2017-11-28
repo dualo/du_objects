@@ -21,6 +21,9 @@ DU_OBJECT_IMPL(DuGame)
 DuGame::DuGame() : DuContainer()
 {
     addChild(KeyGrade, new DuNumeric);
+    addChild(KeyUnlockerEvent, new DuNumeric);
+    addChild(KeyVersion, new DuNumeric);
+    addChild(KeyGameId, new DuNumeric);
 
     DuArrayPtr<DuSystemSoundIdentifier> soundsArray(new DuArray<DuSystemSoundIdentifier>(MAX_DUGAME_SOUND));
     for (int i = 0; i < MAX_DUGAME_SOUND; ++i)
@@ -97,6 +100,9 @@ DuGamePtr DuGame::fromBinary(const QByteArray &data, quint32 version)
     bool verif = true;
 
     verif = game->setGrade(gameStruct.dg_grade) ? verif : false;
+    verif = game->setUnlockerEvent(gameStruct.dg_unlocker_event) ? verif : false;
+    verif = game->setVersion(gameStruct.dg_version) ? verif : false;
+    verif = game->setGameId(gameStruct.dg_id) ? verif : false;
 
     if (!verif)
     {
@@ -122,6 +128,21 @@ QByteArray DuGame::toDuMusicBinary() const
     game.dg_grade = grade;
 
     game.dg_currentevent = 0;
+
+    int unlockerEvent = getUnlockerEvent();
+    if (unlockerEvent == -1)
+        return QByteArray();
+    game.dg_unlocker_event = unlockerEvent;
+
+    int version = getVersion();
+    if (version == -1)
+        return QByteArray();
+    game.dg_version = version;
+
+    int gameId = getGameId();
+    if (gameId == -1)
+        return QByteArray();
+    game.dg_id = gameId;
 
 
     const DuArrayConstPtr<DuSystemSoundIdentifier> &sounds = getSounds();
@@ -176,5 +197,8 @@ int DuGame::size() const
 }
 
 DU_KEY_ACCESSORS_IMPL(DuGame, Grade, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuGame, UnlockerEvent, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuGame, Version, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuGame, GameId, Numeric, int, -1)
 DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuGame, Sounds, DuArray, DuSystemSoundIdentifier)
 DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuGame, Events, DuArray, DuGameEvent)
