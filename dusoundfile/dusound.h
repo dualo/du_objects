@@ -106,6 +106,8 @@ public:
 
     DU_KEY_ACCESSORS_OBJECT_TEMPLATE(Metadata,      DuArray, DuBinaryData)
 
+    void cleanMappingForSpecificKey(int note);
+
 private:
     int m_databaseId;
     QStringList m_lists;
