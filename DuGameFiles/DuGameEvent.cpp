@@ -14,7 +14,8 @@ DU_OBJECT_IMPL(DuGameEvent)
 DuGameEvent::DuGameEvent() : DuContainer()
 {
     addChild(KeyIntroMessage, new DuGameEventMessage);
-    addChild(KeyIntroComment, new DuGameEventMessage);
+
+    addChild(KeyWaitForLoopStart, new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
 
     addChild(KeyActions, new DuArray<DuArrangementAction>(ARRANGEMENT_MAXEVENTACTION));
 
@@ -37,14 +38,6 @@ DuGameEventPtr DuGameEvent::fromStruct(const s_arrangement_event& eventStruct)
         return {};
     }
     event->setIntroMessage(introMessage);
-
-    const DuGameEventMessagePtr& introComment = DuGameEventMessage::fromStruct(eventStruct.ae_intro_cmt);
-    if (introComment == Q_NULLPTR)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Can't parse DuGameEvent: intro comment corrupted";
-        return {};
-    }
-    event->setIntroComment(introComment);
 
     if (eventStruct.ae_nb_actions > ARRANGEMENT_MAXEVENTACTION)
     {
@@ -96,6 +89,12 @@ DuGameEventPtr DuGameEvent::fromStruct(const s_arrangement_event& eventStruct)
     }
     event->setLeds(ledsArray);
 
+    bool verif = event->setWaitForLoopStart(eventStruct.ae_wait_for_loop_start);
+    if (!verif)
+    {
+        qCWarning(LOG_CAT_DU_OBJECT) << "An attribute was not properly set";
+    }
+
     return event;
 }
 
@@ -126,13 +125,10 @@ QByteArray DuGameEvent::toDuMusicBinary() const
     std::memcpy(&(event.ae_intro_msg), introMessageData.constData(), static_cast<size_t>(introMessageData.size()));
 
 
-    const DuGameEventMessageConstPtr &introComment = getIntroComment();
-    if (introComment == Q_NULLPTR)
+    int tmp = getWaitForLoopStart();
+    if (tmp == -1)
         return QByteArray();
-    const QByteArray &introCommentData = introComment->toDuMusicBinary();
-    if (introCommentData.isNull())
-        return QByteArray();
-    std::memcpy(&(event.ae_intro_cmt), introCommentData.constData(), static_cast<size_t>(introCommentData.size()));
+    event.ae_wait_for_loop_start = static_cast<quint8>(tmp);
 
 
     const DuArrayConstPtr<DuArrangementAction> &actions = getActions();
@@ -171,7 +167,8 @@ int DuGameEvent::size() const
 }
 
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuGameEvent, IntroMessage, DuGameEventMessage)
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuGameEvent, IntroComment, DuGameEventMessage)
+
+DU_KEY_ACCESSORS_IMPL(DuGameEvent, WaitForLoopStart, Numeric, int, -1)
 
 DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuGameEvent, Actions, DuArray, DuArrangementAction)
 

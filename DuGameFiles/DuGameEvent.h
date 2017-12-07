@@ -35,7 +35,8 @@ public:
     virtual int size() const Q_DECL_OVERRIDE;
 
     DU_KEY_ACCESSORS_OBJECT(IntroMessage, DuGameEventMessage)
-    DU_KEY_ACCESSORS_OBJECT(IntroComment, DuGameEventMessage)
+
+    DU_KEY_ACCESSORS(WaitForLoopStart, int)
 
     DU_KEY_ACCESSORS_OBJECT_TEMPLATE(Actions, DuArray, DuArrangementAction)
 
