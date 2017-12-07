@@ -88,6 +88,12 @@ DuGamePtr DuGame::fromBinary(const QByteArray &data, quint32 version)
             return {};
         }
 
+        // MIGRATE EVENTS FOR DU-GAME VERSION 1
+        if (version == 1)
+        {
+            event->setWaitForLoopStart(0xFF);
+        }
+
         if (!eventsArray->append(event))
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "Can't parse DuGame: the event" << i << "could not be appended";
