@@ -15,7 +15,7 @@ DuGameEvent::DuGameEvent() : DuContainer()
 {
     addChild(KeyIntroMessage, new DuGameEventMessage);
 
-    addChild(KeyWaitForLoopStart, new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
+    addChild(KeyWaitForLoopStart, new DuNumeric(0xFF, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
 
     addChild(KeyActions, new DuArray<DuArrangementAction>(ARRANGEMENT_MAXEVENTACTION));
 
