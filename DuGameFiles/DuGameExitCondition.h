@@ -24,7 +24,8 @@ public:
     virtual int size() const Q_DECL_OVERRIDE;
 
     DU_KEY_ACCESSORS_TEMPLATE(Type, ARRANGEMENT_EXITCONDITION)
-    DU_KEY_ACCESSORS(Value, int)
+    DU_KEY_ACCESSORS(Value1, int)
+    DU_KEY_ACCESSORS(Value2, int)
 };
 
 #endif // DUGAMEEXITCONDITION_H
