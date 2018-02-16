@@ -1,7 +1,7 @@
 #ifndef DUARRAY_H
 #define DUARRAY_H
 
-#include "duobject.h"
+#include "dunumeric.h"
 #include <QJsonArray>
 #include <QList>
 
@@ -523,5 +523,28 @@ QList<QSharedPointer<T> > &DuArray<T>::getArray()
 {
     return m_array;
 }
+
+
+DU_OBJECT(DuNumericArray);
+
+class DuNumericArray : public DuArray<DuNumeric>
+{
+public:
+    DuNumericArray(int maxSize = -1);
+    virtual ~DuNumericArray() = default;
+
+    virtual DuObjectPtr clone() const Q_DECL_OVERRIDE;
+
+    QList<int> getNumericArray() const;
+    bool setNumericArray(const QList<int>& value);
+
+    bool append(int element);
+    void insert(int index, int element);
+
+    void replace(int index, int element);
+
+    int at(int index) const;
+    int operator[](int index) const;
+};
 
 #endif // DUARRAY_H

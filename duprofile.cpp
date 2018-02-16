@@ -14,21 +14,24 @@
 #include <QJsonObject>
 #include <QMimeDatabase>
 
+#include "DuWorld/DuWorldUserData.h"
+
 DU_OBJECT_IMPL(DuProfile)
 
 DuProfile::DuProfile() :
     DuContainer()
 {
-    addChild(KeyFirstname,    new DuString);
-    addChild(KeyLastname,     new DuString);
-    addChild(KeyPseudo,       new DuString);
-    addChild(KeyMail,         new DuString);
-    addChild(KeyAvatarUrl,    new DuUrl);
-    addChild(KeyCreationDate, new DuDate);
-    addChild(KeyRole,         new DuNumeric(None));
-    addChild(KeyGUID,         new DuNumeric(-1));
-    addChild(KeyDuTouchList,  new DuArray<DuTouch>);
-    addChild(KeyFriends,      new DuArray<DuProfile>);
+    addChild(KeyFirstname,     new DuString);
+    addChild(KeyLastname,      new DuString);
+    addChild(KeyPseudo,        new DuString);
+    addChild(KeyMail,          new DuString);
+    addChild(KeyAvatarUrl,     new DuUrl);
+    addChild(KeyCreationDate,  new DuDate);
+    addChild(KeyRole,          new DuNumeric(None));
+    addChild(KeyGUID,          new DuNumeric(-1));
+    addChild(KeyDuTouchList,   new DuArray<DuTouch>);
+    addChild(KeyFriends,       new DuArray<DuProfile>);
+    addChild(KeyWorldUserData, new DuWorldUserData);
 }
 
 DuObjectPtr DuProfile::clone() const
@@ -133,6 +136,16 @@ DuProfilePtr DuProfile::fromJsonApi(const JsonApiResourceObject &jsonProfile, in
         outProfile->setAvatarUrl(avatarValue.toString());
     }
 
+    // WORLD DATA
+    if (dataObject.contains("world_data"))
+    {
+        const QJsonValue& worldDataValue = dataObject.value("world_data");
+        if (!worldDataValue.isNull())
+        {
+            outProfile->setWorldUserData(DuWorldUserData::fromJsonApi(worldDataValue));
+        }
+    }
+
     // FRIENDS
     //TODO
     Q_UNUSED(recursionLevel)
@@ -212,3 +225,5 @@ DU_KEY_ACCESSORS_IMPL(DuProfile, GUID,         Numeric, int, -1)
 
 DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuProfile, DuTouchList, DuArray, DuTouch)
 DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuProfile, Friends,     DuArray, DuProfile)
+
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuProfile, WorldUserData, DuWorldUserData)
