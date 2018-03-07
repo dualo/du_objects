@@ -81,7 +81,7 @@ HEADERS += \
     $$PWD/du-touch/dualo_structs/parameters_structs.h \
     $$PWD/du-touch/dualo_structs/arrangement_structs.h \
     $$PWD/du-touch/dualo_structs/metadata_structs.h \
-    $$PWD/DuGameFiles/DuGame.h \
+    $$PWD/DuGameFiles/DuGameMetadata.h \
     $$PWD/metadata/DuMetadataChunk.h \
     $$PWD/dumusicfile/DuMusicMetadata.h \
     $$PWD/DuGameFiles/DuGameEvent.h \
@@ -143,7 +143,7 @@ SOURCES += \
     $$PWD/midifile/dumidisysexevent.cpp \
     $$PWD/midifile/dumiditrack.cpp \
     $$PWD/midifile/dumidifile.cpp \
-    $$PWD/DuGameFiles/DuGame.cpp \
+    $$PWD/DuGameFiles/DuGameMetadata.cpp \
     $$PWD/metadata/DuMetadataChunk.cpp \
     $$PWD/dumusicfile/DuMusicMetadata.cpp \
     $$PWD/DuGameFiles/DuGameEvent.cpp \

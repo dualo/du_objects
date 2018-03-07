@@ -12,7 +12,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
-#include "../DuGameFiles/DuGame.h"
+#include "../DuGameFiles/DuGameMetadata.h"
 
 #include "../dusoundfile/dusound.h"
 
@@ -1368,7 +1368,7 @@ bool DuMusic::getIsDuGame() const
     if (metadata == Q_NULLPTR)
         return false;
 
-    const DuGameConstPtr& game = metadata->getGame();
+    const DuGameMetadataConstPtr& game = metadata->getGameMetadata();
 
     return game != Q_NULLPTR;
 }
@@ -1473,7 +1473,7 @@ QSet<InstrumentIdentifier> DuMusic::getUsedSystemSoundsIdentifiers() const
         return {};
     }
 
-    const DuGameConstPtr& game = metadata->getGame();
+    const DuGameMetadataConstPtr& game = metadata->getGameMetadata();
     if (game == Q_NULLPTR)
     {
         return {};

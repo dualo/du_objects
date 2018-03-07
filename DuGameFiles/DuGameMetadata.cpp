@@ -1,4 +1,4 @@
-#include "DuGame.h"
+#include "DuGameMetadata.h"
 
 #include "DuGameEvent.h"
 
@@ -16,9 +16,9 @@
 
 #include "../instrument/DuSystemSoundIdentifier.h"
 
-DU_OBJECT_IMPL(DuGame)
+DU_OBJECT_IMPL(DuGameMetadata)
 
-DuGame::DuGame() : DuContainer()
+DuGameMetadata::DuGameMetadata() : DuContainer()
 {
     addChild(KeyGrade, new DuNumeric);
     addChild(KeyUnlockerEvent, new DuNumeric);
@@ -33,7 +33,7 @@ DuGame::DuGame() : DuContainer()
     addChild(KeyEvents, new DuArray<DuGameEvent>);
 }
 
-DuGamePtr DuGame::fromBinary(const QByteArray &data, quint32 version)
+DuGameMetadataPtr DuGameMetadata::fromBinary(const QByteArray &data, quint32 version)
 {
     if (version < MUSICMETADATA_GAME_CURRENT_VERSION)
     {
@@ -49,11 +49,11 @@ DuGamePtr DuGame::fromBinary(const QByteArray &data, quint32 version)
     const int expectedSize = DUGAME_HEADER + (gameStruct.dg_numevent * ARRANGEMENT_EVENT_SIZE);
     if (data.size() != expectedSize)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Can't parse DuGame: data size incorrect -> expected" << expectedSize << ", got" << data.size();
+        qCCritical(LOG_CAT_DU_OBJECT) << "Can't parse DuGameMetadata: data size incorrect -> expected" << expectedSize << ", got" << data.size();
         return {};
     }
 
-    DuGamePtr game(new DuGame);
+    DuGameMetadataPtr game(new DuGameMetadata);
 
     DuArrayPtr<DuSystemSoundIdentifier> soundsArray(new DuArray<DuSystemSoundIdentifier>(MAX_DUGAME_SOUND));
     for (uint i = 0; i < MAX_DUGAME_SOUND; ++i)
@@ -63,13 +63,13 @@ DuGamePtr DuGame::fromBinary(const QByteArray &data, quint32 version)
         const DuSystemSoundIdentifierPtr& sound = DuSystemSoundIdentifier::fromBinary(soundStruct);
         if (sound == Q_NULLPTR)
         {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Can't parse DuGame: sound" << i << "corrupted";
+            qCCritical(LOG_CAT_DU_OBJECT) << "Can't parse DuGameMetadata: sound" << i << "corrupted";
             return {};
         }
 
         if (!soundsArray->append(sound))
         {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Can't parse DuGame: the sound" << i << "could not be appended";
+            qCCritical(LOG_CAT_DU_OBJECT) << "Can't parse DuGameMetadata: the sound" << i << "could not be appended";
             return {};
         }
     }
@@ -84,7 +84,7 @@ DuGamePtr DuGame::fromBinary(const QByteArray &data, quint32 version)
         const DuGameEventPtr& event = DuGameEvent::fromStruct(eventStruct);
         if (event == Q_NULLPTR)
         {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Can't parse DuGame: event" << i << "corrupted";
+            qCCritical(LOG_CAT_DU_OBJECT) << "Can't parse DuGameMetadata: event" << i << "corrupted";
             return {};
         }
 
@@ -96,7 +96,7 @@ DuGamePtr DuGame::fromBinary(const QByteArray &data, quint32 version)
 
         if (!eventsArray->append(event))
         {
-            qCCritical(LOG_CAT_DU_OBJECT) << "Can't parse DuGame: the event" << i << "could not be appended";
+            qCCritical(LOG_CAT_DU_OBJECT) << "Can't parse DuGameMetadata: the event" << i << "could not be appended";
             return {};
         }
     }
@@ -118,12 +118,12 @@ DuGamePtr DuGame::fromBinary(const QByteArray &data, quint32 version)
     return game;
 }
 
-DuObjectPtr DuGame::clone() const
+DuObjectPtr DuGameMetadata::clone() const
 {
-    return DuGamePtr(new DuGame(*this));
+    return DuGameMetadataPtr(new DuGameMetadata(*this));
 }
 
-QByteArray DuGame::toDuMusicBinary() const
+QByteArray DuGameMetadata::toDuMusicBinary() const
 {
     s_dugame game;
     std::memset(&game, 0x00, DUGAME_HEADER);
@@ -190,7 +190,7 @@ QByteArray DuGame::toDuMusicBinary() const
     return data;
 }
 
-int DuGame::size() const
+int DuGameMetadata::size() const
 {
     const DuArrayConstPtr<DuGameEvent>& events = getEvents();
     if (events == Q_NULLPTR)
@@ -202,9 +202,9 @@ int DuGame::size() const
     return DUGAME_HEADER + events->size();
 }
 
-DU_KEY_ACCESSORS_IMPL(DuGame, Grade, Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuGame, UnlockerEvent, Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuGame, Version, Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuGame, GameId, Numeric, int, -1)
-DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuGame, Sounds, DuArray, DuSystemSoundIdentifier)
-DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuGame, Events, DuArray, DuGameEvent)
+DU_KEY_ACCESSORS_IMPL(DuGameMetadata, Grade, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuGameMetadata, UnlockerEvent, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuGameMetadata, Version, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuGameMetadata, GameId, Numeric, int, -1)
+DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuGameMetadata, Sounds, DuArray, DuSystemSoundIdentifier)
+DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuGameMetadata, Events, DuArray, DuGameEvent)

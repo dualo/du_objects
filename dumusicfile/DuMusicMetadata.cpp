@@ -1,6 +1,6 @@
 #include "DuMusicMetadata.h"
 
-#include "../DuGameFiles/DuGame.h"
+#include "../DuGameFiles/DuGameMetadata.h"
 #include "../metadata/DuMetadataChunk.h"
 
 #include <QDataStream>
@@ -9,7 +9,7 @@ DU_OBJECT_IMPL(DuMusicMetadata)
 
 DuMusicMetadata::DuMusicMetadata() : DuContainer()
 {
-    addChild(KeyGame, Q_NULLPTR);
+    addChild(KeyGameMetadata, Q_NULLPTR);
 }
 
 DuMusicMetadataPtr DuMusicMetadata::fromBinary(const QByteArray &data)
@@ -27,14 +27,14 @@ DuMusicMetadataPtr DuMusicMetadata::fromBinary(const QByteArray &data)
         }
 
         const DuMetadataChunk& gameChunk = chunks.value(MUSICMETADATA_GAME_SIGNATURE);
-        DuGamePtr game = DuGame::fromBinary(gameChunk.data(), gameChunk.version());
+        DuGameMetadataPtr game = DuGameMetadata::fromBinary(gameChunk.data(), gameChunk.version());
         if (game == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT) << "Can't parse music metadata: game is corrupted";
             return {};
         }
 
-        metadata->setGame(game);
+        metadata->setGameMetadata(game);
     }
 
     return metadata;
@@ -56,7 +56,7 @@ QByteArray DuMusicMetadata::toDuMusicBinary() const
 
     data += QByteArray(reinterpret_cast<const char*>(&generalHeader), METADATA_HEADER_SIZE);
 
-    const DuGameConstPtr& game = getGame();
+    const DuGameMetadataConstPtr& game = getGameMetadata();
     if (game != Q_NULLPTR)
     {
         s_metadata_header header{MUSICMETADATA_GAME_SIGNATURE, MUSICMETADATA_GAME_CURRENT_VERSION, static_cast<quint32>(game->size())};
@@ -71,7 +71,7 @@ int DuMusicMetadata::size() const
 {
     int size = 0;
 
-    const DuGameConstPtr& game = getGame();
+    const DuGameMetadataConstPtr& game = getGameMetadata();
     if (game != Q_NULLPTR)
     {
         size += METADATA_HEADER_SIZE + game->size();
@@ -80,4 +80,4 @@ int DuMusicMetadata::size() const
     return size;
 }
 
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusicMetadata, Game, DuGame)
+DU_KEY_ACCESSORS_OBJECT_IMPL(DuMusicMetadata, GameMetadata, DuGameMetadata)

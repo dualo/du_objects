@@ -3,7 +3,7 @@
 
 #include "../general/ducontainer.h"
 
-DU_OBJECT(DuGame);
+DU_OBJECT(DuGameMetadata);
 
 DU_OBJECT(DuMusicMetadata);
 
@@ -21,7 +21,7 @@ public:
     virtual QByteArray toDuMusicBinary() const Q_DECL_OVERRIDE;
     virtual int size() const Q_DECL_OVERRIDE;
 
-    DU_KEY_ACCESSORS_OBJECT(Game, DuGame)
+    DU_KEY_ACCESSORS_OBJECT(GameMetadata, DuGameMetadata)
 };
 
 #endif // DUMUSICMETADATA_H

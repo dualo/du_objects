@@ -1,5 +1,5 @@
-#ifndef DUGAME_H
-#define DUGAME_H
+#ifndef DUGAMEMETADATA_H
+#define DUGAMEMETADATA_H
 
 #include "../general/ducontainer.h"
 
@@ -11,15 +11,15 @@ DU_OBJECT_TEMPLATE(DuArray);
 DU_OBJECT(DuGameEvent);
 DU_OBJECT(DuSystemSoundIdentifier);
 
-DU_OBJECT(DuGame);
+DU_OBJECT(DuGameMetadata);
 
-class DuGame : public DuContainer
+class DuGameMetadata : public DuContainer
 {
 public:
-    DuGame();
-    virtual ~DuGame() = default;
+    DuGameMetadata();
+    virtual ~DuGameMetadata() = default;
 
-    static DuGamePtr fromBinary(const QByteArray& data, quint32 version);
+    static DuGameMetadataPtr fromBinary(const QByteArray& data, quint32 version);
 
     // DuObject interface
 public:
@@ -35,4 +35,4 @@ public:
     DU_KEY_ACCESSORS_OBJECT_TEMPLATE(Events, DuArray, DuGameEvent)
 };
 
-#endif // DUGAME_H
+#endif // DUGAMEMETADATA_H
