@@ -56,7 +56,8 @@ void DuMusicTest::testMusicInOut()
     loop->setState(REC_STOP);
 
     QByteArray data = obj->toDuMusicBinary();
-    DuMusicPtr fromBinaryObj = DuMusic::fromBinary(data);
+    QVector<DuSoundPtr> sounds;
+    DuMusicPtr fromBinaryObj = DuMusic::fromBinary(data, sounds);
     QByteArray toBinaryData = fromBinaryObj->toDuMusicBinary();
 
     QCOMPARE(data.size(), toBinaryData.size());
