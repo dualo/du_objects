@@ -1,7 +1,7 @@
 #ifndef DUSYSTEMSOUNDIDENTIFIER_H
 #define DUSYSTEMSOUNDIDENTIFIER_H
 
-#include <du_objects/general/ducontainer.h>
+#include "../general/ducontainer.h"
 
 #pragma pack(push, 4)
 #include "../du-touch/dualo_structs/dugame_structs.h"
