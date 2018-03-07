@@ -97,8 +97,8 @@ public:
     static DuMusicPtr fromDuMusicBinary(s_total_buffer &du_music, int totalBufferSize, const QByteArray& metadataBin);
     static DuMusicPtr fromBinary(const QByteArray &data, QVector<DuSoundPtr> &outIntegratedSounds);
     static DuMusicPtr fromBinary(QIODevice *input, QVector<DuSoundPtr> &outIntegratedSounds);
-    static DuMusicPtr fromDuGameBinary(const QByteArray &data, QVector<DuSoundPtr> &outSystemSounds);
-    static DuMusicPtr fromDuGameBinary(QIODevice *input, QVector<DuSoundPtr> &outSystemSounds);
+    static DuMusicPtr fromDuGameBinary(const QByteArray &data, QVector<DuSoundPtr> &outIntegratedSounds, QVector<DuSoundPtr> &outSystemSounds);
+    static DuMusicPtr fromDuGameBinary(QIODevice *input, QVector<DuSoundPtr> &outIntegratedSounds, QVector<DuSoundPtr> &outSystemSounds);
     static DuMusicPtr fromJson(const QJsonObject &jsonMusic);
 
 #ifndef NO_MIDI_IMPORT
@@ -107,7 +107,7 @@ public:
 
     QByteArray toDuMusicBinary() const override;
     QByteArray toDuMusicBundleBinary(const QVector<DuSoundConstPtr> &integratedSounds) const;
-    QByteArray toDuGameBinary(const QVector<DuSoundConstPtr> &systemSounds) const;
+    QByteArray toDuGameBinary(const QVector<DuSoundConstPtr> &integratedSounds, const QVector<DuSoundConstPtr> &systemSounds) const;
 
     QByteArray toMidiBinary() const override;
     DuMidiTrackPtr getTempoTrack() const;

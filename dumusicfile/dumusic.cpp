@@ -516,7 +516,7 @@ DuMusicPtr DuMusic::fromBinary(QIODevice *input, QVector<DuSoundPtr>& outIntegra
     return DuMusic::fromBinary(array, outIntegratedSounds);
 }
 
-DuMusicPtr DuMusic::fromDuGameBinary(const QByteArray &data, QVector<DuSoundPtr> &outSystemSounds)
+DuMusicPtr DuMusic::fromDuGameBinary(const QByteArray &data, QVector<DuSoundPtr> &outIntegratedSounds, QVector<DuSoundPtr> &outSystemSounds)
 {
     QByteArray musicData;
 
@@ -566,6 +566,14 @@ DuMusicPtr DuMusic::fromDuGameBinary(const QByteArray &data, QVector<DuSoundPtr>
         if (chunkType == "DMSC")
         {
             musicData = chunkData;
+        }
+        else if (chunkType == "DSND")
+        {
+            const DuSoundPtr& sound = DuSound::fromBinary(chunkData);
+            if (sound == Q_NULLPTR)
+                continue;
+
+            outIntegratedSounds << sound;
         }
         else if (chunkType == "SDSM")
         {
@@ -634,7 +642,7 @@ DuMusicPtr DuMusic::fromDuGameBinary(const QByteArray &data, QVector<DuSoundPtr>
     return DuMusic::fromDuMusicBinary(*temp_total_buffer, MUSIC_SONG_SIZE + totalSampleSize, metadata);
 }
 
-DuMusicPtr DuMusic::fromDuGameBinary(QIODevice *input, QVector<DuSoundPtr> &outSystemSounds)
+DuMusicPtr DuMusic::fromDuGameBinary(QIODevice *input, QVector<DuSoundPtr> &outIntegratedSounds, QVector<DuSoundPtr> &outSystemSounds)
 {
     QByteArray array = input->readAll();
 
@@ -647,7 +655,7 @@ DuMusicPtr DuMusic::fromDuGameBinary(QIODevice *input, QVector<DuSoundPtr> &outS
         return {};
     }
 
-    return DuMusic::fromDuGameBinary(array, outSystemSounds);
+    return DuMusic::fromDuGameBinary(array, outIntegratedSounds, outSystemSounds);
 }
 
 
@@ -1130,7 +1138,7 @@ QByteArray DuMusic::toDuMusicBundleBinary(const QVector<DuSoundConstPtr> &integr
     return musicBinaryData;
 }
 
-QByteArray DuMusic::toDuGameBinary(const QVector<DuSoundConstPtr> &systemSounds) const
+QByteArray DuMusic::toDuGameBinary(const QVector<DuSoundConstPtr> &integratedSounds, const QVector<DuSoundConstPtr> &systemSounds) const
 {
     QByteArray musicBinaryData;
 
@@ -1152,6 +1160,23 @@ QByteArray DuMusic::toDuGameBinary(const QVector<DuSoundConstPtr> &systemSounds)
     stream << static_cast<quint32>(musicSize);
     stream.writeRawData(musicData.constData(), musicSize);
     stream << qChecksum(musicData.constData(), static_cast<uint>(musicSize));
+
+    for (const DuSoundConstPtr& sound : integratedSounds)
+    {
+        stream.writeRawData("DSND", 4);
+
+        const QByteArray& soundData = sound->toBinary(false);
+        if (soundData.isEmpty())
+        {
+            qCCritical(LOG_CAT_DU_OBJECT) << "Error converting du-sound to binary";
+            return QByteArray();
+        }
+
+        int soundSize = soundData.size();
+        stream << static_cast<quint32>(soundSize);
+        stream.writeRawData(soundData.constData(), soundSize);
+        stream << qChecksum(soundData.constData(), static_cast<uint>(soundSize));
+    }
 
     for (const DuSoundConstPtr& sound : systemSounds)
     {
