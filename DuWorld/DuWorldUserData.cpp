@@ -97,13 +97,15 @@ QHttpMultiPart *DuWorldUserData::toHttpMultiPart(const QByteArray &boundary) con
     multiPart->setBoundary(boundary);
 
     QJsonArray finishedGamesJsonArray;
-    for (const int finishedGame : getFinishedGames())
+    const QList<int>& finishedGames = getFinishedGames();
+    for (const int finishedGame : finishedGames)
     {
         finishedGamesJsonArray << finishedGame;
     }
 
     QJsonArray unlockedGamesJsonArray;
-    for (const int unlockedGame : getUnlockedGames())
+    const QList<int>& unlockedGames = getUnlockedGames();
+    for (const int unlockedGame : unlockedGames)
     {
         unlockedGamesJsonArray << unlockedGame;
     }
