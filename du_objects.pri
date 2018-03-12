@@ -91,7 +91,8 @@ HEADERS += \
     $$PWD/general/DuEnum.h \
     $$PWD/du-touch/dualo_structs/dugame_structs.h \
     $$PWD/instrument/DuSystemSoundIdentifier.h \
-    $$PWD/DuWorld/DuWorldUserData.h
+    $$PWD/DuWorld/DuWorldUserData.h \
+    $$PWD/DuGameFiles/DuGame.h
 
 SOURCES += \
     $$PWD/general/duobject.cpp \
@@ -152,7 +153,8 @@ SOURCES += \
     $$PWD/DuGameFiles/DuGameExitCondition.cpp \
     $$PWD/general/DuEnum.cpp \
     $$PWD/instrument/DuSystemSoundIdentifier.cpp \
-    $$PWD/DuWorld/DuWorldUserData.cpp
+    $$PWD/DuWorld/DuWorldUserData.cpp \
+    $$PWD/DuGameFiles/DuGame.cpp
 
 DEFINES += NO_MIDI_IMPORT
 
