@@ -1,5 +1,7 @@
 #include "DuGame.h"
 
+#include <cstring>
+
 #include <QDataStream>
 
 #include <QtEndian>
