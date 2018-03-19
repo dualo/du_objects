@@ -22,6 +22,7 @@ public:
 
     static DuGamePtr fromDuGameBinary(const QByteArray &data);
     static DuGamePtr fromDuGameBinary(QIODevice *input);
+    static DuGamePtr fromDuMusicAndSounds(const DuMusicConstPtr& music, const QVector<DuSoundPtr> &integratedSounds, const QVector<DuSoundPtr> &systemSounds);
 
     QByteArray toDuGameBinary() const;
 

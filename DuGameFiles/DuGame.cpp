@@ -169,6 +169,15 @@ DuGamePtr DuGame::fromDuGameBinary(QIODevice *input)
     return DuGame::fromDuGameBinary(array);
 }
 
+DuGamePtr DuGame::fromDuMusicAndSounds(const DuMusicConstPtr &music, const QVector<DuSoundPtr> &integratedSounds, const QVector<DuSoundPtr> &systemSounds)
+{
+    DuGamePtr newGame(new DuGame(*music));
+    newGame->m_integratedSounds = integratedSounds;
+    newGame->m_systemSounds = systemSounds;
+
+    return newGame;
+}
+
 QByteArray DuGame::toDuGameBinary() const
 {
     QByteArray gameBinaryData;
