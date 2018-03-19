@@ -1,6 +1,7 @@
 #ifndef DUOBJECT_H
 #define DUOBJECT_H
 
+#include <QMetaType>
 #include <QHttpPart>
 #include <QSharedPointer>
 #include <QLoggingCategory>
@@ -101,5 +102,8 @@ inline QSharedPointer<T> DuObject::cloneAs() const
 {
     return clone().dynamicCast<T>();
 }
+
+Q_DECLARE_METATYPE(DuObjectPtr);
+Q_DECLARE_METATYPE(DuObjectConstPtr);
 
 #endif // DUOBJECT_H

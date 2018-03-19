@@ -18,7 +18,10 @@ DuContainer::DuContainer(const DuContainer &other) :
     while (i.hasNext())
     {
         i.next();
-        m_children.insert(i.key(), i.value()->clone());
+        if (i.value() != Q_NULLPTR)
+            m_children.insert(i.key(), i.value()->clone());
+        else
+            m_children.insert(i.key(), DuObjectPtr());
     }
 }
 

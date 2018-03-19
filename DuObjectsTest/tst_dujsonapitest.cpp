@@ -162,9 +162,9 @@ void DuJsonApiTest::testJsonApiDocumentError()
     QVERIFY(apiDoc.toJsonDocument().isObject());
     QCOMPARE(QString(apiDoc.toJsonDocument().toJson(QJsonDocument::Compact)), QString(doc.toJson(QJsonDocument::Compact)));
 
-    JsonApiErrorObject error1(1564684, 200, 123, "Value is too short", "First name must contain at least three characters.");
-    JsonApiErrorObject error2(489494, 404, 225, "Passwords must contain a letter, number, and punctuation character.", "The password provided is missing a punctuation character.");
-    JsonApiErrorObject error3(3789648, 500, 226, "Password and password confirmation do not match.", "They have to match !");
+    JsonApiErrorObject error1(1564684, 200, "123", "Value is too short", "First name must contain at least three characters.");
+    JsonApiErrorObject error2(489494, 404, "225", "Passwords must contain a letter, number, and punctuation character.", "The password provided is missing a punctuation character.");
+    JsonApiErrorObject error3(3789648, 500, "226", "Password and password confirmation do not match.", "They have to match !");
     JsonApiDocument homemadeApiDoc(QList<JsonApiErrorObject>() << error1 << error2 << error3);
 
     QCOMPARE(QString(apiDoc.toJsonDocument().toJson(QJsonDocument::Compact)), QString(homemadeApiDoc.toJsonDocument().toJson(QJsonDocument::Compact)));

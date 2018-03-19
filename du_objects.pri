@@ -77,7 +77,22 @@ HEADERS += \
     $$PWD/midifile/dumidimetaevent.h \
     $$PWD/midifile/dumidisysexevent.h \
     $$PWD/midifile/dumiditrack.h \
-    $$PWD/midifile/dumidifile.h
+    $$PWD/midifile/dumidifile.h \
+    $$PWD/du-touch/dualo_structs/parameters_structs.h \
+    $$PWD/du-touch/dualo_structs/arrangement_structs.h \
+    $$PWD/du-touch/dualo_structs/metadata_structs.h \
+    $$PWD/DuGameFiles/DuGameMetadata.h \
+    $$PWD/metadata/DuMetadataChunk.h \
+    $$PWD/dumusicfile/DuMusicMetadata.h \
+    $$PWD/DuGameFiles/DuGameEvent.h \
+    $$PWD/DuGameFiles/DuGameEventMessage.h \
+    $$PWD/DuGameFiles/DuArrangementAction.h \
+    $$PWD/DuGameFiles/DuGameExitCondition.h \
+    $$PWD/general/DuEnum.h \
+    $$PWD/du-touch/dualo_structs/dugame_structs.h \
+    $$PWD/instrument/DuSystemSoundIdentifier.h \
+    $$PWD/DuWorld/DuWorldUserData.h \
+    $$PWD/DuGameFiles/DuGame.h
 
 SOURCES += \
     $$PWD/general/duobject.cpp \
@@ -128,7 +143,18 @@ SOURCES += \
     $$PWD/midifile/dumidimetaevent.cpp \
     $$PWD/midifile/dumidisysexevent.cpp \
     $$PWD/midifile/dumiditrack.cpp \
-    $$PWD/midifile/dumidifile.cpp
+    $$PWD/midifile/dumidifile.cpp \
+    $$PWD/DuGameFiles/DuGameMetadata.cpp \
+    $$PWD/metadata/DuMetadataChunk.cpp \
+    $$PWD/dumusicfile/DuMusicMetadata.cpp \
+    $$PWD/DuGameFiles/DuGameEvent.cpp \
+    $$PWD/DuGameFiles/DuGameEventMessage.cpp \
+    $$PWD/DuGameFiles/DuArrangementAction.cpp \
+    $$PWD/DuGameFiles/DuGameExitCondition.cpp \
+    $$PWD/general/DuEnum.cpp \
+    $$PWD/instrument/DuSystemSoundIdentifier.cpp \
+    $$PWD/DuWorld/DuWorldUserData.cpp \
+    $$PWD/DuGameFiles/DuGame.cpp
 
 DEFINES += NO_MIDI_IMPORT
 

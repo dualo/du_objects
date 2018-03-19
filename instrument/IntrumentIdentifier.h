@@ -2,6 +2,7 @@
 #define INTRUMENTIDENTIFIER_H
 
 #include <QHash>
+#include <QMetaType>
 
 struct InstrumentIdentifier
 {
@@ -24,5 +25,7 @@ inline uint qHash(const InstrumentIdentifier &key, uint seed)
 {
     return qHash(qMakePair(key.id, key.userId), seed);
 }
+
+Q_DECLARE_METATYPE(InstrumentIdentifier)
 
 #endif // INTRUMENTIDENTIFIER_H

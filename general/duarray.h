@@ -1,10 +1,9 @@
 #ifndef DUARRAY_H
 #define DUARRAY_H
 
-#include "duobject.h"
+#include "dunumeric.h"
 #include <QJsonArray>
 #include <QList>
-
 
 DU_OBJECT(DuArrayNoTemplate);
 
@@ -34,7 +33,7 @@ class DuArray : public DuArrayNoTemplate
 #endif
 
 public:
-    explicit DuArray(int m_maxSize = -1);
+    explicit DuArray(int maxSize = -1);
     virtual ~DuArray() = default;
 
 protected:
@@ -77,6 +76,7 @@ public:
     QSharedPointer<const T> at(int index) const;
 
     QSharedPointer<T> operator[](int index);
+    QSharedPointer<const T> operator[](int index) const;
 
     // STL container functions
     inline typename QList< QSharedPointer<T> >::iterator begin() { return m_array.begin(); }
@@ -87,7 +87,8 @@ public:
     inline typename QList< QSharedPointer<T> >::const_iterator cend() const { return m_array.cend(); }
 
 protected:
-    const QList< QSharedPointer<T> > &getArray() const;
+    const QList< QSharedPointer<T> >& getArray() const;
+    QList< QSharedPointer<T> >& getArray();
 
 private:
     QList< QSharedPointer<T> > m_array;
@@ -490,7 +491,22 @@ QSharedPointer<T> DuArray<T>::operator[](int index)
                    << index << "is above element count\n"
                    << "default constructed value returned";
 
-        return DuObjectPtr();
+        return QSharedPointer<T>();
+    }
+
+    return m_array[index];
+}
+
+template<class T>
+QSharedPointer<const T> DuArray<T>::operator[](int index) const
+{
+    if (index >= m_array.count())
+    {
+        qCWarning(LOG_CAT_DU_OBJECT)
+                   << index << "is above element count\n"
+                   << "default constructed value returned";
+
+        return QSharedPointer<const T>();
     }
 
     return m_array[index];
@@ -501,5 +517,34 @@ const QList< QSharedPointer<T> > &DuArray<T>::getArray() const
 {
     return m_array;
 }
+
+template<class T>
+QList<QSharedPointer<T> > &DuArray<T>::getArray()
+{
+    return m_array;
+}
+
+
+DU_OBJECT(DuNumericArray);
+
+class DuNumericArray : public DuArray<DuNumeric>
+{
+public:
+    DuNumericArray(int maxSize = -1);
+    virtual ~DuNumericArray() = default;
+
+    virtual DuObjectPtr clone() const Q_DECL_OVERRIDE;
+
+    QList<int> getNumericArray() const;
+    bool setNumericArray(const QList<int>& value);
+
+    bool append(int element);
+    void insert(int index, int element);
+
+    void replace(int index, int element);
+
+    int at(int index) const;
+    int operator[](int index) const;
+};
 
 #endif // DUARRAY_H

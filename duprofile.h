@@ -13,6 +13,7 @@ DU_OBJECT_TEMPLATE(DuArray);
 #endif
 
 DU_OBJECT(DuTouch);
+DU_OBJECT(DuWorldUserData);
 
 DU_OBJECT(DuProfile);
 
@@ -47,6 +48,7 @@ public:
 
     QHttpMultiPart *toHttpMultiPart(const QByteArray &boundary) const;
 
+    // General
     DU_KEY_ACCESSORS(Firstname,    QString)
     DU_KEY_ACCESSORS(Lastname,     QString)
     DU_KEY_ACCESSORS(Pseudo,       QString)
@@ -58,6 +60,9 @@ public:
 
     DU_KEY_ACCESSORS_OBJECT_TEMPLATE(DuTouchList, DuArray, DuTouch)
     DU_KEY_ACCESSORS_OBJECT_TEMPLATE(Friends,     DuArray, DuProfile)
+
+    // du-world
+    DU_KEY_ACCESSORS_OBJECT(WorldUserData, DuWorldUserData)
 };
 
 Q_DECLARE_METATYPE(DuProfilePtr)

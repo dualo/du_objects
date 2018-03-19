@@ -59,7 +59,11 @@ public:
 
     DU_KEY_ACCESSORS(RelativeVolume,     int)
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+    DU_KEY_ACCESSORS_TEMPLATE(InstrType, INSTRUMENT_TYPE)
+#else
     DU_KEY_ACCESSORS(InstrType,          INSTRUMENT_TYPE)
+#endif
     DU_KEY_ACCESSORS(InstrVersion,       int)
     DU_KEY_ACCESSORS(HardInstrVersion,   int)
     DU_KEY_ACCESSORS(SoftInstrVersion,   int)

@@ -18,6 +18,8 @@ public:
 
     bool setType(Type value);
 
+    int getNumButtonKeyboard() const;
+
     DU_KEY_ACCESSORS_OBJECT(Device, DuDevice)
 
     DU_KEY_ACCESSORS_IN_CHILD(DeviceType,   DuDevice::Type)
