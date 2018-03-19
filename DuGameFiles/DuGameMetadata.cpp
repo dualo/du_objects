@@ -89,9 +89,17 @@ DuGameMetadataPtr DuGameMetadata::fromBinary(const QByteArray &data, quint32 ver
         }
 
         // MIGRATE EVENTS FOR DU-GAME VERSION 1
-        if (version == 1)
+        if (version <= 1)
         {
             event->setWaitForLoopStart(0xFF);
+        }
+
+        // MIGRATE EVENTS FOR DU-GAME VERSION 2
+        if (version <= 2)
+        {
+            event->setNextEvent(i==(gameStruct.dg_numevent-1) ? 0xFF : i+1);
+            event->setBackwardEvent(i==0 ? 0 : i-1);
+            event->setForwardEvent(i==(gameStruct.dg_numevent-1) ? 0xFF : i+1);
         }
 
         if (!eventsArray->append(event))
@@ -101,7 +109,6 @@ DuGameMetadataPtr DuGameMetadata::fromBinary(const QByteArray &data, quint32 ver
         }
     }
     game->setEvents(eventsArray);
-
 
     bool verif = true;
 
