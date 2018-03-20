@@ -75,8 +75,10 @@ DuGameMetadataPtr DuGameMetadata::fromBinary(const QByteArray &data, quint32 ver
     }
     game->setSounds(soundsArray);
 
+    const int nbEvents = gameStruct.dg_numevent;
+
     DuArrayPtr<DuGameEvent> eventsArray(new DuArray<DuGameEvent>);
-    for (uint i = 0; i < gameStruct.dg_numevent; ++i)
+    for (uint i = 0; i < nbEvents; ++i)
     {
         s_arrangement_event eventStruct;
         stream.readRawData(reinterpret_cast<char*>(&eventStruct), ARRANGEMENT_EVENT_SIZE);
@@ -97,9 +99,9 @@ DuGameMetadataPtr DuGameMetadata::fromBinary(const QByteArray &data, quint32 ver
         // MIGRATE EVENTS FOR DU-GAME VERSION 2
         if (version <= 2)
         {
-            event->setNextEvent(i==(gameStruct.dg_numevent-1) ? 0xFF : i+1);
-            event->setBackwardEvent(i==0 ? 0 : i-1);
-            event->setForwardEvent(i==(gameStruct.dg_numevent-1) ? 0xFF : i+1);
+            event->setNextEvent(i == nbEvents - 1 ? 0xFF : i + 1);
+            event->setBackwardEvent(i == 0 ? 0 : i - 1);
+            event->setForwardEvent(i == nbEvents - 1 ? 0xFF : i + 1);
         }
 
         if (!eventsArray->append(event))
@@ -109,6 +111,7 @@ DuGameMetadataPtr DuGameMetadata::fromBinary(const QByteArray &data, quint32 ver
         }
     }
     game->setEvents(eventsArray);
+
 
     bool verif = true;
 

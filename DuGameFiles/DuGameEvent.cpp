@@ -141,6 +141,22 @@ QByteArray DuGameEvent::toDuMusicBinary() const
     event.ae_wait_for_loop_start = static_cast<quint8>(tmp);
 
 
+    tmp = getNextEvent();
+    if (tmp == -1)
+        return QByteArray();
+    event.ae_nextevent = static_cast<quint8>(tmp);
+
+    tmp = getForwardEvent();
+    if (tmp == -1)
+        return QByteArray();
+    event.ae_forwardevent = static_cast<quint8>(tmp);
+
+    tmp = getBackwardEvent();
+    if (tmp == -1)
+        return QByteArray();
+    event.ae_backwardevent = static_cast<quint8>(tmp);
+
+
     const DuArrayConstPtr<DuArrangementAction> &actions = getActions();
     if (actions == Q_NULLPTR)
         return QByteArray();
@@ -166,20 +182,6 @@ QByteArray DuGameEvent::toDuMusicBinary() const
     if (leds == Q_NULLPTR)
         return QByteArray();
     std::memcpy(event.ae_led, leds->toDuMusicBinary().constData(), static_cast<size_t>(leds->size()));
-
-
-    tmp = getNextEvent();
-    if (tmp == -1)
-        return QByteArray();
-    event.ae_nextevent = static_cast<quint8>(tmp);
-    tmp = getForwardEvent();
-    if (tmp == -1)
-        return QByteArray();
-    event.ae_forwardevent = static_cast<quint8>(tmp);
-    tmp = getBackwardEvent();
-    if (tmp == -1)
-        return QByteArray();
-    event.ae_backwardevent = static_cast<quint8>(tmp);
 
 
     return QByteArray(reinterpret_cast<const char*>(&event), ARRANGEMENT_EVENT_SIZE);
