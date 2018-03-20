@@ -17,6 +17,10 @@ DuGameEvent::DuGameEvent() : DuContainer()
 
     addChild(KeyWaitForLoopStart, new DuNumeric(0xFF, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
 
+    addChild(KeyNextEvent, new DuNumeric(0xFF, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
+    addChild(KeyBackwardEvent, new DuNumeric(0xFF, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
+    addChild(KeyForwardEvent, new DuNumeric(0xFF, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
+
     addChild(KeyActions, new DuArray<DuArrangementAction>(ARRANGEMENT_MAXEVENTACTION));
 
     addChild(KeyExitCondition, new DuGameExitCondition);
@@ -89,7 +93,13 @@ DuGameEventPtr DuGameEvent::fromStruct(const s_arrangement_event& eventStruct)
     }
     event->setLeds(ledsArray);
 
-    bool verif = event->setWaitForLoopStart(eventStruct.ae_wait_for_loop_start);
+    bool verif = true;
+
+    verif = event->setWaitForLoopStart(eventStruct.ae_wait_for_loop_start) ? verif : false;
+    verif = event->setNextEvent(eventStruct.ae_nextevent) ? verif : false;
+    verif = event->setBackwardEvent(eventStruct.ae_backwardevent) ? verif : false;
+    verif = event->setForwardEvent(eventStruct.ae_forwardevent) ? verif : false;
+
     if (!verif)
     {
         qCWarning(LOG_CAT_DU_OBJECT) << "An attribute was not properly set";
@@ -131,6 +141,22 @@ QByteArray DuGameEvent::toDuMusicBinary() const
     event.ae_wait_for_loop_start = static_cast<quint8>(tmp);
 
 
+    tmp = getNextEvent();
+    if (tmp == -1)
+        return QByteArray();
+    event.ae_nextevent = static_cast<quint8>(tmp);
+
+    tmp = getForwardEvent();
+    if (tmp == -1)
+        return QByteArray();
+    event.ae_forwardevent = static_cast<quint8>(tmp);
+
+    tmp = getBackwardEvent();
+    if (tmp == -1)
+        return QByteArray();
+    event.ae_backwardevent = static_cast<quint8>(tmp);
+
+
     const DuArrayConstPtr<DuArrangementAction> &actions = getActions();
     if (actions == Q_NULLPTR)
         return QByteArray();
@@ -169,6 +195,10 @@ int DuGameEvent::size() const
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuGameEvent, IntroMessage, DuGameEventMessage)
 
 DU_KEY_ACCESSORS_IMPL(DuGameEvent, WaitForLoopStart, Numeric, int, -1)
+
+DU_KEY_ACCESSORS_IMPL(DuGameEvent, NextEvent, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuGameEvent, ForwardEvent, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuGameEvent, BackwardEvent, Numeric, int, -1)
 
 DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuGameEvent, Actions, DuArray, DuArrangementAction)
 

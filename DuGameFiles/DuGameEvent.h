@@ -38,6 +38,10 @@ public:
 
     DU_KEY_ACCESSORS(WaitForLoopStart, int)
 
+    DU_KEY_ACCESSORS(NextEvent, int)
+    DU_KEY_ACCESSORS(ForwardEvent, int)
+    DU_KEY_ACCESSORS(BackwardEvent, int)
+
     DU_KEY_ACCESSORS_OBJECT_TEMPLATE(Actions, DuArray, DuArrangementAction)
 
     DU_KEY_ACCESSORS_OBJECT(ExitCondition, DuGameExitCondition)
