@@ -91,6 +91,8 @@ public:
     static int sizeWavDreamToReadable(quint32 dreamValue);
     static quint32 sizeWavReadableToDream(int readableValue);
 
+    QString toWav(DuSamplePtr input, QString outputFilePath);
+
     // Intrument Parameters
     DU_KEY_ACCESSORS(StartNote,       int)
     DU_KEY_ACCESSORS(EndNote,         int)
