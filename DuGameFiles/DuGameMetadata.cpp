@@ -75,7 +75,7 @@ DuGameMetadataPtr DuGameMetadata::fromBinary(const QByteArray &data, quint32 ver
     }
     game->setSounds(soundsArray);
 
-    const int nbEvents = gameStruct.dg_numevent;
+    const uint nbEvents = gameStruct.dg_numevent;
 
     DuArrayPtr<DuGameEvent> eventsArray(new DuArray<DuGameEvent>);
     for (uint i = 0; i < nbEvents; ++i)
