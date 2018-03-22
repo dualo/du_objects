@@ -21,7 +21,11 @@ DU_OBJECT_IMPL(DuGameMetadata)
 DuGameMetadata::DuGameMetadata() : DuContainer()
 {
     addChild(KeyGrade, new DuNumeric);
-    addChild(KeyUnlockerEvent, new DuNumeric);
+
+    addChild(KeyFirstStarEvent, new DuNumeric(UINT16_MAX, 2, UINT16_MAX, 0));
+    addChild(KeySecondStarEvent, new DuNumeric(UINT16_MAX, 2, UINT16_MAX, 0));
+    addChild(KeyThirdStarEvent, new DuNumeric(UINT16_MAX, 2, UINT16_MAX, 0));
+
     addChild(KeyVersion, new DuNumeric);
     addChild(KeyGameId, new DuNumeric);
 
@@ -35,21 +39,51 @@ DuGameMetadata::DuGameMetadata() : DuContainer()
 
 DuGameMetadataPtr DuGameMetadata::fromBinary(const QByteArray &data, quint32 version)
 {
-    if (version < MUSICMETADATA_GAME_CURRENT_VERSION)
+    // migrate
+    QByteArray migratedData(data);
+    if (version <= 2)
     {
-        // migrate
+        typedef struct
+        {
+            uint32_t dg_grade;
+            uint32_t dg_numevent;
+
+            uint32_t dg_currentevent;
+            uint32_t dg_unlocker_event;
+
+            uint32_t dg_version;
+            uint32_t dg_id;
+            uint32_t dummy[3];
+            uint32_t dg_sound[5][2]; // s_dugame_sound dg_sound[MAX_DUGAME_SOUND];
+        } s_dugame_v2;
+
+        s_dugame_v2 gameStructV2;
+        {
+            QDataStream stream(migratedData);
+            stream.setByteOrder(QDataStream::LittleEndian);
+            stream.readRawData(reinterpret_cast<char*>(&gameStructV2), sizeof(s_dugame_v2));
+        }
+
+        s_dugame gameStruct;
+        std::memcpy(&gameStruct, &gameStructV2, sizeof(s_dugame_v2));
+        gameStruct.dg_currentevent = static_cast<uint16_t>(gameStructV2.dg_currentevent);
+        gameStruct.dg_first_star_event = static_cast<uint16_t>(gameStructV2.dg_unlocker_event);
+        gameStruct.dg_second_star_event = static_cast<uint16_t>(gameStructV2.dg_unlocker_event);
+        gameStruct.dg_third_star_event = static_cast<uint16_t>(gameStructV2.dg_unlocker_event);
+
+        migratedData = QByteArray(reinterpret_cast<const char*>(&gameStruct), DUGAME_HEADER);
     }
 
-    QDataStream stream(data);
+    QDataStream stream(migratedData);
     stream.setByteOrder(QDataStream::LittleEndian);
 
     s_dugame gameStruct;
     stream.readRawData(reinterpret_cast<char*>(&gameStruct), DUGAME_HEADER);
 
     const int expectedSize = DUGAME_HEADER + (gameStruct.dg_numevent * ARRANGEMENT_EVENT_SIZE);
-    if (data.size() != expectedSize)
+    if (migratedData.size() != expectedSize)
     {
-        qCCritical(LOG_CAT_DU_OBJECT) << "Can't parse DuGameMetadata: data size incorrect -> expected" << expectedSize << ", got" << data.size();
+        qCCritical(LOG_CAT_DU_OBJECT) << "Can't parse DuGameMetadata: data size incorrect -> expected" << expectedSize << ", got" << migratedData.size();
         return {};
     }
 
@@ -99,9 +133,9 @@ DuGameMetadataPtr DuGameMetadata::fromBinary(const QByteArray &data, quint32 ver
         // MIGRATE EVENTS FOR DU-GAME VERSION 2
         if (version <= 2)
         {
-            event->setNextEvent(i == nbEvents - 1 ? 0xFF : i + 1);
+            event->setNextEvent(i == nbEvents - 1 ? UINT16_MAX : i + 1);
             event->setBackwardEvent(i == 0 ? 0 : i - 1);
-            event->setForwardEvent(i == nbEvents - 1 ? 0xFF : i + 1);
+            event->setForwardEvent(i == nbEvents - 1 ? UINT16_MAX : i + 1);
         }
 
         if (!eventsArray->append(event))
@@ -116,7 +150,9 @@ DuGameMetadataPtr DuGameMetadata::fromBinary(const QByteArray &data, quint32 ver
     bool verif = true;
 
     verif = game->setGrade(gameStruct.dg_grade) ? verif : false;
-    verif = game->setUnlockerEvent(gameStruct.dg_unlocker_event) ? verif : false;
+    verif = game->setFirstStarEvent(gameStruct.dg_first_star_event) ? verif : false;
+    verif = game->setSecondStarEvent(gameStruct.dg_second_star_event) ? verif : false;
+    verif = game->setThirdStarEvent(gameStruct.dg_third_star_event) ? verif : false;
     verif = game->setVersion(gameStruct.dg_version) ? verif : false;
     verif = game->setGameId(gameStruct.dg_id) ? verif : false;
 
@@ -145,10 +181,20 @@ QByteArray DuGameMetadata::toDuMusicBinary() const
 
     game.dg_currentevent = 0;
 
-    int unlockerEvent = getUnlockerEvent();
-    if (unlockerEvent == -1)
+    const int firstStarEvent = getFirstStarEvent();
+    if (firstStarEvent == -1)
         return QByteArray();
-    game.dg_unlocker_event = unlockerEvent;
+    game.dg_first_star_event = static_cast<quint16>(firstStarEvent);
+
+    const int secondStarEvent = getSecondStarEvent();
+    if (secondStarEvent == -1)
+        return QByteArray();
+    game.dg_second_star_event = static_cast<quint16>(secondStarEvent);
+
+    const int thirdStarEvent = getThirdStarEvent();
+    if (thirdStarEvent == -1)
+        return QByteArray();
+    game.dg_third_star_event = static_cast<quint16>(thirdStarEvent);
 
     int version = getVersion();
     if (version == -1)
@@ -213,7 +259,11 @@ int DuGameMetadata::size() const
 }
 
 DU_KEY_ACCESSORS_IMPL(DuGameMetadata, Grade, Numeric, int, -1)
-DU_KEY_ACCESSORS_IMPL(DuGameMetadata, UnlockerEvent, Numeric, int, -1)
+
+DU_KEY_ACCESSORS_IMPL(DuGameMetadata, FirstStarEvent, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuGameMetadata, SecondStarEvent, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuGameMetadata, ThirdStarEvent, Numeric, int, -1)
+
 DU_KEY_ACCESSORS_IMPL(DuGameMetadata, Version, Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuGameMetadata, GameId, Numeric, int, -1)
 DU_KEY_ACCESSORS_OBJECT_TEMPLATE_IMPL(DuGameMetadata, Sounds, DuArray, DuSystemSoundIdentifier)

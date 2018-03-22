@@ -17,9 +17,9 @@ DuGameEvent::DuGameEvent() : DuContainer()
 
     addChild(KeyWaitForLoopStart, new DuNumeric(0xFF, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
 
-    addChild(KeyNextEvent, new DuNumeric(0xFF, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
-    addChild(KeyBackwardEvent, new DuNumeric(0x00, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
-    addChild(KeyForwardEvent, new DuNumeric(0xFF, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
+    addChild(KeyNextEvent, new DuNumeric(UINT16_MAX, 2, UINT16_MAX, 0));
+    addChild(KeyBackwardEvent, new DuNumeric(0, 2, UINT16_MAX, 0));
+    addChild(KeyForwardEvent, new DuNumeric(UINT16_MAX, 2, UINT16_MAX, 0));
 
     addChild(KeyActions, new DuArray<DuArrangementAction>(ARRANGEMENT_MAXEVENTACTION));
 
@@ -144,17 +144,17 @@ QByteArray DuGameEvent::toDuMusicBinary() const
     tmp = getNextEvent();
     if (tmp == -1)
         return QByteArray();
-    event.ae_nextevent = static_cast<quint8>(tmp);
+    event.ae_nextevent = static_cast<quint16>(tmp);
 
     tmp = getForwardEvent();
     if (tmp == -1)
         return QByteArray();
-    event.ae_forwardevent = static_cast<quint8>(tmp);
+    event.ae_forwardevent = static_cast<quint16>(tmp);
 
     tmp = getBackwardEvent();
     if (tmp == -1)
         return QByteArray();
-    event.ae_backwardevent = static_cast<quint8>(tmp);
+    event.ae_backwardevent = static_cast<quint16>(tmp);
 
 
     const DuArrayConstPtr<DuArrangementAction> &actions = getActions();
