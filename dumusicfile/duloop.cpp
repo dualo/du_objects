@@ -441,6 +441,11 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel, int transpose
 
         nameEvent->setInstrumentName(instrName);
         midiEvents->append(nameEvent);
+
+        //ADD BY BV: Sequence Title is set for each track, to become a Midi clip name, recognized in many DAW.
+        DuMidiMetaEventPtr seqTitleEvent(new DuMidiMetaEvent(prevTime));
+        seqTitleEvent->setTitle(instrName);
+        midiEvents->append(seq);
     }
 
     if (instrPC != -1)
