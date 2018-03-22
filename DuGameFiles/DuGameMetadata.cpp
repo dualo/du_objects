@@ -71,7 +71,7 @@ DuGameMetadataPtr DuGameMetadata::fromBinary(const QByteArray &data, quint32 ver
         gameStruct.dg_second_star_event = static_cast<uint16_t>(gameStructV2.dg_unlocker_event);
         gameStruct.dg_third_star_event = static_cast<uint16_t>(gameStructV2.dg_unlocker_event);
 
-        migratedData = QByteArray(reinterpret_cast<const char*>(&gameStruct), DUGAME_HEADER);
+        migratedData.replace(0, DUGAME_HEADER, reinterpret_cast<const char*>(&gameStruct), DUGAME_HEADER);
     }
 
     QDataStream stream(migratedData);
