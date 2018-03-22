@@ -11,6 +11,8 @@ struct Version
     int patch;
     QString suffix;
 
+    Version() : major(-1), minor(-1), patch(-1) {}
+
     inline QString toString() const
     {
         return QString("%1.%2.%3%4").arg(major).arg(minor).arg(patch).arg(suffix.isEmpty() ? QString() : "-" + suffix);
