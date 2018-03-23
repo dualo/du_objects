@@ -157,6 +157,7 @@ SOURCES += \
     $$PWD/DuGameFiles/DuGame.cpp
 
 include(Util/Util.pri)
+INCLUDEPATH += $$PWD
 
 DEFINES += NO_MIDI_IMPORT
 
