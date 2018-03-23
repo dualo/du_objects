@@ -156,6 +156,8 @@ SOURCES += \
     $$PWD/DuWorld/DuWorldUserData.cpp \
     $$PWD/DuGameFiles/DuGame.cpp
 
+include(Util/Util.pri)
+
 DEFINES += NO_MIDI_IMPORT
 
 HEADERS += \
