@@ -20,10 +20,7 @@ public:
 
     QHttpMultiPart *toHttpMultiPart(const QByteArray &boundary) const;
 
-    bool setSoundbankVersion(const QString& value);
-    bool setSoundbankVersion(int major, int minor, int patch);
-
-    DU_KEY_ACCESSORS_OBJECT(SoundbankVersion, DuVersion)
+    DU_KEY_ACCESSORS(SoundbankVersion, Version)
     DU_KEY_ACCESSORS(SoundbankUpdateDate, QDateTime)
 };
 

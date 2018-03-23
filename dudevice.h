@@ -3,6 +3,8 @@
 
 #include "general/ducontainer.h"
 
+#include <Util/Version.h>
+
 
 DU_OBJECT(DuVersion);
 
@@ -35,9 +37,6 @@ public:
 
     QString getDisplayName() const;
 
-    bool setVersion(const QString& value);
-    bool setVersion(int major, int minor, int patch);
-
     bool getPlugged() const;
     void setPlugged(bool value);
 
@@ -56,10 +55,8 @@ public:
     DU_KEY_ACCESSORS(Owner,           QString)
     DU_KEY_ACCESSORS(OwnerId,         int)
     DU_KEY_ACCESSORS(DissocScheduled, bool)
-
-    DU_KEY_ACCESSORS_OBJECT(Version, DuVersion)
-
-    DU_KEY_ACCESSORS(UpdateDate, QDateTime)
+    DU_KEY_ACCESSORS(Version,         Version)
+    DU_KEY_ACCESSORS(UpdateDate,      QDateTime)
 
 private:
     bool plugged;

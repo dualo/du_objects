@@ -70,9 +70,9 @@ DuTouchPtr DuTouch::fromJsonApi(const JsonApiResourceObject &jsonDuTouch)
     device->setPlugged(false);
     device->setConnected(false);
     device->setBusy(false);
-    device->setVersion(firmware);
+    device->setVersion(Version::extractVersionFromStr(firmware));
     device->setUpdateDate(QDateTime::fromString(firmwareUpdateDate, QStringLiteral("yyyy-MM-dd HH:mm:ss")));
-    device->setSoundbankVersion(soundbank);
+    device->setSoundbankVersion(Version::extractVersionFromStr(soundbank));
     device->setSoundbankUpdateDate(QDateTime::fromString(soundbankUpdateDate, QStringLiteral("yyyy-MM-dd HH:mm:ss")));
     device->setDissocScheduled(dissocScheduled);
 
@@ -88,25 +88,5 @@ QHttpMultiPart *DuTouch::toHttpMultiPart(const QByteArray& boundary) const
     return multiPart;
 }
 
-bool DuTouch::setSoundbankVersion(const QString &value)
-{
-    DuVersionPtr tmp = getSoundbankVersion();
-
-    if (tmp == Q_NULLPTR)
-        return false;
-
-    return tmp->setVersion(value);
-}
-
-bool DuTouch::setSoundbankVersion(int major, int minor, int patch)
-{
-    DuVersionPtr tmp = getSoundbankVersion();
-
-    if (tmp == Q_NULLPTR)
-        return false;
-
-    return tmp->setVersion(major, minor, patch);
-}
-
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuTouch, SoundbankVersion, DuVersion)
+DU_KEY_ACCESSORS_IMPL(DuTouch, SoundbankVersion, Version, Version, Version())
 DU_KEY_ACCESSORS_IMPL(DuTouch, SoundbankUpdateDate, Date, QDateTime, QDateTime())

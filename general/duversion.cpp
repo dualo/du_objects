@@ -1,38 +1,74 @@
 #include "duversion.h"
 
+#include <QJsonValue>
 
 
 DU_OBJECT_IMPL(DuVersion)
 
-DuVersion::DuVersion(const QString &version) :
-    DuString(),
-    m_major(-1),
-    m_minor(-1),
-    m_patch(-1)
+
+DuVersion::DuVersion(const Version &version) :
+    DuValue()
 {
     setVersion(version);
 }
 
-DuVersion::DuVersion(int major, int minor, int patch) :
-    DuString(),
-    m_major(-1),
-    m_minor(-1),
-    m_patch(-1)
+DuVersion::DuVersion() :
+    DuValue()
 {
-    setVersion(major, minor, patch);
 }
 
-DuVersion::DuVersion() :
-    DuString(tr("unknown")),
-    m_major(-1),
-    m_minor(-1),
-    m_patch(-1)
+int DuVersion::major() const
 {
+    return getVersion().major;
+}
+
+int DuVersion::minor() const
+{
+    return getVersion().minor;
+}
+
+int DuVersion::patch() const
+{
+    return getVersion().patch;
+}
+
+Version DuVersion::getVersion() const
+{
+    return getValue().value<Version>();
+}
+
+bool DuVersion::setVersion(const Version &version)
+{
+    return setValue(QVariant::fromValue(version));
 }
 
 DuObjectPtr DuVersion::clone() const
 {
     return DuVersionPtr(new DuVersion(*this));
+}
+
+QByteArray DuVersion::toDuMusicBinary() const
+{
+    return getVersion().toString().toLatin1();
+}
+
+QByteArray DuVersion::toMidiBinary() const
+{
+    return getVersion().toString().toLocal8Bit();
+}
+
+QJsonValue DuVersion::toJson() const
+{
+    return QJsonValue(getVersion().toString());
+}
+
+QHttpPart DuVersion::toHttpPart(const QString &name) const
+{
+    QHttpPart part;
+    part.setHeader(QNetworkRequest::ContentDispositionHeader, "form-data; name=\"" + name + "\"");
+    part.setBody(getVersion().toString().toUtf8());
+
+    return part;
 }
 
 QDebug DuVersion::debugPrint(QDebug dbg) const
@@ -42,86 +78,15 @@ QDebug DuVersion::debugPrint(QDebug dbg) const
     return dbg.space();
 }
 
-int DuVersion::major() const
+QVariant DuVersion::checkValue(const QVariant &value, bool &success)
 {
-    return m_major;
-}
-
-int DuVersion::minor() const
-{
-    return m_minor;
-}
-
-int DuVersion::patch() const
-{
-    return m_patch;
-}
-
-QString DuVersion::getVersion() const
-{
-    return getString();
-}
-
-bool DuVersion::setVersion(const QString &version)
-{
-    QStringList nbs = version.split('.');
-
-    if (nbs.size() != 3)
+    if (!value.canConvert<Version>())
     {
-        qCWarning(LOG_CAT_DU_OBJECT) << "failed:" << version;
-        setString(tr("unknown"));
-        return false;
+        qCCritical(LOG_CAT_DU_OBJECT) << "value is not of type Version:" << value;
+        success = false;
+        return QVariant();
     }
 
-    bool ok = false;
-
-    int major = nbs[0].toInt(&ok);
-    if (!ok)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "failed:" << version;
-        setString(tr("unknown"));
-        return false;
-    }
-
-    int minor = nbs[1].toInt(&ok);
-    if (!ok)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "failed:" << version;
-        setString(tr("unknown"));
-        return false;
-    }
-
-    int patch = nbs[2].toInt(&ok);
-    if (!ok)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "failed:" << version;
-        setString(tr("unknown"));
-        return false;
-    }
-
-    m_major = major;
-    m_minor = minor;
-    m_patch = patch;
-    setString(version);
-
-    return true;
-}
-
-bool DuVersion::setVersion(int major, int minor, int patch)
-{
-    if (major < 0 || minor < 0 || patch < 0)
-    {
-        qCWarning(LOG_CAT_DU_OBJECT) << "failed:" << major << minor << patch;
-        setString(tr("unknown"));
-        return false;
-    }
-
-    QString value = QString::number(major) + "." + QString::number(minor) + "." + QString::number(patch);
-
-    m_major = major;
-    m_minor = minor;
-    m_patch = patch;
-    setString(value);
-
-    return true;
+    success = true;
+    return value;
 }

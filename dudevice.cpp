@@ -71,26 +71,6 @@ QString DuDevice::getDisplayName() const
     return name.isEmpty() ? getSerialNumber() : name;
 }
 
-bool DuDevice::setVersion(const QString &value)
-{
-    DuVersionPtr tmp = getVersion();
-
-    if (tmp == Q_NULLPTR)
-        return false;
-
-    return tmp->setVersion(value);
-}
-
-bool DuDevice::setVersion(int major, int minor, int patch)
-{
-    DuVersionPtr tmp = getVersion();
-
-    if (tmp == Q_NULLPTR)
-        return false;
-
-    return tmp->setVersion(major, minor, patch);
-}
-
 bool DuDevice::getPlugged() const
 {
     return plugged;
@@ -139,7 +119,5 @@ DU_KEY_ACCESSORS_IMPL(DuDevice, Name,            String, QString, QString())
 DU_KEY_ACCESSORS_IMPL(DuDevice, Owner,           String, QString, QString())
 DU_KEY_ACCESSORS_IMPL(DuDevice, OwnerId,         Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuDevice, DissocScheduled, Boolean, bool, false)
-
-DU_KEY_ACCESSORS_OBJECT_IMPL(DuDevice, Version, DuVersion)
-
-DU_KEY_ACCESSORS_IMPL(DuDevice, UpdateDate, Date, QDateTime, QDateTime())
+DU_KEY_ACCESSORS_IMPL(DuDevice, Version,         Version, Version, Version())
+DU_KEY_ACCESSORS_IMPL(DuDevice, UpdateDate,      Date, QDateTime, QDateTime())
