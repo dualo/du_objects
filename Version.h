@@ -1,6 +1,7 @@
 #ifndef VERSION_H
 #define VERSION_H
 
+#include <QObject>
 #include <QString>
 #include <QMetaType>
 
@@ -11,16 +12,16 @@ struct Version
     int patch;
     QString suffix;
 
-    Version(int maj = -1, int min = -1, int pat = -1, QString suf = QString()) : major(maj), minor(min), patch(pat), suffix(suf) {}
+    Version(int maj = -1, int min = -1, int pat = -1, QString suf = QString());
 
     inline QString toString() const
     {
-        return QString("%1.%2.%3%4").arg(major).arg(minor).arg(patch).arg(suffix.isEmpty() ? QString() : "-" + suffix);
+        return isNull() ? QObject::tr("unkown") : QString("%1.%2.%3%4").arg(major).arg(minor).arg(patch).arg(suffix.isEmpty() ? QString() : "-" + suffix);
     }
 
     inline bool isNull() const
     {
-        return major != -1 && minor != -1 && patch != -1;
+        return major == -1 || minor == -1 || patch == -1;
     }
 
     friend inline bool operator<(const Version& v1, const Version& v2)

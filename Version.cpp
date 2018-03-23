@@ -4,17 +4,25 @@
 #include <QRegularExpression>
 
 
+Version::Version(int maj, int min, int pat, QString suf) :
+    major(maj),
+    minor(min),
+    patch(pat),
+    suffix(suf)
+{
+}
+
 Version Version::extractVersionFromStr(const QString &str, bool *ok)
 {
-    Version versionStruct = {0, 0, 0, QString()};
-
     if (!str.contains(QRegularExpression("^[0-9]+\\.[0-9]+(\\.[0-9]+(-(dev|(beta|alpha|RC|patch)[0-9]+))?)?$")))
     {
         qCritical() << "Version string format incorrect. Should be major.minor.patch(-suffix) : " << str;
         if (ok != Q_NULLPTR)
             *ok = false;
-        return versionStruct;
+        return {};
     }
+
+    Version versionStruct(0, 0, 0, QString());
 
     QStringList splitVersionStr1 = str.split('-');
     QStringList splitVersionStr2 = splitVersionStr1[0].split('.');
