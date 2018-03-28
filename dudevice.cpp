@@ -43,6 +43,7 @@ DuDevice::DuDevice(Type type) :
     addChild(KeyOwnerId,         new DuNumeric(0));
     addChild(KeyDissocScheduled, new DuBoolean(false));
 
+    addChild(KeyApiVersion,      new DuVersion());
     addChild(KeyVersion,         new DuVersion());
     addChild(KeyUpdateDate,      new DuDate());
 }
