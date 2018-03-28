@@ -55,6 +55,7 @@ public:
     DU_KEY_ACCESSORS(Owner,           QString)
     DU_KEY_ACCESSORS(OwnerId,         int)
     DU_KEY_ACCESSORS(DissocScheduled, bool)
+    DU_KEY_ACCESSORS(ApiVersion,      Version)
     DU_KEY_ACCESSORS(Version,         Version)
     DU_KEY_ACCESSORS(UpdateDate,      QDateTime)
 
