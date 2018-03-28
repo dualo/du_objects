@@ -4,7 +4,23 @@
 #include <QRegularExpression>
 
 
-Version::Version(int maj, int min, int pat, QString suf) :
+Version::Version() : Version(-1, -1, -1, QString())
+{
+}
+
+Version::Version(int maj) : Version(maj, 0, 0, QString())
+{
+}
+
+Version::Version(int maj, int min) : Version(maj, min, 0, QString())
+{
+}
+
+Version::Version(int maj, int min, int pat) : Version(maj, min, pat, QString())
+{
+}
+
+Version::Version(int maj, int min, int pat, const QString& suf) :
     major(maj),
     minor(min),
     patch(pat),
@@ -22,7 +38,7 @@ Version Version::extractVersionFromStr(const QString &str, bool *ok)
         return {};
     }
 
-    Version versionStruct(0, 0, 0, QString());
+    Version versionStruct(0);
 
     QStringList splitVersionStr1 = str.split('-');
     QStringList splitVersionStr2 = splitVersionStr1[0].split('.');

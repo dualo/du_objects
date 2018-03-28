@@ -12,7 +12,11 @@ struct Version
     int patch;
     QString suffix;
 
-    Version(int maj = -1, int min = -1, int pat = -1, QString suf = QString());
+    Version();
+    Version(int maj);
+    Version(int maj, int min);
+    Version(int maj, int min, int pat);
+    Version(int maj, int min, int pat, const QString &suf);
 
     inline QString toString() const
     {
