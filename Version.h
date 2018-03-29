@@ -5,6 +5,14 @@
 #include <QString>
 #include <QMetaType>
 
+// On gcc, major and minor are macros defined in sysmacro.h...
+#ifdef major
+#undef major
+#endif // major
+#ifdef minor
+#undef minor
+#endif // minor
+
 struct Version
 {
     int major;
