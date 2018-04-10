@@ -3,6 +3,8 @@
 
 #include "../general/ducontainer.h"
 
+#include "FinishedGameData.h"
+
 DU_OBJECT(DuWorldUserData);
 
 class DuWorldUserData : public DuContainer
@@ -23,10 +25,12 @@ public:
 public:
     virtual QHttpMultiPart *toHttpMultiPart(const QByteArray &boundary) const Q_DECL_OVERRIDE;
 
-    DU_KEY_ACCESSORS(FinishedGames, QList<int>)
+    typedef QMap<int, FinishedGameData> FinishedGamesMap;
+    DU_KEY_ACCESSORS(FinishedGames, FinishedGamesMap)
     DU_KEY_ACCESSORS(UnlockedGames, QList<int>)
 };
 
 Q_DECLARE_METATYPE(DuWorldUserDataPtr)
+Q_DECLARE_METATYPE(DuWorldUserData::FinishedGamesMap)
 
 #endif // DUWORLDUSERDATA_H

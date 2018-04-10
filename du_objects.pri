@@ -92,7 +92,9 @@ HEADERS += \
     $$PWD/du-touch/dualo_structs/dugame_structs.h \
     $$PWD/instrument/DuSystemSoundIdentifier.h \
     $$PWD/DuWorld/DuWorldUserData.h \
-    $$PWD/DuGameFiles/DuGame.h
+    $$PWD/DuGameFiles/DuGame.h \
+    $$PWD/DuWorld/FinishedGameData.h \
+    $$PWD/general/DuTypedValue.h
 
 SOURCES += \
     $$PWD/general/duobject.cpp \
@@ -154,7 +156,8 @@ SOURCES += \
     $$PWD/general/DuEnum.cpp \
     $$PWD/instrument/DuSystemSoundIdentifier.cpp \
     $$PWD/DuWorld/DuWorldUserData.cpp \
-    $$PWD/DuGameFiles/DuGame.cpp
+    $$PWD/DuGameFiles/DuGame.cpp \
+    $$PWD/DuWorld/FinishedGameData.cpp
 
 include(Util/Util.pri)
 INCLUDEPATH += $$PWD
