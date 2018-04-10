@@ -19,6 +19,23 @@ DuValue::DuValue(const QVariant &value, int maxSize) :
 {
 }
 
+DuObjectPtr DuValue::clone() const
+{
+    return DuValuePtr(new DuValue(*this));
+}
+
+QByteArray DuValue::toDuMusicBinary() const
+{
+    Q_UNIMPLEMENTED();
+    return m_value.toByteArray();
+}
+
+QJsonValue DuValue::toJson() const
+{
+    Q_UNIMPLEMENTED();
+    return m_value.toJsonValue();
+}
+
 bool DuValue::parseJson(const QJsonValue &jsonValue)
 {
     if (jsonValue.isNull())
