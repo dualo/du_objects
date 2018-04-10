@@ -30,6 +30,36 @@ namespace Util
         return newList;
     }
 
+    // Key has to be convertible to QString
+    template <class Key, class T>
+    QVariantMap mapToVariantMap(const QMap<Key, T> &map)
+    {
+        QVariantMap newMap;
+        QMapIterator<Key, T> it(map);
+        while (it.hasNext())
+        {
+            it.next();
+            newMap.insert(QVariant::fromValue(it.key()).toString(), QVariant::fromValue(it.value()));
+        }
+
+        return newMap;
+    }
+
+    // Key has to be convertible from QString
+    template <class Key, class T>
+    QMap<Key, T> mapFromVariantMap(const QVariantMap &map)
+    {
+        QMap<Key, T> newMap;
+        QMapIterator<QString, QVariant> it(map);
+        while (it.hasNext())
+        {
+            it.next();
+            newMap.insert(QVariant::fromValue(it.key()).value<Key>(), it.value().value<T>());
+        }
+
+        return newMap;
+    }
+
     template <typename T>
     QByteArray intToByteArray(T value)
     {
