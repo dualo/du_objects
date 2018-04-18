@@ -27,6 +27,9 @@ public:
     virtual QByteArray toDuMusicBinary() const Q_DECL_OVERRIDE;
     virtual int size() const Q_DECL_OVERRIDE;
 
+    bool getIsFinished() const;
+    int getNbStars() const;
+
     DU_KEY_ACCESSORS(Grade, int)
 
     DU_KEY_ACCESSORS(FirstStarEvent, int)

@@ -1171,6 +1171,45 @@ bool DuMusic::getIsDuGame() const
     return game != Q_NULLPTR;
 }
 
+int DuMusic::getDuGameId() const
+{
+    const DuMusicMetadataConstPtr& metadata = getMetadata();
+    if (metadata == Q_NULLPTR)
+        return -1;
+
+    const DuGameMetadataConstPtr& game = metadata->getGameMetadata();
+    if (game == Q_NULLPTR)
+        return -1;
+
+    return game->getGameId();
+}
+
+int DuMusic::getDuGameVersion() const
+{
+    const DuMusicMetadataConstPtr& metadata = getMetadata();
+    if (metadata == Q_NULLPTR)
+        return -1;
+
+    const DuGameMetadataConstPtr& game = metadata->getGameMetadata();
+    if (game == Q_NULLPTR)
+        return -1;
+
+    return game->getVersion();
+}
+
+int DuMusic::getDuGameNbStars() const
+{
+    const DuMusicMetadataConstPtr& metadata = getMetadata();
+    if (metadata == Q_NULLPTR)
+        return -1;
+
+    const DuGameMetadataConstPtr& game = metadata->getGameMetadata();
+    if (game == Q_NULLPTR)
+        return -1;
+
+    return game->getNbStars();
+}
+
 int DuMusic::databaseId() const
 {
     return m_databaseId;

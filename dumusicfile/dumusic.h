@@ -112,6 +112,9 @@ public:
     bool isEmpty() const;
 
     bool getIsDuGame() const;
+    int getDuGameId() const;
+    int getDuGameVersion() const;
+    int getDuGameNbStars() const;
 
     int databaseId() const;
     void setDatabaseId(int databaseId);

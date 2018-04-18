@@ -258,6 +258,27 @@ int DuGameMetadata::size() const
     return DUGAME_HEADER + events->size();
 }
 
+bool DuGameMetadata::getIsFinished() const
+{
+    return getGrade() >= getFirstStarEvent();
+}
+
+int DuGameMetadata::getNbStars() const
+{
+    const int grade = getGrade();
+
+    if (grade >= getThirdStarEvent())
+        return 3;
+
+    if (grade >= getSecondStarEvent())
+        return 2;
+
+    if (grade >= getFirstStarEvent())
+        return 1;
+
+    return 0;
+}
+
 DU_KEY_ACCESSORS_IMPL(DuGameMetadata, Grade, Numeric, int, -1)
 
 DU_KEY_ACCESSORS_IMPL(DuGameMetadata, FirstStarEvent, Numeric, int, -1)
