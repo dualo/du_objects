@@ -37,6 +37,7 @@ public:
     DU_KEY_ACCESSORS_OBJECT(IntroMessage, DuGameEventMessage)
 
     DU_KEY_ACCESSORS(WaitForLoopStart, int)
+    DU_KEY_ACCESSORS(ResetAtStart, bool)
 
     DU_KEY_ACCESSORS(NextEvent, int)
     DU_KEY_ACCESSORS(ForwardEvent, int)

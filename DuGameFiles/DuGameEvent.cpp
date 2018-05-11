@@ -5,6 +5,7 @@
 #include "DuGameExitCondition.h"
 
 #include "../general/duarray.h"
+#include "../general/duboolean.h"
 #include "../general/dunumeric.h"
 
 #include <cstring>
@@ -16,6 +17,7 @@ DuGameEvent::DuGameEvent() : DuContainer()
     addChild(KeyIntroMessage, new DuGameEventMessage);
 
     addChild(KeyWaitForLoopStart, new DuNumeric(0xFF, NUMERIC_DEFAULT_SIZE, 0xFF, 0x00));
+    addChild(KeyResetAtStart, new DuBoolean(false));
 
     addChild(KeyNextEvent, new DuNumeric(UINT16_MAX, 2, UINT16_MAX, 0));
     addChild(KeyBackwardEvent, new DuNumeric(0, 2, UINT16_MAX, 0));
@@ -96,6 +98,7 @@ DuGameEventPtr DuGameEvent::fromStruct(const s_arrangement_event& eventStruct)
     bool verif = true;
 
     verif = event->setWaitForLoopStart(eventStruct.ae_wait_for_loop_start) ? verif : false;
+    verif = event->setResetAtStart(eventStruct.ae_reset_at_start == 1) ? verif : false;
     verif = event->setNextEvent(eventStruct.ae_nextevent) ? verif : false;
     verif = event->setBackwardEvent(eventStruct.ae_backwardevent) ? verif : false;
     verif = event->setForwardEvent(eventStruct.ae_forwardevent) ? verif : false;
@@ -140,6 +143,7 @@ QByteArray DuGameEvent::toDuMusicBinary() const
         return QByteArray();
     event.ae_wait_for_loop_start = static_cast<quint8>(tmp);
 
+    event.ae_reset_at_start = static_cast<quint8>(getResetAtStart() ? 1 : 0);
 
     tmp = getNextEvent();
     if (tmp == -1)
@@ -195,6 +199,7 @@ int DuGameEvent::size() const
 DU_KEY_ACCESSORS_OBJECT_IMPL(DuGameEvent, IntroMessage, DuGameEventMessage)
 
 DU_KEY_ACCESSORS_IMPL(DuGameEvent, WaitForLoopStart, Numeric, int, -1)
+DU_KEY_ACCESSORS_IMPL(DuGameEvent, ResetAtStart, Boolean, bool, false)
 
 DU_KEY_ACCESSORS_IMPL(DuGameEvent, NextEvent, Numeric, int, -1)
 DU_KEY_ACCESSORS_IMPL(DuGameEvent, ForwardEvent, Numeric, int, -1)
