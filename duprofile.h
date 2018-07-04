@@ -26,6 +26,7 @@ public:
     {
         None = 0,
         Default,
+        EarlyAccess,
         Beta,
         Temp,
         Test,

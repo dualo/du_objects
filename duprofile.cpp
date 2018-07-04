@@ -77,6 +77,8 @@ DuProfilePtr DuProfile::fromJsonApi(const JsonApiResourceObject &jsonProfile, in
     const QString& role = roleValue.toString();
     if (role == QLatin1String("all") || role.isEmpty())
         outProfile->setRole(Default);
+    else if (role == QLatin1String("earlyaccess"))
+        outProfile->setRole(EarlyAccess);
     else if (role == QLatin1String("beta"))
         outProfile->setRole(Beta);
     else if (role == QLatin1String("temp"))
