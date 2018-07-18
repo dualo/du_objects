@@ -19,8 +19,8 @@ public:
         Official,
         Device,
         Shared,
+        Games,
         Trash,
-        Lessons,
         Shop
     };
     Q_ENUM(Type)
