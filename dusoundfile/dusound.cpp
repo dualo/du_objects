@@ -37,7 +37,8 @@ DuSound::DuSound() :
     m_defaultSlotS(0),
     m_isInLFactorySndbk(false),
     m_isInSFactorySndbk(false),
-    m_isFromCommunity(false)
+    m_isFromCommunity(false),
+    m_associatedGameId(0)
 {
     addChild(KeyInfo,       new DuSoundInfo);
 
@@ -970,6 +971,16 @@ bool DuSound::getIsFromCommunity() const
 void DuSound::setIsFromCommunity(bool isFromCommunity)
 {
     m_isFromCommunity = isFromCommunity;
+}
+
+int DuSound::getAssociatedGameId() const
+{
+    return m_associatedGameId;
+}
+
+void DuSound::setAssociatedGameId(int associatedGameId)
+{
+    m_associatedGameId = associatedGameId;
 }
 
 void DuSound::cleanMappingForSpecificKey(int note)

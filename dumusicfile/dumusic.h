@@ -131,6 +131,9 @@ public:
     bool getIsFromCommunity() const;
     void setIsFromCommunity(bool isFromCommunity);
 
+    int getAssociatedGameId() const;
+    void setAssociatedGameId(int associatedGameId);
+
     bool appendTrack(const DuTrackPtr &track);
 
     QSet<InstrumentIdentifier> getUsedInstrumentsIdentifiers() const;
@@ -152,6 +155,7 @@ private:
     QString m_deviceSerialNumber;
 
     bool m_isFromCommunity;
+    int m_associatedGameId;
 };
 
 Q_DECLARE_METATYPE(DuMusicPtr)

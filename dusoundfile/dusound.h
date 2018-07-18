@@ -83,6 +83,9 @@ public:
     bool getIsFromCommunity() const;
     void setIsFromCommunity(bool isFromCommunity);
 
+    int getAssociatedGameId() const;
+    void setAssociatedGameId(int associatedGameId);
+
     DU_KEY_ACCESSORS_IN_CHILD(NameForDevice,        QString)
     DU_KEY_ACCESSORS_IN_CHILD(Octave,               int)
     DU_KEY_ACCESSORS_IN_CHILD(UserID,               int)
@@ -124,6 +127,7 @@ private:
     bool m_isInSFactorySndbk;
 
     bool m_isFromCommunity;
+    int m_associatedGameId;
 };
 
 Q_DECLARE_METATYPE(DuSoundPtr)

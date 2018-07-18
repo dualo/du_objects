@@ -49,7 +49,8 @@ DuMusic::DuMusic() :
     DuContainer(),
     m_databaseId(-1),
     m_indexInDevice(-1),
-    m_isFromCommunity(false)
+    m_isFromCommunity(false),
+    m_associatedGameId(0)
 {
     addChild(KeyFileVersion, new DuNumeric(VERSION_MUSIC));
 
@@ -1366,6 +1367,16 @@ bool DuMusic::getIsFromCommunity() const
 void DuMusic::setIsFromCommunity(bool isFromCommunity)
 {
     m_isFromCommunity = isFromCommunity;
+}
+
+int DuMusic::getAssociatedGameId() const
+{
+    return m_associatedGameId;
+}
+
+void DuMusic::setAssociatedGameId(int associatedGameId)
+{
+    m_associatedGameId = associatedGameId;
 }
 
 #define X(key, dutype, type, defaultReturn) DU_KEY_ACCESSORS_IMPL(DuMusic, key, dutype, type, defaultReturn)
