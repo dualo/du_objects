@@ -93,7 +93,7 @@ QByteArray DuMidiChannelEvent::toMidiBinary() const
     const DuMidiVariableLengthConstPtr &time =
             getChildAs<DuMidiVariableLength>(KEY_MIDIEVENT_TIME);
 
-    if (time == NULL)
+    if (time == Q_NULLPTR)
         return QByteArray();
 
     retArray += time->toMidiBinary();
@@ -102,7 +102,7 @@ QByteArray DuMidiChannelEvent::toMidiBinary() const
     const DuMidiStatusConstPtr &status =
             getChildAs<DuMidiStatus>(KEY_MIDIEVENT_STATUS);
 
-    if (status == NULL)
+    if (status == Q_NULLPTR)
         return QByteArray();
 
     retArray += status->toMidiBinary();
@@ -120,7 +120,7 @@ QByteArray DuMidiChannelEvent::toMidiBinary() const
         const DuNumericConstPtr &key =
                 getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_KEY);
 
-        if (key == NULL)
+        if (key == Q_NULLPTR)
             return QByteArray();
 
         retArray += key->toMidiBinary();
@@ -128,7 +128,7 @@ QByteArray DuMidiChannelEvent::toMidiBinary() const
         const DuNumericConstPtr &value =
                 getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_VALUE);
 
-        if (value == NULL)
+        if (value == Q_NULLPTR)
             return QByteArray();
 
         retArray += value->toMidiBinary();
@@ -141,7 +141,7 @@ QByteArray DuMidiChannelEvent::toMidiBinary() const
         const DuNumericConstPtr &value =
                 getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_VALUE);
 
-        if (value == NULL)
+        if (value == Q_NULLPTR)
             return QByteArray();
 
         retArray += value->toMidiBinary();
@@ -166,13 +166,13 @@ int DuMidiChannelEvent::size() const
     const DuMidiVariableLengthConstPtr &time =
             getChildAs<DuMidiVariableLength>(KEY_MIDIEVENT_TIME);
 
-    if (time == NULL)
+    if (time == Q_NULLPTR)
         return -1;
 
     const DuMidiStatusConstPtr &status =
             getChildAs<DuMidiStatus>(KEY_MIDIEVENT_STATUS);
 
-    if (status == NULL)
+    if (status == Q_NULLPTR)
         return -1;
 
     //Delta time size + 1 status byte or 0 if running status active
@@ -235,7 +235,7 @@ int DuMidiChannelEvent::getKey() const
     const DuNumericConstPtr &tmp =
             getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_KEY);
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return -1;
 
     return tmp->getNumeric();
@@ -246,7 +246,7 @@ void DuMidiChannelEvent::setKey(quint8 value)
     const DuNumericPtr &tmp =
             getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_KEY);
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return;
 
     tmp->setNumeric(value);
@@ -258,7 +258,7 @@ int DuMidiChannelEvent::getValue() const
     const DuNumericConstPtr &tmp =
             getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_VALUE);
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return -1;
 
     return tmp->getNumeric();
@@ -269,7 +269,7 @@ void DuMidiChannelEvent::setValue(quint8 value)
     const DuNumericPtr &tmp =
             getChildAs<DuNumeric>(KEY_MIDICHANNELEVENT_VALUE);
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return;
 
     tmp->setNumeric(value);

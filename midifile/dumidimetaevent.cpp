@@ -54,7 +54,7 @@ QByteArray DuMidiMetaEvent::toMidiBinary() const
     const DuMidiVariableLengthConstPtr &time =
             getChildAs<DuMidiVariableLength>(KEY_MIDIEVENT_TIME);
 
-    if (time == NULL)
+    if (time == Q_NULLPTR)
         return QByteArray();
 
     retArray += time->toMidiBinary();
@@ -63,7 +63,7 @@ QByteArray DuMidiMetaEvent::toMidiBinary() const
     const DuMidiStatusConstPtr &status =
             getChildAs<DuMidiStatus>(KEY_MIDIEVENT_STATUS);
 
-    if (status == NULL)
+    if (status == Q_NULLPTR)
         return QByteArray();
 
     retArray += status->toMidiBinary();
@@ -72,7 +72,7 @@ QByteArray DuMidiMetaEvent::toMidiBinary() const
     const DuNumericConstPtr &type =
             getChildAs<DuNumeric>(KEY_MIDIMETAEVENT_TYPE);
 
-    if (type == NULL)
+    if (type == Q_NULLPTR)
         return QByteArray();
 
     retArray += type->toMidiBinary();
@@ -81,7 +81,7 @@ QByteArray DuMidiMetaEvent::toMidiBinary() const
     const DuMidiVariableLengthConstPtr &length =
             getChildAs<DuMidiVariableLength>(KEY_MIDIMETAEVENT_LENGTH);
 
-    if (length == NULL)
+    if (length == Q_NULLPTR)
         return QByteArray();
 
     retArray += length->toMidiBinary();
@@ -90,7 +90,7 @@ QByteArray DuMidiMetaEvent::toMidiBinary() const
     const DuBinaryDataConstPtr &data =
             getChildAs<DuBinaryData>(KEY_MIDIMETAEVENT_DATA);
 
-    if (data == NULL)
+    if (data == Q_NULLPTR)
         return QByteArray();
 
     retArray += data->toMidiBinary();
@@ -105,7 +105,7 @@ int DuMidiMetaEvent::getType() const
     const DuNumericConstPtr &tmp =
             getChildAs<DuNumeric>(KEY_MIDIMETAEVENT_TYPE);
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return -1;
 
     return tmp->getNumeric();
@@ -116,7 +116,7 @@ void DuMidiMetaEvent::setType(quint8 value)
     const DuNumericPtr &tmp =
             getChildAs<DuNumeric>(KEY_MIDIMETAEVENT_TYPE);
 
-     if (tmp == NULL)
+     if (tmp == Q_NULLPTR)
          return;
 
      tmp->setNumeric(value);
@@ -128,7 +128,7 @@ int DuMidiMetaEvent::getLength() const
     const DuMidiVariableLengthConstPtr &tmp =
             getChildAs<DuMidiVariableLength>(KEY_MIDIMETAEVENT_LENGTH);
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return -1;
 
     return static_cast<int>(tmp->getAbsolute());
@@ -138,12 +138,12 @@ void DuMidiMetaEvent::setLength(quint32 value)
 {
     const DuMidiVariableLengthPtr &length =
             getChildAs<DuMidiVariableLength>(KEY_MIDIMETAEVENT_LENGTH);
-    if (length == NULL)
+    if (length == Q_NULLPTR)
         return;
 
     const DuBinaryDataPtr &data =
             getChildAs<DuBinaryData>(KEY_MIDIMETAEVENT_DATA);
-    if (data == NULL)
+    if (data == Q_NULLPTR)
         return;
 
     length->setAbsolute(value);
@@ -154,12 +154,12 @@ void DuMidiMetaEvent::setLength(QDataStream &stream)
 {
     const DuMidiVariableLengthPtr &length =
             getChildAs<DuMidiVariableLength>(KEY_MIDIMETAEVENT_LENGTH);
-    if (length == NULL)
+    if (length == Q_NULLPTR)
         return;
 
     const DuBinaryDataPtr &data =
             getChildAs<DuBinaryData>(KEY_MIDIMETAEVENT_DATA);
-    if (data == NULL)
+    if (data == Q_NULLPTR)
         return;
 
     length->setAbsolute(stream);
@@ -172,7 +172,7 @@ const QByteArray DuMidiMetaEvent::getData() const
     const DuBinaryDataConstPtr &tmp =
             getChildAs<DuBinaryData>(KEY_MIDIMETAEVENT_DATA);
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return QByteArray();
 
     return tmp->getBinaryData();
@@ -182,12 +182,12 @@ void DuMidiMetaEvent::setData(const QByteArray &value)
 {
     const DuMidiVariableLengthPtr &length =
             getChildAs<DuMidiVariableLength>(KEY_MIDIMETAEVENT_LENGTH);
-    if (length == NULL)
+    if (length == Q_NULLPTR)
         return;
 
     const DuBinaryDataPtr &data =
             getChildAs<DuBinaryData>(KEY_MIDIMETAEVENT_DATA);
-    if (data == NULL)
+    if (data == Q_NULLPTR)
         return;
 
     length->setAbsolute(static_cast<quint32>(value.size()));
@@ -199,7 +199,7 @@ void DuMidiMetaEvent::setData(QDataStream &stream)
     const DuBinaryDataPtr &tmp =
             getChildAs<DuBinaryData>(KEY_MIDIMETAEVENT_DATA);
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return;
 
     tmp->setData(stream);

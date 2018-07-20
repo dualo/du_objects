@@ -991,17 +991,17 @@ void DuSound::cleanMappingForSpecificKey(int note)
     for (int i = 0; i < layerArray->count(); ++i)
     {
         const DuLayerPtr& l = layerArray->at(i);
-        if (l == NULL)
+        if (l == Q_NULLPTR)
             continue;
 
         const DuArrayPtr<DuSample>& sampleArray = l->getSampleArray();
-        if (sampleArray == NULL)
+        if (sampleArray == Q_NULLPTR)
             continue;
 
         for (int j = 0; j < sampleArray->count(); ++j)
         {
             const DuSampleConstPtr& s = sampleArray->at(j);
-            if (s == NULL)
+            if (s == Q_NULLPTR)
                 continue;
 
             if (s->getStartNote() == note)
@@ -1021,7 +1021,7 @@ void DuSound::cleanMappingForSpecificKey(int note)
         for (int i = 0; i < mappingL->count(); ++i)
         {
             const DuNotePtr& newNote = mappingL->at(i);
-            if (newNote != NULL && newNote->getNote() == note)
+            if (newNote != Q_NULLPTR && newNote->getNote() == note)
             {
                 newNote->setNoteGM(0);
                 newNote->setIsExclusive(false);
@@ -1036,7 +1036,7 @@ void DuSound::cleanMappingForSpecificKey(int note)
         for (int i = 0; i < mappingS->count(); ++i)
         {
             const DuNotePtr& newNote = mappingS->at(i);
-            if (newNote != NULL && newNote->getNote() == note)
+            if (newNote != Q_NULLPTR && newNote->getNote() == note)
             {
                 newNote->setNoteGM(0);
                 newNote->setIsExclusive(false);

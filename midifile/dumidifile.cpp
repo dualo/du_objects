@@ -144,7 +144,7 @@ int DuMidiFile::getFormat() const
 {
     const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_MIDIFILE_FORMAT);
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return -1;
 
     return tmp->getNumeric();
@@ -154,7 +154,7 @@ bool DuMidiFile::setFormat(quint16 value)
 {
     const DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_MIDIFILE_FORMAT);
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return false;
 
     return tmp->setNumeric(value);
@@ -165,7 +165,7 @@ int DuMidiFile::getDivision() const
 {
     const DuNumericConstPtr &tmp = getChildAs<DuNumeric>(KEY_MIDIFILE_DIVISION);
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return -1;
 
     return tmp->getNumeric();
@@ -175,7 +175,7 @@ bool DuMidiFile::setDivision(quint16 value)
 {
     const DuNumericPtr tmp = getChildAs<DuNumeric>(KEY_MIDIFILE_DIVISION);
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return false;
 
     return tmp->setNumeric(value);
@@ -195,7 +195,7 @@ DuArrayConstPtr<DuMidiTrack> DuMidiFile::getTracks() const
 DuMidiTrackPtr DuMidiFile::getTrackAt(int index)
 {
     const DuArrayPtr<DuMidiTrack> &tracks = getTracks();
-    if (tracks == NULL)
+    if (tracks == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuMidiTrack::getTrackAt():\n"
@@ -216,7 +216,7 @@ DuMidiTrackPtr DuMidiFile::getTrackAt(int index)
     }
 
     const DuObjectPtr &tmpObject = tracks->at(index);
-    if (tmpObject == NULL)
+    if (tmpObject == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuMidiTrack::getTrackAt():\n"
@@ -227,7 +227,7 @@ DuMidiTrackPtr DuMidiFile::getTrackAt(int index)
     }
 
     const DuMidiTrackPtr &track = tmpObject.dynamicCast<DuMidiTrack>();
-    if (track == NULL)
+    if (track == Q_NULLPTR)
     {
         qCCritical(LOG_CAT_DU_OBJECT)
                 << "DuMidiTrack::getTrackAt():\n"
@@ -249,7 +249,7 @@ bool DuMidiFile::appendTrack(const DuMidiTrackPtr &track)
 {
     DuArrayPtr<DuMidiTrack> tmp = getChildAs< DuArray<DuMidiTrack> >(KEY_MIDIFILE_TRACKS);
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return false;
 
     return tmp->append(track);
@@ -259,7 +259,7 @@ bool DuMidiFile::appendTracks(const QVector<DuMidiTrackPtr> &tracks)
 {
     DuArrayPtr<DuMidiTrack> tmp = getChildAs< DuArray<DuMidiTrack> >(KEY_MIDIFILE_TRACKS);
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return false;
 
     bool ret = true;

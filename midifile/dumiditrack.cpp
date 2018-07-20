@@ -99,7 +99,7 @@ DuMidiTrackPtr DuMidiTrack::fromMidiBinary(QDataStream &stream)
             event = DuMidiChannelEvent::fromMidiBinary(stream, status, tmp);
         }
 
-        if (event == NULL)
+        if (event == Q_NULLPTR)
         {
             qCCritical(LOG_CAT_DU_OBJECT)
                     << "DuMidiTrack::fromMidiBinary():\n"
@@ -164,7 +164,7 @@ int DuMidiTrack::size() const
 {
     const DuArrayConstPtr<DuMidiBasicEvent> &events = getChildAs< DuArray<DuMidiBasicEvent> >(KEY_MIDITRACK_EVENTS);
 
-    if (events == NULL)
+    if (events == Q_NULLPTR)
         return -1;
 
     return MIDI_TRACK_ID_SIZE + MIDI_TRACK_SIZE_SIZE + events->size();
@@ -190,7 +190,7 @@ bool DuMidiTrack::appendEvent(const DuMidiBasicEventPtr &event)
 {
     DuArrayPtr<DuMidiBasicEvent> tmp = getChildAs< DuArray<DuMidiBasicEvent> >(KEY_MIDITRACK_EVENTS);
 
-    if (tmp == NULL)
+    if (tmp == Q_NULLPTR)
         return false;
 
     return tmp->append(event);
