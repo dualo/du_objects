@@ -1010,6 +1010,7 @@ QByteArray DuMusic::toMidiBinary() const
         return QByteArray();
     }
 
+    // NEED CHECK. Check that transpose doesn't infer MIDI export for SAMPLE or PERCU INSTR_TYPE
     int transpose = getTranspose();
     if (transpose == -1)
     {

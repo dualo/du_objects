@@ -316,6 +316,48 @@ DuSamplePtr DuSample::fromWav(QFile *input, WavConvertionResults& outResults)
     return sample;
 }
 
+QString DuSample::toWav(DuSamplePtr input, QString inputFilePath)
+{
+    // Fill default parameters
+    SF_INFO sfinfo ;
+    sfinfo.channels = 1;
+    sfinfo.samplerate = 44100;
+    sfinfo.format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
+
+    // Open file
+    SndfileHandle outputSoundFile(inputFilePath.toStdString(), SFM_WRITE, sfinfo.format, sfinfo.channels, sfinfo.samplerate);
+    if (outputSoundFile.rawHandle() == Q_NULLPTR)
+    {
+        qCCritical(LOG_CAT_DU_OBJECT) << "Failed to open the file" << inputFilePath << ":\n"
+                                      << outputSoundFile.strError();
+        return "";
+    }
+
+    // Fill parameters from dusound infos
+    // loop start/end is a quint32 in the WAV format
+    SF_INSTRUMENT instrument;
+    instrument.basenote = input->getUnityNote();
+    instrument.detune = input->getFineTune();
+    instrument.key_lo = input->getStartNote();
+    instrument.key_hi = input->getEndNote();
+    if (input->getLoopEnd() != 0) {
+        instrument.loops[0].mode = SF_LOOP_FORWARD; // FIX if necessary !
+        instrument.loop_count = 1;
+        instrument.loops[0].start = (unsigned int)(input->getLoopStart() / 2);
+        qDebug() << "Loopstart : " << instrument.loops[0].start;
+        instrument.loops[0].end = (unsigned int)(input->getLoopEnd() / 2);
+        qDebug() << "Loopend : " << instrument.loops[0].end;
+        instrument.loops[0].count = 0; //Specify the number of times the loop is played. 0 means infinite.
+    }
+    qDebug() << outputSoundFile.command(SFC_SET_INSTRUMENT, &instrument, sizeof (instrument)) ;
+
+    sf_count_t nbBytes = input->getData().size() ;
+    qDebug() << "nbBytes " << nbBytes;
+    outputSoundFile.writeRaw(reinterpret_cast<const short*>(input->getData().constData()), nbBytes) ;
+
+    return inputFilePath;
+}
+
 QString DuSample::convertToMono(SndfileHandle &oldSoundFile)
 {
     QString monoWavFileName = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/tmp_mono.wav";

@@ -402,16 +402,21 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel, int transpose
         return DuMidiTrackPtr();
     }
 
-    int presetOctave = instrPreset->getOctave();
-    if (presetOctave == -1)
-    {
-        qCCritical(LOG_CAT_DU_OBJECT)
-                << "DuLoop::toDuMidiTrack():\n"
-                << "invalid instrument preset octave:" << presetOctave;
+    // FIXED by BV. Octave should not infer for SAMPLE or PERCU INSTR_TYPE
+    int presetOctave = 0;
+    if (instrType == 0) {
+        presetOctave = instrPreset->getOctave();
+        if (presetOctave == -1)
+        {
+            qCCritical(LOG_CAT_DU_OBJECT)
+                    << "DuLoop::toDuMidiTrack():\n"
+                    << "invalid instrument preset octave:" << presetOctave;
 
-        return DuMidiTrackPtr();
+            return DuMidiTrackPtr();
+        }
+    } else {
+        presetOctave = 0;
     }
-
 
     QString instrName = instrInfo->getNameForDevice();
 
@@ -432,6 +437,13 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel, int transpose
 
     if (!instrName.isEmpty())
     {
+        //ADD BY BV: Sequence Title is set for each track, to become a Midi clip name, recognized in many DAW.
+        DuMidiMetaEventPtr seqTitleEvent(new DuMidiMetaEvent(prevTime));
+
+        seqTitleEvent->setTitle(instrName);
+        midiEvents->append(seqTitleEvent);
+        // ADDED BY BV
+
         DuMidiMetaEventPtr nameEvent(new DuMidiMetaEvent(prevTime));
 
         nameEvent->setInstrumentName(instrName);
