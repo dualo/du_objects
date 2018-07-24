@@ -38,14 +38,14 @@ struct Version
 
     friend inline bool operator<(const Version& v1, const Version& v2)
     {
-        if (v1.major < v2.major)
-            return true;
+        if (v1.major != v2.major)
+            return v1.major < v2.major;
 
-        if (v1.minor < v2.minor)
-            return true;
+        if (v1.minor != v2.minor)
+            return v1.minor < v2.minor;
 
-        if (v1.patch < v2.patch)
-            return true;
+        if (v1.patch != v2.patch)
+            return v1.patch < v2.patch;
 
         if (v1.suffix == v2.suffix)
             return false;
