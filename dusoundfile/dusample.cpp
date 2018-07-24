@@ -330,7 +330,7 @@ QString DuSample::toWav(const QString& outputFilePath) const
     {
         qCCritical(LOG_CAT_DU_OBJECT) << "Failed to open the file" << outputFilePath << ":\n"
                                       << outputSoundFile.strError();
-        return "";
+        return {};
     }
 
     // Fill parameters from dusound infos
