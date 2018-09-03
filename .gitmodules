@@ -1,6 +1,3 @@
 [submodule "du-touch/dualo_structs"]
 	path = du-touch/dualo_structs
 	url = ../../../Embeded_Software/API/dualo_structs.git
-[submodule "Util"]
-	path = Util
-	url = ../../QtTools/Utilities.git
