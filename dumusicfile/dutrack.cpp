@@ -237,7 +237,8 @@ QByteArray DuTrack::toDuMusicBinary() const
 
 
 QVector<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef,
-                                                    int transpose) const
+                                                    int transpose,
+                                                    int trackId) const
 {
     const DuArrayConstPtr<DuLoop> &loops = getLoops();
     if (loops == Q_NULLPTR)
@@ -274,7 +275,7 @@ QVector<DuMidiTrackPtr> DuTrack::toDuMidiTrackArray(int durationRef,
         }
 
         const DuMidiTrackPtr &midiTrack =
-                loop->toDuMidiTrack(durationRef, channel, transpose);
+                loop->toDuMidiTrack(durationRef, channel, transpose, trackId, i);
 
         if (midiTrack != Q_NULLPTR)
             retList.append(midiTrack);

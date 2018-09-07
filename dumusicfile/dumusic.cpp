@@ -1057,7 +1057,8 @@ QByteArray DuMusic::toMidiBinary() const
         }
 
         if (!midiFile->appendTracks(track->toDuMidiTrackArray(durationRef,
-                                                              transpose)))
+                                                              transpose,
+                                                              i)))
         {
             qCCritical(LOG_CAT_DU_OBJECT)
                     << "DuMusic::toMidiBinary():\n"

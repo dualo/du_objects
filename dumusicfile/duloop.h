@@ -36,8 +36,8 @@ public:
 
     QByteArray toDuMusicBinary() const override;
 
-    DuMidiTrackPtr toDuMidiTrack(int durationRef, int channel, int transpose) const;
-    QByteArray toMidiOneLoopBinary(const DuMidiTrackPtr &tempoTrack, int durationRef, int transpose) const;
+    DuMidiTrackPtr toDuMidiTrack(int durationRef, int channel, int transpose, int trackId, int loopId) const;
+    QByteArray toMidiOneLoopBinary(const DuMidiTrackPtr &tempoTrack, int durationRef, int transpose, int trackId, int loopId) const;
 
     int size() const override;
 

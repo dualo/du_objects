@@ -340,7 +340,7 @@ QByteArray DuLoop::toDuMusicBinary() const
     return QByteArray(reinterpret_cast<char*>(&du_loop), size());
 }
 
-DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel, int transpose) const
+DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel, int transpose, int trackId, int loopId) const
 {
     if (getState() == REC_EMPTY)
     {
@@ -435,16 +435,18 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel, int transpose
 
     if (!instrName.isEmpty())
     {
+        const QString& instrNameWithTrackAndLoopIds = QString("%1-%2_%3").arg(trackId + 1).arg(loopId + 1).arg(instrName);
+
         // ADD BY BV: Sequence Title is set for each track, to become a Midi clip name, recognized in many DAW.
         DuMidiMetaEventPtr seqTitleEvent(new DuMidiMetaEvent(prevTime));
 
-        seqTitleEvent->setTitle(instrName);
+        seqTitleEvent->setTitle(instrNameWithTrackAndLoopIds);
         midiEvents->append(seqTitleEvent);
         // ADDED BY BV
 
         DuMidiMetaEventPtr nameEvent(new DuMidiMetaEvent(prevTime));
 
-        nameEvent->setInstrumentName(instrName);
+        nameEvent->setInstrumentName(instrNameWithTrackAndLoopIds);
         midiEvents->append(nameEvent);
     }
 
@@ -550,11 +552,11 @@ DuMidiTrackPtr DuLoop::toDuMidiTrack(int durationRef, int channel, int transpose
     return midiTrack;
 }
 
-QByteArray DuLoop::toMidiOneLoopBinary(const DuMidiTrackPtr& tempoTrack, int durationRef, int transpose) const
+QByteArray DuLoop::toMidiOneLoopBinary(const DuMidiTrackPtr& tempoTrack, int durationRef, int transpose, int trackId, int loopId) const
 {
     DuMidiFilePtr midiFile(new DuMidiFile);
     midiFile->appendTrack(tempoTrack);
-    midiFile->appendTrack(toDuMidiTrack(durationRef, 0, transpose));
+    midiFile->appendTrack(toDuMidiTrack(durationRef, 0, transpose, trackId, loopId));
 
     return midiFile->toMidiBinary();
 }

@@ -39,7 +39,7 @@ public:
 
     QByteArray toDuMusicBinary() const;
 
-    QVector<DuMidiTrackPtr> toDuMidiTrackArray(int durationRef, int transpose) const;
+    QVector<DuMidiTrackPtr> toDuMidiTrackArray(int durationRef, int transpose, int trackId) const;
 
     int size() const;
 
